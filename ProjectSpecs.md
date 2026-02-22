@@ -96,7 +96,7 @@ Google Fonts link (also required in `<head>`):
 | Nakalim | `--nakalim-color` | `--nakalim-color-rgb` | Pale sacred gold #e8d48b |
 
 
-Faction deep-dives use the corresponding faction identity color as their base, the badges defined in the shared CSS file, and use `--red` for warning blocks (for example: a risk assesment, or a weakness explanation)
+Faction deep-dives use the corresponding faction identity color as their base, and the badges defined in the shared CSS file. 
 
 ### Per-page `:root` override (required in every file's `<style>`)
 
@@ -112,14 +112,11 @@ Minimal volumes (vol0–vol6):
 Faction deep-dives (example — Lumeris):
 ```css
 :root {
-  --accent:             var(--vol6-accent);
-  --accent-rgb:         var(--vol6-accent-rgb);
-  --accent-dim:         rgba(var(--vol6-accent-rgb), 0.11);
+  --accent:             var(--lumeris-color);
+  --accent-rgb:         var(--lumeris-color-rgb);
+  --accent-dim:         rgba(var(--lumeris-color-rgb), 0.11);
   --accent-bright-rgb:  245,200,66;
   --accent-bright:      rgb(var(--accent-bright-rgb));
-  --lumeris-teal-rgb:   0,180,204;
-  --lumeris-teal:       rgb(var(--lumeris-teal-rgb));
-  --lumeris-teal-dim:   rgba(var(--lumeris-teal-rgb), 0.10);
 }
 ```
 
@@ -314,7 +311,7 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 Faction files are more elaborate than the main volumes and introduce additional components:
 
 - **`.faction-badge`** — identity label at the top of the page
-- **`.trait-block`** — faction-specific trait/mechanic blocks (`.teal`, `.warn` modifiers)
+- **`.trait-block`** — faction-specific trait/mechanic blocks (`.warn` modifiers when signalling a negative trait (for example: a weakness explanation))
 - **`.trait-label`** — label inside trait blocks
 - **`.source-row` / `.src-pill`** — source attribution inline with claims
 - **`.timeline` / `.tl-row`** — turn-order playbook (T1, T5, T10, etc.)
