@@ -9,28 +9,25 @@
 <style>
   /* Vol 6 — Lumeris: deep gold / amber. Money. */
   :root {
-    --accent:             var(--vol6-accent);
-    --accent-rgb:         var(--vol6-accent-rgb);
-    --accent-dim:         rgba(var(--vol6-accent-rgb), 0.11);
+    --accent:             var(--lumeris-color);
+    --accent-rgb:         var(--lumeris-color-rgb);
+    --accent-dim:         rgba(var(--lumeris-color-rgb), 0.11);
     --accent-bright-rgb:  245,200,66;
     --accent-bright:      rgb(var(--accent-bright-rgb));
-    --lumeris-teal-rgb:   0,180,204;
-    --lumeris-teal:       rgb(var(--lumeris-teal-rgb));
-    --lumeris-teal-dim:   rgba(var(--lumeris-teal-rgb), 0.10);
   }
 
-  .progress-mini-fill { background: linear-gradient(90deg, var(--accent), var(--accent-bright), var(--lumeris-teal)); }
+  .progress-mini-fill { background: linear-gradient(90deg, var(--accent), var(--accent-bright)); }
 
   body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--vol6-accent-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--lumeris-teal-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--lumeris-color-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--lumeris-color-rgb), 0.04) 0%, transparent 65%),
     radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%); }
 
-  h1.page-title { text-shadow: 0 0 40px rgba(var(--vol6-accent-rgb), 0.4), 0 0 80px rgba(var(--vol6-accent-rgb), 0.15); }
+  h1.page-title { text-shadow: 0 0 40px rgba(var(--lumeris-color-rgb), 0.4), 0 0 80px rgba(var(--lumeris-color-rgb), 0.15); }
 
-  .topic-num { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--vol6-accent-rgb), 0.35); }
-  .tag-mech { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--vol6-accent-rgb), 0.3); }
-  .tag-source { background: var(--lumeris-teal-dim); color: var(--lumeris-teal); border-color: rgba(var(--lumeris-teal-rgb), 0.25); font-size: var(--ts_sectionTitle); letter-spacing:1.5px; padding: 2px 8px; border-radius:4px; border:1px solid; font-family:'Share Tech Mono',monospace; }
+  .topic-num { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--lumeris-color-rgb), 0.35); }
+  .tag-mech { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--lumeris-color-rgb), 0.3); }
+  .tag-source { background: rgba(var(--lumeris-color-rgb), 0.10); color: var(--lumeris-color); border-color: rgba(var(--lumeris-color-rgb), 0.25); font-size: var(--ts_sectionTitle); letter-spacing:1.5px; padding: 2px 8px; border-radius:4px; border:1px solid; font-family:'Share Tech Mono',monospace; }
 
   .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
   .nav-item:hover { background: var(--accent-dim); }
@@ -40,8 +37,8 @@
 
   /* Lumeris identity badge */
   .faction-badge {
-    background: rgba(var(--vol6-accent-rgb), 0.15); color: var(--accent-bright);
-    border: 1px solid rgba(var(--vol6-accent-rgb), 0.35);
+    background: rgba(var(--lumeris-color-rgb), 0.15); color: var(--accent-bright);
+    border: 1px solid rgba(var(--lumeris-color-rgb), 0.35);
   }
 
   /* Faction trait blocks */
@@ -50,7 +47,6 @@
     border-left: 3px solid var(--accent); border-radius: 6px;
     padding: 13px 16px; margin: 10px 0; font-size: var(--ts_sectionLabel); line-height: 1.75;
   }
-  .trait-block.teal { border-left-color: var(--lumeris-teal); }
   .trait-block.warn { border-left-color: var(--red); }
 
   .trait-label {
@@ -58,7 +54,6 @@
     letter-spacing: 2px; margin-bottom: 5px; font-weight: 700;
     color: var(--accent);
   }
-  .trait-label.teal { color: var(--lumeris-teal); }
   .trait-label.warn { color: var(--red); }
 
   /* Source attribution pills */
@@ -68,22 +63,22 @@
   }
   .src-pill {
     padding: 2px 9px; border-radius: 10px; letter-spacing: 1px;
-    background: rgba(var(--lumeris-teal-rgb), 0.08); color: var(--lumeris-teal);
-    border: 1px solid rgba(var(--lumeris-teal-rgb), 0.2);
+    background: rgba(var(--lumeris-color-rgb), 0.08); color: var(--lumeris-color);
+    border: 1px solid rgba(var(--lumeris-color-rgb), 0.2);
   }
 
   /* Turn-order timeline */
   .timeline { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
   .tl-row {
     display: grid; grid-template-columns: 90px 1fr;
-    border-left: 2px solid rgba(var(--vol6-accent-rgb), 0.25); padding-left: 16px;
+    border-left: 2px solid rgba(var(--lumeris-color-rgb), 0.25); padding-left: 16px;
     padding-bottom: 18px; position: relative;
   }
   .tl-row:last-child { padding-bottom: 0; }
   .tl-row::before {
     content: ''; position: absolute; left: -6px; top: 4px;
     width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); box-shadow: 0 0 8px rgba(var(--vol6-accent-rgb), 0.5);
+    background: var(--accent); box-shadow: 0 0 8px rgba(var(--lumeris-color-rgb), 0.5);
   }
   .tl-turn {
     font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
@@ -104,7 +99,7 @@
   }
 
   /* Weapon comparison table highlight */
-  .cell-tier { background: rgba(var(--vol6-accent-rgb), 0.08); color: var(--accent-bright); font-weight:700; }
+  .cell-tier { background: rgba(var(--lumeris-color-rgb), 0.08); color: var(--accent-bright); font-weight:700; }
 
   /* Ship card grid */
   .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; margin: 16px 0; }
@@ -112,7 +107,6 @@
     background: var(--card2); border: 1px solid var(--border);
     border-top: 2px solid var(--accent); border-radius: 8px; padding: 14px 16px;
   }
-  .ship-card.teal-top { border-top-color: var(--lumeris-teal); }
   .ship-card.red-top  { border-top-color: var(--red); }
   .ship-name {
     font-family: 'Orbitron', sans-serif; font-size: var(--ts_quizTitle); font-weight: 700;
@@ -120,14 +114,14 @@
   }
   .ship-role {
     font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: var(--lumeris-teal); letter-spacing: 2px; margin-bottom: 10px;
+    color: var(--lumeris-color); letter-spacing: 2px; margin-bottom: 10px;
   }
   .ship-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
 
   /* TAKT concept callout */
   .takt-box {
-    background: linear-gradient(135deg, rgba(var(--vol6-accent-rgb), 0.08), rgba(var(--lumeris-teal-rgb), 0.06));
-    border: 1px solid rgba(var(--vol6-accent-rgb), 0.3); border-radius: 8px;
+    background: linear-gradient(135deg, rgba(var(--lumeris-color-rgb), 0.08), rgba(var(--accent-bright-rgb), 0.06));
+    border: 1px solid rgba(var(--lumeris-color-rgb), 0.3); border-radius: 8px;
     padding: 18px 20px; margin: 16px 0;
   }
   .takt-title {
@@ -223,8 +217,8 @@
           For Lumeris, Trade Company income generates Influence in addition to Dust. Longer trade routes therefore don't just make more money — they directly power the Lumeris's Senate presence and diplomatic tools. This is the mechanic that ties their economic and political engines together.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">BLOCKADE BREAKER — SITUATIONAL</div>
+        <div class="trait-block">
+          <div class="trait-label">BLOCKADE BREAKER — SITUATIONAL</div>
           Lumeris can break blockades at 50 population empire-wide. In practice this is rarely the deciding factor in a game, but it prevents a single blockading fleet from entirely shutting down trade income during a war.
         </div>
 
@@ -279,8 +273,8 @@
           ES2 has a galaxy-wide Dust inflation mechanic: as more Dust is generated per turn across all empires, the purchase cost of improvements, ships, and outposts inflates. Because Lumeris are the highest per-turn Dust generators, they <strong>inflate the market faster than anyone else</strong> — effectively raising prices on themselves. In the late game, buyout costs that were 1,000 Dust on turn 20 may be 8,000+ Dust by turn 80. Two consequences: (1) use buyouts early and aggressively before inflation compounds; (2) planet broker outpost costs (250 → 350 → 650 → …) escalate even faster than the base formula in high-inflation games. On max AI count, inflation can be severe enough to make buyouts impractical by turn 30.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">DUST TREE LUXURY — THE LUMERIS STAPLE RESOURCE</div>
+        <div class="trait-block">
+          <div class="trait-label">DUST TREE LUXURY — THE LUMERIS STAPLE RESOURCE</div>
           Dust Trees are the luxury resource most directly synergistic with Lumeris. Each Dust Tree grants bonus Dust per population unit on the system, and a system with multiple Dust Trees on fertile planets generates dramatically more Dust per pop than any improvement can provide alone. Prioritize colonizing systems with Dust Trees visible on planets. The system improvement that converts Dust Trees to "National Pride" (your designated luxury) is worth rushing if your capital or primary system has Dust Trees already.
         </div>
 
@@ -316,13 +310,13 @@
       <div class="block-body">
         <p>Every other faction must physically send a colony ship along star lanes to colonize a system — this means systems deep in a neighbor's territory or isolated off-lane pockets are unreachable without warp tech or military force. Lumeris pay Dust and a system appears instantly, anywhere in their explored vision, no lanes required.</p>
 
-        <div class="trait-block">
-          <div class="trait-label">FOOD DRAIN — THE CRITICAL CONSTRAINT</div>
+        <div class="trait-block warn">
+          <div class="trait-label warn">FOOD DRAIN — THE CRITICAL CONSTRAINT</div>
           When a Lumeris outpost is placed, the game automatically routes Food from your nearest connected system to feed the outpost's growth. This drain is significant: <strong>~32 Food per turn per outpost</strong>, deducted from the source system's surplus. If your capital has 40 Food surplus and you place two outposts simultaneously, your capital goes negative — population begins shrinking immediately. The correct response: only place a second outpost when your largest food-producing system can sustain the drain without going negative. Alternatively, place off-piste outposts (isolated by star lane gaps) — these grow slower but do <strong>not</strong> pull Food from your connected systems, eliminating the drain entirely.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">TREE OF WORLDS — THE OFF-PISTE ACCELERATOR</div>
+        <div class="trait-block">
+          <div class="trait-label">TREE OF WORLDS — THE OFF-PISTE ACCELERATOR</div>
           A system containing a "Tree of Worlds" planetary anomaly provides enormous bonus Food to its outpost growth — so much that a Tree of Worlds outpost can mature to full colony in 5–6 turns regardless of how much Food your capital is sending. When you find a Tree of Worlds system, colonize it immediately regardless of its other stats. The fast growth alone pays for the outpost cost within a few turns of the colony becoming fully productive.
         </div>
 
@@ -376,8 +370,8 @@
           All other factions cap at 3 Trade Companies. Lumeris can operate 5 simultaneously. Since each Company's income scales with its level, and leveling is fueled by the Dust circulating through the system, a fully developed 5-Company Lumeris empire generates Trade income in a completely different tier from any competitor. Build toward all 5 as fast as your Dust and Industry allow — but level each Company to at least 4–5 before building the next. A Level 7 Company generates far more per turn than two Level 3 companies combined.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">ROUTE LENGTH = INFLUENCE — THE DUAL PAYOFF</div>
+        <div class="trait-block">
+          <div class="trait-label">ROUTE LENGTH = INFLUENCE — THE DUAL PAYOFF</div>
           For Lumeris, Trade Company income splits into Dust and Influence. Longer routes produce more of both. This means: (a) signing Trade Agreements with peaceful neighbors isn't just about Dust — it directly extends route length and increases your Senate seat count; (b) systems far from your core territory that would be marginal economic colonies are more valuable as Subsidiary endpoints because they extend route length; (c) your diplomatic posture directly funds your political engine — keeping neighbors friendly is economically mandatory, not just diplomatically pleasant.
         </div>
 
@@ -439,8 +433,8 @@
           <strong>Below 70 → Content or worse:</strong> No bonus or active penalties. Never let Lumeris drop here — the Dust income loss compounds across every system simultaneously.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">HOW MANY COLONIES CAN YOU HAVE?</div>
+        <div class="trait-block">
+          <div class="trait-label">HOW MANY COLONIES CAN YOU HAVE?</div>
           The Optimistic +20 Approval effectively gives Lumeris 1–2 free extra colonies compared to other factions before hitting the same Approval threshold. The exact limit depends on your luxury resources and happiness improvements, but a practical target is: maintain Ecstatic up to 5–6 systems, then evaluate per colony whether the new system's FIDSI gain outweighs the Approval drop across your whole empire. When in doubt, use the TAKT principle (see section 12): don't expand if the Approval drop will cut your Ecstatic bonus by more than the new colony produces.
         </div>
 
@@ -492,8 +486,8 @@
           (3) The Ecologist party's entrenched law (+25 Industry when at Ecstatic) is also a strong secondary option and plays well with the Lumeris Approval advantages — consider it if you can't win an Industrialist majority cleanly.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">HOW TO WIN THE INDUSTRIALIST ELECTION</div>
+        <div class="trait-block">
+          <div class="trait-label">HOW TO WIN THE INDUSTRIALIST ELECTION</div>
           Turn 20 is the first major election. The steps to secure an Industrialist victory:<br><br>
           <strong>From Turn 10 onward:</strong> Spend Dust lobbying for Industrialists. Lobbying costs increase each time and reset each election cycle — invest incrementally rather than in one burst. Budget ~200–300 Dust for pre-election lobbying.<br><br>
           <strong>Turn 18–20:</strong> Check the election forecast screen. If Industrialists are at or near 50%+, the standard population vote plus your lobbying should secure the seat. If they're below 40%, spend a larger Dust lump to push them over before the vote resolves.<br><br>
@@ -546,8 +540,8 @@
           <strong>After investigating 3 curiosities in their system:</strong> 25 → 75 → (jump is smaller or free). Investigating 3 curiosities before paying any bribes can save 50–100 Dust across the relationship arc. Always investigate curiosities first, then bribe — never bribe before investigating.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">INVESTMENT ROI — ACTUAL NUMBERS</div>
+        <div class="trait-block">
+          <div class="trait-label">INVESTMENT ROI — ACTUAL NUMBERS</div>
           From the expert playthrough: 100 Dust invested in the Mavros minor faction on turn 5 returned 6 Dust + 8 Science per turn by turn 9 (4 turns × ~3.5/turn = 14 Dust recovered, then ongoing). By turn 14, the investment was fully repaid and generating net 18 Dust + Science per turn. With "Trusted Broker" law reducing bribe costs by ~25%, initial investment payback drops to ~3 turns. Every minor faction reached "Friendly" status provides:<br><br>
           — Resource trickle per turn (Dust, Science, or Food depending on faction)<br>
           — A free population unit of their race delivered to your nearest system (see Vol.0)<br>
@@ -607,8 +601,8 @@
           <strong>Final reward:</strong> Both branches eventually offer a unique upgrade. The military buyout option (allows buying out ships instantly with Dust during battle) is the default best choice — it transforms the Lumeris's Dust wealth into real-time tactical flexibility.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">VICTORY PATH RECOMMENDATIONS</div>
+        <div class="trait-block">
+          <div class="trait-label">VICTORY PATH RECOMMENDATIONS</div>
           Economic victory exists in theory but is effectively blocked in practice — other factions (particularly Unfallen with their +15% Dust/Science per ally bonus) reach the 450,000 cumulative Dust threshold faster. The Lumeris Trade Company cap advantage helps but doesn't compensate entirely for the time cost.<br><br>
           <strong>Best paths for Lumeris:</strong><br>
           <strong>Conquest</strong> — use the early territorial expansion advantage. Claim 40%+ of systems by turn 50 by combining off-piste colonization with aggressive military action against weaker neighbors.<br>
@@ -652,8 +646,8 @@
           Lumeris have no inherent fleet bonuses — no damage multipliers, no special module unlocks, no faction-specific battle card beyond what their ships provide. Their fleet strength comes entirely from quantity funded by Dust. The correct doctrine: build more ships than opponents can respond to, not better ships. A fleet of 6 average Hunters bought with Dust in 3 turns beats a fleet of 3 excellent Hunters that took 15 turns of Industry to produce — because the Lumeris fleet is already deployed and winning territory while the opponent is still in the queue.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">DUST BUYOUTS — THE TACTICAL MULTIPLIER</div>
+        <div class="trait-block">
+          <div class="trait-label">DUST BUYOUTS — THE TACTICAL MULTIPLIER</div>
           Any ship or improvement can be completed instantly by paying its remaining Industry cost in Dust. For Lumeris, this transforms their economic advantage directly into military readiness:<br><br>
           <strong>Reactive buyout:</strong> An opponent declares war unexpectedly. You have 4 partially-built ships and 3,000 Dust. Buyout all 4 in one turn and meet them with a full fleet instead of an empty space lane.<br>
           <strong>Pre-battle buyout:</strong> Before initiating a war, queue 5–6 ships and let them build for 3–4 turns. On the turn you declare, buyout everything simultaneously — opponent's scouts see no fleet buildup until the fleet appears fully formed.<br>
@@ -703,7 +697,7 @@
             <div class="ship-role">ATTACKER (SMALL)</div>
             <div class="ship-body">2 weapon + 2 defense + 1 utility when unupgraded. Decent early survivability for pirate clearing and minor faction coercion. <strong>After upgrade:</strong> gains a 4th defense slot and extra utility — becomes one of the two best attackers in the game, rivaling Riftborn. Use early, then replace with Hunters in mid-game. Do not bother upgrading — invest that research in Hull tiers instead.</div>
           </div>
-          <div class="ship-card teal-top">
+          <div class="ship-card">
             <div class="ship-name">DRAFT-CLASS</div>
             <div class="ship-role">PROTECTOR (SMALL)</div>
             <div class="ship-body">6 modules — 1 more than typical protectors. Top-mounted weapon gives 270° arc vs. standard 120° broadside. Can go head-to-head with many attacker designs. One of the two most damaging protectors in the game. Useful early; transition to Coordinator support in mid-game but keep 1 in each fleet for its Flak and damage absorption.</div>
@@ -713,7 +707,7 @@
             <div class="ship-role">HUNTER (MEDIUM)</div>
             <div class="ship-body"><strong>The core of your fleet.</strong> 9 modules unupgraded — already top 3 among all faction hunters. After upgrade: the most modules of any hunter in the game (+4 modules including a large top slot). Scales with tech level — the better your modules, the more this hull pays off. A base Hunter is worth approximately 4× an Attacker for 3× the command points. Never skip this hull.</div>
           </div>
-          <div class="ship-card teal-top">
+          <div class="ship-card">
             <div class="ship-name">LONG CALLUM-CLASS</div>
             <div class="ship-role">COORDINATOR (MEDIUM)</div>
             <div class="ship-body">After upgrade: the tankiest coordinator in the entire game. 4 extra modules on upgrade (more than any other coordinator). Can be specced as a dedicated fleet tank OR as a carrier (pocket carrier with squadron modules) OR as a flak platform. Its versatility is its defining trait. Always upgrade. Partner with the Omaha Hunter — together they are one of the most lethal mid-game combinations in ES2.</div>
@@ -723,7 +717,7 @@
             <div class="ship-role">CARRIER (LARGE)</div>
             <div class="ship-body"><strong>The weakest carrier in the game.</strong> Poor weapon placement (broadside-only); loses to virtually every other faction's carrier in a direct fight. Its role: bullet sponge protecting your Hunters from enemy carriers. Equip with Flak + defense modules, not weapons. Do not upgrade unless you intend to use it as a troop transport (many utility slots when upgraded make it excellent for ground invasion support). Generally, skip the carrier tech and invest in Hunter upgrades instead.</div>
           </div>
-          <div class="ship-card teal-top">
+          <div class="ship-card">
             <div class="ship-name">ERA-CLASS (CARAVEL)</div>
             <div class="ship-role">EXPLORER</div>
             <div class="ship-body">No colony ship exists for Lumeris — the Caravel fills an outsized early-game role. Add extra engines and probe modules as priority. Late game: refit with maximum engine modules and deploy as forward scouts deep in enemy territory. Cheap enough to lose, fast enough (12+ movement with engine mods) to give advance warning of incoming fleets. 1–2 late-game scout Caravels are worth keeping indefinitely.</div>
@@ -789,8 +783,8 @@
           </tr>
         </table>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">DEFENSE MODULE SPLIT — ALWAYS HALF/HALF</div>
+        <div class="trait-block">
+          <div class="trait-label">DEFENSE MODULE SPLIT — ALWAYS HALF/HALF</div>
           When filling defense slots, split evenly between hull plating and energy shields. Both types have diminishing returns the more you stack of the same type — stacking 4 hull plating slots provides less total damage reduction than 2 hull + 2 shield. If you have an odd number of defense slots and must choose, favor hull plating: most ships have higher base HP than shield value, so percentage reductions on hull provide larger absolute damage absorption.
         </div>
 
@@ -840,8 +834,8 @@
           Assign the starting hero to your Caravel fleet on turn 1. Send them to investigate every curiosity in reach — each investigation grants hero XP. A hero that investigates 8–10 curiosities in the first 10 turns reaches Level 3–4 before most factions' heroes hit Level 2. At Level 3, assign the hero as your home system Governor for the +30 Science per turn bonus (the "Blue Skies" speculator skill). The timing of reassignment matters: you must wait for the assignment cooldown before you can move them from the fleet to a system role — plan for the cooldown in your turn scheduling.
         </div>
 
-        <div class="trait-block teal">
-          <div class="trait-label teal">ACADEMY — GET A BETTER HERO AS SOON AS POSSIBLE</div>
+        <div class="trait-block">
+          <div class="trait-label">ACADEMY — GET A BETTER HERO AS SOON AS POSSIBLE</div>
           The Galactic Academy appears mid-game and allows recruiting heroes from all factions. Lumeris should prioritize finding and claiming the Academy system via off-piste colonization if possible — the Academy's hero pool often contains Sophon heroes (+Science per turn as Admiral or Governor) or military-specialist heroes that dramatically outperform the Lumeris default lines. Recruit a military-capable hero (Admiral class) as soon as the Academy is operational to compensate for the weak Lumeris starting hero in fleet combat.
         </div>
 
