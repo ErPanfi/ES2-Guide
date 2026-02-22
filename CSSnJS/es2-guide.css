@@ -47,8 +47,8 @@
     --vol4-accent:     #2d8fff;
     --vol5-accent-rgb: 0,212,160;
     --vol5-accent:     #00d4a0;
-    --vol6-accent-rgb: 192,132,252;
-    --vol6-accent:     #c084fc;
+    --vol6-accent-rgb: var(--gold-rgb);
+    --vol6-accent:     var(--gold);
 
     /* ── Default accent (overridden per-volume in each HTML <style>) ── */
     --accent:     var(--vol4-accent);
