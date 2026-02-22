@@ -62,9 +62,6 @@
   <div class="nav-item" onclick="scrollByID('t2')">🐛 Cravers <span class="nav-check" id="nc2"></span></div>
   <div class="nav-item" onclick="scrollByID('t3')">❄️ Riftborn <span class="nav-check" id="nc3"></span></div>
   <div class="nav-item" onclick="scrollByID('t4')">👁️ Umbral Choir <span class="nav-check" id="nc4"></span></div>
-  <div class="nav-section-label">// Distinctive Factions</div>
-  <div class="nav-item" onclick="scrollByID('t5')">💰 Lumeris <span class="nav-check" id="nc5"></span></div>
-  <div class="nav-item" onclick="scrollByID('t6')">🧬 Horatio <span class="nav-check" id="nc6"></span></div>
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   
@@ -81,7 +78,7 @@
   <div class="page-header">
     <div class="breadcrumb">ES2 // <span>Vol.6</span> // Faction Guides II</div>
     <h1 class="page-title">Faction<br>Guides II</h1>
-    <p class="page-subtitle">Four factions break the normal rules of ES2 so fundamentally that Volumes 0–3 are partially inapplicable to them. This volume covers each unique faction's rule-breaking mechanics, what strategies those mechanics enable, and how to play each one correctly. Two additional factions with highly distinctive (but not rule-breaking) playstyles round out the guide.</p>
+    <p class="page-subtitle">Four factions break the normal rules of ES2 so fundamentally that Volumes 0–3 are partially inapplicable to them. This volume covers each unique faction's rule-breaking mechanics, what strategies those mechanics enable, and how to play each one correctly.</p>
   </div>
 
   <!-- T1: VODYANI -->
@@ -284,113 +281,8 @@
     </div>
   </div>
 
-  <hr class="topic-divider">
 
-  <!-- T5: LUMERIS -->
-  <div class="topic" id="t5">
-    <div class="topic-header">
-      <div class="topic-num">05</div>
-      <div>
-        <h2 class="topic-title">Lumeris — The Trade Empire</h2>
-        <div class="topic-subtitle">Standard colonization, but with a Trade Company cap of 5 (vs. 3 for all others) and unique Dust-multiplying mechanics</div>
-      </div>
-    </div>
-    <div class="content-block open" id="cb5a">
-      <div class="block-header" onclick="toggle('cb5a')">
-        <span class="block-icon">💰</span>
-        <span class="block-title">What Makes Lumeris Different</span>
-        <span class="block-tag tag-mech">MECHANIC</span>
-        <span class="block-chevron">▾</span>
-      </div>
-      <div class="block-body">
-        <div class="faction-badge badge-lumeris">◈ LUMERIS — THE MERCHANTS</div>
-        <p>Lumeris play largely like a standard faction — they colonize normally, grow population from Food, and use the standard Approval system. Their uniqueness comes from three stacking Dust advantages:</p>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">TRADE COMPANY CAP: 5 INSTEAD OF 3</div>
-          Where all other factions max out at 3 Trade Companies, Lumeris can operate 5 simultaneously. Since each additional Trade Company compounds income multiplicatively across all its routes, two extra companies at high level can generate more Dust per turn than a faction's entire FIDSI mining output. The Lumeris Dust economy is categorically in a different tier from all other factions if correctly managed.
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">DUST FACTION ABILITY — BUYING INFLUENCE</div>
-          Lumeris can spend Dust to directly purchase Senate Influence, political support, and even diplomatic relation boosts. Where other factions must invest time and Influence resource, Lumeris converts their abundant Dust into political power directly. In the late game when their Dust income is 2–3× any opponent's, this turns Senate seats into a purchasable commodity.
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">ECONOMIC VICTORY ADVANTAGE</div>
-          With 5 Trade Companies and the highest per-turn Dust income in the game, Economic victory (450,000 cumulative Dust) is Lumeris's natural path. Reach it ~20–30 turns faster than any other faction can. The primary threat is war — military aggression disrupts trade routes. Lumeris must invest in diplomacy and defensive military to protect their income network.
-        </div>
-        <div class="callout callout-tip">
-          <div class="callout-label">LUMERIS PRIORITY ORDER</div>
-          1. Sign Trade Agreements with every neighbor immediately — route extension is your income multiplier.<br>
-          2. Build Trade Company HQs as fast as possible; always have all 5 companies operational by turn 50.<br>
-          3. Level each company to at least 5 before building the next — level matters more than company count at low levels.<br>
-          4. Spend Dust on Senate seat purchases to maintain Pacifist political dominance, which further boosts Dust via their entrenched law.<br>
-          5. Maintain a defensive military and a Non-Aggression network — one blockaded Trade Company route during peak income is catastrophically expensive.
-        </div>
-        <div class="done-row">
-          <span class="done-label">UNDERSTOOD & APPLIED</span>
-          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <hr class="topic-divider">
-
-  <!-- T6: HORATIO -->
-  <div class="topic" id="t6">
-    <div class="topic-header">
-      <div class="topic-num">06</div>
-      <div>
-        <h2 class="topic-title">Horatio — The Gene-Shapers</h2>
-        <div class="topic-subtitle">Standard mechanics, but population cloning creates custom races — the strongest pop-type bonuses in the game</div>
-      </div>
-    </div>
-    <div class="content-block open" id="cb6a">
-      <div class="block-header" onclick="toggle('cb6a')">
-        <span class="block-icon">🧬</span>
-        <span class="block-title">Cloning Mechanics and Gene Combination</span>
-        <span class="block-tag tag-mech">MECHANIC</span>
-        <span class="block-chevron">▾</span>
-      </div>
-      <div class="block-body">
-        <div class="faction-badge badge-horatio">◈ HORATIO — THE BEAUTIFUL</div>
-        <p>Horatio is the only faction that can create custom population types by splicing together traits from different races they've encountered. Their unique ability is <strong>Gene Fusion</strong>: by collecting genetic samples from other factions (through combat, exploration, and diplomacy) and spending Dust, they can combine traits from two different races into a new Horatio-specific pop type with bonuses from both parents.</p>
-
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">GENE FUSION — HOW IT WORKS</div>
-          In the Genetics screen (unique to Horatio), you see all races whose genetic samples you've collected. Select two races as "parents." The resulting fusion pop inherits a combination of both parents' FIDSI bonuses and racial traits. The combination is not always straightforward — some trait combinations are more powerful than others (e.g., fusing Sophon +Science with a race that has +Approval creates a Science-generating pop that also doesn't generate Approval problems).
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">SAMPLE COLLECTION</div>
-          Collecting genetic samples requires: fighting in combat (each battle against a faction gives samples of their pop type), peaceful gene sharing agreements (unique to Horatio — other factions can agree to share samples diplomatically), or assimilating minor factions (whose pop type samples you gain). The more factions you've met and fought or traded with, the more gene combinations you have available.
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">POPULATION REPLACEMENT</div>
-          Once a Gene Fusion type is created, Horatio can replace existing population units in their systems with the new custom type. Over time, all their population gradually becomes the custom fused type, providing the combined bonuses across their entire empire. A fully optimized Horatio empire's per-pop FIDSI bonuses can exceed any other faction's by 30–50%.
-        </div>
-
-        <div class="callout callout-gold">
-          <div class="callout-label">OPTIMAL HORATIO GENE STRATEGY</div>
-          The most powerful fusion targets in most games:<br>
-          <strong>Sophon + any high-Industry minor faction:</strong> Creates a Science/Industry dual-output pop — the two most important FIDSI resources combined in one type.<br>
-          <strong>Any high-Approval pop + Cravers:</strong> Cravers have strong FIDSI output but terrible Approval. Fusing their FIDSI stats with a high-Approval race creates a powerhouse pop with no downsides.<br>
-          The key insight: the gene system essentially lets Horatio design their ideal population. Identify which two FIDSI resources your victory path needs most, then specifically hunt samples from races strong in those two areas.
-        </div>
-        <div class="callout callout-tip">
-          <div class="callout-label">HORATIO PRIORITY ORDER</div>
-          1. Meet and fight (or trade with) as many factions as possible early — samples require contact.<br>
-          2. Make your first Gene Fusion by turn 25–30, targeting bonuses that amplify your chosen victory path.<br>
-          3. Begin replacing population in your home system with the fused type immediately — home system benefits from the combo bonus while the type grows toward other systems.<br>
-          4. Make a second Gene Fusion around turn 50 using a different combination — assign the second type to a different system role (e.g., first fusion for Industry systems, second for Science systems).
-        </div>
-        <div class="done-row">
-          <span class="done-label">UNDERSTOOD & APPLIED</span>
-          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="topic-divider">
 
   <!-- QUIZ -->
   <div class="topic" id="quiz">
@@ -418,7 +310,7 @@
 <script>
   const doneTopics = new Set();
   const VOLUME = 'vol6';
-  const TOTAL = 6;
+  const TOTAL = 4;
   let qIdx = 0;
   let answered = false;
   const quizzes = [
@@ -457,18 +349,19 @@
       ],
       correct: 1,
       explain: "The 500-Essence faction can sustain the most total extractions — harvest it first as it's the most resilient source. But the critical long-term management principle is to spread extraction across all three sources rather than depleting any single one quickly. A fully depleted minor faction disappears permanently — losing a future Essence source that cannot be recovered. In a galaxy with limited minor factions, every source is precious. Vodyani who harvest one faction to death early find themselves in an Essence drought later when population growth is needed most. Regarding other major factions: they may dislike your Essence harvesting (it's visible to everyone as a hostile act against minor factions) but Vodyani have no choice — it's their only population growth mechanism."
-    },
+    }
+    ,
     {
-      scenario: "You are playing Horatio. Turn 22. You've collected genetic samples from Sophons (strong +Science/pop) and from a conquered Craver system (strong +Industry/pop, −Approval/pop). You need to make your first Gene Fusion decision.",
-      q: "Is the Sophon + Craver fusion a good choice, and what is the main consideration?",
+      scenario: "You are playing Umbral Choir. Turn 20. You have Whisper networks established in 2 enemy systems. One enemy system is a high-value industrial hub (150 Industry/turn, 4 planets). The other is a frontier outpost (40 Industry/turn, 1 planet). You have enough Corruption points to trigger one Subversion action this turn.",
+      q: "Which system should you target with Subversion, and what type of action maximizes long-term value?",
       opts: [
-        "No — Craver genes introduce too much Approval penalty; never fuse negative-trait races.",
-        "Yes — the Sophon+Craver fusion creates a pop type with both +Science/pop and +Industry/pop, combining the two most valuable FIDSI resources. The −Approval trait from Cravers is partially diluted in the fusion process (combined bonuses are weighted averages), and the combined Science+Industry output makes it one of the strongest possible fusions for almost any victory path. Assign Counselor Heroes to systems populated with this type to manage the residual Approval penalty.",
-        "It depends entirely on your chosen victory path — only fuse traits that exactly match your single victory condition.",
-        "Never fuse with captured/conquered faction samples — the genes are incompatible with Horatio biology."
+        "Target the frontier outpost — it's easier to subvert with less risk of detection.",
+        "Target the industrial hub. Use a FIDSI-disruption Subversion to reduce its Industry output. Crippling 150 Industry/turn in an opponent's best production system has a compounding effect — every ship, improvement, and population unit they fail to build on schedule is a permanent setback. The frontier outpost at 40 Industry/turn is not worth the Corruption points.",
+        "Target the industrial hub, but use a political Subversion to shift their ruling party — political disruption is always more valuable than FIDSI disruption.",
+        "Save your Corruption points — Subversion is only useful when you're ready to trigger a full system defection."
       ],
       correct: 1,
-      explain: "Sophon+Craver is one of the strongest available fusions precisely because it combines the two most universally valuable FIDSI resources. The Craver −Approval trait is real but manageable: the fusion dilutes it (it's not full Craver Approval penalty), and Counselor Heroes assigned to those systems can fully compensate. The key insight of Gene Fusion is that negative traits are partial while positive traits are also partial — you're getting the combined upside of both races at reduced strength, which almost always outweighs the downside when your chosen combination covers two critical FIDSI outputs. A pop generating both Science and Industry per unit is producing two resources simultaneously that other factions need two separate pop types to cover."
+      explain: "Subversion value scales directly with the target system's output — disrupting 150 Industry/turn is 3.75× more impactful than disrupting 40 Industry/turn for the same Corruption cost. The industrial hub is always the priority target. FIDSI disruption on a production powerhouse delays ships and improvements permanently — those turns of lost Industry are never recovered. Political subversion can be valuable but is situational (depends on the opponent's political composition and what laws are at stake). Saving Corruption for a full defection event is a late-game play; in the mid-game, consistent FIDSI disruption on high-value systems accumulates more total damage than waiting for a single dramatic defection that may never materialize."
     }
   ];
 </script>
