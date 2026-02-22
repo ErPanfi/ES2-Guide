@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Horatio: Gene-Shapers Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<style>
+  /* Horatio: narcissist pink / rose gold */
+  :root {
+    --accent:             var(--horatio-color);
+    --accent-rgb:         var(--horatio-color-rgb);
+    --accent-dim:         rgba(var(--horatio-color-rgb), 0.10);
+    --accent-bright-rgb:  255,200,220;
+    --accent-bright:      rgb(var(--accent-bright-rgb));
+  }
+
+  .progress-mini-fill { background: linear-gradient(90deg, var(--accent), var(--accent-bright)); }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--horatio-color-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--horatio-color-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%); }
+
+  h1.page-title { text-shadow: 0 0 40px rgba(var(--horatio-color-rgb), 0.4), 0 0 80px rgba(var(--horatio-color-rgb), 0.15); }
+
+  .topic-num { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--horatio-color-rgb), 0.35); }
+  .tag-mech { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--horatio-color-rgb), 0.3); }
+  .tag-source { background: rgba(var(--horatio-color-rgb), 0.10); color: var(--horatio-color); border-color: rgba(var(--horatio-color-rgb), 0.25); font-size: var(--ts_sectionTitle); letter-spacing:1.5px; padding: 2px 8px; border-radius:4px; border:1px solid; font-family:'Share Tech Mono',monospace; }
+
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .nav-item:hover { background: var(--accent-dim); }
+  .step-list li .step-n { color: var(--accent); background: var(--accent-dim); }
+  .callout-tip { border-left-color: var(--accent); background: var(--accent-dim); }
+  .callout-tip .callout-label { color: var(--accent); }
+
+  /* Horatio identity badge */
+  .faction-badge {
+    background: rgba(var(--horatio-color-rgb), 0.15); color: var(--accent-bright);
+    border: 1px solid rgba(var(--horatio-color-rgb), 0.35);
+  }
+
+  /* Faction trait blocks */
+  .trait-block {
+    background: var(--card2); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 6px;
+    padding: 13px 16px; margin: 10px 0; font-size: var(--ts_sectionLabel); line-height: 1.75;
+  }
+  .trait-block.warn { border-left-color: var(--red); }
+
+  .trait-label {
+    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px; margin-bottom: 5px; font-weight: 700;
+    color: var(--accent);
+  }
+  .trait-label.warn { color: var(--red); }
+
+  /* Source attribution pills */
+  .source-row {
+    display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px;
+    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+  }
+  .src-pill {
+    padding: 2px 9px; border-radius: 10px; letter-spacing: 1px;
+    background: rgba(var(--horatio-color-rgb), 0.08); color: var(--horatio-color);
+    border: 1px solid rgba(var(--horatio-color-rgb), 0.2);
+  }
+
+  /* Turn-order timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
+  .tl-row {
+    display: grid; grid-template-columns: 90px 1fr;
+    border-left: 2px solid rgba(var(--horatio-color-rgb), 0.25); padding-left: 16px;
+    padding-bottom: 18px; position: relative;
+  }
+  .tl-row:last-child { padding-bottom: 0; }
+  .tl-row::before {
+    content: ''; position: absolute; left: -6px; top: 4px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 8px rgba(var(--horatio-color-rgb), 0.5);
+  }
+  .tl-turn {
+    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    color: var(--accent); letter-spacing: 1px; padding-top: 2px;
+    font-weight: 700;
+  }
+  .tl-body { font-size: var(--ts_sectionLabel); line-height: 1.7; color: var(--text); }
+  .tl-body strong { color: var(--accent-bright); }
+
+  /* Ship card grid */
+  .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; margin: 16px 0; }
+  .ship-card {
+    background: var(--card2); border: 1px solid var(--border);
+    border-top: 2px solid var(--accent); border-radius: 8px; padding: 14px 16px;
+  }
+  .ship-card.warn-top { border-top-color: var(--red); }
+  .ship-name {
+    font-family: 'Orbitron', sans-serif; font-size: var(--ts_quizTitle); font-weight: 700;
+    color: var(--accent-bright); letter-spacing: 2px; margin-bottom: 4px;
+  }
+  .ship-role {
+    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    color: var(--horatio-color); letter-spacing: 2px; margin-bottom: 10px;
+  }
+  .ship-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
+
+  /* GENE SEQUENCER concept callout */
+  .takt-box {
+    background: linear-gradient(135deg, rgba(var(--horatio-color-rgb), 0.08), rgba(var(--accent-bright-rgb), 0.06));
+    border: 1px solid rgba(var(--horatio-color-rgb), 0.3); border-radius: 8px;
+    padding: 18px 20px; margin: 16px 0;
+  }
+  .takt-title {
+    font-family: 'Orbitron', sans-serif; font-size: var(--ts_topicTitle); font-weight: 700;
+    color: var(--accent-bright); letter-spacing: 3px; margin-bottom: 10px;
+  }
+
+  /* Priority tier table */
+  .splice-tier {
+    border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 14px 0;
+  }
+  .splice-tier-row {
+    display: grid; grid-template-columns: 100px 1fr;
+    border-bottom: 1px solid var(--border); font-size: var(--ts_sectionLabel);
+  }
+  .splice-tier-row:last-child { border-bottom: none; }
+  .splice-tier-label {
+    padding: 10px 12px; font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    font-weight: 700; letter-spacing: 1.5px; display: flex; align-items: center;
+  }
+  .splice-tier-label.s { background: rgba(var(--green-rgb), 0.12); color: var(--green); }
+  .splice-tier-label.a { background: rgba(var(--horatio-color-rgb), 0.12); color: var(--horatio-color); }
+  .splice-tier-label.b { background: rgba(var(--gold-rgb), 0.10); color: var(--gold); }
+  .splice-tier-label.c { background: rgba(var(--red-rgb), 0.08); color: var(--red); }
+  .splice-tier-body {
+    padding: 10px 14px; line-height: 1.7; color: var(--text);
+  }
+
+  /* Pop count visual */
+  .pop-cost-row {
+    display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; align-items: center;
+  }
+  .pop-cost-chip {
+    padding: 4px 12px; border-radius: 4px; font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle); font-weight: 700; letter-spacing: 1px;
+    border: 1px solid;
+  }
+  .pop-cost-chip.cheap { background: rgba(var(--green-rgb),0.10); color: var(--green); border-color: rgba(var(--green-rgb),0.3); }
+  .pop-cost-chip.mid   { background: rgba(var(--gold-rgb),0.10);  color: var(--gold);  border-color: rgba(var(--gold-rgb),0.3); }
+  .pop-cost-chip.hard  { background: rgba(var(--red-rgb),0.10);   color: var(--red);   border-color: rgba(var(--red-rgb),0.3); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="game-name">FAC.02</div>
+    <div class="guide-name">The<br>Horatio</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">◈ Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Gene System</div>
+  <div class="nav-item" onclick="scrollByID('t1')">🧬 Splicing Mechanics <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🎯 Sample Acquisition <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🔬 GENE SEQUENCER <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">📊 Splice Priority Ranking <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🌱 Nursery Systems &amp; Pop Mgmt <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">❓ The Z'vali Question <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Empire</div>
+  <div class="nav-item" onclick="scrollByID('t7')">📜 Questline &amp; Senate <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Military</div>
+  <div class="nav-item" onclick="scrollByID('t8')">🚀 Ships &amp; Fleet Philosophy <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-item" onclick="scrollByID('t9')">🦸 Hero Management <span class="nav-check" id="nc9"></span></div>
+
+  <div class="nav-section-label">// Opening</div>
+  <div class="nav-item" onclick="scrollByID('t10')">🗓️ First 40 Turns Playbook <span class="nav-check" id="nc10"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="vol-link" style="background:rgba(var(--vol5-accent-rgb),0.08);border:1px solid rgba(var(--vol5-accent-rgb),0.20);color:var(--vol5-accent);" onclick="location.href='../GeneralGuide/es2-vol5-factions.html'">← Vol.5: Standard Factions</div>
+  <div class="vol-link" style="background:rgba(var(--lumeris-color-rgb),0.08);border:1px solid rgba(var(--lumeris-color-rgb),0.20);color:var(--lumeris-color);margin-top:6px;" onclick="location.href='es2-Fac01-lumeris.html'">◈ Fac.01: The Lumeris</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html">ES2</a> // <span>Fac.02</span> // The Horatio</div>
+    <h1 class="page-title">The<br>Horatio</h1>
+    <p class="page-subtitle">A trillion clones of the galaxy's most perfect being. Horatio plays like a standard faction in the early game, then diverges radically: the gene splicing system is not a side mechanic — it is the entire mid-to-late-game strategy. The player who understands which genes to acquire, in what order, when to splice, and how to breed populations for the sacrifice is playing a completely different game than everyone else on the map.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Snowball That Takes Its Time</h2>
+        <div class="topic-subtitle">Early game is deceptively normal. The faction only becomes itself around turn 30–50.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">◈</span>
+        <span class="block-title">Core Traits and the True Horatio Identity</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge">◈ HORATIO — THE BEAUTIFUL</div>
+
+        <p>The wiki describes Horatio as "a relatively vanilla faction." This is technically true of turns 1–25, and entirely misleading as a strategic description. The expert guide author is more direct: <em>"I'm of the opinion that the Horatio are by far the weakest race simply because their early game is such crap."</em> This is not hyperbole — it reflects the compound problem of a +25% ship cost penalty, one fewer module slot on every hull compared to other factions, no access to Xeno-Industrial Infrastructure (they start on a Mediterranean), and genuinely weak early FIDSI output. Horatio is a late-blooming exponential faction: their first 30 turns are spent building the infrastructure (population diversity, nursery systems, minor faction assimilation) that will let them create a per-pop FIDSI output that no other faction can match.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">GENE HUNTER AFFINITY — THE DEFINING MECHANIC</div>
+          Horatio can sacrifice a number of any non-Horatio population type to permanently add a partial version of that type's racial bonus to all Horatio population units, everywhere in the empire, forever. Each splice adds a new layer of bonus. After three well-chosen splices, a single Horatio population unit provides more FIDSI output than most factions' entire populations combined — and Horatio generates enormous quantities of population.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">FOOD &amp; POPULATION MACHINE — THE FOUNDATION</div>
+          Horatio's base racial bonuses give <strong>+3 Food per Horatio pop on hot planets</strong> and <strong>+2 Approval on hot planets</strong>. Their starting planet, Horatio Prime, is Mediterranean — not the ideal category, but their Ecologist government grants the "Hardship Ready" law, allowing colonization of <em>any non-gas planet type</em> from the start of the game. This means Horatio can expand into any environment they find and breed their population anywhere. As spliced bonuses stack, more Food means faster population growth, which means more Horatio pops producing more spliced FIDSI — a reinforcing loop that compounds aggressively from the mid-game onward.
+          <br><br>
+          <span style="color:var(--red);">⚠ VERIFY WITH SOURCE:</span> The exact Food bonus value per pop and the approval values may vary with version and planet type combinations. Community sources consistently cite these as strong Food-producers, but exact numbers should be confirmed against patch notes or in-game tooltips.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">PRICE OF PERFECTION — THE EARLY-GAME TAX</div>
+          Horatio ships cost <strong>+25% Industry</strong> to construct compared to equivalent ships from other factions. This is the single most punishing early-game disadvantage the faction has — Horatio cannot match any militaristic faction ship-for-ship on the same Industry budget. The faction trait tooltip also claims a weapon damage bonus, but this appears to be a UI error: in-game testing confirmed by multiple community sources shows Horatio ships receive a hidden <strong>+10% HP bonus</strong> on all hulls, but no actual weapon damage increase. The ships are tankier than they appear on paper, but they don't hit harder. This distinction matters for fleet design — lean into survivability (armor modules), not firepower. Plan accordingly: stay peaceful early, and avoid military confrontations before your gene splicing comes online.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">DICTATORSHIP + ECOLOGIST — THE STARTING GOVERNMENT</div>
+          Horatio begins as a Dictatorship under the Ecologist party. Dictatorship gives stability (no election volatility) but has two significant drawbacks: only <strong>2 law slots</strong> (Cravers' Autocracy gets 3; Republic/Federation get more), and <strong>no influence accumulates for any other political party</strong> — meaning when you eventually switch government types, your non-Ecologist parties will be completely undeveloped and you'll have no access to their laws. The government switch tech (Xeno-Anthropology, Tier 3 Empire Development) arrives in the mid-game; at that point, your other parties have zero experience. Switching to Republic or Federation gives you more law slots and influence bonuses, but you'll need time before the other parties level up enough to offer meaningful laws.
+          <br><br>
+          <strong>Recommended path:</strong> Stay Dictatorship + Ecologist through the early game for stability and the "Hardship Ready" colonization law. Switch to Republic or Federation in the mid-game when the Ecologist influence base is strong enough to maintain dominance and you want the extra law slots. Never abandon Ecologist as your dominant party if you want the any-planet colonization law active.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">HORATIO IN ONE SENTENCE</div>
+          Survive the early game with a passive food-focused expansion, assemble genetic material from as many factions as possible, and unleash a population type in the mid-game whose per-pop FIDSI output makes every other faction look like they forgot to upgrade their people.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">TRANSCRIPT03</span><span class="src-pill">REDDIT02</span><span class="src-pill">TRANSCRIPT04</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T1: SPLICING MECHANICS -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Gene Splicing: How It Actually Works</h2>
+        <div class="topic-subtitle">The mechanics are simple. The implications are not.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🧬</span>
+        <span class="block-title">Splice Mechanics, Cost Escalation, and the Bonus Reduction Formula</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">HOW TO SPLICE</div>
+          Access the gene splicing interface via the DNA icon shortcut (below the strategic resource counter on the main HUD, or through the population screen). The button greys out if you don't have enough population of the target type. Each non-Horatio population type in your empire appears as a potential splice target. Clicking the splice button for a given type consumes a set number of that type's population units (which are deleted permanently) and permanently adds a reduced copy of that type's racial bonus to all Horatio population units empire-wide, immediately.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ESCALATING POP COST — THE CRUCIAL CONSTRAINT</div>
+          The number of population units consumed per splice increases with each successive splice you perform, regardless of which faction you're splicing:
+          <div class="pop-cost-row">
+            <div class="pop-cost-chip cheap">1st splice: 2 pops</div>
+            <div class="pop-cost-chip cheap">2nd splice: 4 pops</div>
+            <div class="pop-cost-chip mid">3rd splice: 6 pops</div>
+            <div class="pop-cost-chip mid">4th splice: 8 pops</div>
+            <div class="pop-cost-chip hard">5th splice: 10 pops</div>
+            <div class="pop-cost-chip hard">6th+: 12, 14… pops</div>
+          </div>
+          This is the most important mechanical constraint in the gene system. The escalation means your first two splices are cheap and should happen relatively early; later splices require you to breed large numbers of the target race before consuming them — a process that can take 20–40 turns per splice. The achievement for splicing 6+ races in one game ("All for One…") is considered notable precisely because reaching splice 6 requires enormous logistical investment.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">BONUS REDUCTION — WHAT YOU ACTUALLY RECEIVE</div>
+          The splice bonus is NOT the full racial trait of the spliced race — it is typically reduced to roughly <strong>1/3 to 1/2</strong> of the vanilla bonus. For example, if a Sophon pop natively grants +4 Science/pop, the splice might grant +1 or +2 Science/pop to Horatio. The exact reduction factor varies by race and bonus type.
+          <br><br>
+          The stacking is additive: after splicing Sophons (+2 Science/pop) and then Mavros (+1 Industry/pop), each Horatio unit produces their native bonuses plus +2 Science plus +1 Industry. With 30 Horatio pops across your empire and three or four good splices, the cumulative output advantage over non-Horatio factions becomes dramatic.
+          <br><br>
+          <span style="color:var(--red);">⚠ VERIFY WITH SOURCE:</span> Exact reduction ratios for each faction's splice bonus are best confirmed from the in-game Genetics screen or from the community-maintained splice bonus tables. Different bonuses (flat vs. percentage) may be reduced differently.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">COLLECTION BONUSES ARE NOT SPLICED</div>
+          Minor faction populations provide two different effects: their per-pop FIDSI bonus (which applies while they live in your systems), and a <em>collection bonus</em> triggered at population thresholds (typically 20 and 50 of that type in your empire). <strong>Splicing does NOT transfer the collection bonus</strong> — you absorb only the FIDSI bonus. This means: if a minor faction has a particularly valuable collection bonus (e.g. +15% Food to systems at 20 pops), you may want to keep some of that population alive alongside your Horatios rather than splicing them to extinction. This is a deliberate strategic tension built into the system.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">FOOD CONSUMPTION PENALTY — THE HIDDEN COST</div>
+          Each splice also adds a food consumption penalty to Horatio population units. The penalty grows with each splice performed. In the early game with few Horatio pops this is negligible; in the late game with 80+ Horatio pops empire-wide and 6 splices completed, the cumulative food drain can be significant — potentially requiring dedicated food-producing systems to offset. This is another reason not to splice every available population reflexively: each splice costs you both the sacrificed pops and ongoing Food per Horatio unit.
+          <br><br>
+          <span style="color:var(--red);">⚠ VERIFY WITH SOURCE:</span> Exact Food penalty per splice needs confirmation. Community discussions confirm the penalty exists and compounds, but specific values vary by patch version.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">TRANSCRIPT03</span><span class="src-pill">REDDIT03</span><span class="src-pill">REDDIT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T2: SAMPLE ACQUISITION -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Sample Acquisition: Getting the Populations You Need</h2>
+        <div class="topic-subtitle">You can only splice what you have. Getting the right races into your empire is half the strategy.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Acquisition Channels and Their Reliability</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Horatio's gene system is gated behind access to alien populations. The game provides several acquisition channels, each with different reliability, speed, and diplomatic cost.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">MINOR FACTIONS — ASSIMILATION</span><span>The most reliable early-game source. Every minor faction system you assimilate brings their entire resident population into your empire. Prioritize assimilating minor factions that have high-value splice targets (see T4 for priority rankings). You can also pay for selective migration — a single pop of their type moves to one of your systems — without full assimilation if you only need breeding stock, not their system. Selective migration is cheaper and preserves diplomacy.</span></li>
+          <li><span class="step-n">MINOR FACTIONS — INFLUENCE ABSORPTION</span><span>Once your cultural influence covers a minor faction's system, you can absorb them peacefully over time. The Supra-Light Content (SLC) technology enables peaceful absorption of minor and even some major factions. This is slower than assimilation but costs no Influence bribe and has no diplomatic friction.</span></li>
+          <li><span class="step-n">CONQUEST</span><span>Invading any system hands you the surviving population. After conquering a major faction's system, you inherit their pop type — which is your only reliable source for major faction splices (Sophon, United Empire, Riftborn, etc.). This is the primary method for late-game "premium" splices. The conquest-hold-splice-evacuate cycle (invade, hold for 13 turns on normal speed to get ownership recognition, splice the populations, then optionally abandon the system if it's beyond your support capacity) is a real technique used by experienced Horatio players.</span></li>
+          <li><span class="step-n">CURIOSITIES</span><span>Investigating curiosities can yield "exile" population units of various faction types. With curiosity detection power 4 (requires tech), you can find major faction exiles — potentially getting rare populations like Vodyani without going to war. This is RNG-dependent but worth prioritizing curiosity investigation throughout the game as an opportunistic channel.</span></li>
+          <li><span class="step-n">RANDOM EVENTS &amp; QUESTS</span><span>Various events deposit population units in your systems unexpectedly. These are low-frequency but free. The Horatio questline itself references interactions with other populations in ways that can introduce new pop types. Check each event's reward carefully.</span></li>
+          <li><span class="step-n">DIPLOMATIC SYSTEM TRADING</span><span>If you've formed an alliance, you can trade systems with allied AI factions. Choosing a system with high population of a desired type is a peaceful way to acquire major faction pops without conquest. Requires strong diplomatic positioning beforehand.</span></li>
+        </ul>
+
+        <div class="trait-block">
+          <div class="trait-label">LUXURY RESOURCES — THE BREEDING ACCELERATOR</div>
+          Each population type has a preferred luxury resource that increases their reproduction rate when applied. The resource preference is shown as an icon in the population screen next to each race's tab. Using the correct luxury on a pop type you're breeding for a future splice can dramatically reduce the time to reach the required count. If you have a small colony with 2 Sophon pops and need to reach 4 for the next splice, applying Sophon-preferred luxury to that system cuts the breeding time significantly. This is not optional micromanagement — it is essential for keeping your splice pipeline on schedule.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">TRANSPORTATION SHIPYARDS — THE POPULATION LOGISTICS TOOL</div>
+          Once your systems reach a certain level, they gain Transportation Shipyards, allowing you to move population between systems. This is critical for Horatio's nursery system strategy (T5): you can concentrate a specific alien pop type in a single system optimized for their growth, breed them to splice threshold, then perform the splice without it being held back by other system conditions. Move populations around proactively rather than letting them grow organically in whichever system they arrived in.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">TRANSCRIPT03</span><span class="src-pill">REDDIT02</span><span class="src-pill">REDDIT03</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T3: GENE SEQUENCER -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">The GENE SEQUENCER Framework</h2>
+        <div class="topic-subtitle">Not just what to splice — but when, in what order, and what you're trading away each time you pull the trigger</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">The Decision Framework for Every Gene Splice</span>
+        <span class="block-tag tag-mech">FRAMEWORK</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="takt-box">
+          <div class="takt-title">THE GENE SEQUENCER PRINCIPLE</div>
+          <p style="font-size:var(--ts_sectionLabel);line-height:1.75;margin:0;">
+            Every splice decision has three components that must be evaluated together: <strong>What</strong> you're adding to each Horatio unit (the splice bonus), <strong>What</strong> you're losing permanently (the sacrificed pops and their collection bonuses), and <strong>When</strong> the splice compounds enough to justify its cost. Splicing the wrong race, or splicing the right race at the wrong time, produces a sub-optimal Horatio. The GENE SEQUENCER is the internal checklist that prevents impulse-splicing — the most common mistake new Horatio players make.
+            <br><br>
+            The central tension: Horatio population units are themselves the most FIDSI-productive individuals in the empire once well-spliced. <em>Every non-Horatio pop you keep alive instead of converting is an opportunity cost.</em> But every pop you sacrifice for a splice that delivers a weak bonus is also an opportunity cost. The GENE SEQUENCER forces you to put a number on both sides before acting.
+          </p>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SEQUENCER STEP 1 — QUANTIFY THE BONUS</div>
+          Before splicing any race, ask: <em>What FIDSI bonus does this race natively produce per pop?</em> You can read this off the homeworld tooltip of any faction you've met, or from the population tab in your own systems. Estimate the splice reduction (~1/2 for common minor factions, up to 1/3 for some major factions — verify in-game). Multiply by your current Horatio pop count. That number is the total bonus you're adding to empire output this turn.
+          <br><br>
+          Example: You have 20 Horatio pops. A Mavros splice adds +1 Industry/pop (after reduction). That is +20 Industry/turn empire-wide, immediately, and it scales with every new Horatio pop born from this point forward.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SEQUENCER STEP 2 — QUANTIFY THE SACRIFICE</div>
+          You are consuming N population units of the target race. Each of those units currently generates its own FIDSI output in whichever system it occupies. Calculate the FIDSI you lose from removing them. Additionally, check whether those pops are close to a collection bonus threshold (20 or 50 pops). If you're at 19 pops of a faction and the 20-pop collection bonus is significant, <em>do not splice yet</em> — wait for one more to be born, hit the collection bonus, then splice.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SEQUENCER STEP 3 — EVALUATE TIMING</div>
+          The splice bonus scales with Horatio pop count. Splicing on turn 20 with 8 Horatio pops means the bonus multiplies 8 times. Waiting until turn 40 with 20 Horatio pops means it multiplies 20 times — 2.5× more total output from the same splice. <strong>But</strong> waiting also means foregoing 20 turns of the compounding bonus. The break-even calculation depends on your Horatio growth rate and the size of the bonus.
+          <br><br>
+          General heuristic (from community sources): splice once your Horatio count exceeds 10–12 in a concentrated system (home system or main colony). Before that threshold, the compounding payoff is too thin relative to the sacrificed alien pops' current output.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SEQUENCER STEP 4 — ASSESS DOWNSTREAM AVAILABILITY</div>
+          After splicing, that population type is potentially extinct in your empire (unless you kept surplus pops). Ask: <em>Can I still get more of this type later, if needed?</em> For minor factions you've assimilated, re-acquiring them requires either a new minor faction of the same type or military action. For major faction types, you'd need to conquer another system. Some races (Vodyani, Umbral Choir, Riftborn) are so hard to acquire that you should never splice them impulsively — save them for a planned, high-pop-count moment when the bonus multiplies maximally.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PRACTICAL SEQUENCER DECISION TABLE</div>
+          <table style="width:100%;border-collapse:collapse;font-size:var(--ts_sectionLabel);">
+            <thead>
+              <tr style="border-bottom:1px solid var(--border);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:var(--ts_sectionTitle);">
+                <th style="text-align:left;padding:6px 8px;">SITUATION</th>
+                <th style="text-align:left;padding:6px 8px;">DECISION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:6px 8px;">Horatio count &lt; 10, strong alien bonus available</td>
+                <td style="padding:6px 8px;color:var(--gold);">Wait. Let Horatio grow first.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:6px 8px;">Target race at 19 pops, 20-pop collection bonus is good</td>
+                <td style="padding:6px 8px;color:var(--gold);">Wait 1 more birth cycle, collect bonus, then splice.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:6px 8px;">Target race very hard to re-acquire (Vodyani, Riftborn)</td>
+                <td style="padding:6px 8px;color:var(--red);">Hold. Only splice when Horatio count is 20+.</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--border);">
+                <td style="padding:6px 8px;">Target race easy to re-acquire (minor faction), large Horatio count</td>
+                <td style="padding:6px 8px;color:var(--green);">Splice. The cost is recoverable.</td>
+              </tr>
+              <tr>
+                <td style="padding:6px 8px;">Splice bonus is food or flat-minor (only +1 food/pop)</td>
+                <td style="padding:6px 8px;color:var(--red);">Skip. The food penalty from the splice may exceed the bonus.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT01</span><span class="src-pill">REDDIT02</span><span class="src-pill">REDDIT03</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T4: SPLICE PRIORITY RANKING -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Splice Priority Ranking: Who to Target and Why</h2>
+        <div class="topic-subtitle">Not all genes are equal. The early splices shape your Horatio permanently.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">Faction Splice Tiers by FIDSI Value</span>
+        <span class="block-tag tag-mech">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The gene splicing community has converged on a clear priority hierarchy based on which FIDSI bonuses compound best with Horatio's large population counts. Science and Industry are universally the most valuable; Food and Approval bonuses are situational. Military bonuses (manpower, combat stats) are niche — they bypass the per-pop FIDSI framework entirely, which makes them hard to evaluate against economic splices.</p>
+
+        <div class="splice-tier">
+          <div class="splice-tier-row">
+            <div class="splice-tier-label s">S-TIER</div>
+            <div class="splice-tier-body">
+              <strong>Industry and Science providers.</strong> <strong>Mavros</strong> (minor, +Industry per pop — widely cited as best minor faction in the game for Horatio), <strong>Sefaloros</strong> (minor, +Industry or similar — specifically called out alongside Mavros by community guides), <strong>Remnant</strong> (minor, +Science/Industry combo — available as a guaranteed random event in most games, so expect them). These provide the two most universally useful FIDSI resources regardless of victory path. A Mavros splice at 15 Horatio pops produces +15 Industry/turn empire-wide and scales with every birth after that. Seek these races from the first minute of scouting.
+            </div>
+          </div>
+          <div class="splice-tier-row">
+            <div class="splice-tier-label a">A-TIER</div>
+            <div class="splice-tier-body">
+              <strong>High-value Dust providers and flexible major faction splices.</strong> Any pop with meaningful Dust/pop output. Also: Sophons (+Science/pop, hard to acquire without war but extremely powerful — each Horatio pop gaining Science from a Sophon splice turns your empire into a tech giant). Cravers are controversial: their splice provides a percentage FIDSI bonus on high-value planets, which can be exceptional with many Horatios concentrated on rich worlds, but the acquisition is difficult and Cravers tend to be hostile. Riftborn: extremely powerful splice bonus if you can get them (Science/Industry type bonuses), but acquiring Riftborn population without conquest is nearly impossible.
+            </div>
+          </div>
+          <div class="splice-tier-row">
+            <div class="splice-tier-label b">B-TIER</div>
+            <div class="splice-tier-body">
+              <strong>Approval/Happiness providers — essential for late-game Ecstatic maintenance.</strong> <strong>Kalgeros</strong> (common minor faction, +Approval) is specifically called out in the community guide as <em>essential</em>: in a fully Horatio empire (all systems at max pop with the overcolonization penalty accumulating), the Kalgeros splice's Approval bonus per Horatio pop keeps systems at 100% Ecstatic, directly neutralizing overcolonization's impact. You will be overcolonized heavily as you expand — Kalgeros splice is the structural answer. Z'vali splice (+Happiness per Horatio, after reduction) provides a similar role but is more situational as a 2nd or 3rd splice slot.
+            </div>
+          </div>
+          <div class="splice-tier-row">
+            <div class="splice-tier-label c">C-TIER / SKIP</div>
+            <div class="splice-tier-body">
+              <strong>Flat +1 Food providers and most military bonuses.</strong> Food splices add a flat bonus to Horatio Food output per pop, but the Food consumption penalty added by splicing can exceed this bonus — resulting in a net negative Food situation. Community consensus: never splice a faction whose sole bonus is +1 Food. Military bonuses (manpower generation, combat stats) are situational and never replace an economic splice for a player pursuing Science, Economic, or Wonder victory. Manpower splices may have value for Annihilation victory playthroughs — but are almost universally the last priority.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE COMMON MISTAKE — KITCHEN SINK SPLICING</div>
+          New Horatio players see alien populations accumulating and splice everything the moment they have enough. This is a mistake. The escalating cost means your 5th and 6th splices require 10 and 12 pops respectively — enormous investments in breeding. If those slots are spent on C-tier bonuses that were spliced impulsively in the early game, you cannot reclaim those splice slots for premium bonuses later. Map your intended splice sequence before the game begins (or by turn 15 once you've scouted your neighborhood), and only deviate if an exceptional acquisition opportunity arises.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT02</span><span class="src-pill">REDDIT03</span><span class="src-pill">TRANSCRIPT03</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T5: NURSERY SYSTEMS -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Nursery Systems and the Monolith Goal</h2>
+        <div class="topic-subtitle">How to breed alien populations efficiently, and why the endgame is pure Horatio</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🌱</span>
+        <span class="block-title">Population Management Techniques for the Gene Pipeline</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">HOW POP GROWTH ACTUALLY WORKS — POINT-BASED, NOT CHANCE-BASED</div>
+          Population growth in ES2 is deterministic, not random. Each pop type in a system accumulates growth points every turn. The type with the most points when the threshold is reached produces the next birth. Points are <strong>not based on how many pops of that type you have</strong> — they accumulate at a flat rate per turn, doubled by applying that type's preferred luxury resource. This has a critical implication:
+          <br><br>
+          <strong>Parallel breeding:</strong> If you want to multiply Mavros rapidly, send 1 Mavros pop to 4 different systems on 4 consecutive turns. Now 4 systems are each accumulating Mavros growth points simultaneously. You can get 4 Mavros births per turn cycle instead of 1, without needing multiple Mavros per system. This is the core of efficient alien pop production.
+          <br><br>
+          <strong>Luxury acceleration:</strong> Apply the target race's preferred luxury to whichever system is breeding them. This doubles their point accumulation per turn, halving the time to next birth. With the right luxury, a 4-system parallel breeding operation can get you to splice threshold faster than you'd believe.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE NURSERY SYSTEM — DEDICATED ALIEN BREEDING COLONIES</div>
+          A nursery system is a colony where you concentrate a specific alien population to breed it up to splice threshold. The optimal setup: a system with only two pop types — the target alien type, and enough Horatio to occupy the spaceport slots when needed. Feed the alien type their preferred luxury resource to double their growth rate. Because the system has only two types, you can predict and control which type births next.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE SPACEPORT SHUFFLE — PREVENTING UNWANTED BIRTHS</div>
+          Since growth is point-based, you can't directly tell the game which type to birth next — but you can prevent a specific type from being eligible by removing them from the planet. The trick: when a pop type is about to birth that you don't want (e.g., more Horatio when you need another Mavros), move those pops into the spaceport temporarily. They leave the planet surface, which resets their point eligibility. After the Mavros births, return the Horatios to the planet. You'll need to check each turn near the threshold and repeat this shuffle if needed. Without this technique, you'll spend extra turns waiting for the right births in a mixed-population system.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE MONOLITH GOAL — ALL HORATIO, EVERYWHERE</div>
+          The endgame population ideal for Horatio is a fully monolithic empire of Horatio pops carrying every spliced bonus. Each alien pop type still present in your systems is producing weaker FIDSI than a well-spliced Horatio would. Once you've completed all your planned splices, begin systematically eliminating non-Horatio pops: concentrate them in dedicated systems, splicing the last ones when possible, and using the <strong>Genetic Alteration Lab</strong> improvement (Tier 4 Empire Development research) — it converts non-Horatio pops in the host system to Horatio each turn for an Industry cost. Note: it doesn't let you choose which alien type; only build it on systems where you've already spliced the remaining alien pop types.
+          <br><br>
+          <span style="color:var(--red);">⚠ NOTE:</span> Be careful with pops whose collection bonuses (at 20 or 50) you're still benefiting from. Don't eliminate a pop type until you've confirmed the collection bonus is either no longer relevant or you've already surpassed that threshold benefit period.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE QUESTLINE INTERACTION — "SYSTEMS ONLY WITH HORATIO"</div>
+          At least one branch of the Horatio questline requires systems containing only Horatio population. If you've aggressively mixed alien pops everywhere, this quest condition becomes difficult. When you know a quest branch is active, designate one or two home-region systems as pure Horatio colonies and avoid introducing alien breeds there. Your nursery systems (alien-heavy by design) should be on the frontier, not near your political center where quest conditions are likely to be evaluated.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT03</span><span class="src-pill">TRANSCRIPT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T6: THE Z'VALI QUESTION -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">The Z'vali Question: When to Splice Your Starting Companion</h2>
+        <div class="topic-subtitle">The most common early-game mistake. Z'vali are useful alive. Read this before touching the splice button on turn 12.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">❓</span>
+        <span class="block-title">Z'vali Role, Splice Value, and the Correct Timing Window</span>
+        <span class="block-tag tag-mech">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT Z'VALI ACTUALLY DO</div>
+          Z'vali are Horatio's default starting minor faction companion (the game begins with 2 Horatio + 1 Z'vali on your home planet). Their native racial bonus is <strong>+3 Science and +2 Happiness per pop</strong>. This is directly relevant to Horatio's early game on two fronts: the Science bonus partially offsets Horatio's weak early science output, and the Happiness bonus contributes to maintaining the mood thresholds where laws (especially "Toys for Boys") become active and beneficial. Starting Approval is already close to the "Happy" threshold — even one Z'vali helps stabilize it.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">WHY THE WIKI STRATEGY GUIDE SAYS: DO NOT SPLICE IMMEDIATELY</div>
+          Z'vali are your only starting alien pop. The moment you splice them, you sacrifice 2 pops — and you only start with 1, so you need to breed them to 2 first anyway. More critically: their living bonuses of <strong>+3 Science and +2 Happiness per Z'vali pop</strong> are doing real work throughout your fragile early expansion phase. Each living Z'vali is contributing 3 Science and 2 Happiness every turn to whichever system they're in. Splicing them gives you a permanent reduced version of that bonus per Horatio pop (roughly +2 Science and +1 Happiness per Horatio after reduction), but costs you the full contribution of those 2 living Z'vali for as long as they would have been alive. The net gain from an early Z'vali splice is small; the cost (losing 2 high-output pops during your vulnerable early phase) is significant.
+          <br><br>
+          The expert guide author states it plainly (at ~turn 22): "Why would you ever sacrifice two population giving you all of that stuff for like eight science and four happiness like total throughout your empire?" — referring to the fact that the splice bonus spread across few Horatio pops is tiny compared to what the 2 living Z'vali would produce while alive.
+          <br><br>
+          Additionally, splice bonuses compound with Horatio count. Splicing Z'vali when you have 5 Horatio gives ~+10 Science and +5 Happiness empire-wide. Waiting until you have 15 Horatio triples that output — and you likely have better alien pops to use your cheap 1st/2nd splice slots on anyway.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE CORRECT Z'VALI SPLICE WINDOW</div>
+          The community consensus: splice Z'vali once you have <strong>4–5 Horatio pops</strong> in your home system and you have acquired a different Approval source (e.g., Kalgeros — a common minor faction minor often available through random events). The reasoning:
+          <br><br>
+          — By then, 4–5 Horatios provide enough per-pop Approval multiplied by the Z'vali splice to match what living Z'vali would have given.<br>
+          — You've bred enough Z'vali (4+ to reach the splice threshold at that point in the splice escalation) that the sacrifice is manageable.<br>
+          — Preferably, save Z'vali as your 1st or 2nd splice (cheap at 2 pops), and time it to after you've verified your Approval won't drop below 70 when you remove the living Z'vali contribution.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE QUESTLINE CAVEAT</div>
+          At least one Horatio quest branch can be interpreted as requiring populations you haven't spliced to extinction yet — there are quests referencing your minor faction populations still being present. The guide from the community forum explicitly notes: the existence of such quests implies developers intended Horatio to have living alien pops for significant portions of the game. Do not rush the genocide of all non-Horatio life in your empire just because the endgame state is monoculture — it conflicts with your own questline.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT02</span><span class="src-pill">TRANSCRIPT03</span><span class="src-pill">REDDIT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T7: QUESTLINE & SENATE -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Questline, Senate Politics &amp; Victory Paths</h2>
+        <div class="topic-subtitle">The questline rewards are substantial — one branch delivers one of the best fleet heroes in the game.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">Quest Branches, Senate Strategy, and Recommended Victory Paths</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">QUESTLINE OVERVIEW — THREE BRANCHES, ONE CLEAR WINNER</div>
+          The Horatio questline splits into three distinct paths at the first chapter: <strong>Ecologist</strong> (Food buildings), <strong>Religious</strong> (Influence buildings), and <strong>Industrialist</strong> (Industry buildings). The expert guide and community consensus agree: <strong>always take the Industrialist path</strong>.
+          <br><br>
+          The Industrialist chapter 2 reward is a flat <strong>+25 Industry on all your systems</strong>, empire-wide, immediately. This is equivalent to the "Thinkers and Tinkers" minor faction perk but permanent and affecting every system simultaneously. For Horatio, who struggle with Industry throughout the early game (no Xeno-Industrial Infrastructure advantage, +25% ship costs), this is the most impactful single reward available. It's not hard to unlock: you must build 5 ships with at least 59 Defensive Power, which is achievable by turn 15–20 with basic combat ship designs.
+          <br><br>
+          The Industrialist path also unlocks the <strong>Museum of Manual Efforts</strong> and <strong>Hyperhelix Dynamo</strong> — unique system improvements that compound with population count throughout the game.
+          <br><br>
+          After completing the ship-building branch condition, the quest <strong>spawns two enemy Horatio Prime fleets</strong> that you must defeat. These ships are legitimately strong. Position your military before completing the condition, not after. Have your fleet assembled at a defensible system before triggering this phase.
+          <br><br>
+          The Ecologist and Religious branches give a hero (Named Five, Level 5 Guardian) and an outpost. These are decent but compare unfavorably to +25 Industry empire-wide that the Industrialist path provides at the same stage.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SENATE STRATEGY — DICTATORSHIP TO REPUBLIC TRANSITION</div>
+          Horatio starts as a Dictatorship under 4 Ecologist representatives. Dictatorship's main value is stability: no election cycles means no law disruption during your vulnerable early game. The "Hardship Ready" Ecologist power law (colonize all non-gas planets) is critical throughout the game — never lose Ecologist dominance if you want this law active.
+          <br><br>
+          The community debates switching to Republic. Republic provides meaningful election-cycle Influence generation and bonus to laws, but happiness management is "relatively easy for Horatio" — the gene system can provide Approval splice bonuses, and Ecologist base law doesn't gut Horatio output the way it does for some factions. Switching to Republic + keeping Ecologist as dominant party provides the best of both: election Influence and planet flexibility.
+          <br><br>
+          Key laws to target:
+          <br><br>
+          <strong>Ecologist:</strong> "Hardship Ready" (any planet colonization) — keep this active permanently.<br>
+          <strong>Early mid-game:</strong> "Cram Exam Act" (Science boost) — useful during the initial expansion sprint.<br>
+          <strong>Mid-to-late:</strong> Gene-boosting laws that multiply output from your spliced population — specific law names vary; check the Senate screen for laws that reference "Original Empire Population" bonuses as these are Horatio-specific advantages.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">VICTORY PATHS FOR HORATIO</div>
+          Horatio's gene system makes them competitive on multiple victory types, but the best path depends on your splice sequence:
+          <br><br>
+          <strong>Science Victory:</strong> Ideal if you've prioritized Science splices. With 30+ Horatio pops each producing +2 Science/pop from spliced bonuses plus their native Science output, your research speed can outpace any other faction from turn 50 onward.<br>
+          <strong>Economic Victory:</strong> Viable with Dust + Industry splices. Horatio generate strong Food → population → FIDSI cycles and can accumulate Dust rapidly once the gene engine is running.<br>
+          <strong>Conquest/Annihilation:</strong> Horatio can pursue conquest aggressively in the late game using their fleet hero (questline reward) and the manpower advantage of a large Horatio population. Their ships are expensive individually but strong for their class. The "coordinator fleet siege" strategy (mass coordinators with manpower-dump modules to reduce system manpower to 0 before invasion) is a documented and effective technique.<br>
+          <strong>Score Victory:</strong> Horatio's population output naturally generates score advantage in long games. If the endgame is approaching and you're ahead on points, switching focus to score optimization is legitimate.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">TRANSCRIPT03</span><span class="src-pill">REDDIT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T8: SHIPS -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Ships &amp; Fleet Philosophy</h2>
+        <div class="topic-subtitle">Individually stronger than they look. Collectively expensive to produce. Compensate with multi-slot flexibility.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Horatio Hull Analysis and the 20% Penalty Problem</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">THE 25% COST PENALTY — AND THE REAL COMPENSATION</div>
+          All Horatio ships cost 25% more Industry than equivalent hulls from other factions. This is not a small penalty — at 206 Industry per early combat ship vs. ~160 for comparable factions, you're running ~30% behind on fleet production tempo. The sole real compensation is the hidden <strong>+10% HP on all hulls</strong>. The trait tooltip also implies a weapon damage bonus, but community testing shows this does not apply in practice — Horatio ships are tankier than their HP value suggests, but they do not hit harder than faction equivalents. Design philosophy follows from this: lean into survivability, not firepower. Armor modules compound the HP advantage; damage amplifiers are worth less than on other factions because the raw damage cap is the same.
+          <br><br>
+          On top of the cost issue, Horatio hulls have <strong>one fewer module slot</strong> than equivalent hulls from every other faction (with very few exceptions). An attacker that every other faction gets with 5 slots, Horatio gets with 4. A hunter other factions get with 8, Horatio gets with 7. This is not compensated by versatility — mixed-type slots help you adapt, but they can't conjure a missing slot. The gap is real and persistent through the tech tree.
+        </div>
+
+        <div class="ship-grid">
+          <div class="ship-card">
+            <div class="ship-name">MARQUIS-CLASS</div>
+            <div class="ship-role">ATTACKER (SMALL)</div>
+            <div class="ship-body"><strong>4 module slots</strong> — 1 fewer than every other faction's attacker (standard is 5+). Slots: 1 broadside weapon, 1 weapon/defense (broadside), 1 top weapon/defense/utility, 1 defense/utility. Three potential weapon mounts on 4 slots is actually not bad — but the defensive capacity is thin (1 slot). Community recommendation: skip defense entirely and run it as a glass cannon with a damage amplifier, relying on the +10% HP bonus for survivability. Best use: early pirate clearance. Upgraded version gains extra slots and top-mounted weapons — potentially the tankiest attacker in the game, but not worth upgrading when Industry is better spent elsewhere.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">BARO-CLASS</div>
+            <div class="ship-role">PROTECTOR (SMALL)</div>
+            <div class="ship-body"><strong>4 module slots</strong> — again 1 fewer than standard. Slots: 1 utility (dedicated), 1 defense/utility, 2 defense/weapon (one top, one broadside). The beauty of this ship is its versatility: fill it with utility for out-of-combat support, or defense modules to tank, or even weapons for some damage contribution. Upgraded: gains a dedicated defense, a dedicated utility, and a defense/weapon mix — one of the tankiest protectors in the game when upgraded, with the HP bonus amplifying further. Great for sieges (invasion/boarding pod platform) and as a support anchor in early fleets.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">IMPOSER-CLASS (DUCK)</div>
+            <div class="ship-role">HUNTER (MEDIUM)</div>
+            <div class="ship-body"><strong>7 module slots</strong> — 1 fewer than standard (8). Slots: 2 dedicated weapon, 1 top weapon, 3 blank (weapon/defense/utility), 1 defense/utility. Up to 5 weapon mounts total — matching the most heavily armed hunters in the game (tied with Hissho and Riftborn). Two viable builds: (1) glass cannon with damage amplifier + max weapons, or (2) <strong>boarding pod spam</strong> — 5 boarding pod launchers turn this into a crew-stealing machine. The boarding pod build is particularly effective since the enemy needs flak specifically to counter it, and most early fleets don't have it. Upgraded: gains a large top weapon slot, defense slot, and utility — becomes competitive across most matchups.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">ARCHDUKE-CLASS</div>
+            <div class="ship-role">COORDINATOR (MEDIUM)</div>
+            <div class="ship-body">1 blank slot + 1 weapon/squadron/utility + 2 defense/utility + 2 dedicated utility + 1 dedicated defense. The standout feature: this ship can fit <strong>more utility/support modules than any other coordinator in the game</strong>. Out of combat it's unmatched as a support platform. In combat: run it as a tank (the HP bonus + defense modules make it very hard to kill) or as a pure invasion ship (pack invasion modules — it has the slots for it). Upgraded version gains a large weapon slot and extra utility, becoming a capable weapons platform too if desired. Core Horatio siege tool when loaded with boarding pods or invasion modules.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">REVEALER-CLASS (COMMS)</div>
+            <div class="ship-role">EXPLORER / SCOUT</div>
+            <div class="ship-body">Horatio's explorer starts with <strong>4 probes and 6 movement speed</strong>, and the starting hero gives +2 movement to any fleet he joins. Refitting: remove any weapon, max out engines and probes. With hero attached: 8 movement speed and 6 probes, generating 2 probes recovered per turn because two ships are both recovering. This is <strong>the best scouting ship in the game</strong> — faster and more probe-heavy than even the Lumeris. Invest in it from turn 1. Early scouting defines which minor factions you reach first and which curiosities you monopolize for XP and resources. Every curiosity your hero investigates is both XP and potential exile population.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">BEAUTIFIER-CLASS (CHRISTIE)</div>
+            <div class="ship-role">COLONY SHIP</div>
+            <div class="ship-body">3 defense/utility slots — the only job is to colonize and move fast. Refit with maximum engines. Unlike the Lumeris (who have no colony ship), Horatio uses this standard colonizer — but benefits from the Ecologist law allowing colonization of any non-gas planet type without the relevant tech. The penalty for doing so without tech is a <strong>50% FIDSI reduction</strong> on the base output of that planet. Use the Ecologist perk for expanding within your comfort zone first (T0–T1 planet types); reserve the "colonize anything" advantage for specific high-value systems with resources or strategic positioning that justify the FIDSI hit until you research the proper tech.</div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE MULTI-SLOT ADVANTAGE — COUNTER-EQUIPPING OPPONENTS</div>
+          Because most Horatio module slots accept multiple module types (weapon OR defense in the same slot), you can observe an enemy fleet composition on approach and refit your ships to specifically counter their build. An enemy fleet heavy on shields → load your ships with beam/laser weapons (shield-piercing). An enemy fleet with heavy armor → switch to kinetic slugs. No other faction's ships offer this level of in-game adaptability for countering specific opponents. It partially compensates for having fewer slots than some faction equivalents.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">TRANSCRIPT04</span><span class="src-pill">TRANSCRIPT03</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T9: HEROES -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">Hero Management</h2>
+        <div class="topic-subtitle">The starting Horatio hero skill choice shapes your entire early game. Choose carefully.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">Starting Hero Priorities and the Questline Hero</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">STARTING HERO — UNIQUE SKILLS</div>
+          The Horatio starting hero is an Ecologist Overseer with unique faction-specific skills: <strong>+1 Command Point</strong> on fleets they lead (helpful for keeping small early fleets combat-effective) and <strong>+1 FIDSI per Original Empire Population</strong> on systems they govern. That second skill is Horatio's early-game lever — with 3–4 Horatio pops in the home system, the governor hero already adds 3–4 to each FIDSI category. This scales with population: at 10 Horatios, it's +10/turn to all FIDSI types from a single hero skill.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">EARLY HERO SKILL PRIORITY — EXPLORATION FIRST, THEN TRANSITION</div>
+          Per the community strategy guide: initially, assign the hero to the Explorer fleet (not as system governor) to gain experience through curiosity investigation. The starting governor bonus is negligible with 3 pops. The curiosity XP is far more valuable — it levels the hero faster and the investigations yield Dust, Science, and sometimes population exiles.
+          <br><br>
+          Recommended level-up targets:
+          <br><br>
+          — Level 2: "Efficiency Aficionado" (+20 Industry on System, +20 per relevant FIDSI) — immediately impactful when you transition back to Governor<br>
+          — If starting system has fertile planets: "Farming Logistics" (+20 Food on System, +20 per Farming building) — feeds Horatio's population machine<br>
+          — Otherwise: "Optimal Operations Expert" (+2 all FIDSI, +2/system) — reliable flat bonus<br>
+          — "Clone Wares" (+10% Science, +10 Dust) — niche but useful if your starting system is science-heavy<br>
+          <br>
+          Transition the hero back to home system Governor once they hit Level 2 and you've mapped enough of the local galaxy for expansion decisions.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE QUESTLINE HERO — YOUR MILITARY CENTERPIECE</div>
+          Completing the Horatio questline rewards a Level 5 Militarist Guardian hero with skills optimized for fleet command. This hero is described in community sources as one of the most powerful fleet commanders in the game — they are the primary reason to prioritize questline completion by the mid-game. Build your military strategy around this hero's arrival: time your fleet buildup so that when the questline hero arrives, you immediately have a fleet worthy of their command rating.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">TRANSCRIPT03</span><span class="src-pill">TRANSCRIPT04</span><span class="src-pill">REDDIT02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T10: FIRST 40 TURNS PLAYBOOK -->
+  <div class="topic" id="t10">
+    <div class="topic-header">
+      <div class="topic-num">10</div>
+      <div>
+        <h2 class="topic-title">First 40 Turns: The Horatio Playbook</h2>
+        <div class="topic-subtitle">The gene engine takes time to come online. These 40 turns are about building the pipeline, not winning fights.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb10a">
+      <div class="block-header" onclick="toggle('cb10a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Turn-by-Turn Opening Framework</span>
+        <span class="block-tag tag-mech">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURN 1</div>
+            <div class="tl-body">
+              <strong>Hero to Revealer fleet. Activate "Toys for Boys."</strong> The Ecologist law "Toys for Boys" (available from the start) costs −10% Science for your empire but grants +15% Science for being Happy — net +5% Science when Happy, which you should be. Activate it immediately. Refit your hero (give him an engine module to match the Revealer's 6 movement, then add probes to the fleet for a combined 6 probes and 8 movement). Attach hero to the Revealer fleet. Build a second empty Revealer hull in your queue — you'll upgrade it with Dust to save Industry. Research toward curiosity detection (Baryonic Shielding or early science era unlock to access higher-tier curiosities). You cannot use Xeno-Industrial Infrastructure — Horatio starts on a Mediterranean, which doesn't qualify. Instead queue <strong>Sustainable Farms</strong> (Food building) as first improvement to accelerate population growth. The goal of turn 1 is: maximum scout mobility, maximum population growth, minimum Industry waste on things that don't immediately pay off.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 1–10</div>
+            <div class="tl-body">
+              <strong>Scout aggressively. Build a second scout.</strong> With two Revealers + hero, you cover ground faster than nearly any other faction. Priority intelligence: locate all minor factions, especially <strong>Mavros, Sefaloros, Kalgeros, and Remnant</strong>. These are your core splice targets. When you find a minor faction system, investigate all their curiosities <em>before</em> praising them — each curiosity builds relationship faster and you gain the XP regardless of diplomatic status. Don't praise more than needed at once (the relationship decays to a lower cost for the next praise if you wait).
+              <br><br>
+              <strong>Colony ship direction:</strong> Head toward the nearest Tier 0 or Tier 1 planet system (Ocean, Jungle, Terran, Savannah). Do not colonize hostile planet types without tech — the 50% FIDSI penalty makes them liabilities early. Horatio's colonize-anything Ecologist perk is most useful for securing specific resource deposits, not general expansion.
+              <br><br>
+              <strong>Curiosity exiles:</strong> Investigating curiosities can yield exile populations deposited in your nearest system. Even a manpower-only exile is a breeding-capable alien pop. With maximum curiosity detection power researched, you can find major faction exiles — occasionally even Vodyani without going to war.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 8–15</div>
+            <div class="tl-body">
+              <strong>Minor faction assimilation pipeline begins.</strong> Prioritize completing minor faction quests over influence-buying when possible — Development Grants (from completing their quest) provide Science, Dust, and Manpower bonuses for 10–15 turns before you need to renew (15 luxuries). These ongoing bonuses are often more valuable than assimilating immediately. Only assimilate once you're confident no AI can outbid you for that minor faction, or if you specifically need their pop type in your empire right now for breeding.
+              <br><br>
+              <strong>Remnant event:</strong> Community sources confirm that a Remnant pop is available as a <em>guaranteed random event</em> in most games. Watch for the event notification — Remnant are an S-tier splice target (+Science/Industry). When they arrive, immediately begin breeding them in a dedicated system.
+              <br><br>
+              <strong>Colony 2 placement:</strong> Each new outpost pulls approximately <strong>40% of your food production</strong> from your nearest connected system as supply. Check the math before placing: if your main system produces 80 Food/turn, one outpost draws ~32. Two outposts can consume 80% of your surplus, causing pop shrinkage. Horatio's high Food output (the core racial trait) makes them more capable of sustaining two simultaneous outposts than most factions — but don't exceed your surplus. Ecologist perks let you pick any planet type; pick one that doesn't need colonization tech to avoid the 50% FIDSI penalty.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 15–25</div>
+            <div class="tl-body">
+              <strong>First alien pop acquisition.</strong> By now you should have assimilated 1–2 minor factions, giving you alien pop types. Transport them to a designated nursery system (your second or third colony works well). Set up the spaceport shuffle to breed them efficiently. Apply their preferred luxury resource.
+              <br><br>
+              <strong>Z'vali splice evaluation:</strong> If you have 4–5 Horatio pops in your home system and your Approval is stable (above 70 without Z'vali's help), this is the window to splice Z'vali. Do the GENE SEQUENCER check first: confirm the sacrifice of 2 Z'vali doesn't drop your home system Approval below 70. If it does, wait until another Approval source is in place (Kalgeros or a law).
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 25–35</div>
+            <div class="tl-body">
+              <strong>First major splice target ready.</strong> Ideally you've bred 2+ of your priority S-tier alien (Mavros, Pulsos, or similar) to splice threshold. This is your first truly game-changing splice. Apply GENE SEQUENCER: verify Horatio count is 10+, confirm the collection bonus threshold situation, then pull the trigger. The Industry or Science bonus you add now begins compounding on every Horatio birth for the rest of the game.
+              <br><br>
+              <strong>Questline management:</strong> Check which quest conditions are active. The early Horatio quests tend to be achievable through normal play (population growth, system development). Consciously hit these milestone conditions — the questline hero reward in the mid-game is worth planning around.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 35–50</div>
+            <div class="tl-body">
+              <strong>Gene engine online.</strong> With 1–2 splices complete and 15–25 Horatio pops, your per-turn FIDSI output begins visibly outpacing neighbors of the same colony count. This is also when you should be building your nursery pipeline for splice #3 — identify your next target, breed them in isolation, and plan the splice timing for around turn 50–60 when your Horatio count is 20+.
+              <br><br>
+              <strong>Military transition:</strong> If the questline hero has arrived, begin assembling a proper combat fleet around them. Research Military Tier 2 for coordinator slugs (manpower dump modules) — this unlocks the siege swarm technique that is Horatio's most efficient system-capture method. Do not try to fight pitched battles against dedicated military factions with your 20%-cost ships in equal numbers; instead use the siege swarm to capture systems while their fleet is away.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE HORATIO TIPPING POINT</div>
+          Community sources consistently describe a subjective "tipping point" around turn 50–70 in Horatio games where the compounding gene bonuses and population count suddenly make your empire feel unbeatable. This is real and is the faction's design. If you're playing Horatio and feeling behind at turn 40, do not panic — you are probably on schedule. The goal of turns 1–40 is to not die and to set up the engine. The engine pays out at turns 40–80. Everything after that is running a winning position.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">TRANSCRIPT03</span><span class="src-pill">REDDIT03</span><span class="src-pill">REDDIT02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Horatio-specific decisions — splicing, timing, population management, fleet deployment</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac02';
+  const TOTAL = 11;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "Turn 18. Your home system has 6 Horatio pops and 2 Z'vali pops. Your current Approval is 72 (Happy, barely). The Z'vali are providing +2 Approval to the home system from their per-pop bonus. You have not yet performed any splice. A Mavros minor faction (S-tier splice: +Industry/pop) lives 3 lanes away; you've just made them Friendly and received 1 Mavros pop on your second colony. You could splice Z'vali right now (costs 2 pops, which you have).",
+      q: "Should you splice Z'vali now?",
+      opts: [
+        "Yes — Z'vali is your first splice (only costs 2 pops), and the sooner you add Approval to every Horatio, the better.",
+        "No — the 2 living Z'vali are contributing +2 Approval total to your home system. Splicing them would remove that living Approval contribution, dropping you from 72 to ~70 — dangerously close to the Happy threshold with no buffer. Additionally, Mavros (+Industry) is a higher-priority S-tier splice that you should target first. Wait until you either have a Kalgeros or other Approval source to replace the Z'vali contribution, or until your Horatio count is larger so the splice-bonus Approval per Horatio exceeds what the living Z'vali provided.",
+        "Yes, but only splice 1 Z'vali, not both.",
+        "No — you should never splice Z'vali because they are your starting population and splicing any starting population is always a mistake."
+      ],
+      correct: 1,
+      explain: "The living Z'vali are doing real work: they're holding your Approval at 72, which is above the Happy threshold (70). Removing them without a replacement Approval source risks dropping to 69 — below Happy — costing production multipliers. The splice bonus would give +Approval per Horatio pop (reduced from Z'vali's native bonus), but with 6 Horatio, the splice might add +6 Approval units split empire-wide while the living Z'vali were concentrating their bonus in the home system. More importantly, Mavros is the S-tier splice you should be targeting. Save your 1st splice slot (only 2 pops cost) for the Mavros when it's ready — don't spend it on Z'vali while your Approval is precarious."
+    },
+    {
+      scenario: "Turn 30. You've completed your first splice (Mavros, +1 Industry/pop to all Horatio). You now have 14 Horatio pops empire-wide. You've recently conquered a Sophon border system and have 4 Sophon pops available (Sophon splice: +2 Science/pop to all Horatio after reduction). Your 2nd splice requires 4 pops — exactly what you have. You could splice Sophons this turn.",
+      q: "Is this the correct moment to splice Sophons?",
+      opts: [
+        "Yes — you have exactly the required pops, the splice bonus is excellent, and every turn you wait is a turn without the Science bonus.",
+        "Yes, but only if you have a nursery system set up to re-acquire Sophon pops in case you need more later.",
+        "Wait and evaluate: with exactly 4 pops, you have zero surplus. Splicing this turn extincts Sophons from your empire permanently. Check whether the 20-pop or 50-pop collection bonus for Sophons is worth preserving, and verify whether you can re-acquire Sophon pops without another conquest. If re-acquisition would require another war (likely, given you just took their border system), consider breeding a surplus of 1–2 Sophon pops first before splicing, so you retain at least some Sophon pops for their collection bonus.",
+        "Never splice major faction populations — they are too valuable to destroy."
+      ],
+      correct: 2,
+      explain: "The GENE SEQUENCER check at Step 4 applies here: after splicing with exactly the minimum, Sophons are gone from your empire forever. The splice bonus is powerful — +2 Science/pop × 14 Horatio = +28 Science/turn immediately. But the collection bonus at 20 Sophon pops (if it's significant for your victory path) is now unreachable. Before pulling the trigger, breed 2 more Sophons in a nursery system (apply their preferred luxury to the conquered system), giving you 6 total — splice 4, keep 2 alive for the collection bonus path and as insurance. The 5–8 turns to breed the surplus is worth the information security. Option A's urgency is real but ignores the extinction risk."
+    },
+    {
+      scenario: "Turn 45. You have 3 splices complete (Mavros +Industry, Sophons +Science, Z'vali +Approval). Your 4th splice would require 8 pops. You have a Remnant minor faction (S-tier: +Science/Industry combo) with 6 pops in your empire, and a Kalgeros minor faction (B-tier: +Approval) with 10 pops. Your Approval is 88 (Ecstatic) and your primary goal is Science Victory.",
+      q: "Which splice target should be 4th in your sequence?",
+      opts: [
+        "Kalgeros — you only have 6 Remnant pops and need 8, so Kalgeros (10 pops available) is immediately actionable.",
+        "Neither — at 8 pops required, 4th splice is too expensive. Stop splicing and focus on converting all non-Horatio pops to Horatio.",
+        "Breed 2 more Remnant pops in a nursery system over the next 8–12 turns, then splice Remnant. The Remnant +Science/Industry splice is S-tier for your Science Victory path. Your Approval is already Ecstatic at 88 — you do not need more Approval from Kalgeros. Spending 8 pops on a B-tier Approval bonus when you're already Ecstatic is a sequencing error. The ~10 turns to breed Remnant to threshold is worth the wait for the superior bonus.",
+        "Splice Kalgeros now for the Approval buffer, then splice Remnant later."
+      ],
+      correct: 2,
+      explain: "This is a pure GENE SEQUENCER Step 1+2 decision: quantify what each splice gives you against your victory condition. Science Victory → Science and Industry bonuses are directly on the critical path. Approval at 88 is already at the Ecstatic multiplier cap — adding more Approval from Kalgeros gives zero additional output while burning one of your increasingly-expensive splice slots on a redundant stat. Remnant, even at 8-pop cost, directly accelerates Science Victory by multiplying every Horatio pop's Science output. The 10-turn breeding delay is a small cost compared to spending 8 pops on a splice that changes nothing measurable in your current situation. Kalgeros would be correct only if your Approval was below 85 and you needed Ecstatic restored."
+    },
+    {
+      scenario: "Turn 55. You have 28 Horatio pops empire-wide, 3 splices complete, and a fully developed nursery system ready. An aggressive neighbor (Cravers) has just declared war. Their fleet of 6 ships is moving toward your frontier system. You have 4 Hunter ships in your empire — 2 at the frontier, 2 at your home system. Your questline hero arrived 5 turns ago but is currently assigned as home system Governor.",
+      q: "What are your immediate military priorities?",
+      opts: [
+        "Reassign the questline hero to the frontier fleet immediately and engage the Craver fleet directly — your Hunters with +10% HP and +10% damage are individually stronger and can win in equal numbers.",
+        "Consolidate all 4 Hunters into one fleet, reassign the questline hero from Governor to fleet command, and position the fleet to intercept on favorable terms. Meanwhile, begin building coordinator ships for the siege swarm — Cravers deplete planets, so capturing their systems quickly is strategically critical. Check whether you have enough Industry to queue 8–12 coordinators now. A Craver war is best ended by taking their core systems fast, not by a defensive war of attrition.",
+        "Immediately splice any available populations to rush toward a Science advantage and out-tech them.",
+        "Offer a peace bribe immediately — Horatio cannot win wars against Cravers due to the ship cost penalty."
+      ],
+      correct: 1,
+      explain: "The questline hero is wasted as a Governor during an active war — their fleet command skills (likely +3 to 5 Command Points) make your 4 Hunters into a significantly more powerful fleet than they'd be under any available admiral. Consolidate, assign the hero to fleet command, and engage. But the deeper strategic point is about war goals: Cravers deplete planets, meaning any system they hold degrades permanently. A defensive war lets them eat your border systems. The correct Horatio response is offensive pressure — use your coordinator siege swarm to raid or capture Craver systems while their main fleet is occupied at your frontier. The Horatio mid-game military technique is asymmetric: don't fight their fleet head-on in equal numbers, siege their infrastructure."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
