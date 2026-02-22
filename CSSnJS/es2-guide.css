@@ -7,6 +7,7 @@
     --border:      #162540;
     --text:        #b8ccE4;
     --text-bright: #ddeeff;
+    --text-dim:        #B8ccE47F;
 
     /* ── Semantic fixed colors (role-based, not accent) ── */
     --green:       #1db96a;
@@ -257,11 +258,12 @@
   .breadcrumb {
     font-family: 'Share Tech Mono', monospace;
     font-size: var(--ts_breadcrumb);
-    color: var(--muted);
+    color: var(--text-dim);
     letter-spacing: 1px;
     margin-bottom: 16px;
   }
   
+  .breadcrumb a, .breadcrumb a:visited   { color: var(--text-bright); text-decoration: none;}
   .breadcrumb span { color: var(--accent); }
   
   .breadcrumb #navHider
