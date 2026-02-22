@@ -826,11 +826,11 @@
   }
 
   
+  .badge-lumeris { background:rgba(var(--vol1-accent-rgb), 0.15); color:var(--vol1-accent); border:1px solid rgba(var(--vol1-accent-rgb), 0.3); }
   .badge-vodyani { background:rgba(var(--vol3-accent-rgb), 0.15); color:var(--vol3-accent); border:1px solid rgba(var(--vol3-accent-rgb), 0.3); }
   .badge-craver  { background:rgba(var(--red-rgb), 0.15);  color:var(--vol2-accent); border:1px solid rgba(var(--red-rgb), 0.3); }
   .badge-riftborn{ background:rgba(var(--vol4-accent-rgb), 0.15); color:var(--vol4-accent); border:1px solid rgba(var(--vol4-accent-rgb), 0.3); }
   .badge-umbral  { background:rgba(var(--vol0-accent-rgb), 0.12);  color:var(--vol0-accent); border:1px solid rgba(var(--vol0-accent-rgb), 0.3); }
-  .badge-lumeris { background:rgba(var(--vol1-accent-rgb), 0.15); color:var(--vol1-accent); border:1px solid rgba(var(--vol1-accent-rgb), 0.3); }
   .badge-horatio { background:rgba(var(--green-rgb), 0.12); color:var(--green); border:1px solid rgba(var(--green-rgb), 0.3); }
   .badge-ue      { background:rgba(var(--vol1-accent-rgb), 0.15); color:var(--vol1-accent); border:1px solid rgba(var(--vol1-accent-rgb), 0.3); }
   .badge-sophon  { background:rgba(var(--vol4-accent-rgb), 0.15); color:var(--vol4-accent); border:1px solid rgba(var(--vol4-accent-rgb), 0.3); }

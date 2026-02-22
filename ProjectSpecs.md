@@ -21,7 +21,8 @@ es2-vol3-heroes.html       ← Vol.3: Heroes
 es2-vol4-diplomacy.html    ← Vol.4: Diplomacy
 es2-vol5-factions.html     ← Vol.5: Standard Factions
 es2-vol6-factions-special.html  ← Vol.6: Special Factions
-es2-FacVol01-lumeris.html  ← Faction deep-dive: The Lumeris (in-progress)
+es2-Fac01-lumeris.html  ← Faction deep-dive: The Lumeris (in-progress)
+index.html                 ← Main page (in progress: at this moment is just a redirect to Vol0)
 ```
 
 The files must follow this subdirectory structure:
@@ -30,7 +31,7 @@ The files must follow this subdirectory structure:
 ./GeneralGuide/           ← All the HTML files that make the volumes of the general guide  live in here
 ./FactionsDeepGuide/      ← All the HTML files that make the faction deep dives volumes live in here
 ```
-Faction deep-dives follow the naming pattern `es2-FacVol-{faction}.html`.
+Faction deep-dives follow the naming pattern `es2-Fac{NN}-{faction}.html`.
 
 ---
 
@@ -311,14 +312,14 @@ COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc
 
 | File | Status | Topics | Notes |
 |------|--------|--------|-------|
-| es2-vol0-exploration.html | Complete | 7 | |
-| es2-vol1-empire.html | Complete | 8 | |
-| es2-vol2-combat.html | Complete | — | |
-| es2-vol3-heroes.html | Complete | — | |
-| es2-vol4-diplomacy.html | Complete | — | |
-| es2-vol5-factions.html | Complete | — | |
-| es2-vol6-factions-special.html | Complete | — | |
-| es2-FacVol01-lumeris.html | In progress | 13 | Compliance-fixed Feb 2026 |
+| es2-vol0-exploration.html | Complete, content awaiting user revision | 7 | |
+| es2-vol1-empire.html | Complete, content awaiting user revision | 8 | |
+| es2-vol2-combat.html | Complete, content awaiting user revision | — | |
+| es2-vol3-heroes.html | Complete, content awaiting user revision | — | |
+| es2-vol4-diplomacy.html | Complete, content awaiting user revision | — | |
+| es2-vol5-factions.html | Complete, content awaiting user revision | — | |
+| es2-vol6-factions-special.html | Complete, content awaiting user revision | — | |
+| es2-Fac01-lumeris.html | In progress | 13 | Compliance-fixed Feb 2026 |
 
 ---
 
