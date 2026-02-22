@@ -22,7 +22,7 @@ es2-vol4-diplomacy.html    ← Vol.4: Diplomacy
 es2-vol5-factions.html     ← Vol.5: Standard Factions
 es2-vol6-factions-special.html  ← Vol.6: Special Factions
 es2-Fac01-lumeris.html  ← Faction deep-dive: The Lumeris (in-progress)
-index.html                 ← Main page 
+index.html                 ← Main page (in progress, waiting for all the deep dives)
 ```
 
 The files must follow this subdirectory structure:
@@ -262,6 +262,8 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 </nav>
 ```
 
+Factions deep dive should not have the two `vol-link` elements in the sidebar, because deep dives are meant to be standalone volumes, and do not have a logical order
+
 ### Common content components
 
 **Callout boxes:**
@@ -333,7 +335,8 @@ COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc
 | es2-vol4-diplomacy.html | Complete, content awaiting user revision | — | |
 | es2-vol5-factions.html | Complete, content awaiting user revision | — | |
 | es2-vol6-factions-special.html | Complete, content awaiting user revision | — | |
-| es2-Fac01-lumeris.html | In progress | 13 | Compliance-fixed Feb 2026 |
+| es2-Fac01-lumeris.html | Complete, content awaiting user revision  | 13 | Compliance-fixed Feb 2026 |
+| es2-Fac02-horatio.html | Complete, content awaiting user revision | — | |
 
 ---
 
