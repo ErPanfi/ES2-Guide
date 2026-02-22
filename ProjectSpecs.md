@@ -79,7 +79,24 @@ Google Fonts link (also required in `<head>`):
 | Vol.5 | `--vol5-accent` | `--vol5-accent-rgb` | Mint #00d4a0 |
 | Vol.6 | `--vol6-accent` | `--vol6-accent-rgb` | Violet #c084fc |
 
-Faction deep-dives use **Vol.6** accent as their base, then may define additional vars (e.g. `--lumeris-teal`) in `:root` pseudoclass of `es2-guide.css` file — but those vars must themselves use RGB triplets rather than raw hex values.
+**Faction identity colors:**
+| Faction | Color var | RGB var | Color |
+|---------|-----------|---------|-------|
+| Lumeris | `--lumeris-color` | `--lumeris-color-rgb` | Gold #e8a020 |
+| United Empire | `--ue-color` | `--ue-color-rgb` | Imperial red #c0392b |
+| Vodyani | `--vodyani-color` | `--vodyani-color-rgb` | Predatory orange #ff6b1a |
+| Riftborn | `--riftborn-color` | `--riftborn-color-rgb` | Cold cyan #00e5ff |
+| Sophon | `--sophon-color` | `--sophon-color-rgb` | Blue #2d8fff |
+| Cravers | `--cravers-color` | `--cravers-color-rgb` | Dark green #1a6b2a |
+| Hissho | `--hissho-color` | `--hissho-color-rgb` | Red #e84040 |
+| Horatio | `--horatio-color` | `--horatio-color-rgb` | Narcissist pink #f0a8d0 |
+| Unfallen | `--unfallen-color` | `--unfallen-color-rgb` | Green #1db96a |
+| Umbral Choir | `--umbral-color` | `--umbral-color-rgb` | Purple #8b5cf6 |
+| Vaulters | `--vaulters-color` | `--vaulters-color-rgb` | Teal #00c9a7 |
+| Nakalim | `--nakalim-color` | `--nakalim-color-rgb` | Pale sacred gold #e8d48b |
+
+
+Faction deep-dives use the corresponding faction identity color as their base, the badges defined in the shared CSS file, and use `--red` for warning blocks (for example: a risk assesment, or a weakness explanation)
 
 ### Per-page `:root` override (required in every file's `<style>`)
 
