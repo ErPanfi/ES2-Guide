@@ -41,9 +41,9 @@
   <div class="nav-item active" onclick="scrollByID('t1')">⚔️ United Empire <span class="nav-check" id="nc1"></span></div>
   <div class="nav-item" onclick="scrollByID('t2')">🔭 Sophons <span class="nav-check" id="nc2"></span></div>
   <div class="nav-item" onclick="scrollByID('t3')">🌿 Unfallen <span class="nav-check" id="nc3"></span></div>
-  <div class="nav-item" onclick="scrollByID('t4')">🌀 Vaulters <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🏛️ Nakalim <span class="nav-check" id="nc4"></span></div>
   <div class="nav-item" onclick="scrollByID('t5')">🪶 Hissho <span class="nav-check" id="nc5"></span></div>
-  <div class="nav-item" onclick="scrollByID('t6')">🏛️ Nakalim <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🌀 Vaulters <span class="nav-check" id="nc6"></span></div>
   <div class="nav-section-label">// Distinctive Factions</div>
   <div class="nav-item" onclick="scrollByID('t7')">💰 Lumeris <span class="nav-check" id="nc7"></span></div>
   <div class="nav-item" onclick="scrollByID('t8')">🧬 Horatio <span class="nav-check" id="nc8"></span></div>
@@ -230,51 +230,55 @@
 
   <hr class="topic-divider">
 
-  <!-- T4: VAULTERS -->
+  <!-- T6: NAKALIM -->
   <div class="topic" id="t4">
     <div class="topic-header">
       <div class="topic-num">04</div>
       <div>
-        <h2 class="topic-title">Vaulters — Instant Colonization & Portal Teleportation</h2>
-        <div class="topic-subtitle">One colony ship, but colonies appear instantly with no outpost phase — and a portal network makes distance irrelevant</div>
+        <h2 class="topic-title">Nakalim — The Ancient Empire Reawakening</h2>
+        <div class="topic-subtitle">Start with 2 tech stages already researched but with a 50% FIDSI penalty — Temples and Relics remove the penalty and unlock Cathedral bonuses</div>
       </div>
     </div>
     <div class="content-block open" id="cb4a">
       <div class="block-header" onclick="toggle('cb4a')">
-        <span class="block-icon">🌀</span>
-        <span class="block-title">Instant Colonization and the Golden Age Mechanic</span>
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">The Core Nakalim Mechanics: Relics, Temples & Cathedrals</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge badge-vaulters">◈ VAULTERS — THE PORTAL BUILDERS</div>
+        <div class="faction-badge badge-nakalim">◈ NAKALIM — THE LAST EMPIRE</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol3-accent)">INSTANT COLONIZATION — NO OUTPOST PHASE</div>
-          The Vaulters have only one colony ship (the Argosy) active at any given time, but when it colonizes a system, the colony appears <strong>immediately as a full colony</strong> — no outpost growth phase, no Food supply line to maintain, no 10–15 turn wait. The system is productive from turn 1 of colonization. Combined with the Golden Age mechanic (see below), a newly colonized Vaulter system hits the ground running at a speed impossible for any other faction. The single colony ship constraint is the intentional trade-off; the correct response is to identify the highest-value target in the galaxy before sending it, because you only get one at a time.
+          <div class="rule-label" style="color:var(--nakalim-color)">THE STARTING ADVANTAGE — 2 TECH STAGES PRE-RESEARCHED</div>
+          The Nakalim begin the game with all Stage 1 and Stage 2 technologies already researched across all four tech quadrants. No other faction starts with any free tech. This means the Nakalim have immediate access to Medium hull ships, System Development (Level 1), Arctic colonization tech, and Economy Stage 2 agreements — all from turn 1. The correct response is to <strong>immediately exploit the tech lead</strong> by building improvements and ships that other factions won't unlock for 20–30 turns.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol3-accent)">GOLDEN AGE — MASSIVE TEMPORARY FIDSI ON NEW COLONIES</div>
-          Each time the Vaulters colonize a system, that system enters a "Golden Age" — a temporary period of dramatically boosted FIDSI output (+50 to all FIDSI stats plus +25 Approval and +25 Manpower). The Golden Age lasts a set number of turns and cannot be extended. The implication: <strong>the Vaulters' newest colony is always temporarily their most productive system</strong>. Timing your next colonization (sending the Argosy to the next target the moment the last Golden Age is ending) creates a staggered chain of productive periods that maximizes overall empire FIDSI across all turns.
+          <div class="rule-label" style="color:var(--nakalim-color)">THE STARTING PENALTY — 50% FIDSI CUT ON ALL PLANETS</div>
+          This tech lead has a steep price: all Nakalim planets suffer a <strong>−50% penalty to all FIDSI production</strong> by default. A planet that would generate 20 Food for any other faction generates 10 for the Nakalim. This is the largest starting penalty of any faction in the game. The penalty is not permanent — it is removed planet by planet by building the <strong>Temple of the Lost</strong> improvement on each planet. Until Temples are built, the Nakalim are economically crippled despite their tech advantage.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol3-accent)">PORTAL NETWORK — INSTANT FLEET TELEPORTATION</div>
-          The Vaulters' strategic game-changer is the Portal system improvement (unlocked mid-game). When built in two or more of your systems, military fleets can teleport between any two Portal-connected systems <strong>in a single turn</strong>, regardless of distance. A fleet at your home system can reach a system 15 star lanes away in one turn if portals connect them. This means: (a) you only need one strong defensive fleet — it can defend anywhere in your empire immediately, (b) you can strike from unexpected directions in war — the opponent cannot predict which front you'll reinforce, (c) your empire doesn't need to be geographically compact. Colonize the best systems regardless of distance; the portal network makes isolation irrelevant.
+          <div class="rule-label" style="color:var(--nakalim-color)">TEMPLES, CATHEDRALS & RELICS — THE RECOVERY CHAIN</div>
+          The Nakalim recovery chain has three steps:<br>
+          <strong>Step 1 — Temples:</strong> Build Temple of the Lost on every planet. This removes the −50% FIDSI penalty on that planet and generates Influence (useful for Senate dominance). Temples cost Industry and take turns to build — prioritize them on your highest-population planets first.<br>
+          <strong>Step 2 — Cathedrals:</strong> Once enough Temples are built in a system, you can build a Cathedral of the Lost — a system improvement that provides large empire-wide FIDSI bonuses (+15% to Food, Dust, Industry, and Influence empire-wide per Cathedral, scaling to +30% with multiple Cathedrals) and unlocks <strong>Relic Slots</strong>.<br>
+          <strong>Step 3 — Relics:</strong> Relics are collectible items found through exploration, combat salvage, and faction quests. They can be assigned to Cathedral Relic Slots to provide powerful empire-wide modifiers (e.g., +25% fleet movement, +1 colonization threshold per Cathedral, political bonuses). Each Cathedral has one active Relic Slot — rotating Relics between Cathedrals based on current strategic need is a high-level Nakalim management task.
         </div>
 
         <div class="callout callout-warn">
-          <div class="callout-label">PORTALS ARE MILITARY ONLY</div>
-          Trade Company routes and civilian ships do not use the portal network — they still travel along star lanes at normal movement speed. This means that while your military can teleport, your economic infrastructure (Trade Company income, pop shipments) is still bound by geography. Plan your Trade Company HQ and Subsidiary placement based on star lane connectivity, not portal connectivity.
+          <div class="callout-label">SCIENCE IS THE NAKALIM'S PERSISTENT BOTTLENECK</div>
+          Despite starting with 2 tech stages researched, the Nakalim's Science output is weak — and their starting tech lead means they now need Stage 3–5 technologies, which are dramatically more expensive. The penalty removal system doesn't help Science specifically (Temples give Influence, not Science). The correct approach: use combat salvage modules (Coordinator ships with "Trophy Collection" modules that grant Science per destroyed enemy ship) and seek Relics that boost Science output. The Nakalim are not a passive science accumulator — they must actively fight and salvage to maintain research pace after their free starting lead.
         </div>
 
         <div class="callout callout-tip">
-          <div class="callout-label">VAULTERS PRIORITY ORDER</div>
-          1. <strong>Scout extensively before your first colonization</strong> — with only one colony ship, the first system you colonize sets your expansion trajectory. Find the highest-value system in your reachable galaxy before committing.<br>
-          2. <strong>Chain Golden Ages</strong> — time the Argosy's departure for the next colonization to coincide with the current Golden Age ending, so you're always in a Golden Age somewhere in your empire.<br>
-          3. <strong>Build portals in at least 3 systems as soon as they're available</strong> — the network is useless with only 2 nodes; 3+ nodes creates meaningful strategic flexibility.<br>
-          4. <strong>Best victory paths:</strong> Science (portal network + fast fleet response defends your Science systems; no colony spam means tall Science-focused development is natural), Conquest (portals make surprise attacks against multiple opponents viable simultaneously).
+          <div class="callout-label">NAKALIM PRIORITY ORDER</div>
+          1. <strong>Build Temples immediately on your highest-population planets</strong> — turn 1 priority. The −50% penalty collapses your economy until removed.<br>
+          2. <strong>Exploit your tech lead immediately</strong> — build Medium hulls on turn 1, sign Trade Agreements that other factions can't (Economy Stage 2 is pre-researched), develop systems at Level 1 from the very first turns.<br>
+          3. <strong>Rush to Cathedrals</strong> in your best systems to unlock the +15%/+30% FIDSI empire bonuses — this is what makes late-game Nakalim economically dominant.<br>
+          4. <strong>Collect Relics aggressively</strong> via exploration and combat — they are the Nakalim's equivalent of system improvements, providing bonuses no buildings can replicate.<br>
+          5. <strong>Best victory paths:</strong> Wonder (Cathedrals + Influence from Temples = political stability + resources for Obelisks), Conquest (tech lead means better military from turn 1 — exploit it before opponents catch up), Score (broad FIDSI from fully Templed + Cathedraled systems).
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -363,57 +367,54 @@
     </div>
   </div>
 
+
   <hr class="topic-divider">
 
-  <!-- T6: NAKALIM -->
+  <!-- T4: VAULTERS -->
   <div class="topic" id="t6">
     <div class="topic-header">
       <div class="topic-num">06</div>
       <div>
-        <h2 class="topic-title">Nakalim — The Ancient Empire Reawakening</h2>
-        <div class="topic-subtitle">Start with 2 tech stages already researched but with a 50% FIDSI penalty — Temples and Relics remove the penalty and unlock Cathedral bonuses</div>
+        <h2 class="topic-title">Vaulters — Instant Colonization & Portal Teleportation</h2>
+        <div class="topic-subtitle">One colony ship, but colonies appear instantly with no outpost phase — and a portal network makes distance irrelevant</div>
       </div>
     </div>
     <div class="content-block open" id="cb6a">
       <div class="block-header" onclick="toggle('cb6a')">
-        <span class="block-icon">🏛️</span>
-        <span class="block-title">The Core Nakalim Mechanics: Relics, Temples & Cathedrals</span>
+        <span class="block-icon">🌀</span>
+        <span class="block-title">Instant Colonization and the Golden Age Mechanic</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge badge-nakalim">◈ NAKALIM — THE LAST EMPIRE</div>
+        <div class="faction-badge badge-vaulters">◈ VAULTERS — THE PORTAL BUILDERS</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol5-accent)">THE STARTING ADVANTAGE — 2 TECH STAGES PRE-RESEARCHED</div>
-          The Nakalim begin the game with all Stage 1 and Stage 2 technologies already researched across all four tech quadrants. No other faction starts with any free tech. This means the Nakalim have immediate access to Medium hull ships, System Development (Level 1), Arctic colonization tech, and Economy Stage 2 agreements — all from turn 1. The correct response is to <strong>immediately exploit the tech lead</strong> by building improvements and ships that other factions won't unlock for 20–30 turns.
+          <div class="rule-label" style="color:var(--vaulters-color)">INSTANT COLONIZATION — NO OUTPOST PHASE</div>
+          The Vaulters have only one colony ship (the Argosy) active at any given time, but when it colonizes a system, the colony appears <strong>immediately as a full colony</strong> — no outpost growth phase, no Food supply line to maintain, no 10–15 turn wait. The system is productive from turn 1 of colonization. Combined with the Golden Age mechanic (see below), a newly colonized Vaulter system hits the ground running at a speed impossible for any other faction. The single colony ship constraint is the intentional trade-off; the correct response is to identify the highest-value target in the galaxy before sending it, because you only get one at a time.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol5-accent)">THE STARTING PENALTY — 50% FIDSI CUT ON ALL PLANETS</div>
-          This tech lead has a steep price: all Nakalim planets suffer a <strong>−50% penalty to all FIDSI production</strong> by default. A planet that would generate 20 Food for any other faction generates 10 for the Nakalim. This is the largest starting penalty of any faction in the game. The penalty is not permanent — it is removed planet by planet by building the <strong>Temple of the Lost</strong> improvement on each planet. Until Temples are built, the Nakalim are economically crippled despite their tech advantage.
+          <div class="rule-label" style="color:var(--vaulters-color)">GOLDEN AGE — MASSIVE TEMPORARY FIDSI ON NEW COLONIES</div>
+          Each time the Vaulters colonize a system, that system enters a "Golden Age" — a temporary period of dramatically boosted FIDSI output (+50 to all FIDSI stats plus +25 Approval and +25 Manpower). The Golden Age lasts a set number of turns and cannot be extended. The implication: <strong>the Vaulters' newest colony is always temporarily their most productive system</strong>. Timing your next colonization (sending the Argosy to the next target the moment the last Golden Age is ending) creates a staggered chain of productive periods that maximizes overall empire FIDSI across all turns.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol5-accent)">TEMPLES, CATHEDRALS & RELICS — THE RECOVERY CHAIN</div>
-          The Nakalim recovery chain has three steps:<br>
-          <strong>Step 1 — Temples:</strong> Build Temple of the Lost on every planet. This removes the −50% FIDSI penalty on that planet and generates Influence (useful for Senate dominance). Temples cost Industry and take turns to build — prioritize them on your highest-population planets first.<br>
-          <strong>Step 2 — Cathedrals:</strong> Once enough Temples are built in a system, you can build a Cathedral of the Lost — a system improvement that provides large empire-wide FIDSI bonuses (+15% to Food, Dust, Industry, and Influence empire-wide per Cathedral, scaling to +30% with multiple Cathedrals) and unlocks <strong>Relic Slots</strong>.<br>
-          <strong>Step 3 — Relics:</strong> Relics are collectible items found through exploration, combat salvage, and faction quests. They can be assigned to Cathedral Relic Slots to provide powerful empire-wide modifiers (e.g., +25% fleet movement, +1 colonization threshold per Cathedral, political bonuses). Each Cathedral has one active Relic Slot — rotating Relics between Cathedrals based on current strategic need is a high-level Nakalim management task.
+          <div class="rule-label" style="color:var(--vaulters-color)">PORTAL NETWORK — INSTANT FLEET TELEPORTATION</div>
+          The Vaulters' strategic game-changer is the Portal system improvement (unlocked mid-game). When built in two or more of your systems, military fleets can teleport between any two Portal-connected systems <strong>in a single turn</strong>, regardless of distance. A fleet at your home system can reach a system 15 star lanes away in one turn if portals connect them. This means: (a) you only need one strong defensive fleet — it can defend anywhere in your empire immediately, (b) you can strike from unexpected directions in war — the opponent cannot predict which front you'll reinforce, (c) your empire doesn't need to be geographically compact. Colonize the best systems regardless of distance; the portal network makes isolation irrelevant.
         </div>
 
         <div class="callout callout-warn">
-          <div class="callout-label">SCIENCE IS THE NAKALIM'S PERSISTENT BOTTLENECK</div>
-          Despite starting with 2 tech stages researched, the Nakalim's Science output is weak — and their starting tech lead means they now need Stage 3–5 technologies, which are dramatically more expensive. The penalty removal system doesn't help Science specifically (Temples give Influence, not Science). The correct approach: use combat salvage modules (Coordinator ships with "Trophy Collection" modules that grant Science per destroyed enemy ship) and seek Relics that boost Science output. The Nakalim are not a passive science accumulator — they must actively fight and salvage to maintain research pace after their free starting lead.
+          <div class="callout-label">PORTALS ARE MILITARY ONLY</div>
+          Trade Company routes and civilian ships do not use the portal network — they still travel along star lanes at normal movement speed. This means that while your military can teleport, your economic infrastructure (Trade Company income, pop shipments) is still bound by geography. Plan your Trade Company HQ and Subsidiary placement based on star lane connectivity, not portal connectivity.
         </div>
 
         <div class="callout callout-tip">
-          <div class="callout-label">NAKALIM PRIORITY ORDER</div>
-          1. <strong>Build Temples immediately on your highest-population planets</strong> — turn 1 priority. The −50% penalty collapses your economy until removed.<br>
-          2. <strong>Exploit your tech lead immediately</strong> — build Medium hulls on turn 1, sign Trade Agreements that other factions can't (Economy Stage 2 is pre-researched), develop systems at Level 1 from the very first turns.<br>
-          3. <strong>Rush to Cathedrals</strong> in your best systems to unlock the +15%/+30% FIDSI empire bonuses — this is what makes late-game Nakalim economically dominant.<br>
-          4. <strong>Collect Relics aggressively</strong> via exploration and combat — they are the Nakalim's equivalent of system improvements, providing bonuses no buildings can replicate.<br>
-          5. <strong>Best victory paths:</strong> Wonder (Cathedrals + Influence from Temples = political stability + resources for Obelisks), Conquest (tech lead means better military from turn 1 — exploit it before opponents catch up), Score (broad FIDSI from fully Templed + Cathedraled systems).
+          <div class="callout-label">VAULTERS PRIORITY ORDER</div>
+          1. <strong>Scout extensively before your first colonization</strong> — with only one colony ship, the first system you colonize sets your expansion trajectory. Find the highest-value system in your reachable galaxy before committing.<br>
+          2. <strong>Chain Golden Ages</strong> — time the Argosy's departure for the next colonization to coincide with the current Golden Age ending, so you're always in a Golden Age somewhere in your empire.<br>
+          3. <strong>Build portals in at least 3 systems as soon as they're available</strong> — the network is useless with only 2 nodes; 3+ nodes creates meaningful strategic flexibility.<br>
+          4. <strong>Best victory paths:</strong> Science (portal network + fast fleet response defends your Science systems; no colony spam means tall Science-focused development is natural), Conquest (portals make surprise attacks against multiple opponents viable simultaneously).
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
