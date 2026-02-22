@@ -41,9 +41,12 @@
   <div class="nav-item active" onclick="scrollByID('t1')">⚔️ United Empire <span class="nav-check" id="nc1"></span></div>
   <div class="nav-item" onclick="scrollByID('t2')">🔭 Sophons <span class="nav-check" id="nc2"></span></div>
   <div class="nav-item" onclick="scrollByID('t3')">🌿 Unfallen <span class="nav-check" id="nc3"></span></div>
-  <div class="nav-item" onclick="scrollByID('t4')">🌀 Vaulters <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🏛️ Nakalim <span class="nav-check" id="nc4"></span></div>
   <div class="nav-item" onclick="scrollByID('t5')">🪶 Hissho <span class="nav-check" id="nc5"></span></div>
-  <div class="nav-item" onclick="scrollByID('t6')">🏛️ Nakalim <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🌀 Vaulters <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-section-label">// Distinctive Factions</div>
+  <div class="nav-item" onclick="scrollByID('t7')">💰 Lumeris <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🧬 Horatio <span class="nav-check" id="nc8"></span></div>
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   
@@ -59,9 +62,9 @@
 
 <main class="main">
   <div class="page-header">
-    <div class="breadcrumb">ES2 // <span>Vol.5</span> // Faction Guides</div>
+    <div class="breadcrumb"><a href="../index.html">ES2</a> // <span>Vol.5</span> // Faction Guides</div>
     <h1 class="page-title">Faction<br>Guides</h1>
-    <p class="page-subtitle">These six factions all operate within the standard rulebook covered in Volumes 0–3. None of them break the core colonization, Approval, or population systems. What they have instead are powerful directional advantages — specific mechanics, traits, and optimal strategies that a player who ignores them will never fully exploit. Each guide covers what makes the faction distinct, what their strongest play patterns are, and what mistakes players consistently make with them.</p>
+    <p class="page-subtitle">These factions all operate within the standard rulebook covered in Volumes 0–3. None of them break the core colonization, Approval, or population systems. What they have instead are powerful directional advantages — specific mechanics, traits, and optimal strategies that a player who ignores them will never fully exploit. Two additional factions — Lumeris and Horatio — have highly distinctive playstyles that set them apart even within this group. Each guide covers what makes the faction distinct, what their strongest play patterns are, and what mistakes players consistently make with them.</p>
   </div>
 
   <!-- T1: UNITED EMPIRE -->
@@ -84,17 +87,17 @@
         <div class="faction-badge badge-ue">◈ UNITED EMPIRE — THE EXPANSIONISTS</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">EXPANSIONIST TRAIT — REDUCED OVERCOLONIZATION PENALTY</div>
+          <div class="rule-label" style="color:var(--ue-color)">EXPANSIONIST TRAIT — REDUCED OVERCOLONIZATION PENALTY</div>
           The United Empire suffers significantly smaller Approval penalties from overcolonization than any other faction. Where most factions feel the Approval cost of each new colony immediately and sharply, the UE can absorb 2–3 additional systems before experiencing the same penalty. This makes them the game's best wide-expansion faction — they can outpace everyone in system count without the Approval spiral that would cripple another faction at the same size.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">DUST BUYOUT FEEDBACK LOOP</div>
+          <div class="rule-label" style="color:var(--ue-color)">DUST BUYOUT FEEDBACK LOOP</div>
           The UE's core economic advantage is a system improvement feedback mechanic: when they complete a system improvement, they receive a Dust bonus proportional to the improvement's Industry cost. This means high-Industry systems that complete expensive improvements generate significant Dust as a side effect of building. Combined with the unique UE Dust-buyout system improvement (which reduces the Dust cost of buying out other improvements), this creates a compounding feedback loop: build improvements fast → generate Dust → buy out the next improvement instantly with Dust → generate more Dust → repeat. A properly run UE empire can develop a new system to full build-out in 8–10 turns instead of 20–30 for most factions.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">SHEREDYN FORMATION — THE BEST BATTLE CARD IN THE GAME</div>
+          <div class="rule-label" style="color:var(--ue-color)">SHEREDYN FORMATION — THE BEST BATTLE CARD IN THE GAME</div>
           The UE's unique faction battle card, Sheredyn Formation, grants +50% Penetration to all weapons for the phase it is played. Penetration bypasses a percentage of the opponent's shields and armor simultaneously — at 50%, half of all defensive modules on every enemy ship become irrelevant for that entire combat phase. This makes UE combat fleets punch far above their weapon stats in any phase where Sheredyn Formation is active. The card should be held for the phase where you have the highest weapon accuracy (match it to your dominant weapon type's optimal range) to maximize the combined penetration+accuracy effect.
         </div>
 
@@ -135,17 +138,17 @@
         <div class="faction-badge badge-sophon">◈ SOPHONS — THE SCIENTISTS</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol4-accent)">OMNISCIENCE — THE CORE MECHANIC</div>
+          <div class="rule-label" style="color:var(--sophon-color)">OMNISCIENCE — THE CORE MECHANIC</div>
           When a Sophon player researches a technology that no other faction has yet discovered, they receive a <strong>−50% Science cost reduction</strong> on that technology. As more factions research the same tech, the discount decreases linearly — at maximum, if every other faction has already researched it, the discount is 0%. The Sophon tech screen shows each tech's current discount percentage based on current research states across all factions. This is the single most powerful passive Science advantage in the game, but it requires active management to exploit correctly.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol4-accent)">THE PIONEER STRATEGY — ALWAYS BE FIRST</div>
+          <div class="rule-label" style="color:var(--sophon-color)">THE PIONEER STRATEGY — ALWAYS BE FIRST</div>
           The Omniscience bonus only exists when you are the first to research a tech. This means the correct Sophon playstyle is to <strong>continuously stay ahead of all other factions in the tech tree</strong> — not racing toward one specific tech, but maintaining a broad frontier position where most of what you're researching hasn't been touched by anyone else yet. If you fall behind and start researching techs others have already discovered, your Omniscience bonus collapses to zero and you're playing as an inferior version of most other factions.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol4-accent)">COLD PLANET BONUS — +3 SCIENCE PER SOPHON POP ON ARCTIC/TUNDRA</div>
+          <div class="rule-label" style="color:var(--sophon-color)">COLD PLANET BONUS — +3 SCIENCE PER SOPHON POP ON ARCTIC/TUNDRA</div>
           Each Sophon population unit provides +1 Science per turn baseline. On Arctic and Tundra planets specifically, this becomes +4 Science per pop — a 4× multiplier on per-pop Science output vs. most other faction populations. Sophons should <strong>prioritize colonizing systems with Arctic and Tundra planets</strong> above all other planet types (except where strategic resources are needed). A fully populated Arctic system provides Science output that no other faction can match with standard populations.
         </div>
 
@@ -191,17 +194,17 @@
         <div class="faction-badge badge-unfallen">◈ UNFALLEN — THE ARBOREAL PACIFISTS</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">THE VINE NETWORK — CORE EXPANSION MECHANIC</div>
+          <div class="rule-label" style="color:var(--unfallen-color)">THE VINE NETWORK — CORE EXPANSION MECHANIC</div>
           The Unfallen do not build colony ships. Instead, they build <strong>Vineships</strong> which spread a Celestial Vine to adjacent systems. Once a system is vined, any habitable planet within it can be colonized <strong>instantly, for free, without consuming the Vineship</strong> — no Industry cost, no Food penalty for an outpost phase, and no ship consumed. The Vineship is reused immediately on the next target system. Vining a system takes 20 turns by default with one Vineship; stacking multiple Vineships in the same fleet divides this time proportionally (2 Vineships = 10 turns, 4 = 5 turns, 8 = ~2 turns). The vine connection is permanent once established unless the system is captured and the vine severed.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">VINE RANGE — NOT LIMITED TO STAR LANES</div>
+          <div class="rule-label" style="color:var(--unfallen-color)">VINE RANGE — NOT LIMITED TO STAR LANES</div>
           A critical rule most players miss: vines can connect to any system within their spatial range, <strong>regardless of whether a star lane connects them</strong>. A system that has no lane connection to your network but is within the vine's radial influence zone can still be vined and colonized. This gives Unfallen access to isolated systems that other factions can only reach via wormhole tech. Checking vine range (visible as an aura around vined systems on the galaxy map) before deciding which direction to expand can reveal colonization opportunities invisible to all other factions.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">GUARDIAN MINOR FACTION — THE UNFALLEN'S SECRET WEAPON</div>
+          <div class="rule-label" style="color:var(--unfallen-color)">GUARDIAN MINOR FACTION — THE UNFALLEN'S SECRET WEAPON</div>
           Guardians are a unique minor faction that only the Unfallen can discover and utilize. They are found via curiosity investigation in uncharted systems. Each Guardian unit placed in a system provides a <strong>+5 empire-wide Approval bonus</strong> (not just in their system — across your entire empire). Multiple Guardians stack. An Unfallen empire with 6–8 Guardians discovered and placed effectively has a permanent Approval advantage of +30–40 empire-wide, allowing them to expand well past the normal overcolonization threshold with minimal penalty.
         </div>
 
@@ -227,51 +230,55 @@
 
   <hr class="topic-divider">
 
-  <!-- T4: VAULTERS -->
+  <!-- T6: NAKALIM -->
   <div class="topic" id="t4">
     <div class="topic-header">
       <div class="topic-num">04</div>
       <div>
-        <h2 class="topic-title">Vaulters — Instant Colonization & Portal Teleportation</h2>
-        <div class="topic-subtitle">One colony ship, but colonies appear instantly with no outpost phase — and a portal network makes distance irrelevant</div>
+        <h2 class="topic-title">Nakalim — The Ancient Empire Reawakening</h2>
+        <div class="topic-subtitle">Start with 2 tech stages already researched but with a 50% FIDSI penalty — Temples and Relics remove the penalty and unlock Cathedral bonuses</div>
       </div>
     </div>
     <div class="content-block open" id="cb4a">
       <div class="block-header" onclick="toggle('cb4a')">
-        <span class="block-icon">🌀</span>
-        <span class="block-title">Instant Colonization and the Golden Age Mechanic</span>
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">The Core Nakalim Mechanics: Relics, Temples & Cathedrals</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge badge-vaulters">◈ VAULTERS — THE PORTAL BUILDERS</div>
+        <div class="faction-badge badge-nakalim">◈ NAKALIM — THE LAST EMPIRE</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol3-accent)">INSTANT COLONIZATION — NO OUTPOST PHASE</div>
-          The Vaulters have only one colony ship (the Argosy) active at any given time, but when it colonizes a system, the colony appears <strong>immediately as a full colony</strong> — no outpost growth phase, no Food supply line to maintain, no 10–15 turn wait. The system is productive from turn 1 of colonization. Combined with the Golden Age mechanic (see below), a newly colonized Vaulter system hits the ground running at a speed impossible for any other faction. The single colony ship constraint is the intentional trade-off; the correct response is to identify the highest-value target in the galaxy before sending it, because you only get one at a time.
+          <div class="rule-label" style="color:var(--nakalim-color)">THE STARTING ADVANTAGE — 2 TECH STAGES PRE-RESEARCHED</div>
+          The Nakalim begin the game with all Stage 1 and Stage 2 technologies already researched across all four tech quadrants. No other faction starts with any free tech. This means the Nakalim have immediate access to Medium hull ships, System Development (Level 1), Arctic colonization tech, and Economy Stage 2 agreements — all from turn 1. The correct response is to <strong>immediately exploit the tech lead</strong> by building improvements and ships that other factions won't unlock for 20–30 turns.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol3-accent)">GOLDEN AGE — MASSIVE TEMPORARY FIDSI ON NEW COLONIES</div>
-          Each time the Vaulters colonize a system, that system enters a "Golden Age" — a temporary period of dramatically boosted FIDSI output (+50 to all FIDSI stats plus +25 Approval and +25 Manpower). The Golden Age lasts a set number of turns and cannot be extended. The implication: <strong>the Vaulters' newest colony is always temporarily their most productive system</strong>. Timing your next colonization (sending the Argosy to the next target the moment the last Golden Age is ending) creates a staggered chain of productive periods that maximizes overall empire FIDSI across all turns.
+          <div class="rule-label" style="color:var(--nakalim-color)">THE STARTING PENALTY — 50% FIDSI CUT ON ALL PLANETS</div>
+          This tech lead has a steep price: all Nakalim planets suffer a <strong>−50% penalty to all FIDSI production</strong> by default. A planet that would generate 20 Food for any other faction generates 10 for the Nakalim. This is the largest starting penalty of any faction in the game. The penalty is not permanent — it is removed planet by planet by building the <strong>Temple of the Lost</strong> improvement on each planet. Until Temples are built, the Nakalim are economically crippled despite their tech advantage.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol3-accent)">PORTAL NETWORK — INSTANT FLEET TELEPORTATION</div>
-          The Vaulters' strategic game-changer is the Portal system improvement (unlocked mid-game). When built in two or more of your systems, military fleets can teleport between any two Portal-connected systems <strong>in a single turn</strong>, regardless of distance. A fleet at your home system can reach a system 15 star lanes away in one turn if portals connect them. This means: (a) you only need one strong defensive fleet — it can defend anywhere in your empire immediately, (b) you can strike from unexpected directions in war — the opponent cannot predict which front you'll reinforce, (c) your empire doesn't need to be geographically compact. Colonize the best systems regardless of distance; the portal network makes isolation irrelevant.
+          <div class="rule-label" style="color:var(--nakalim-color)">TEMPLES, CATHEDRALS & RELICS — THE RECOVERY CHAIN</div>
+          The Nakalim recovery chain has three steps:<br>
+          <strong>Step 1 — Temples:</strong> Build Temple of the Lost on every planet. This removes the −50% FIDSI penalty on that planet and generates Influence (useful for Senate dominance). Temples cost Industry and take turns to build — prioritize them on your highest-population planets first.<br>
+          <strong>Step 2 — Cathedrals:</strong> Once enough Temples are built in a system, you can build a Cathedral of the Lost — a system improvement that provides large empire-wide FIDSI bonuses (+15% to Food, Dust, Industry, and Influence empire-wide per Cathedral, scaling to +30% with multiple Cathedrals) and unlocks <strong>Relic Slots</strong>.<br>
+          <strong>Step 3 — Relics:</strong> Relics are collectible items found through exploration, combat salvage, and faction quests. They can be assigned to Cathedral Relic Slots to provide powerful empire-wide modifiers (e.g., +25% fleet movement, +1 colonization threshold per Cathedral, political bonuses). Each Cathedral has one active Relic Slot — rotating Relics between Cathedrals based on current strategic need is a high-level Nakalim management task.
         </div>
 
         <div class="callout callout-warn">
-          <div class="callout-label">PORTALS ARE MILITARY ONLY</div>
-          Trade Company routes and civilian ships do not use the portal network — they still travel along star lanes at normal movement speed. This means that while your military can teleport, your economic infrastructure (Trade Company income, pop shipments) is still bound by geography. Plan your Trade Company HQ and Subsidiary placement based on star lane connectivity, not portal connectivity.
+          <div class="callout-label">SCIENCE IS THE NAKALIM'S PERSISTENT BOTTLENECK</div>
+          Despite starting with 2 tech stages researched, the Nakalim's Science output is weak — and their starting tech lead means they now need Stage 3–5 technologies, which are dramatically more expensive. The penalty removal system doesn't help Science specifically (Temples give Influence, not Science). The correct approach: use combat salvage modules (Coordinator ships with "Trophy Collection" modules that grant Science per destroyed enemy ship) and seek Relics that boost Science output. The Nakalim are not a passive science accumulator — they must actively fight and salvage to maintain research pace after their free starting lead.
         </div>
 
         <div class="callout callout-tip">
-          <div class="callout-label">VAULTERS PRIORITY ORDER</div>
-          1. <strong>Scout extensively before your first colonization</strong> — with only one colony ship, the first system you colonize sets your expansion trajectory. Find the highest-value system in your reachable galaxy before committing.<br>
-          2. <strong>Chain Golden Ages</strong> — time the Argosy's departure for the next colonization to coincide with the current Golden Age ending, so you're always in a Golden Age somewhere in your empire.<br>
-          3. <strong>Build portals in at least 3 systems as soon as they're available</strong> — the network is useless with only 2 nodes; 3+ nodes creates meaningful strategic flexibility.<br>
-          4. <strong>Best victory paths:</strong> Science (portal network + fast fleet response defends your Science systems; no colony spam means tall Science-focused development is natural), Conquest (portals make surprise attacks against multiple opponents viable simultaneously).
+          <div class="callout-label">NAKALIM PRIORITY ORDER</div>
+          1. <strong>Build Temples immediately on your highest-population planets</strong> — turn 1 priority. The −50% penalty collapses your economy until removed.<br>
+          2. <strong>Exploit your tech lead immediately</strong> — build Medium hulls on turn 1, sign Trade Agreements that other factions can't (Economy Stage 2 is pre-researched), develop systems at Level 1 from the very first turns.<br>
+          3. <strong>Rush to Cathedrals</strong> in your best systems to unlock the +15%/+30% FIDSI empire bonuses — this is what makes late-game Nakalim economically dominant.<br>
+          4. <strong>Collect Relics aggressively</strong> via exploration and combat — they are the Nakalim's equivalent of system improvements, providing bonuses no buildings can replicate.<br>
+          5. <strong>Best victory paths:</strong> Wonder (Cathedrals + Influence from Temples = political stability + resources for Obelisks), Conquest (tech lead means better military from turn 1 — exploit it before opponents catch up), Score (broad FIDSI from fully Templed + Cathedraled systems).
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -303,19 +310,19 @@
         <div class="faction-badge badge-hissho">◈ HISSHO — THE WARRIOR CASTE</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol2-accent)">KEII REPLACES APPROVAL EMPIRE-WIDE</div>
+          <div class="rule-label" style="color:var(--hissho-color)">KEII REPLACES APPROVAL EMPIRE-WIDE</div>
           The Hissho have no per-system Approval mechanic. Instead, a single empire-wide <strong>Keii</strong> value (represented by a red feather icon) functions as their approval equivalent. Like Approval, Keii above certain thresholds provides FIDSI bonuses (Ecstatic/Devoted/Loyal equivalents); below certain thresholds, penalties apply. Unlike Approval, Keii is not driven by happiness improvements, luxury resources, or planet type matching — it is driven entirely by honorable actions and combat outcomes. Happiness improvements in the standard tech tree do nothing for Hissho; their Keii equivalent is winning wars.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol2-accent)">KEII GAINS AND LOSSES — THE COMPLETE TABLE</div>
+          <div class="rule-label" style="color:var(--hissho-color)">KEII GAINS AND LOSSES — THE COMPLETE TABLE</div>
           Gain Keii from: winning a space battle (+5–10), winning a ground invasion (+5–10), subduing a conquered system (+10, one-time per system), destroying a pirate lair (large bonus), completing faction quests (+5 each), discovering new systems (+1 each).<br><br>
           Lose Keii from: retreating from a space battle (−10, this is the most punishing), losing a controlled system (significant loss), offering peace/truce/alliance to another faction (−varies), colonizing a new system (−escalating cost per system over your cap).<br><br>
           <strong>The most important Keii rule: NEVER RETREAT.</strong> A −10 Keii retreat penalty is almost always worth more than the fleet you'd lose. Hissho ships are replaced in 1–2 turns at high-Industry systems. −10 Keii requires winning 2 full space battles to recover.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol2-accent)">OVERCOLONIZATION — THE HISSHO HARD CAP</div>
+          <div class="rule-label" style="color:var(--hissho-color)">OVERCOLONIZATION — THE HISSHO HARD CAP</div>
           The Hissho have a strict colonization threshold — far lower than other factions. Each colony over the threshold applies a −5% FIDSI penalty to <em>all</em> systems in your empire (not Keii — this is a separate stacking penalty). At 3 colonies over cap, you're at −15% to all empire FIDSI — severe. The correct response is to <strong>play tall</strong>: hold 3–5 high-quality colonies maximum and expand through military conquest rather than standard colonization. Captured systems have no colonization cost in Keii — only the colonization action itself does. Conquer and then subdue for +10 Keii, rather than colonizing fresh systems.
         </div>
       </div>
@@ -331,7 +338,7 @@
         <p>The Hissho have two additional mechanics that transform their tall empire into a resource powerhouse:</p>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol2-accent)">OBSERVANCES — POP SACRIFICE FOR EMPIRE BONUSES</div>
+          <div class="rule-label" style="color:var(--hissho-color)">OBSERVANCES — POP SACRIFICE FOR EMPIRE BONUSES</div>
           Each election cycle, the Hissho unlock a unique Observance — a special build action that costs 1 population unit (1 turn of production, 0 Industry cost) and produces a powerful empire-wide bonus. Observances include:<br>
           <strong>Blood Ritual:</strong> +Keii generation for several turns — run this during peacetime when your Keii would otherwise drain from lack of combat.<br>
           <strong>Diligence Ritual:</strong> +50% Dust output on the system for 10 turns — powerful for recovering economic liquidity before a war.<br>
@@ -340,7 +347,7 @@
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol2-accent)">HISSHO START WITH AN ECONOMIC BEHEMOTH</div>
+          <div class="rule-label" style="color:var(--hissho-color)">HISSHO START WITH AN ECONOMIC BEHEMOTH</div>
           Unlike all other factions, Hissho begin the game with an Economic Behemoth already constructed. This provides the FIDSI multiplier rotation described in Vol.2 from turn 1 — a massive head start on development speed. Immediately assign it to your most important system and begin rotating it on a productive schedule. Hissho also have a higher Behemoth count cap than other factions (+1 additional Behemoth allowed), enabling a second Economic Behemoth that other factions cannot build until Military Stage 4.
         </div>
 
@@ -360,61 +367,164 @@
     </div>
   </div>
 
+
   <hr class="topic-divider">
 
-  <!-- T6: NAKALIM -->
+  <!-- T4: VAULTERS -->
   <div class="topic" id="t6">
     <div class="topic-header">
       <div class="topic-num">06</div>
       <div>
-        <h2 class="topic-title">Nakalim — The Ancient Empire Reawakening</h2>
-        <div class="topic-subtitle">Start with 2 tech stages already researched but with a 50% FIDSI penalty — Temples and Relics remove the penalty and unlock Cathedral bonuses</div>
+        <h2 class="topic-title">Vaulters — Instant Colonization & Portal Teleportation</h2>
+        <div class="topic-subtitle">One colony ship, but colonies appear instantly with no outpost phase — and a portal network makes distance irrelevant</div>
       </div>
     </div>
     <div class="content-block open" id="cb6a">
       <div class="block-header" onclick="toggle('cb6a')">
-        <span class="block-icon">🏛️</span>
-        <span class="block-title">The Core Nakalim Mechanics: Relics, Temples & Cathedrals</span>
+        <span class="block-icon">🌀</span>
+        <span class="block-title">Instant Colonization and the Golden Age Mechanic</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge badge-nakalim">◈ NAKALIM — THE LAST EMPIRE</div>
+        <div class="faction-badge badge-vaulters">◈ VAULTERS — THE PORTAL BUILDERS</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol5-accent)">THE STARTING ADVANTAGE — 2 TECH STAGES PRE-RESEARCHED</div>
-          The Nakalim begin the game with all Stage 1 and Stage 2 technologies already researched across all four tech quadrants. No other faction starts with any free tech. This means the Nakalim have immediate access to Medium hull ships, System Development (Level 1), Arctic colonization tech, and Economy Stage 2 agreements — all from turn 1. The correct response is to <strong>immediately exploit the tech lead</strong> by building improvements and ships that other factions won't unlock for 20–30 turns.
+          <div class="rule-label" style="color:var(--vaulters-color)">INSTANT COLONIZATION — NO OUTPOST PHASE</div>
+          The Vaulters have only one colony ship (the Argosy) active at any given time, but when it colonizes a system, the colony appears <strong>immediately as a full colony</strong> — no outpost growth phase, no Food supply line to maintain, no 10–15 turn wait. The system is productive from turn 1 of colonization. Combined with the Golden Age mechanic (see below), a newly colonized Vaulter system hits the ground running at a speed impossible for any other faction. The single colony ship constraint is the intentional trade-off; the correct response is to identify the highest-value target in the galaxy before sending it, because you only get one at a time.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol5-accent)">THE STARTING PENALTY — 50% FIDSI CUT ON ALL PLANETS</div>
-          This tech lead has a steep price: all Nakalim planets suffer a <strong>−50% penalty to all FIDSI production</strong> by default. A planet that would generate 20 Food for any other faction generates 10 for the Nakalim. This is the largest starting penalty of any faction in the game. The penalty is not permanent — it is removed planet by planet by building the <strong>Temple of the Lost</strong> improvement on each planet. Until Temples are built, the Nakalim are economically crippled despite their tech advantage.
+          <div class="rule-label" style="color:var(--vaulters-color)">GOLDEN AGE — MASSIVE TEMPORARY FIDSI ON NEW COLONIES</div>
+          Each time the Vaulters colonize a system, that system enters a "Golden Age" — a temporary period of dramatically boosted FIDSI output (+50 to all FIDSI stats plus +25 Approval and +25 Manpower). The Golden Age lasts a set number of turns and cannot be extended. The implication: <strong>the Vaulters' newest colony is always temporarily their most productive system</strong>. Timing your next colonization (sending the Argosy to the next target the moment the last Golden Age is ending) creates a staggered chain of productive periods that maximizes overall empire FIDSI across all turns.
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol5-accent)">TEMPLES, CATHEDRALS & RELICS — THE RECOVERY CHAIN</div>
-          The Nakalim recovery chain has three steps:<br>
-          <strong>Step 1 — Temples:</strong> Build Temple of the Lost on every planet. This removes the −50% FIDSI penalty on that planet and generates Influence (useful for Senate dominance). Temples cost Industry and take turns to build — prioritize them on your highest-population planets first.<br>
-          <strong>Step 2 — Cathedrals:</strong> Once enough Temples are built in a system, you can build a Cathedral of the Lost — a system improvement that provides large empire-wide FIDSI bonuses (+15% to Food, Dust, Industry, and Influence empire-wide per Cathedral, scaling to +30% with multiple Cathedrals) and unlocks <strong>Relic Slots</strong>.<br>
-          <strong>Step 3 — Relics:</strong> Relics are collectible items found through exploration, combat salvage, and faction quests. They can be assigned to Cathedral Relic Slots to provide powerful empire-wide modifiers (e.g., +25% fleet movement, +1 colonization threshold per Cathedral, political bonuses). Each Cathedral has one active Relic Slot — rotating Relics between Cathedrals based on current strategic need is a high-level Nakalim management task.
+          <div class="rule-label" style="color:var(--vaulters-color)">PORTAL NETWORK — INSTANT FLEET TELEPORTATION</div>
+          The Vaulters' strategic game-changer is the Portal system improvement (unlocked mid-game). When built in two or more of your systems, military fleets can teleport between any two Portal-connected systems <strong>in a single turn</strong>, regardless of distance. A fleet at your home system can reach a system 15 star lanes away in one turn if portals connect them. This means: (a) you only need one strong defensive fleet — it can defend anywhere in your empire immediately, (b) you can strike from unexpected directions in war — the opponent cannot predict which front you'll reinforce, (c) your empire doesn't need to be geographically compact. Colonize the best systems regardless of distance; the portal network makes isolation irrelevant.
         </div>
 
         <div class="callout callout-warn">
-          <div class="callout-label">SCIENCE IS THE NAKALIM'S PERSISTENT BOTTLENECK</div>
-          Despite starting with 2 tech stages researched, the Nakalim's Science output is weak — and their starting tech lead means they now need Stage 3–5 technologies, which are dramatically more expensive. The penalty removal system doesn't help Science specifically (Temples give Influence, not Science). The correct approach: use combat salvage modules (Coordinator ships with "Trophy Collection" modules that grant Science per destroyed enemy ship) and seek Relics that boost Science output. The Nakalim are not a passive science accumulator — they must actively fight and salvage to maintain research pace after their free starting lead.
+          <div class="callout-label">PORTALS ARE MILITARY ONLY</div>
+          Trade Company routes and civilian ships do not use the portal network — they still travel along star lanes at normal movement speed. This means that while your military can teleport, your economic infrastructure (Trade Company income, pop shipments) is still bound by geography. Plan your Trade Company HQ and Subsidiary placement based on star lane connectivity, not portal connectivity.
         </div>
 
         <div class="callout callout-tip">
-          <div class="callout-label">NAKALIM PRIORITY ORDER</div>
-          1. <strong>Build Temples immediately on your highest-population planets</strong> — turn 1 priority. The −50% penalty collapses your economy until removed.<br>
-          2. <strong>Exploit your tech lead immediately</strong> — build Medium hulls on turn 1, sign Trade Agreements that other factions can't (Economy Stage 2 is pre-researched), develop systems at Level 1 from the very first turns.<br>
-          3. <strong>Rush to Cathedrals</strong> in your best systems to unlock the +15%/+30% FIDSI empire bonuses — this is what makes late-game Nakalim economically dominant.<br>
-          4. <strong>Collect Relics aggressively</strong> via exploration and combat — they are the Nakalim's equivalent of system improvements, providing bonuses no buildings can replicate.<br>
-          5. <strong>Best victory paths:</strong> Wonder (Cathedrals + Influence from Temples = political stability + resources for Obelisks), Conquest (tech lead means better military from turn 1 — exploit it before opponents catch up), Score (broad FIDSI from fully Templed + Cathedraled systems).
+          <div class="callout-label">VAULTERS PRIORITY ORDER</div>
+          1. <strong>Scout extensively before your first colonization</strong> — with only one colony ship, the first system you colonize sets your expansion trajectory. Find the highest-value system in your reachable galaxy before committing.<br>
+          2. <strong>Chain Golden Ages</strong> — time the Argosy's departure for the next colonization to coincide with the current Golden Age ending, so you're always in a Golden Age somewhere in your empire.<br>
+          3. <strong>Build portals in at least 3 systems as soon as they're available</strong> — the network is useless with only 2 nodes; 3+ nodes creates meaningful strategic flexibility.<br>
+          4. <strong>Best victory paths:</strong> Science (portal network + fast fleet response defends your Science systems; no colony spam means tall Science-focused development is natural), Conquest (portals make surprise attacks against multiple opponents viable simultaneously).
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
           <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T7: LUMERIS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Lumeris — The Trade Empire</h2>
+        <div class="topic-subtitle">Standard colonization, but with a Trade Company cap of 5 (vs. 3 for all others) and unique Dust-multiplying mechanics</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">💰</span>
+        <span class="block-title">What Makes Lumeris Different</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-lumeris">◈ LUMERIS — THE MERCHANTS</div>
+        <p>Lumeris play largely like a standard faction — they colonize normally, grow population from Food, and use the standard Approval system. Their uniqueness comes from three stacking Dust advantages:</p>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--lumeris-color)">TRADE COMPANY CAP: 5 INSTEAD OF 3</div>
+          Where all other factions max out at 3 Trade Companies, Lumeris can operate 5 simultaneously. Since each additional Trade Company compounds income multiplicatively across all its routes, two extra companies at high level can generate more Dust per turn than a faction's entire FIDSI mining output. The Lumeris Dust economy is categorically in a different tier from all other factions if correctly managed.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--lumeris-color)">DUST FACTION ABILITY — BUYING INFLUENCE</div>
+          Lumeris can spend Dust to directly purchase Senate Influence, political support, and even diplomatic relation boosts. Where other factions must invest time and Influence resource, Lumeris converts their abundant Dust into political power directly. In the late game when their Dust income is 2–3× any opponent's, this turns Senate seats into a purchasable commodity.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--lumeris-color)">ECONOMIC VICTORY ADVANTAGE</div>
+          With 5 Trade Companies and the highest per-turn Dust income in the game, Economic victory (450,000 cumulative Dust) is Lumeris's natural path. Reach it ~20–30 turns faster than any other faction can. The primary threat is war — military aggression disrupts trade routes. Lumeris must invest in diplomacy and defensive military to protect their income network.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">LUMERIS PRIORITY ORDER</div>
+          1. Sign Trade Agreements with every neighbor immediately — route extension is your income multiplier.<br>
+          2. Build Trade Company HQs as fast as possible; always have all 5 companies operational by turn 50.<br>
+          3. Level each company to at least 5 before building the next — level matters more than company count at low levels.<br>
+          4. Spend Dust on Senate seat purchases to maintain Pacifist political dominance, which further boosts Dust via their entrenched law.<br>
+          5. Maintain a defensive military and a Non-Aggression network — one blockaded Trade Company route during peak income is catastrophically expensive.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T8: HORATIO -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Horatio — The Gene-Shapers</h2>
+        <div class="topic-subtitle">Standard mechanics, but population cloning creates custom races — the strongest pop-type bonuses in the game</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🧬</span>
+        <span class="block-title">Cloning Mechanics and Gene Combination</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-horatio">◈ HORATIO — THE BEAUTIFUL</div>
+        <p>Horatio is the only faction that can create custom population types by splicing together traits from different races they've encountered. Their unique ability is <strong>Gene Fusion</strong>: by collecting genetic samples from other factions (through combat, exploration, and diplomacy) and spending Dust, they can combine traits from two different races into a new Horatio-specific pop type with bonuses from both parents.</p>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--horatio-color)">GENE FUSION — HOW IT WORKS</div>
+          In the Genetics screen (unique to Horatio), you see all races whose genetic samples you've collected. Select two races as "parents." The resulting fusion pop inherits a combination of both parents' FIDSI bonuses and racial traits. The combination is not always straightforward — some trait combinations are more powerful than others (e.g., fusing Sophon +Science with a race that has +Approval creates a Science-generating pop that also doesn't generate Approval problems).
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--horatio-color)">SAMPLE COLLECTION</div>
+          Collecting genetic samples requires: fighting in combat (each battle against a faction gives samples of their pop type), peaceful gene sharing agreements (unique to Horatio — other factions can agree to share samples diplomatically), or assimilating minor factions (whose pop type samples you gain). The more factions you've met and fought or traded with, the more gene combinations you have available.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--horatio-color)">POPULATION REPLACEMENT</div>
+          Once a Gene Fusion type is created, Horatio can replace existing population units in their systems with the new custom type. Over time, all their population gradually becomes the custom fused type, providing the combined bonuses across their entire empire. A fully optimized Horatio empire's per-pop FIDSI bonuses can exceed any other faction's by 30–50%.
+        </div>
+
+        <div class="callout callout-gold">
+          <div class="callout-label">OPTIMAL HORATIO GENE STRATEGY</div>
+          The most powerful fusion targets in most games:<br>
+          <strong>Sophon + any high-Industry minor faction:</strong> Creates a Science/Industry dual-output pop — the two most important FIDSI resources combined in one type.<br>
+          <strong>Any high-Approval pop + Cravers:</strong> Cravers have strong FIDSI output but terrible Approval. Fusing their FIDSI stats with a high-Approval race creates a powerhouse pop with no downsides.<br>
+          The key insight: the gene system essentially lets Horatio design their ideal population. Identify which two FIDSI resources your victory path needs most, then specifically hunt samples from races strong in those two areas.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">HORATIO PRIORITY ORDER</div>
+          1. Meet and fight (or trade with) as many factions as possible early — samples require contact.<br>
+          2. Make your first Gene Fusion by turn 25–30, targeting bonuses that amplify your chosen victory path.<br>
+          3. Begin replacing population in your home system with the fused type immediately — home system benefits from the combo bonus while the type grows toward other systems.<br>
+          4. Make a second Gene Fusion around turn 50 using a different combination — assign the second type to a different system role (e.g., first fusion for Industry systems, second for Science systems).
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
         </div>
       </div>
     </div>
@@ -448,7 +558,7 @@
 <script>
   const doneTopics = new Set();
   const VOLUME = 'vol5';
-  const TOTAL = 6;
+  const TOTAL = 8;
   let qIdx = 0;
   let answered = false;
   const quizzes = [
@@ -499,6 +609,32 @@
       ],
       correct: 1,
       explain: "Portals teleport fleets between systems where a portal improvement is physically built — not to any Vaulter system. A fleet can teleport to any portal node in one turn, but then must travel normally from there. With portals in only 2 systems, your teleportation network has only 2 endpoints. The threatened colony 3 lanes from your nearest portal will take 3 additional turns to reach after the teleport. The lesson: build portals in your frontier systems, not just your core systems. A portal at your border is worth far more defensively than one at your home system, where threats rarely reach. Plan portal construction as a priority defensive investment as your empire expands."
+    }
+  ,
+    {
+      scenario: "You are playing Horatio. Turn 22. You've collected genetic samples from Sophons (strong +Science/pop) and from a conquered Craver system (strong +Industry/pop, −Approval/pop). You need to make your first Gene Fusion decision.",
+      q: "Is the Sophon + Craver fusion a good choice, and what is the main consideration?",
+      opts: [
+        "No — Craver genes introduce too much Approval penalty; never fuse negative-trait races.",
+        "Yes — the Sophon+Craver fusion creates a pop type with both +Science/pop and +Industry/pop, combining the two most valuable FIDSI resources. The −Approval trait from Cravers is partially diluted in the fusion process (combined bonuses are weighted averages), and the combined Science+Industry output makes it one of the strongest possible fusions for almost any victory path. Assign Counselor Heroes to systems populated with this type to manage the residual Approval penalty.",
+        "It depends entirely on your chosen victory path — only fuse traits that exactly match your single victory condition.",
+        "Never fuse with captured/conquered faction samples — the genes are incompatible with Horatio biology."
+      ],
+      correct: 1,
+      explain: "Sophon+Craver is one of the strongest available fusions precisely because it combines the two most universally valuable FIDSI resources. The Craver −Approval trait is real but manageable: the fusion dilutes it (it's not full Craver Approval penalty), and Counselor Heroes assigned to those systems can fully compensate. The key insight of Gene Fusion is that negative traits are partial while positive traits are also partial — you're getting the combined upside of both races at reduced strength, which almost always outweighs the downside when your chosen combination covers two critical FIDSI outputs. A pop generating both Science and Industry per unit is producing two resources simultaneously that other factions need two separate pop types to cover."
+    }
+    ,
+    {
+      scenario: "You are playing Lumeris. Turn 28. Your empire has 4 systems, Approval at 88 (Ecstatic). Your Trade Company is Level 4, generating 210 Dust/turn. You have 1,400 Dust in reserve. A neighbor has offered a Trade Agreement. Accepting it would extend your Trade Company route through their territory, adding an estimated +55 Dust/turn. However, your route currently passes through a system with no star lane connection to theirs — the extension requires you to first build a relay outpost in an unclaimed off-piste system (cost: 250 Dust, ~6 turns to become a colony).",
+      q: "Should you accept the Trade Agreement and build the relay outpost?",
+      opts: [
+        "Yes — accept immediately and build the outpost. +55 Dust/turn pays back the 250 Dust cost in under 5 turns.",
+        "No — Trade Agreements are a diplomatic liability. Avoid entangling alliances.",
+        "Accept the agreement, but don't build the relay outpost yet. Scout whether the off-piste system has meaningful resources first. If it has a Tree of Worlds or strategic resource, the outpost is doubly justified; if it's barren, the route extension may not be worth the Approval cost of an extra colony at 88 Approval.",
+        "Reject the agreement and focus on leveling your existing Trade Company to Level 5 before expanding routes."
+      ],
+      correct: 2,
+      explain: "+55 Dust/turn does pay back 250 Dust in under 5 turns — the math looks obvious. But the relay outpost is also a new colony, which will push Approval below 88 and cost you the Ecstatic bonus (+30% to all FIDSI empire-wide). At 4 systems generating combined FIDSI, losing Ecstatic is worth roughly 60–100+ Dust/turn depending on your output. The route extension only becomes net-positive if the off-piste system has additional value (resources, strategic position) that justifies the Approval cost. Accept the Trade Agreement immediately — it costs nothing and locks in the diplomatic relationship. But evaluate the outpost as a colonization decision first, not just a route infrastructure decision. TAKT: spend when the full picture justifies it, not just the headline number."
     }
   ];
 </script>

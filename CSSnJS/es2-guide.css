@@ -7,6 +7,7 @@
     --border:      #162540;
     --text:        #b8ccE4;
     --text-bright: #ddeeff;
+    --text-dim:        #B8ccE47F;
 
     /* ── Semantic fixed colors (role-based, not accent) ── */
     --green:       #1db96a;
@@ -75,6 +76,32 @@
 	--ts_logoText:var(--ts_sectionLabel);
 	--ts_quizQuestion:var(--ts_sectionLabel);
 	--ts_quizSmall:var(--ts_sectionTitle);
+
+    /* ── Faction identity colors ── */
+    --lumeris-color:        #e8a020;
+    --lumeris-color-rgb:    232,160,32;
+    --ue-color:             #c0392b;
+    --ue-color-rgb:         192,57,43;
+    --vodyani-color:        #ff6b1a;
+    --vodyani-color-rgb:    255,107,26;
+    --riftborn-color:       #00e5ff;
+    --riftborn-color-rgb:   0,229,255;
+    --sophon-color:         #2d8fff;
+    --sophon-color-rgb:     45,143,255;
+    --cravers-color:        #1a6b2a;
+    --cravers-color-rgb:    26,107,42;
+    --hissho-color:         #e84040;
+    --hissho-color-rgb:     232,64,64;
+    --horatio-color:        #f0a8d0;
+    --horatio-color-rgb:    240,168,208;
+    --unfallen-color:       #1db96a;
+    --unfallen-color-rgb:   29,185,106;
+    --umbral-color:         #8b5cf6;
+    --umbral-color-rgb:     139,92,246;
+    --vaulters-color:       #00c9a7;
+    --vaulters-color-rgb:   0,201,167;
+    --nakalim-color:        #e8d48b;
+    --nakalim-color-rgb:    232,212,139;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -231,11 +258,12 @@
   .breadcrumb {
     font-family: 'Share Tech Mono', monospace;
     font-size: var(--ts_breadcrumb);
-    color: var(--muted);
+    color: var(--text-dim);
     letter-spacing: 1px;
     margin-bottom: 16px;
   }
   
+  .breadcrumb a, .breadcrumb a:visited   { color: var(--text-bright); text-decoration: none;}
   .breadcrumb span { color: var(--accent); }
   
   .breadcrumb #navHider
@@ -826,17 +854,17 @@
   }
 
   
-  .badge-lumeris { background:rgba(var(--vol1-accent-rgb), 0.15); color:var(--vol1-accent); border:1px solid rgba(var(--vol1-accent-rgb), 0.3); }
-  .badge-vodyani { background:rgba(var(--vol3-accent-rgb), 0.15); color:var(--vol3-accent); border:1px solid rgba(var(--vol3-accent-rgb), 0.3); }
-  .badge-craver  { background:rgba(var(--red-rgb), 0.15);  color:var(--vol2-accent); border:1px solid rgba(var(--red-rgb), 0.3); }
-  .badge-riftborn{ background:rgba(var(--vol4-accent-rgb), 0.15); color:var(--vol4-accent); border:1px solid rgba(var(--vol4-accent-rgb), 0.3); }
-  .badge-umbral  { background:rgba(var(--vol0-accent-rgb), 0.12);  color:var(--vol0-accent); border:1px solid rgba(var(--vol0-accent-rgb), 0.3); }
-  .badge-horatio { background:rgba(var(--green-rgb), 0.12); color:var(--green); border:1px solid rgba(var(--green-rgb), 0.3); }
-  .badge-ue      { background:rgba(var(--vol1-accent-rgb), 0.15); color:var(--vol1-accent); border:1px solid rgba(var(--vol1-accent-rgb), 0.3); }
-  .badge-sophon  { background:rgba(var(--vol4-accent-rgb), 0.15); color:var(--vol4-accent); border:1px solid rgba(var(--vol4-accent-rgb), 0.3); }
-  .badge-unfallen{ background:rgba(var(--green-rgb), 0.15); color:var(--green); border:1px solid rgba(var(--green-rgb), 0.3); }
-  .badge-vaulters{ background:rgba(var(--vol3-accent-rgb), 0.15); color:var(--vol3-accent); border:1px solid rgba(var(--vol3-accent-rgb), 0.3); }
-  .badge-hissho  { background:rgba(var(--red-rgb), 0.15);  color:var(--vol2-accent); border:1px solid rgba(var(--red-rgb), 0.3); }
-  .badge-nakalim { background:rgba(var(--vol5-accent-rgb), 0.12);  color:var(--vol5-accent); border:1px solid rgba(var(--vol5-accent-rgb), 0.3); }
+  .badge-lumeris { background:rgba(var(--lumeris-color-rgb), 0.15); color:var(--lumeris-color); border:1px solid rgba(var(--lumeris-color-rgb), 0.3); }
+  .badge-ue      { background:rgba(var(--ue-color-rgb),      0.15); color:var(--ue-color);      border:1px solid rgba(var(--ue-color-rgb),      0.3); }
+  .badge-vodyani { background:rgba(var(--vodyani-color-rgb), 0.15); color:var(--vodyani-color); border:1px solid rgba(var(--vodyani-color-rgb), 0.3); }
+  .badge-riftborn{ background:rgba(var(--riftborn-color-rgb),0.15); color:var(--riftborn-color);border:1px solid rgba(var(--riftborn-color-rgb),0.3); }
+  .badge-sophon  { background:rgba(var(--sophon-color-rgb),  0.15); color:var(--sophon-color);  border:1px solid rgba(var(--sophon-color-rgb),  0.3); }
+  .badge-cravers { background:rgba(var(--cravers-color-rgb), 0.15); color:var(--cravers-color); border:1px solid rgba(var(--cravers-color-rgb), 0.3); }
+  .badge-hissho  { background:rgba(var(--hissho-color-rgb),  0.15); color:var(--hissho-color);  border:1px solid rgba(var(--hissho-color-rgb),  0.3); }
+  .badge-horatio { background:rgba(var(--horatio-color-rgb), 0.12); color:var(--horatio-color); border:1px solid rgba(var(--horatio-color-rgb), 0.3); }
+  .badge-unfallen{ background:rgba(var(--unfallen-color-rgb),0.15); color:var(--unfallen-color);border:1px solid rgba(var(--unfallen-color-rgb),0.3); }
+  .badge-umbral  { background:rgba(var(--umbral-color-rgb),  0.12); color:var(--umbral-color);  border:1px solid rgba(var(--umbral-color-rgb),  0.3); }
+  .badge-vaulters{ background:rgba(var(--vaulters-color-rgb),0.15); color:var(--vaulters-color);border:1px solid rgba(var(--vaulters-color-rgb),0.3); }
+  .badge-nakalim { background:rgba(var(--nakalim-color-rgb), 0.12); color:var(--nakalim-color); border:1px solid rgba(var(--nakalim-color-rgb), 0.3); }
 
   
