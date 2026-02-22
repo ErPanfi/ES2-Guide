@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ES2 Vol.6 — The Lumeris</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
 <style>
   /* Vol 6 — Lumeris: deep gold / amber. Money. */
   :root {
@@ -40,10 +40,6 @@
 
   /* Lumeris identity badge */
   .faction-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 5px 16px; border-radius: 20px;
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px; margin-bottom: 16px; font-weight: 700;
     background: rgba(var(--vol6-accent-rgb), 0.15); color: var(--accent-bright);
     border: 1px solid rgba(var(--vol6-accent-rgb), 0.35);
   }
@@ -139,12 +135,6 @@
     color: var(--accent-bright); letter-spacing: 3px; margin-bottom: 10px;
   }
 
-  /* nav volume links */
-  .vol-link {
-    margin: 8px 20px 0; padding: 10px 14px;
-    border-radius: 6px; font-size: var(--ts_quizTitle); font-family: 'Share Tech Mono', monospace;
-    cursor: pointer;
-  }
 </style>
 </head>
 <body>
@@ -184,8 +174,6 @@
 
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
-
-  <div class="vol-link" style="background:rgba(var(--vol6-accent-rgb),0.08);border:1px solid rgba(var(--vol6-accent-rgb),0.2);color:var(--accent);" onclick="location.href='es2-vol5-factions2.html'">← Vol.5: Faction Guides II</div>
 
   <div class="progress-mini">
     <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
@@ -1047,7 +1035,7 @@
     }
   ];
 </script>
-<script src="es2-guide.js"></script>
-<script>renderQuiz(); initProgress();</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress();  initMobileNav();</script>
 </body>
 </html>
