@@ -22,7 +22,7 @@ es2-vol4-diplomacy.html    ← Vol.4: Diplomacy
 es2-vol5-factions.html     ← Vol.5: Standard Factions
 es2-vol6-factions-special.html  ← Vol.6: Special Factions
 es2-Fac01-lumeris.html  ← Faction deep-dive: The Lumeris (in-progress)
-index.html                 ← Main page (in progress: at this moment is just a redirect to Vol0)
+index.html                 ← Main page 
 ```
 
 The files must follow this subdirectory structure:
