@@ -262,6 +262,8 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 </nav>
 ```
 
+Factions deep dive should not have the two `vol-link` elements in the sidebar, because deep dives are meant to be standalone volumes, and do not have a logical order
+
 ### Common content components
 
 **Callout boxes:**
