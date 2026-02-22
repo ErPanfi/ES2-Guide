@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.4 — Diplomacy & Espionage</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="es2-guide.css">
+<style>
+  /* Vol 3 accent: purple — intrigue */
+    :root {
+    --accent:     var(--vol4-accent);
+    --accent-rgb: var(--vol4-accent-rgb);
+    --accent-dim: rgba(var(--vol4-accent-rgb), 0.11);
+  }
+  .progress-mini-fill { background: linear-gradient(90deg, var(--vol3-accent), var(--vol4-accent)); }
+  body::before { background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(var(--vol3-accent-rgb), 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 20%, rgba(var(--vol4-accent-rgb), 0.04) 0%, transparent 70%); }
+  h1.page-title { text-shadow: 0 0 30px rgba(var(--vol3-accent-rgb), 0.3); }
+  .topic-num { color:var(--accent); background:var(--accent-dim); border-color:rgba(var(--vol3-accent-rgb), 0.3); }
+  .tag-mech { background:var(--accent-dim); color:var(--accent); border-color:rgba(var(--vol3-accent-rgb), 0.25); }
+  .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:var(--accent-dim); }
+  .nav-item:hover { background:var(--accent-dim); }
+  .step-list li .step-n { color:var(--accent); background:var(--accent-dim); }
+  .callout-tip { border-left-color:var(--accent); background:var(--accent-dim); }
+  .callout-tip .callout-label { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="game-name">VOLUME 4</div>
+    <div class="guide-name">Diplomacy &<br>Espionage</div>
+  </div>
+  <div class="nav-section-label">// Diplomacy</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">🤝 Relation Score System <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">📜 Agreement Types <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">⚔️ War Mechanics & Peace <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🏛️ Senate & Coalitions <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-section-label">// Espionage (Penumbra)</div>
+  <div class="nav-item" onclick="scrollByID('t5')">🕵️ Network & Bandwidth Basics <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">💻 Hacking Results by Target <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🛡️ Offensive &amp; Defensive Programs <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+  
+  
+  <div class="vol-link" style="background:rgba(var(--vol3-accent-rgb),0.08);border:1px solid rgba(var(--vol3-accent-rgb),0.20);color:var(--vol3-accent);" onclick="location.href='es2-vol3-heroes.html'">← Vol.3: Heroes</div>
+  <div class="vol-link" style="background:rgba(var(--vol5-accent-rgb),0.08);border:1px solid rgba(var(--vol5-accent-rgb),0.20);color:var(--vol5-accent);margin-top:6px;" onclick="location.href='es2-vol5-factions.html'">Vol.5: Faction Guides →</div>
+  
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+
+  </nav>
+
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb">ES2 // <span>Vol.4</span> // Diplomacy & Espionage</div>
+    <h1 class="page-title">Diplomacy &<br>Espionage</h1>
+    <p class="page-subtitle">ES2's diplomatic system is more mechanical than most 4X games — relation scores change by specific amounts from specific triggers, and knowing those triggers lets you manage relationships proactively. The Penumbra DLC's hacking system adds a parallel covert layer that most players ignore entirely. Both are covered here at full depth.</p>
+  </div>
+
+  <!-- T1: RELATION SCORE -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The Diplomatic Relation Score System</h2>
+        <div class="topic-subtitle">Every diplomatic event moves the relation score by a specific, predictable amount — not at random</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🤝</span>
+        <span class="block-title">How Relation Scores Are Calculated</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every faction pair in the game has a hidden <strong>Relation Score</strong> ranging from roughly −100 (maximum hostility) to +100 (maximum friendship). The score is visible in the F6 Diplomacy screen as a bar and a number. Every diplomatic action, military event, and passive situation moves this score by a specific delta each turn or as a one-time event.</p>
+        <table class="ref-table">
+          <tr><th>Event / Situation</th><th>Relation Change</th><th>Duration</th></tr>
+          <tr><td class="cell-key">Active peace agreement</td><td class="cell-good">+1 per turn passively</td><td>Ongoing while treaty is active</td></tr>
+          <tr><td class="cell-key">Trade agreement active</td><td class="cell-good">+1–2 per turn</td><td>Ongoing</td></tr>
+          <tr><td class="cell-key">Fleet in their territory (no access rights)</td><td class="cell-bad">−2 per turn per fleet</td><td>Ongoing; stops when fleet leaves</td></tr>
+          <tr><td class="cell-key">Your fleet blockades their system</td><td class="cell-bad">−5 per turn</td><td>Ongoing; very fast relationship destruction</td></tr>
+          <tr><td class="cell-key">Attacked a common enemy</td><td class="cell-good">+5 one-time</td><td>Fades over ~15 turns</td></tr>
+          <tr><td class="cell-key">Declared war on them</td><td class="cell-bad">−40 one-time</td><td>Permanent memory; never fully recovered</td></tr>
+          <tr><td class="cell-key">Broke a treaty</td><td class="cell-bad">−20 one-time + reputation loss</td><td>Permanent; affects all other factions too</td></tr>
+          <tr><td class="cell-key">Refused a reasonable diplomatic offer</td><td class="cell-bad">−3 to −8 one-time</td><td>Fades over ~10 turns</td></tr>
+          <tr><td class="cell-key">Gave a gift (Dust/resource tribute)</td><td class="cell-good">+3 to +12 one-time</td><td>Fades over ~20 turns</td></tr>
+          <tr><td class="cell-key">Ideological similarity (same political party in power)</td><td class="cell-good">+0.5 per turn</td><td>Ongoing — a passive bonus for sharing governance style</td></tr>
+        </table>
+        <div class="callout callout-warn">
+          <div class="callout-label">THE "PERMANENT MEMORY" RULE</div>
+          War declarations leave a permanent scar on the relation score that never fully decays. Even if you sign peace 50 turns later and maintain positive relations, the opponent AI will carry a hidden hostility modifier from the war declaration permanently. This means factions you've gone to war with once are significantly harder to form long-term alliances with. If you need a future ally, avoid declaring war on them — even in wars of opportunity.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T2: AGREEMENTS -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Agreement Types & Strategic Uses</h2>
+        <div class="topic-subtitle">Not all agreements are equally valuable — some provide active game-winning advantages others don't</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">The Full Agreement Menu — What Each One Actually Does</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Agreement</th><th>Mechanical Effect</th><th>Strategic Value</th><th>Relation Required</th></tr>
+          <tr><td class="cell-key">Non-Aggression Pact</td><td>Both sides cannot declare war for the treaty duration. Breaking it is a major relation hit.</td><td>High — locks down one flank while you fight on another</td><td>Neutral (+0)</td></tr>
+          <tr><td class="cell-key">Trade Agreement</td><td>+Dust income to both parties from trade route income sharing. Also extends Trade Company routes into partner territory.</td><td>Very High — allows long trade routes even with a small empire; passive Dust for both sides</td><td>Friendly (+20)</td></tr>
+          <tr><td class="cell-key">Research Agreement</td><td>Both parties gain a science bonus per turn (shared research pool trickle). Does not share technology directly.</td><td>Medium — useful early when Science income is low</td><td>Friendly (+20)</td></tr>
+          <tr><td class="cell-key">Military Access</td><td>Your fleets may pass through their systems without triggering the −2 relation-per-turn penalty.</td><td>High for offensive operations — lets you position fleets near a third enemy without alarming the agreement partner</td><td>Friendly (+25)</td></tr>
+          <tr><td class="cell-key">Alliance</td><td>Shared vision of enemy movements, defensive war obligations, joint Senate voting</td><td>Very High — access to their intel, and their Senate votes compound with yours in political dominance</td><td>Allied (+50)</td></tr>
+          <tr><td class="cell-key">Embargo</td><td>Declare an embargo against a third faction — you and the partner both refuse to trade with the target</td><td>Situational — useful to economically strangle an opponent pursuing Economic victory; requires partner to agree</td><td>Friendly (+20)</td></tr>
+        </table>
+        <div class="callout callout-tip">
+          <div class="callout-label">TRADE AGREEMENT ROUTE EXTENSION — THE HIDDEN ADVANTAGE</div>
+          When you have a Trade Agreement with a neighbor, your Trade Company routes can pass through their systems and use their systems as Subsidiary endpoints. This dramatically extends effective route length — the single largest income multiplier for Trade Companies. A Trade Agreement with a neighbor who has deep territory can double your Trade Company income without any additional construction on your part. Always sign Trade Agreements with peaceful neighbors before building your Trade Company HQ.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T3: WAR & PEACE -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">War Declarations, Cold War & Peace Treaties</h2>
+        <div class="topic-subtitle">War has three escalation stages — knowing them prevents you from stumbling into full conflict unprepared</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Cold War → War → Peace: The Three Stages</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Military conflict in ES2 escalates through three distinct states, and transitioning between them has specific mechanical effects:</p>
+        <ul class="step-list">
+          <li><span class="step-n">COLD WAR</span><span>This is an intermediate hostile state below full war. In Cold War, you can perform hostile actions like Blockade (fleet orbiting their system without full combat) and Privateers (licensed pirates attacking their trade routes), but you cannot invade their systems or trigger full fleet combat. Cold War is declared from the F6 Diplomacy screen. The primary purpose is economic pressure — Blockading their Trade Company routes reduces their Dust income while you build up military for a real war. Each turn in Cold War also generates Influence that can be used to push the Senate toward a war declaration.</span></li>
+          <li><span class="step-n">WAR</span><span>Full war enables all hostile actions: fleet combat, ground invasion, system capture. A war declaration drops relation by −40 immediately and starts generating "War Score" for both sides — the accumulated advantage from battles won, systems captured, and fleets destroyed. War Score determines what peace terms you can demand at the treaty table. High positive War Score = you can demand significant concessions. Negative War Score = you'll have to offer concessions to end the war.</span></li>
+          <li><span class="step-n">PEACE TREATY</span><span>Peace is negotiated in F6 → select the faction → Treaty. Your available demands are gated by your current War Score relative to theirs. Available peace terms include: return all captured systems to original owners (White Peace), transfer specific systems permanently to the winner, demand reparation Dust payments, or force-release an allied faction from their obligations. Accepting unfavorable peace terms while you have a positive War Score is one of the most common tactical errors — if you're winning, keep the war going until you've taken what you want.</span></li>
+        </ul>
+        <div class="callout callout-warn">
+          <div class="callout-label">AI WAR DECLARATION TRIGGERS</div>
+          The AI is far more likely to declare war on you when: (1) your military score drops well below theirs (visible in F5 Scores), (2) you have fleets in their territory without Military Access rights, (3) your relation score drops below −30 without any treaties, or (4) another faction offers them an alliance against you. Monitor F5 Military score constantly — if an opponent's military power is 2× yours with no active treaty, expect a war declaration within 10–15 turns. Pre-emptively offer a Non-Aggression Pact before their score diverges that far.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T4: SENATE & COALITIONS -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Senate Coalitions & Offensive Politics</h2>
+        <div class="topic-subtitle">The Senate is not just an internal resource — it's a weapon you can aim at leading opponents</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Galaxy-Wide Senate Mechanics</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Senate is a galaxy-wide institution. Every major faction holds a number of Senate seats proportional to their Influence stat relative to the total Influence of all factions. The senate votes on special laws — and unlike the per-empire political laws, Senate laws apply to <em>every faction in the galaxy simultaneously</em>. This is what makes the Senate an offensive weapon.</p>
+        <ul class="step-list">
+          <li><span class="step-n">SEATS</span><span>Your Senate seat count = your Influence output / total galaxy Influence output × total seats. A faction that dominates Influence production dominates the Senate. The Religious party's entrenched law gives empire-wide Influence bonuses — running Religious in power is the fastest way to Senate dominance.</span></li>
+          <li><span class="step-n">PROPOSALS</span><span>Any faction with sufficient seats can propose a Senate law from the available pool. Laws range from "+Industry to all empires" (broadly helpful) to "Embargo all empires currently at war" (potentially devastating to aggressive players) to "Technology sharing" (forces all factions to share their current research progress — disastrous if you're winning the tech race, great if you're behind).</span></li>
+          <li><span class="step-n">OFFENSIVE USE</span><span>The most powerful offensive Senate plays target the current leader. If an opponent is close to Economic victory, propose "Dust production penalty to all empires" — it slows everyone including you, but it slows the leader proportionally more. If an opponent relies on their military, propose "Fleet maintenance cost doubled." Use the Senate as a delay mechanism against whoever is closest to winning while you close the gap.</span></li>
+        </ul>
+        <div class="callout callout-gold">
+          <div class="callout-label">ALLY SENATE SEAT SHARING</div>
+          An Alliance agreement combines your Senate votes with your ally's — you vote as a bloc. Two medium-Influence empires allied can overpower one high-Influence empire in Senate votes. If you're losing the Influence game individually, forming an Alliance with another faction purely for Senate vote pooling is a legitimate strategic play. The Alliance does come with defensive war obligations, so choose an ally who isn't likely to drag you into an unwanted war.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T5: HACKING NETWORK BASICS -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Hacking: The Penumbra Espionage System</h2>
+        <div class="topic-subtitle">A covert layer that operates entirely independently of diplomacy, fleets, and territory — available to any faction with the Penumbra DLC</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🕵️</span>
+        <span class="block-title">How the Network Works: Bandwidth, Nodes, and Reach</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Hacking is a parallel action economy that runs alongside your FIDSI and military. Its core currency is <strong>Bandwidth</strong> — generated per turn by your home node, capped by your node level, and spent on hacking operations. Every active hacking operation costs Bandwidth per turn; unused Bandwidth above the cap is wasted, so you always want active operations running.</p>
+        <p>To hack a target system, your hacking network must have a path that <em>reaches</em> it through star lane connections. Hacking travels at <strong>2.9 distance units per turn along a star lane</strong>. You can also hack across open space if you have the Free Movement tech (0.75 units/turn, capped at 23 units distance). Once a hacking operation reaches the target node, the outcome resolves — but if the defender has a defensive program installed, a <strong>Trace</strong> is launched that travels back toward your source at twice your hacking speed over empty space. The key tactical insight: routing your hack through two intermediate nodes usually gives you enough "travel time" for the hack to complete before the trace arrives. A single-hop direct hack is usually too fast to outrun the trace.</p>
+        <div class="callout callout-tip">
+          <div class="callout-label">NO DEFENSIVE PROGRAM = FREE HACK</div>
+          If the target system has no defensive program installed, no trace is launched at all — you can hack it freely with zero risk. Conversely, if your own systems have no defensive programs, they are sitting ducks. Place at least Encrypt on your home system and any critical Science or Dust system from the moment you unlock hacking.
+        </div>
+        <p><strong>Backdoors</strong> are persistent entry points your hacking operations can create in enemy systems. A backdoor allows you to launch new operations from that node directly — effectively extending your network into their territory and granting increased hacking speed on neighbouring nodes. Crucially, hacking started from a backdoor does not trigger a trace on the starting planet, making backdoors extremely valuable for sustained covert campaigns.</p>
+        <p><strong>Sleepers</strong> are embedded population units resulting from a successful hack. They grant you continuous vision of the system and drain a small amount of that system's economy each turn. The Dust drain is disguised under comical names ("Wardrobe Malfunctions", "Ocean Moisturizing", "Charitable Donations") that make it hard for the victim to notice without active monitoring.</p>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T6: HACKING RESULTS BY TARGET -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">What Hacking Actually Does: Results by Target Type</h2>
+        <div class="topic-subtitle">The available outcomes depend on who you're hacking — player systems, home systems, pirates, the Academy, and minor factions each have their own result table</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">💻</span>
+        <span class="block-title">Hacking Results by Target</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>All hacking outcomes are divided into Level 1 (available on any reachable node) and Level 2 (require reaching the target node, not just passing through). Level 1 outcomes can be blocked by a Firewall defensive program. Each target type has its own outcome pool:</p>
+
+        <table class="ref-table">
+          <tr><th>Target</th><th>Outcome</th><th>Level</th><th>Effect</th></tr>
+          <tr><td class="cell-key" rowspan="5">Player System</td><td>Embed Sleeper</td><td>1</td><td>One pop becomes a sleeper — grants you vision and economic drain until killed</td></tr>
+          <tr><td>Create Backdoor</td><td>1</td><td>Persistent entry point: launch future ops from this node, faster hacking on neighbours</td></tr>
+          <tr><td>Jam Commands</td><td>1</td><td>Forces the target to play a detrimental ground battle card as defence for 5 turns</td></tr>
+          <tr><td>Influence Politics</td><td>1</td><td>Changes the system's active political party to your chosen party</td></tr>
+          <tr><td>Injure Figurehead</td><td>1</td><td>Wounds the system's assigned hero</td></tr>
+          <tr><td class="cell-key" rowspan="5">Player Home System</td><td>Infiltrate Scanners</td><td>2</td><td>Vision on all enemy fleets for 10 turns + embeds a sleeper</td></tr>
+          <tr><td>Topple Government</td><td>2</td><td>Causes Anarchy and forces a government change; also shifts system politics to chosen party</td></tr>
+          <tr><td>Scramble Navigation</td><td>2</td><td>Immobilises all enemy fleets for 5 turns + wounds the hero</td></tr>
+          <tr><td>Support Revolutionaries</td><td>2</td><td>Spawns Pirate Revolutionaries from the system's pop; forces a detrimental ground battle card for 5 turns</td></tr>
+          <tr><td>Server ID Duplication</td><td>2</td><td>Steals a technology + creates a backdoor</td></tr>
+          <tr><td class="cell-key" rowspan="4">Pirate Lair</td><td>Create Backdoor</td><td>1</td><td>Entry point into the pirate network</td></tr>
+          <tr><td>Hack Autodroids</td><td>2</td><td>Steal some of the lair's stockpiled resources</td></tr>
+          <tr><td>Falsify Logs</td><td>2</td><td>Improve your relations with the pirates</td></tr>
+          <tr><td>Eavesdrop</td><td>2</td><td>−50% pirate diplomacy cost (NAP, bribe, etc.)</td></tr>
+          <tr><td>Sabotage Supplies</td><td>2</td><td>+4 turns before the next pirate fleet spawns; 0 reinforcement points added</td></tr>
+          <tr><td class="cell-key" rowspan="4">The Academy</td><td>Decrease Reparations</td><td>2</td><td>Reduces current reparations with the Academy by 10%</td></tr>
+          <tr><td>Increase Contributions</td><td>2</td><td>Increases current contributions by 5%</td></tr>
+          <tr><td>Immobilize Fleets</td><td>2</td><td>Prevents all Academy fleet movement for 5 turns</td></tr>
+          <tr><td>Earn Hero Points</td><td>2</td><td>Adds 5% of the Hero Unlock Threshold to the unlock points of your chosen hero class</td></tr>
+          <tr><td class="cell-key" rowspan="4">Minor Faction</td><td>Create Backdoor</td><td>1</td><td>Entry point into the minor faction's node</td></tr>
+          <tr><td>Improve Image</td><td>2</td><td>+5 relation points per turn with the faction for 5 turns</td></tr>
+          <tr><td>Impersonate Ambassador</td><td>2</td><td>−5 relationship between the minor faction and its current suzerain; +500% Praise/Bribe action effect</td></tr>
+          <tr><td>Uncover Secrets</td><td>2</td><td>−50% cost on Praise/Bribe and Assist actions</td></tr>
+          <tr><td>Hack Economy</td><td>2</td><td>+75% minor faction yield for normal resources, +50% for strategics/luxuries; grants rewards even when at War or Neutral</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">HIGHEST-VALUE TARGETS BY GAME PHASE</div>
+          <strong>Early:</strong> Minor factions — "Uncover Secrets" halves bribe costs empire-wide, which compounds across every minor faction interaction for the rest of the game. "Improve Image" is free relationship gain without spending Influence.<br><br>
+          <strong>Mid:</strong> Pirate lairs — "Eavesdrop" at −50% diplomacy cost makes NAPs cheap enough to sustain indefinitely. "Sabotage Supplies" buys your border systems time when you don't have the military to fight back.<br><br>
+          <strong>Mid-Late:</strong> Academy — "Earn Hero Points" directly accelerates hero unlocks, and "Decrease Reparations" is free diplomatic standing with zero Influence cost.<br><br>
+          <strong>Late (vs. players):</strong> "Server ID Duplication" steals a technology and creates a backdoor in one action. "Scramble Navigation" immobilises all enemy fleets for 5 turns — effectively a free opening move before declaring war.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T7: PROGRAMS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Hacking Programs: Offensive and Defensive</h2>
+        <div class="topic-subtitle">Programs are modifiers you install on nodes to shape the speed and cost of operations passing through them — for you and against your enemies</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🛡️</span>
+        <span class="block-title">Offensive Programs</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Offensive programs are installed on nodes your hacking operations pass through. They modify how those operations perform in transit.</p>
+        <table class="ref-table">
+          <tr><th>Program</th><th>Bandwidth Cost</th><th>Effect</th><th>Unlock Tech</th></tr>
+          <tr><td class="cell-key">Accelerator</td><td>15</td><td>+30% Hacking Speed on your ops transiting this node</td><td>Eukaryotic Sap</td></tr>
+          <tr><td class="cell-key">Piggyback</td><td>15</td><td>−30% Bandwidth cost on all Hacking Programs for your ops at this node</td><td>Baryonic Shielding</td></tr>
+          <tr><td class="cell-key">Overload</td><td>20</td><td>+10% Bandwidth cost on enemy programs at this node while your op is active</td><td>Wave Function Control</td></tr>
+          <tr><td class="cell-key">Divert</td><td>20</td><td>Change the target or path of an active Hacking Operation mid-transit</td><td>Graviton Research</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="content-block open" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">🔒</span>
+        <span class="block-title">Defensive Programs</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Defensive programs are installed on your own nodes to slow, penalise, and detect enemy hacking operations. Critically: <strong>a system with no defensive program generates no trace at all</strong> — attackers can hack it freely. Always have at least Encrypt on any system you care about.</p>
+        <table class="ref-table">
+          <tr><th>Program</th><th>Bandwidth Cost</th><th>Effect</th><th>Unlock Tech</th></tr>
+          <tr><td class="cell-key">Encrypt</td><td>15</td><td>−50% enemy Hacking Speed on ops through this node; removes detected backdoors</td><td>Default (no tech required)</td></tr>
+          <tr><td class="cell-key">Interrogate</td><td>20</td><td>+30% Bandwidth cost on enemy Hacking Programs; removes detected backdoors</td><td>Wave Function Control</td></tr>
+          <tr><td class="cell-key">Lockdown</td><td>20</td><td>−25% enemy Hacking Speed; blocks hostile ops from creating backdoors; removes backdoors</td><td>Graviton Research</td></tr>
+          <tr><td class="cell-key">Firewall</td><td>30</td><td>Blocks all Level 1 hacking outcomes (Create Backdoor, Embed Sleeper, Influence Politics, Injure Figurehead, Jam Commands); removes backdoors</td><td>Dimensional Folding</td></tr>
+          <tr><td class="cell-key">Track</td><td>30</td><td>Reveals progress of enemy hacking operations passing through this node; removes backdoors</td><td>Dimensional Folding</td></tr>
+        </table>
+        <div class="callout callout-tip">
+          <div class="callout-label">DEFENSIVE PRIORITY ORDER</div>
+          <strong>Encrypt</strong> should go on every system you care about from the moment it's available — it's cheap (15 Bandwidth) and halves enemy hacking speed. <strong>Lockdown</strong> is the next priority: blocking backdoor creation prevents opponents from establishing persistent footholds inside your territory. <strong>Firewall</strong> is the strongest protection (blocks all Level 1 outcomes) but costs 30 Bandwidth — reserve it for your home system, primary Science system, and Senate-controlling system. <strong>Track</strong> is an intelligence tool rather than a blocker; place it on border nodes to get advance visibility of enemy operations routing through your territory.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Diplomacy and espionage decisions — apply what you've learned</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'vol4';
+  const TOTAL = 7;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "Turn 35. You're pursuing Science victory and have a good relation (+30) with a neighbor who has extensive territory deeper into the galaxy. You need longer Trade Company routes to boost your Dust income. You don't need their military support.",
+      q: "What is the single most valuable agreement to propose to this neighbor, and why?",
+      opts: [
+        "Alliance — combining Senate votes helps control galaxy-wide laws.",
+        "Trade Agreement — it passively boosts both parties' Dust income AND allows your Trade Company routes to extend through their territory, potentially doubling your route length and income without any additional construction.",
+        "Military Access — lets you position fleets near a third enemy through their territory.",
+        "Research Agreement — shared Science per turn benefits your Science victory push."
+      ],
+      correct: 1,
+      explain: "The Trade Agreement is the correct answer here specifically because of the route extension mechanic. Your Trade Company income scales heavily with route length, and extending routes through a neighbor's deep territory can add 5–8 more star lane hops to each route — the single largest multiplier on trade income. The Research Agreement provides a small Science trickle that your Science-focused empire can outpace on its own. Alliance has defensive war obligations that could drag you into conflicts. Military Access doesn't provide income."
+    },
+    {
+      scenario: "Turn 50. An opponent is at 65% of the Economic victory threshold (450,000 cumulative Dust). You're at 40% yourself. You have good military and Influence but your Trade income is lower than theirs.",
+      q: "What is the correct response to stop them from winning?",
+      opts: [
+        "Declare war immediately and invade their systems to stop their Dust production.",
+        "Use the Senate to propose an Embargo against them (requiring a second faction's support), simultaneously enter Cold War to blockade their Trade Company routes (cutting their Dust/turn), and use your Influence advantage to push a Senate law penalizing Dust production for all empires. Act now — at 65% you're still in the intervention window.",
+        "Ignore it and focus on catching up in your own Economic progress.",
+        "Sign an Alliance with a third faction and vote together in the Senate for laws that benefit your own production."
+      ],
+      correct: 1,
+      explain: "At 65%, you have roughly a 15–20 turn window before they reach 100%. Direct war declaration is high-risk and damages relations with other factions who may retaliate. The correct multi-pronged approach: (1) Cold War blockade their Trade Company routes — each blockaded route cuts their Dust/turn significantly, (2) Senate Embargo (if you can get another faction's agreement) forces all factions to stop trading with them, cutting route income further, (3) Senate law penalizing Dust production slows them more than it slows you proportionally. Combined, this can cost them 15–20% Dust/turn — enough to extend the game until you catch up."
+    },
+    {
+      scenario: "Turn 35. You've just noticed that a neighbour has a defensive program (Encrypt) on their home system, but none on their secondary Science system. Your hacking network can reach both. You have 40 Bandwidth available and are considering your first offensive operation.",
+      q: "What is the highest-value first hacking action against this opponent, and why?",
+      opts: [
+        "Hack the home system — it has the most Level 2 outcomes available, including Topple Government.",
+        "Hack the undefended Science system first. No defensive program means no trace is generated — the hack completes freely with zero risk. Use it to embed a Sleeper (granting permanent vision and economy drain) and create a Backdoor (a persistent launch point inside their territory for all future operations). Then route subsequent operations through that Backdoor to reach the home system, arriving with enough transit time to outrun the home system's Encrypt trace.",
+        "Install Lockdown on your own home system before doing anything offensive.",
+        "Use Overload on their home system to raise their Bandwidth costs before attacking."
+      ],
+      correct: 1,
+      explain: "A system with no defensive program generates no trace whatsoever — it's a free hack. The correct sequence: hit the undefended Science system first, embed a Sleeper (vision + economy drain for free, persists until they find and remove it), and create a Backdoor. The Backdoor is the strategic prize: it extends your effective network inside their territory, increases hacking speed on their neighbouring nodes, and lets you launch future operations from that position without triggering a trace at the starting point. From that Backdoor you can then route operations toward their Encrypt-defended home system with enough node-hops to outrun the trace. Overload raises enemy Bandwidth costs but only while your op is active on that node — it's a support program, not a first strike. Lockdown on your own system is defensive and irrelevant to the offensive question."
+    }  ];
+</script>
+<script src="es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

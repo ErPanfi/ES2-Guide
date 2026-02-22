@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.2 — Combat & Victory</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="es2-guide.css">
+<style>
+  /* Vol 2 accent: red/orange — war volume */
+    :root {
+    --accent:     var(--vol2-accent);
+    --accent-rgb: var(--vol2-accent-rgb);
+    --accent-dim: rgba(var(--vol2-accent-rgb), 0.11);
+  }
+  .progress-mini-fill { background: linear-gradient(90deg, var(--vol2-accent), var(--vol1-accent)); }
+  body::before { background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(var(--red-rgb), 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 20%, rgba(var(--vol1-accent-rgb), 0.04) 0%, transparent 70%); }
+  h1.page-title { text-shadow: 0 0 30px rgba(var(--red-rgb), 0.3); }
+  .topic-num { color:var(--accent); background:var(--accent-dim); border-color:rgba(var(--red-rgb), 0.3); }
+  .tag-mech { background:var(--accent-dim); color:var(--accent); border-color:rgba(var(--red-rgb), 0.25); }
+  .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:var(--accent-dim); }
+  .nav-item:hover { background:var(--accent-dim); }
+  .step-list li .step-n { color:var(--accent); background:var(--accent-dim); }
+  .callout-tip { border-left-color:var(--accent); background:var(--accent-dim); }
+  .callout-tip .callout-label { color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="game-name">VOLUME 2</div>
+    <div class="guide-name">Combat &<br>Victory</div>
+  </div>
+  <div class="nav-section-label">// Fleet Combat</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">⚔️ Combat Phase System <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🚀 Fleet & Ship Design <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🃏 Battle Cards <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-section-label">// Ground War</div>
+  <div class="nav-item" onclick="scrollByID('t4')">🪖 Ground Invasion <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-section-label">// Behemoths</div>
+  <div class="nav-item" onclick="scrollByID('t5')">🌑 Behemoth Types & Roles <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🌍 Behemoth: Terraforming <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-section-label">// Victory</div>
+  <div class="nav-item" onclick="scrollByID('t7')">🏆 Victory Conditions <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">📊 Mid-Game Assessment <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+  
+  
+  <div class="vol-link" style="background:rgba(var(--vol1-accent-rgb),0.08);border:1px solid rgba(var(--vol1-accent-rgb),0.20);color:var(--vol1-accent);" onclick="location.href='es2-vol1-empire.html'">← Vol.1: Empire & Economy</div>
+  <div class="vol-link" style="background:rgba(var(--vol3-accent-rgb),0.08);border:1px solid rgba(var(--vol3-accent-rgb),0.20);color:var(--vol3-accent);margin-top:6px;" onclick="location.href='es2-vol3-heroes.html'">Vol.3: Heroes →</div>
+  
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+
+  </nav>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb">ES2 // <span>Vol.2</span> // Combat & Victory</div>
+    <h1 class="page-title">Combat &<br>Victory</h1>
+    <p class="page-subtitle">Fleet combat in ES2 is a layered system of phases, lanes, weapon counters, and battle cards. This volume covers all of it — plus the two topics the original guide skipped entirely: ground invasions (with their permanent post-battle consequences) and Behemoths (the game's most powerful and most misunderstood ship class). Victory condition timing rounds out the volume.</p>
+  </div>
+
+  <!-- T1: COMBAT PHASES -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The 3-Phase Combat System & Weapon Ranges</h2>
+        <div class="topic-subtitle">Combat resolves across three range phases — your weapon choices determine which phase you dominate</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Phase Sequence and Range Resolution</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every battle is divided into three consecutive phases: <strong>Long Range → Medium Range → Short Range</strong>. Both fleets fire simultaneously in each phase using whatever weapons have accuracy in that range band. The phase you fight in is not random — it is determined by the battle cards both sides play before combat begins. Each card sets a preferred range; the interaction between both cards' preferences resolves which phase actually occurs (or if both agree, you skip to that range directly).</p>
+        <p>Weapon accuracy by range band — this is the core table to memorize:</p>
+        <table class="ref-table">
+          <tr><th>Weapon Type</th><th>Long Range</th><th>Medium Range</th><th>Short Range</th><th>Defense Target</th></tr>
+          <tr><td class="cell-key">Missiles</td><td class="cell-good">~90–100%</td><td>~65%</td><td class="cell-bad">~15%</td><td>Kinetic shields / Flak</td></tr>
+          <tr><td class="cell-key">Kinetic (Cannons)</td><td class="cell-bad">~30%</td><td>~65%</td><td class="cell-good">~95–100%</td><td>Energy shields</td></tr>
+          <tr><td class="cell-key">Beam (Lasers)</td><td>~50%</td><td class="cell-good">~85%</td><td>~50%</td><td>Armor plating</td></tr>
+        </table>
+        <p>The weapon-defense counter system: <strong>Kinetics bypass energy shields (deal full damage to hull). Beams bypass armor plating. Missiles are countered by Flak modules</strong> (reduces missile accuracy dramatically). Penetration modules partially bypass all defenses simultaneously — covered in the advanced section of battle card design.</p>
+        <div class="callout callout-tip">
+          <div class="callout-label">FLOTILLA LANE POSITIONING</div>
+          Each fleet's ships are arranged in three lanes: Top, Middle, Bottom. <strong>Middle lane ships fire at all three enemy lanes. Top and Bottom ships fire at two lanes each.</strong> Cross-lane shots are resolved as Long Range regardless of the actual phase — so a Bottom-lane ship firing at the enemy's Top lane uses Long Range accuracy for that shot even during Short Range phase. Put your highest-DPS ships in the Middle lane. Put your tanks (Protector role) in the lanes where they'll absorb the most fire.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T2: FLEET & SHIP DESIGN -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Fleet Composition & Ship Design Roles</h2>
+        <div class="topic-subtitle">Three exclusive ship roles with different module slots — never mix them on the same hull</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">The Three Combat Roles and Their Module Constraints</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>When designing a ship, you must choose one of three roles: <strong>Hunter, Coordinator, or Protector</strong>. Each role unlocks a different set of module slots and locks out the others. You cannot build a ship that combines Hunter offensive modules with Protector defensive modules — the role choice is exclusive.</p>
+        <table class="ref-table">
+          <tr><th>Role</th><th>Module Access</th><th>Primary Function</th><th>Fleet Count</th></tr>
+          <tr><td class="cell-key">Hunter</td><td>Weapon slots (kinetic, beam, missile), targeting modules</td><td>Damage output — the DPS backbone of your fleet</td><td>3–5 per fleet</td></tr>
+          <tr><td class="cell-key">Coordinator</td><td>Support modules (fleet buffs, siege tools, manpower transport), limited weapons</td><td>Siege bombardment + fleet-wide bonuses. Essential for invasion.</td><td>1–2 per fleet</td></tr>
+          <tr><td class="cell-key">Protector</td><td>Heavy defense modules (shields, armor, Flak), support weapons</td><td>Absorb damage, counter missiles via Flak, extend fleet lifespan</td><td>1–2 per fleet</td></tr>
+        </table>
+        <p>A standard combat fleet for mid-game: 3 Hunter ships (weapon-focused, Medium hull), 1 Coordinator (siege + fleet buff modules), 1 Protector (Flak + heavy armor). The Coordinator is the most misunderstood role — without it, you cannot reduce system defenses before invasion, and you lose the fleet-wide bonus modules that multiply your Hunters' output.</p>
+        <div class="callout callout-warn">
+          <div class="callout-label">NEVER BUILD "GENERALIST" SHIPS</div>
+          The most common fleet design mistake is trying to put weapons AND defenses on the same ship by splitting between Hunter and Protector. You can't — the role system prevents it — but players still try by choosing Hunter, then filling unused slots with weak defensive items. A Hunter with weapon slots should be entirely dedicated to weapons. A Protector's defense budget should go entirely to shields + armor + Flak. Dilution reduces both ships to mediocrity.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T3: BATTLE CARDS -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Battle Cards: Range Setting + Passive Bonuses</h2>
+        <div class="topic-subtitle">Cards do two things simultaneously — most players only notice one of them</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🃏</span>
+        <span class="block-title">How Battle Cards Actually Work</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Before each battle phase, both sides secretly select one battle card. Cards do <em>two simultaneous things</em> that most players conflate into one:</p>
+        <ul class="step-list">
+          <li><span class="step-n">FUNCTION 1</span><span><strong>Set a preferred combat range for that phase.</strong> The interaction between your card and the opponent's card resolves which range the phase actually occurs at. If both cards prefer Long Range, the phase occurs at Long Range. If they prefer different ranges, the outcome depends on the specific card interaction (shown in the card tooltip before confirmation). This is what most players know.</span></li>
+          <li><span class="step-n">FUNCTION 2</span><span><strong>Apply a passive fleet-wide bonus for the entire duration of the phase.</strong> Every card has a secondary effect independent of range — things like "+20% missile damage this phase," "+15% evasion," "+X% crit chance," or "enemy Flak effectiveness reduced by 30%." These bonuses apply regardless of which range the phase resolves at. This is what most players miss entirely. A Long Range card that loses the range contest still applies its passive bonus to your fleet during that phase.</span></li>
+        </ul>
+        <p>Faction-specific power cards are the most dramatic example of Function 2. The United Empire's <strong>Sheredyn Formation</strong> card grants +50% Penetration to all weapons for that phase — bypassing half of the opponent's shields and armor regardless of weapon type. Selecting this card is not primarily about range; it's about the Penetration bonus.</p>
+        <div class="callout callout-gold">
+          <div class="callout-label">BUILDING A CARD STRATEGY</div>
+          1. Know your dominant weapon type (Missiles, Kinetics, or Beams) and select cards that favor that range as PRIMARY.<br>
+          2. Among cards that favor your preferred range, pick the ones with the strongest passive bonus for your fleet composition.<br>
+          3. Keep 1 "surprise" card in your hand that favors a different range — if an opponent reads your card pattern and counter-picks, unpredictability costs them a phase.<br>
+          4. Always read the full tooltip of each card before the battle — the passive bonus is listed underneath the range preference, and it changes the calculus entirely.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T4: GROUND INVASION -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Ground Invasion: Troops, Manpower & Post-Battle Choices</h2>
+        <div class="topic-subtitle">Winning the space battle is only half the job — ground invasion is a separate system with permanent consequences</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🪖</span>
+        <span class="block-title">How Ground Combat Works Mechanically</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Once you've won a space battle and achieved orbital supremacy, you can initiate a ground invasion. Ground combat is entirely separate from fleet combat and uses the <strong>Manpower</strong> resource — a reserve pool that converts into troops for the invasion.</p>
+        <p>Three troop types are available, each countering one other (rock-paper-scissors):</p>
+        <table class="ref-table">
+          <tr><th>Troop Type</th><th>Counters</th><th>Weak Against</th><th>Best Against</th></tr>
+          <tr><td class="cell-key">Infantry</td><td>Aerial</td><td>Mechanized</td><td>Lightly-defended systems; early game invasions</td></tr>
+          <tr><td class="cell-key">Mechanized</td><td>Infantry</td><td>Aerial</td><td>Systems with heavy Infantry garrisons</td></tr>
+          <tr><td class="cell-key">Aerial</td><td>Mechanized</td><td>Infantry</td><td>Systems with Mechanized garrisons; rapid capture</td></tr>
+        </table>
+        <p>Before invading, you must <strong>survey the defender's troop composition</strong> — visible in the system tooltip once you have orbital control. This tells you which troop type to bring. Then you select how much Manpower to commit. The conversion ratio is not 1:1 — each Manpower unit converts into a troop strength value that depends on your current Manpower-to-Troops tech level (upgradeable in the Military tech tree). At base tech, 10 Manpower ≈ 1 troop unit.</p>
+        <div class="callout callout-warn">
+          <div class="callout-label">SIEGE BOMBARDMENT BEFORE INVASION</div>
+          System defenses (Fortresses, Defense Turrets, Ground Batteries) actively resist invasion and boost the defender's troop strength. Before committing Manpower, use your Coordinator ship's Siege bombardment action to reduce these. Siege is triggered from the fleet action menu when orbiting the target system — each turn of bombardment reduces defense structure HP. One to three turns of Coordinator siege before invasion dramatically reduces your Manpower cost and casualty rate. Never invade a well-fortified system without sieging first.
+        </div>
+      </div>
+    </div>
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Post-Invasion Choices: Occupy, Pillage, or Raze — Permanent Consequences</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>After winning the ground battle, you choose what to do with the captured system. This is one of the most permanent decisions in the game and cannot be undone:</p>
+        <table class="ref-table">
+          <tr><th>Option</th><th>Immediate Effect</th><th>Long-term Effect</th><th>When to Use</th></tr>
+          <tr><td class="cell-key">Occupy</td><td>System transfers to your empire with all buildings intact; population stays but with heavy Approval penalty</td><td>Full system becomes yours permanently. Highest long-term value if you can manage the Approval crash.</td><td>Always for high-value systems (many planets, luxury resources, strong FIDSI potential)</td></tr>
+          <tr><td class="cell-key">Pillage</td><td>Large one-time Dust loot drop; system returns to neutrality (not occupied)</td><td>System is available to re-colonize later — or an opponent might claim it. No permanent control.</td><td>When you're in a war of economic attrition and need Dust now; or when the system is not worth the Approval cost of occupation</td></tr>
+          <tr><td class="cell-key">Raze</td><td>All buildings on every planet are destroyed; system left as uninhabitable ruins temporarily</td><td>System is permanently weakened — future colonizer (you or opponent) starts from zero with no improvements. The planet slots remain but all development is gone.</td><td>Only when you cannot hold the system AND don't want an opponent to benefit from its development. A "scorched earth" play.</td></tr>
+        </table>
+        <div class="callout callout-tip">
+          <div class="callout-label">HANDLING THE OCCUPATION APPROVAL CRASH</div>
+          Occupying a system collapses its local Approval — often to 20–30%. This means all the FIDSI in that system runs at severe penalty for many turns. Before you invade, pre-position a Counselor Hero to assign as governor the moment occupation happens. The Counselor's Tier 4 skill (available at 12 skill points) forces the system's Approval to Ecstatic regardless of base penalties. Combined with 1–2 Happiness improvements built immediately after occupation, the system becomes productive within 5–10 turns instead of 30+.
+        </div>
+        <div class="callout callout-gold">
+          <div class="callout-label">INVASION TACTICS: BLITZ vs. PROTECT vs. DRAFT</div>
+          During the ground battle resolution screen, you also select an invasion tactic:<br>
+          <strong>Blitz:</strong> Maximizes damage dealt but takes higher casualties. Best when you have overwhelming Manpower advantage.<br>
+          <strong>Protect:</strong> Minimizes your casualties at the cost of slower progress. Best when your Manpower reserve is limited and you need to preserve troops for future invasions.<br>
+          <strong>Draft:</strong> Conscripts local population as troops mid-battle, reducing civilian population but adding troop strength. Best used when you're narrowly losing the ground battle and need emergency reinforcement — but be aware it permanently reduces the system's population by the drafted amount.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T5: BEHEMOTHS -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Behemoths: Types, Roles & Strategic Uses</h2>
+        <div class="topic-subtitle">The most powerful ships in the game — and most players never build any of them</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🌑</span>
+        <span class="block-title">What a Behemoth Is and How to Unlock One</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Behemoths are a special ship class — larger than any standard ship hull — unlocked by researching <strong>"Behemoth Construction"</strong> in the Military tech tree (Stage 4). Unlike standard ships, a Behemoth has no fixed role: instead it has a large pool of modular slots that accept mission-specific equipment packs called <strong>Behemoth Specializations</strong>. You build a Behemoth hull, then equip it with one of four specialization kits that determine its entire function.</p>
+        <p>Only one Behemoth can exist in your fleet at a time (by default). It moves with the fleet and participates in combat, but its value is usually in its out-of-combat capabilities.</p>
+        <p>The four Behemoth types:</p>
+        <table class="ref-table">
+          <tr><th>Type</th><th>Specialization Modules</th><th>Primary Use</th><th>When to Build</th></tr>
+          <tr><td class="cell-key">Juggernaut</td><td>Massive weapon arrays, extra Flak, reinforced hull beyond any standard ship</td><td>Pure combat — adds a fifth combat ship to your fleet with hull HP dwarfing Large ships</td><td>Supremacy or Conquest wars where fleet combat is constant</td></tr>
+          <tr><td class="cell-key">Obliterator</td><td>Planetary bombardment arrays, enhanced siege modules, population reduction beams</td><td>Destroy system defenses faster than Coordinator siege, and optionally reduce enemy system populations</td><td>Before major Conquest invasions — 1–2 turns of Obliterator siege removes what would take 5+ Coordinator turns</td></tr>
+          <tr><td class="cell-key">Citadel</td><td>Defensive turrets, fleet repair arrays, Flak walls, support weapons</td><td>Turns a system into a forward operating base; provides fleet-wide repair between battles</td><td>Holding contested chokepoints or supporting a long campaign far from home territory</td></tr>
+          <tr><td class="cell-key">Economic</td><td>FIDSI multiplier modules, system output amplifiers, resource generation boosts</td><td>Orbiting an underdeveloped system to massively boost its FIDSI output while stationed there</td><td>Early-to-mid game when developing new colonies — the FIDSI bonus while orbiting can be larger than several turns of improvements</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">💡</span>
+        <span class="block-title">The Economic Behemoth — The Most Underbuilt Ship in the Game</span>
+        <span class="block-tag tag-advanced">ADVANCED</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Of the four types, the Economic Behemoth is the least intuitive and the most neglected — and probably the highest-value option for non-Supremacy victory paths. Here's why:</p>
+        <ul class="step-list">
+          <li><span class="step-n">HOW IT WORKS</span><span>The Economic Behemoth's specialization modules apply a percentage multiplier to all FIDSI production in the system it's currently orbiting. The bonus is active only while the Behemoth is stationed there — it's a mobile FIDSI amplifier. The multiplier stacks with System Development bonuses, Governor hero bonuses, and percentage-multiplier buildings.</span></li>
+          <li><span class="step-n">ROTATION STRATEGY</span><span>Because the bonus follows the ship, you can rotate the Economic Behemoth between your most important systems on a schedule. Spend 5 turns orbiting your primary Industry system (completing ships faster), then 5 turns over your Science hub (compressing tech timelines), then 5 turns over a newly colonized system to accelerate its early development. One Behemoth serving three systems is more efficient than three separate empire improvements.</span></li>
+          <li><span class="step-n">COMPOUNDING</span><span>The FIDSI multiplier from the Behemoth stacks multiplicatively with System Development level bonuses. A system at Level 3 System Development already has large percentage bonuses applied. The Behemoth's multiplier sits on top of that already-amplified base. On a fully developed system, the Behemoth's presence can add more FIDSI per turn than any buildable improvement.</span></li>
+          <li><span class="step-n">TIMING</span><span>Build the Economic Behemoth as soon as Military Stage 4 is researched if you're pursuing Science, Economy, or Score victory. For Conquest, build the Obliterator first. For Supremacy all-out war, the Juggernaut. But if you're not in active fleet combat, the Economic Behemoth is almost always the correct choice.</span></li>
+        </ul>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T6: BEHEMOTH TERRAFORMING -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Behemoth Terraforming: Planet Type Conversion</h2>
+        <div class="topic-subtitle">Transforming planets permanently upgrades systems — removing anomalies as a side effect</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🌍</span>
+        <span class="block-title">How Terraforming Works</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>An Economic or a specially-configured Behemoth can carry <strong>Terraforming Module</strong> equipment (unlocked via Science & Exploration Stage 4 tech). When orbiting a system, the Terraforming module opens an action menu showing every planet in the system and the conversion paths available for each. You select a target planet and a new planet type, then the Behemoth begins a multi-turn conversion process (typically 5–10 turns depending on conversion distance in the "planet type tree").</p>
+        <p>When terraforming completes:</p>
+        <ul class="step-list">
+          <li><span class="step-n">TYPE CHANGE</span><span>The planet's base FIDSI profile changes completely to match the new type. A Barren planet converted to Fertile now produces Food-heavy output instead of its old profile. A Tundra converted to Arctic gives Science output instead of marginal Food.</span></li>
+          <li><span class="step-n">ANOMALY CLEARANCE</span><span>All anomalies specific to the old planet type are removed automatically. This is an alternative to Anomaly Correction tech — and it's a stronger one, because you simultaneously upgrade the planet's base output. If you have a heavily anomaly-damaged planet and the Behemoth available, terraforming is better than building Anomaly Correction improvements.</span></li>
+          <li><span class="step-n">NEW CURIOSITIES</span><span>After conversion, the planet receives new curiosity slots appropriate to its new type. These can contain positive anomalies, resources, or unique modules. Terraforming effectively "resets" the planet's curiosity history, giving you a fresh set of potential bonuses to investigate.</span></li>
+          <li><span class="step-n">POP HAPPINESS</span><span>Population already living on the planet may experience an Approval shift — they now live on a planet type that may or may not match their racial preference. Some pop types will become happier (e.g., Sophon pops moved onto an Arctic planet after terraforming love it). Others may become less happy. Check racial preferences before selecting a target planet type.</span></li>
+        </ul>
+        <div class="callout callout-tip">
+          <div class="callout-label">BEST TERRAFORMING TARGETS</div>
+          Priority targets for terraforming:<br>
+          1. Barren planets → Arctic (unlock Science output in your Science system)<br>
+          2. Any planet with severe negative anomalies that would cost many turns of Anomaly Correction industry<br>
+          3. Lava planets near population-heavy systems → Fertile (expand population cap and Food)<br>
+          4. Any planet whose type conflicts with its assigned population's racial preference — fixing the type can give a permanent per-pop Approval bonus worth more than most improvements.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T7: VICTORY CONDITIONS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Victory Conditions: Requirements & Commitment Windows</h2>
+        <div class="topic-subtitle">Six victory types, each with precise thresholds — and the window where you must commit to one</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">All 6 Victory Types — Exact Requirements</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Victory Type</th><th>Exact Requirement</th><th>Primary Resource Need</th></tr>
+          <tr><td class="cell-key">Conquest</td><td>Control X% of all star systems in the galaxy (scales with player count; typically 50–60%)</td><td>Military, Industry, fleet dominance</td></tr>
+          <tr><td class="cell-key">Supremacy</td><td>Destroy or occupy every other major faction's home system simultaneously</td><td>Military, very large fleet capacity</td></tr>
+          <tr><td class="cell-key">Science</td><td>Research all 4 "Endless Technologies" — one in each of the 4 tech quadrants</td><td>Science output sustained to Stage 5 in all quadrants</td></tr>
+          <tr><td class="cell-key">Economic</td><td>Accumulate 450,000 cumulative Dust income (the running total counter, not current stockpile)</td><td>Dust per turn, Trade Companies, luxury resources</td></tr>
+          <tr><td class="cell-key">Wonder</td><td>Build the "Endless Obelisk" in four of your systems (requires Empire Development Stage 5)</td><td>Industry, Empire Development tech, Influence for political stability</td></tr>
+          <tr><td class="cell-key">Score</td><td>Have the highest score when the turn limit expires</td><td>All FIDSI — broadest development wins</td></tr>
+        </table>
+        <div class="callout callout-warn">
+          <div class="callout-label">OPPONENT PROGRESS IS VISIBLE — USE IT</div>
+          Check Scores & Rankings (F5) every 15–20 turns. When an opponent reaches 40–50% of any victory condition threshold, that's your intervention window. At 75% it's usually too late — you can't stop them through normal play. Stopping an Economic victory requires blockading their trade routes and declaring war on their Trade Company routes. Stopping a Science victory requires racing them in tech. Stopping Conquest requires a defensive war before they pass 40% system control. Act early.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T8: MID-GAME ASSESSMENT -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Turn 30 Assessment: Committing to a Victory Path</h2>
+        <div class="topic-subtitle">The most important single decision you'll make — and the framework to make it correctly</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">The Turn 30 Decision Framework</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Around turn 30, you have enough information to make an informed victory path commitment. Here's the four-question framework:</p>
+        <ul class="step-list">
+          <li><span class="step-n">Q1</span><span><strong>What is my galaxy density?</strong> Open the galaxy map. Count the total systems and estimate what percentage you currently control. If the map is dense with systems and you've already claimed 25%+, Conquest is viable. If systems are sparse and spread out, Conquest will take too long — pivot to Science or Economic.</span></li>
+          <li><span class="step-n">Q2</span><span><strong>What is my FIDSI profile?</strong> Open F3. If your Science per turn is already above 200 and growing fast, Science victory is your natural path. If your Dust income is extremely high from Trade Companies, Economic is reachable. If your Industry is dominant and you have multiple Military-research completions, Conquest or Wonder are viable.</span></li>
+          <li><span class="step-n">Q3</span><span><strong>Who is my strongest opponent and what are they pursuing?</strong> Check F5 scores. If the leading opponent is racing Science, either race them or block them — don't ignore the leaderboard. Committing to Economic victory while someone is 70% through Science is a path to losing.</span></li>
+          <li><span class="step-n">Q4</span><span><strong>What political party am I able to lock in power?</strong> Your dominant political party determines which empire-wide laws you can entrench. Entrenched Scientists (+Science%) push you toward Science victory. Entrenched Pacifists (+Dust) push Economic. Match your political lock-in to your intended path — they should compound each other, not conflict.</span></li>
+        </ul>
+        <div class="callout callout-gold">
+          <div class="callout-label">COMMIT HARD AND STOP HEDGING</div>
+          The most common mid-game failure mode is "hedging" — keeping resources invested in multiple victory conditions simultaneously out of indecision. Science victory requires all 4 tech quadrants at Stage 5. Economic requires sustained Dust investment. These are incompatible with also building massive conquest fleets. After turn 30, pick one path and redirect 80% of your decision-making toward it. The remaining 20% can hedge against opponents interfering.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Combat, invasion & Behemoth decisions — apply what you've learned</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'vol2';
+  const TOTAL = 8;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "You're building a combat fleet. You have 5 ship slots. Your weapon strategy is Missiles (dominating Long Range). You've built 4 Hunter ships loaded with missile launchers. For the 5th ship, you're deciding between a second Protector (heavy armor + shields) or a Coordinator (siege + fleet buff modules).",
+      q: "Which is the correct 5th ship for a missile fleet, and why?",
+      opts: [
+        "Second Protector — more defense means your Hunters survive longer to deal damage.",
+        "Coordinator — it provides siege bombardment to reduce system defenses before invasion, and its fleet-wide buff modules (e.g., +missile damage) multiply the output of all 4 Hunter ships simultaneously.",
+        "A fifth Hunter — more DPS is always better than support.",
+        "It doesn't matter — the 5th slot has minimal impact on overall fleet performance."
+      ],
+      correct: 1,
+      explain: "The Coordinator's value is dual: before invasion it's your siege engine, and in fleet combat its buff modules apply to all 4 Hunters simultaneously. A +15% missile damage buff from a single Coordinator slot effectively multiplies the output of all 400 DPS worth of missile Hunters by 15% — that's 60 free DPS from one support slot. A second Protector doesn't provide this multiplicative effect. One Protector is usually sufficient for flak coverage; the Coordinator provides irreplaceable fleet leverage and invasion capability."
+    },
+    {
+      scenario: "You've won a space battle and have orbital control over a 4-planet enemy system (2 Fertile, 1 Arctic, 1 Volcanic). It has 3 luxury resources and high Science output. The system has a Fortress and 2 Defense Turrets still operational.",
+      q: "What is the correct sequence of actions before and after the ground invasion?",
+      opts: [
+        "Invade immediately with maximum Manpower using Blitz tactics to end it quickly.",
+        "Spend 2–3 turns bombarding with your Coordinator ship's siege action to reduce the Fortress and Turrets, then invade with the correct troop type counter to the garrison. After winning, select Occupy, assign a pre-positioned Counselor Hero as governor, and build Happiness improvements immediately.",
+        "Pillage for the Dust income — a 4-planet system is too expensive to manage with the Approval penalty.",
+        "Raze the system to prevent your opponent from recapturing and benefiting from its development."
+      ],
+      correct: 1,
+      explain: "A 4-planet system with 3 luxury resources and high Science is among the most valuable conquests possible — always Occupy. But the Fortress and Defense Turrets dramatically increase your Manpower cost and casualty rate if you invade without sieging. 2–3 turns of Coordinator bombardment removes most or all fortifications, making the ground battle far cheaper. After occupation, the Approval crash (typically down to 20–30%) is managed by the Counselor's Tier 4 skill and immediate Happiness improvements. Pillaging or Razing this system would be one of the worst decisions in a conquest playthrough."
+    },
+    {
+      scenario: "You've unlocked Military Stage 4 and can now build a Behemoth. You're currently pursuing a Science victory path (turn 45) and are not in any active wars. Your three best systems are moderately developed but not yet at their FIDSI potential.",
+      q: "Which Behemoth type should you build first, and what is your deployment strategy?",
+      opts: [
+        "Juggernaut — always build the combat Behemoth first as a deterrent against aggressive opponents.",
+        "Obliterator — siege capability is always useful.",
+        "Economic Behemoth — station it in your primary Science system to boost research output, then rotate it to underdeveloped systems on a schedule to accelerate their growth. On a Science path with no active wars, this provides far more victory progress than any combat Behemoth.",
+        "Citadel — place it at your border chokepoint to deter invasion."
+      ],
+      correct: 2,
+      explain: "On a non-combat victory path, the Economic Behemoth is the highest-value first build. Its FIDSI multiplier stacks on top of System Development bonuses, Governor hero bonuses, and percentage-multiplier buildings — meaning in a well-developed Science system it can add more Science per turn than any buildable improvement. Rotating it between your top three systems means one ship serves the function of multiple improvement slots simultaneously. The Juggernaut and Obliterator are only justified when you are actively at war. A Citadel is defensive and passive — it doesn't advance your victory path at all."
+    },
+    {
+      scenario: "You've just won a ground invasion and are at the post-battle choice screen. The invaded system has 3 planets and average FIDSI output — nothing spectacular. Your empire currently has 6 systems, and your Approval is already at 'Unhappy' empire-wide.",
+      q: "Should you Occupy, Pillage, or Raze this system?",
+      opts: [
+        "Occupy — always occupy conquered systems to maximize expansion.",
+        "Pillage — take the one-time Dust loot. Adding a 7th system when you're already Unhappy empire-wide will push Approval to Angry, applying a −30% FIDSI penalty to all 7 systems. The Dust from Pillage is more valuable than marginal FIDSI from a system your empire can't afford to support.",
+        "Raze — destroy the development so opponents can't use it.",
+        "Occupy but immediately reassign all heroes to the new system to stabilize it."
+      ],
+      correct: 1,
+      explain: "Approval is a multiplier on your entire empire's FIDSI output. At Unhappy, you're already taking a penalty. Occupying a 7th system with no exceptional value pushes you toward Angry — applying a −30% hit to all 7 systems' output simultaneously. That penalty across your whole empire almost certainly exceeds the marginal value of the new system's average FIDSI. Pillaging takes the Dust and lets you keep your empire's Approval stable. The correct play is to stabilize Approval before expanding further — build Happiness improvements across existing systems, reassign heroes, then consider expansion when you're back to Neutral or above."
+    }
+  ];
+</script>
+<script src="es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.3 — Heroes & the Academy</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="es2-guide.css">
+<style>
+  /* Vol 1.5 accent: purple — sits between Vol.1 blue and Vol.2 gold */
+    :root {
+    --accent:     var(--vol3-accent);
+    --accent-rgb: var(--vol3-accent-rgb);
+    --accent-dim: rgba(var(--vol3-accent-rgb), 0.11);
+  }
+
+  .progress-mini-fill { background: linear-gradient(90deg, var(--vol3-accent), var(--vol3-accent), var(--vol1-accent)); }
+
+  body::before { background:
+    radial-gradient(ellipse 65% 45% at 20% 55%, rgba(var(--vol3-accent-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 35% at 80% 25%, rgba(var(--vol1-accent-rgb), 0.04) 0%, transparent 60%); }
+
+  h1.page-title { text-shadow: 0 0 40px rgba(var(--vol3-accent-rgb), 0.35), 0 0 80px rgba(var(--vol3-accent-rgb), 0.12); }
+
+  .topic-num        { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--vol3-accent-rgb), 0.3); }
+  .tag-mech         { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--vol3-accent-rgb), 0.25); }
+  .nav-item.active  { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .nav-item:hover   { background: var(--accent-dim); }
+  .step-list li .step-n { color: var(--accent); background: var(--accent-dim); }
+  .callout-tip      { border-left-color: var(--accent); background: var(--accent-dim); }
+  .callout-tip .callout-label { color: var(--accent); }
+
+  /* ── Hero Class Cards ── */
+  .hero-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+  .hero-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .hero-card.gold-top  { border-top-color: var(--hero-gold); }
+  .hero-card.green-top { border-top-color: var(--green); }
+  .hero-card.red-top   { border-top-color: var(--red); }
+  .hero-card.teal-top  { border-top-color: var(--cyan); }
+
+  .hero-class-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--ts_sectionLabel);
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-bright);
+    margin-bottom: 3px;
+  }
+  .hero-card.gold-top  .hero-class-name { color: var(--hero-gold); }
+  .hero-card.green-top .hero-class-name { color: var(--green); }
+  .hero-card.red-top   .hero-class-name { color: var(--red); }
+  .hero-card.teal-top  .hero-class-name { color: var(--cyan); }
+
+  .hero-role-tag {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .hero-body {
+    font-size: var(--ts_table);
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  /* ── Skill Tree Rows ── */
+  .skill-tree {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 14px 0;
+  }
+  .skill-tree-header {
+    padding: 10px 16px;
+    background: var(--accent-dim);
+    border-bottom: 1px solid rgba(var(--vol3-accent-rgb), 0.2);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: var(--accent-bright);
+    font-weight: 700;
+  }
+  .skill-row {
+    display: grid;
+    grid-template-columns: 60px 1fr 80px;
+    align-items: center;
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border);
+    gap: 14px;
+  }
+  .skill-row:last-child { border-bottom: none; }
+  .skill-tier {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: var(--accent);
+    letter-spacing: 1px;
+    font-weight: 700;
+  }
+  .skill-desc {
+    font-size: var(--ts_table);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .skill-priority {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    text-align: right;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .prio-must   { color: var(--green); }
+  .prio-strong { color: var(--accent-bright); }
+  .prio-good   { color: var(--hero-gold); }
+  .prio-skip   { color: var(--muted); }
+
+  /* ── XP Sources Table ── */
+  .xp-bar-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: var(--ts_table);
+  }
+  .xp-bar-row:last-child { border-bottom: none; }
+  .xp-label { color: var(--text); }
+  .xp-amount {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: var(--accent-bright);
+    white-space: nowrap;
+    font-weight: 700;
+  }
+
+  /* ── Trait blocks reused from Vol.6 ── */
+  .trait-block {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 13px 16px;
+    margin: 10px 0;
+    font-size: var(--ts_table);
+    line-height: 1.75;
+  }
+  .trait-block.gold  { border-left-color: var(--hero-gold); }
+  .trait-block.green { border-left-color: var(--green); }
+  .trait-block.warn  { border-left-color: var(--red); }
+  .trait-block.teal  { border-left-color: var(--cyan); }
+
+  .trait-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+  .trait-label.gold  { color: var(--hero-gold); }
+  .trait-label.green { color: var(--green); }
+  .trait-label.warn  { color: var(--red); }
+  .trait-label.teal  { color: var(--cyan); }
+
+  /* ── Assignment timeline ── */
+  .assign-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 14px 0;
+    overflow-x: auto;
+  }
+  .assign-step {
+    flex: 1;
+    min-width: 130px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-right: none;
+    padding: 12px 14px;
+    position: relative;
+  }
+  .assign-step:last-child { border-right: 1px solid var(--border); border-radius: 0 6px 6px 0; }
+  .assign-step:first-child { border-radius: 6px 0 0 6px; }
+  .assign-step::after {
+    content: '▶';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: var(--ts_sectionTitle);
+    z-index: 1;
+  }
+  .assign-step:last-child::after { display: none; }
+  .assign-turn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: var(--accent);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    font-weight: 700;
+  }
+  .assign-action {
+    font-size: var(--ts_sectionTitle);
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* ── Hero market table ── */
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .market-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .market-card-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: var(--accent-bright);
+    letter-spacing: 1.5px;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+  .market-card-body {
+    font-size: var(--ts_table);
+    color: var(--text);
+    line-height: 1.65;
+  }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="game-name">VOLUME 3</div>
+    <div class="guide-name">Heroes &amp;<br>Academy</div>
+  </div>
+
+  <div class="nav-section-label">// The Basics</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">🦸 Hero Classes <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">⭐ XP &amp; Leveling <span class="nav-check" id="nc2"></span></div>
+
+  <div class="nav-section-label">// Skill Trees</div>
+  <div class="nav-item" onclick="scrollByID('t3')">⚔️ Admiral Skills <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🏙️ Governor Skills <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🧭 Counselor Skills <span class="nav-check" id="nc5"></span></div>
+
+  <div class="nav-section-label">// Management</div>
+  <div class="nav-item" onclick="scrollByID('t6')">🔄 Assignment Strategy <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🛒 Hero Market <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🏛️ The Academy <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  
+  
+
+  <div class="vol-link" style="background:rgba(var(--vol2-accent-rgb),0.08);border:1px solid rgba(var(--vol2-accent-rgb),0.20);color:var(--vol2-accent);" onclick="location.href='es2-vol2-combat.html'">← Vol.2: Combat & Victory</div>
+  <div class="vol-link" style="background:rgba(var(--vol4-accent-rgb),0.08);border:1px solid rgba(var(--vol4-accent-rgb),0.20);color:var(--vol4-accent);margin-top:6px;" onclick="location.href='es2-vol4-diplomacy.html'">Vol.4: Diplomacy & Espionage →</div>
+  
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+
+  </nav>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb">ES2 // <span>Vol.3</span> // Heroes &amp; the Academy</div>
+    <h1 class="page-title">Heroes &amp;<br>the Academy</h1>
+    <p class="page-subtitle">Heroes are the highest-leverage units in the game. A well-managed hero outperforms any system improvement by turn 20 and any single ship by turn 40. They govern your systems, lead your fleets, accelerate your colonization, and influence your elections. This volume covers what each hero class does, how to level them efficiently, which skills to prioritize, how to manage reassignments, and how the Galactic Academy changes everything once it appears.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ T1: HERO CLASSES -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Hero Classes: What Each Type Does</h2>
+        <div class="topic-subtitle">Every hero belongs to a class that determines their skill tree and primary role — but all heroes can be assigned anywhere</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">The Four Hero Classes and Their Roles</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every hero has a class that shapes their skill tree. A hero assigned as a fleet Admiral uses their Admiral skills; the same hero reassigned as a system Governor uses their Governor skills. Class determines which skills are available at each tier — it does not lock the hero to a single assignment type.</p>
+
+        <div class="hero-grid">
+          <div class="hero-card gold-top">
+            <div class="hero-class-name">ADMIRAL</div>
+            <div class="hero-role-tag">// FLEET COMMANDER</div>
+            <div class="hero-body">Leads a fleet in combat. Admiral skills buff fleet attack, defense, accuracy, evasion, initiative, and grant unique combat abilities. An Admiral's level directly determines fleet combat effectiveness — a Level 10 Admiral commanding a mediocre fleet consistently beats a Level 3 Admiral commanding a superior fleet. Always have at least one Admiral per active war front.</div>
+          </div>
+          <div class="hero-card green-top">
+            <div class="hero-class-name">GOVERNOR</div>
+            <div class="hero-role-tag">// SYSTEM MANAGER</div>
+            <div class="hero-body">Assigned to a system. Governor skills amplify the system's FIDSI output, Approval, population growth, and improvement construction speed. A high-level Governor in your capital can be worth more Dust and Science per turn than multiple system improvements combined. Always have at least one Governor in your highest-output system.</div>
+          </div>
+          <div class="hero-card">
+            <div class="hero-class-name">COUNSELOR</div>
+            <div class="hero-role-tag">// CONQUEST SPECIALIST</div>
+            <div class="hero-body">Assigned to a system. Counselor skills specialize in post-conquest management: forcing Ecstatic Approval on newly captured systems, reducing occupation unrest, accelerating assimilation of conquered populations, and providing empire-wide influence bonuses. Indispensable for Conquest and Supremacy victory paths.</div>
+          </div>
+          <div class="hero-card teal-top">
+            <div class="hero-class-name">SEEKER</div>
+            <div class="hero-role-tag">// EXPLORER / SCOUT</div>
+            <div class="hero-body">Leads an exploration fleet. Seeker skills improve probe count, movement range (including off-lane movement), curiosity investigation rewards, and provide combat bonuses against pirates. The most important Seeker trait for non-Lumeris factions: off-lane movement, which allows the Seeker's fleet to reach systems outside the star lane network — normally a Lumeris-exclusive capability. Several factions' starting heroes are Seekers.</div>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE HYBRID REALITY — MOST HEROES SERVE TWO ROLES</div>
+          Every hero has both an Admiral skill tree and a Governor/Counselor/Seeker skill tree, unlocked at alternating tiers. A hero you recruited as a fleet Admiral also has Governor skills at Tiers 3, 5, and 7. This means a fully leveled hero can serve in either role at a high level. The practical implication: <strong>heroes are reassignable assets, not fixed roles</strong>. Your turn-1 explorer hero will become your turn-30 capital Governor. Plan leveling sequences around the role they fill <em>right now</em>, not just their final destination.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T2: XP & LEVELING -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">XP &amp; Leveling: How Heroes Grow</h2>
+        <div class="topic-subtitle">XP sources are not equal. The fastest path to Level 5 takes 8–10 turns. The slowest takes 40.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">⭐</span>
+        <span class="block-title">XP Sources and Early Leveling Strategy</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Heroes gain XP from multiple sources. Understanding which sources are available early vs. late — and how to maximize them — determines how quickly your heroes become impactful.</p>
+
+        <div class="skill-tree">
+          <div class="skill-tree-header">XP SOURCES — RANKED BY EARLY-GAME VALUE</div>
+          <div class="xp-bar-row"><div class="xp-label"><strong>Curiosity investigation</strong> — hero fleet investigates a planetary anomaly</div><div class="xp-amount">HIGH / TURN 1</div></div>
+          <div class="xp-bar-row"><div class="xp-label"><strong>Winning a space battle</strong> — fleet commanded by the hero defeats an enemy</div><div class="xp-amount">HIGH / AS NEEDED</div></div>
+          <div class="xp-bar-row"><div class="xp-label"><strong>System population growth</strong> — governed system gains a new population unit</div><div class="xp-amount">MED / ONGOING</div></div>
+          <div class="xp-bar-row"><div class="xp-label"><strong>System improvement completion</strong> — governed system finishes building an improvement</div><div class="xp-amount">MED / ONGOING</div></div>
+          <div class="xp-bar-row"><div class="xp-label"><strong>Completing a tech research</strong> — empire finishes a technology (XP to current system Governor)</div><div class="xp-amount">LOW-MED / ONGOING</div></div>
+          <div class="xp-bar-row"><div class="xp-label"><strong>Completing a faction quest stage</strong></div><div class="xp-amount">BURST / PERIODIC</div></div>
+          <div class="xp-bar-row"><div class="xp-label"><strong>Dust payment to level up</strong> — pay Dust directly to add one level (diminishing returns)</div><div class="xp-amount">EMERGENCY ONLY</div></div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE TURN-1 IMPERATIVE — CURIOSITY FARMING</div>
+          Attach your starting hero to your explorer fleet immediately on turn 1. Send them to investigate every curiosity in reach before doing anything else. Each investigation grants a flat XP bonus to the hero — a hero that investigates 8–10 curiosities in the first 10 turns typically reaches Level 3–4 before most factions' heroes hit Level 2. This early level gap compounds: a Level 4 hero governs your capital with meaningful FIDSI bonuses by turn 10, a Level 2 hero contributes almost nothing. <strong>Curiosity farming is the single highest-yield early XP action available.</strong>
+        </div>
+
+        <div class="trait-block teal">
+          <div class="trait-label teal">THE TECH COMPLETION TRICK</div>
+          When a tech research completes, the XP is awarded to whoever is currently assigned as the governed hero of your home system — not necessarily your best governor. If you have a hero about to level up from a small amount of XP, reassign them to your home system the turn before a tech completes to capture that XP boost. This is a minor optimization but matters in the early game when every XP point between levels 2 and 4 affects when you unlock key skills.
+        </div>
+
+        <div class="trait-block gold">
+          <div class="trait-label gold">PAYING DUST TO LEVEL — WHEN IT'S WORTH IT</div>
+          The Dust cost to manually level a hero escalates steeply with each level. It is worth paying in exactly two situations:<br><br>
+          <strong>1. War is 2–3 turns away and your Admiral is one level short of a key combat skill.</strong> The combat skill's impact across a 10-battle war is worth the one-time Dust cost.<br>
+          <strong>2. You just recruited a new hero from the market or Academy and need them operational immediately</strong> — bring them to Level 3 via Dust if the situation demands it. Never pay Dust to level past Level 5 in normal play; natural XP takes over efficiently from there.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T3: ADMIRAL SKILLS -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Admiral Skills: Fleet Combat Priorities</h2>
+        <div class="topic-subtitle">Not all Admiral skills are equal. Two categories dominate: damage amplification and initiative. Everything else is secondary.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">What to Take and What to Skip</span>
+        <span class="block-tag tag-mech">SKILLS</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Admiral skill trees vary by faction hero type. The priority framework below applies generally — specific numbers vary by hero.</p>
+
+        <div class="skill-tree">
+          <div class="skill-tree-header">ADMIRAL SKILL PRIORITY FRAMEWORK</div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 1–2</div>
+            <div class="skill-desc"><strong>Damage amplification</strong> — any skill that adds a flat % bonus to all fleet weapon damage. These apply multiplicatively with weapon module bonuses. At Tier 2, a +20% fleet damage skill effectively makes every weapon module 20% stronger with no additional resource cost. This is the highest per-level Admiral contribution to combat power.</div>
+            <div class="skill-priority prio-must">MUST TAKE</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 2–3</div>
+            <div class="skill-desc"><strong>Initiative bonus</strong> — determines which fleet fires first in each combat phase. High initiative means your fleet gets the first volley in every phase; against an evenly matched opponent, going first can eliminate 1–2 enemy ships before they deal a single point of damage. Any Admiral skill adding +Initiative is extremely high value.</div>
+            <div class="skill-priority prio-must">MUST TAKE</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 3–4</div>
+            <div class="skill-desc"><strong>Accuracy / evasion bonuses</strong> — improve the hit chance of your weapons or lower the hit chance of incoming weapons. Valuable but less impactful than damage amplification at equivalent levels, since they only affect a % of shots rather than all damage dealt. Take these when damage and initiative options are exhausted at the same tier.</div>
+            <div class="skill-priority prio-strong">STRONG</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 4–5</div>
+            <div class="skill-desc"><strong>Shield Interference Beam</strong> (where available, Tier 4 military tech) — disables enemy shields for a phase before your weapons fire. Effective specifically against heavy-shield opponents. Situationally powerful; take it if you're fighting opponents who invest heavily in energy shields.</div>
+            <div class="skill-priority prio-good">SITUATIONAL</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">ANY TIER</div>
+            <div class="skill-desc"><strong>Fleet movement bonuses</strong> — movement speed on the galaxy map. Useful for rapid repositioning across a large empire but contributes zero to combat effectiveness. Take only after all combat-relevant skills at the same tier are acquired. Exception: if your strategy relies on out-maneuvering opponents to avoid unfavorable engagements, movement becomes more valuable.</div>
+            <div class="skill-priority prio-skip">LOW PRIORITY</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">ANY TIER</div>
+            <div class="skill-desc"><strong>Manpower capacity increases</strong> — raises the deployment limit for ground invasions. Only relevant if you're actively invading systems this game. Skip entirely if your strategy is blockade-and-negotiate rather than conquest.</div>
+            <div class="skill-priority prio-skip">CONDITIONAL</div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">FACTION HERO DISPARITIES — KNOW YOUR STARTING DISADVANTAGE</div>
+          Some factions' starting heroes have dramatically stronger Admiral trees than others. Sophon and Vodyani heroes have Tier 2 skills that add +40% fleet energy damage — a bonus available by Level 3 that outperforms most other factions' Level 7 Admiral trees. If you're playing a faction with a weak Admiral tree (Lumeris, Riftborn), reaching the Galactic Academy to recruit a better combat hero should be an explicit strategic priority, not an afterthought.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T4: GOVERNOR SKILLS -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Governor Skills: System Output Multipliers</h2>
+        <div class="topic-subtitle">A Tier 4 Governor in your capital is worth more per turn than most system improvements. The Science bonus unlocks this early.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🏙️</span>
+        <span class="block-title">Governor Skill Priorities and System Placement</span>
+        <span class="block-tag tag-mech">SKILLS</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="skill-tree">
+          <div class="skill-tree-header">GOVERNOR SKILL PRIORITY FRAMEWORK</div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 1</div>
+            <div class="skill-desc"><strong>+Science per turn</strong> ("Blue Skies" or equivalent) — the most universally impactful early Governor skill. +15–30 Science per turn in the early game, when your empire generates 40–80 Science total, is a 20–40% Science boost from a single skill. This directly accelerates every tech you research for the rest of the game. Always the first Governor skill to take.</div>
+            <div class="skill-priority prio-must">MUST TAKE</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 2–3</div>
+            <div class="skill-desc"><strong>FIDSI % amplifiers</strong> — skills that add a flat % to all system FIDSI output (e.g., +15% to all production). These apply to the base system output before luxury resource multipliers, meaning they compound with everything else the system produces. Place your Governor in your highest-output system to maximize the absolute value of these percentage bonuses.</div>
+            <div class="skill-priority prio-must">MUST TAKE</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 3–4</div>
+            <div class="skill-desc"><strong>Approval bonus to governed system</strong> — adds flat Approval to the system the Governor manages. This stacks with your empire-wide Approval and can push a system above a breakpoint (70 or 85) that the rest of your empire hasn't reached yet. Particularly valuable when placing a Governor in a newly colonized or conquered system that is dragging down your empire-wide Approval.</div>
+            <div class="skill-priority prio-strong">STRONG</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 4</div>
+            <div class="skill-desc"><strong>Force Ecstatic Approval</strong> (Counselor tree but available to some Governors) — the governed system is forced to Ecstatic Approval regardless of actual modifiers. Instantly converts a newly conquered, heavily penalized system into a productive colony. Covered in detail in the Counselor section.</div>
+            <div class="skill-priority prio-strong">STRONG (CONQUEST)</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">ANY TIER</div>
+            <div class="skill-desc"><strong>Population growth acceleration</strong> — speeds up how fast the governed system gains population. Population = production capacity, so this is a compounding investment: more population now → more FIDSI now → better system for the rest of the game. Valuable in your highest-food systems where growth rate is the limiting factor.</div>
+            <div class="skill-priority prio-good">GOOD</div>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">WHERE TO PLACE YOUR GOVERNOR</div>
+          Always place your primary Governor in your highest-FIDSI system — usually your home system (capital). The % FIDSI amplifiers scale with the system's existing output: a +15% skill on a system generating 200 FIDSI adds 30 FIDSI. The same skill on a system generating 60 FIDSI adds only 9. Maximizing the system output before placing the Governor maximizes the Governor's returns.<br><br>
+          <strong>Exception: newly captured systems</strong> — if a freshly conquered system has a severe Approval penalty dragging down your empire-wide average, a temporary Governor assignment to stabilize its Approval can be worth more in the short term than the capital bonus. Rotate back to the capital once the system stabilizes.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T5: COUNSELOR SKILLS -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Counselor Skills: Conquest Management</h2>
+        <div class="topic-subtitle">The Force Ecstatic skill at Tier 4 is one of the most impactful abilities in the game for aggressive players</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🧭</span>
+        <span class="block-title">Why Counselors Matter for Conquest Paths</span>
+        <span class="block-tag tag-mech">SKILLS</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Counselors are the most underappreciated hero class because their value is invisible on peaceful playthroughs. On conquest paths, they're irreplaceable.</p>
+
+        <div class="skill-tree">
+          <div class="skill-tree-header">COUNSELOR SKILL PRIORITY FRAMEWORK</div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 2–3</div>
+            <div class="skill-desc"><strong>Occupation Approval bonus</strong> — adds flat Approval to a conquered system under occupation. Without this, a newly captured system runs at Angry or Unhappy Approval (−30 to −50 penalty), dragging down your entire empire's FIDSI multiplier. The Counselor provides enough Approval bonus to bring the occupied system out of penalty range within 1–2 turns of occupation.</div>
+            <div class="skill-priority prio-must">MUST TAKE</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 4</div>
+            <div class="skill-desc"><strong>Force Ecstatic Approval</strong> — the governed system is forced to Ecstatic Approval (85+) regardless of all other modifiers. A newly conquered system with −40 Approval, enemy population, war penalties, and overcolonization hits Ecstatic the turn the Counselor is assigned. This is the ability that makes rapid conquest economically viable — without it, each new conquest temporarily tanks your empire's FIDSI. With it, each new system is productive within 1 turn.</div>
+            <div class="skill-priority prio-must">MUST TAKE</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">TIER 3–5</div>
+            <div class="skill-desc"><strong>Assimilation speed</strong> — reduces the number of turns it takes to convert conquered enemy population into your faction's population. Conquered populations generate less FIDSI and may have political effects (voting for opposing parties). Faster assimilation removes these penalties sooner. Priority scales with how many systems you're conquering per game.</div>
+            <div class="skill-priority prio-strong">STRONG (CONQUEST)</div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-tier">ANY TIER</div>
+            <div class="skill-desc"><strong>Empire-wide Influence bonus</strong> — some Counselor trees provide flat Influence per turn to the empire regardless of system assignment. Influence powers Senate lobbying, law enactment, and certain diplomatic actions. A Counselor generating +20 Influence/turn is effectively a Senate seat factory.</div>
+            <div class="skill-priority prio-good">GOOD</div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE COUNSELOR ROTATION — ONE COUNSELOR FOR MANY CONQUESTS</div>
+          You don't need a Counselor permanently stationed in every conquered system. The workflow:<br>
+          <strong>Turn 1 of occupation:</strong> Assign Counselor → system hits Ecstatic, occupation Approval stabilizes.<br>
+          <strong>Turns 2–5:</strong> System builds basic improvements, population begins assimilating.<br>
+          <strong>Turn 5–8:</strong> Reassign Counselor to the next freshly conquered system. The first system's Approval will drop when the Counselor leaves, but by then basic happiness improvements are in the build queue.<br><br>
+          One Counselor can cycle through 3–4 systems in a war, providing the critical Ecstatic window in each and then moving on. This requires planning your conquest sequence so each new system is captured approximately when the Counselor is available.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T6: ASSIGNMENT STRATEGY -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Assignment Strategy: The Lifecycle of a Hero</h2>
+        <div class="topic-subtitle">The same hero fills three different roles across a game. The transitions between them — and their timing — matter more than most players realize.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🔄</span>
+        <span class="block-title">Reassignment Cooldowns and the Three-Phase Hero Arc</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE REASSIGNMENT COOLDOWN — PLAN 2 TURNS AHEAD</div>
+          When you reassign a hero from a fleet to a system (or vice versa), there is a cooldown period before they are active in the new role. During this cooldown, they contribute to neither their old role nor their new one — they are in transit. This cooldown is typically 2–3 turns. The implication: if you need your hero governing a system by turn 10, reassign them from the fleet by turn 7–8. If you wait until turn 10 to reassign, they won't be productive until turn 12–13. Plan reassignments proactively, not reactively.
+        </div>
+
+        <p>A starting explorer hero typically moves through three phases across a game:</p>
+
+        <div class="assign-flow">
+          <div class="assign-step">
+            <div class="assign-turn">TURNS 1–8</div>
+            <div class="assign-action">Fleet assignment — investigates curiosities, farms XP, scouts galaxy. Reaches Level 3–4.</div>
+          </div>
+          <div class="assign-step">
+            <div class="assign-turn">TURNS 8–30</div>
+            <div class="assign-action">Capital Governor — contributes +Science, FIDSI bonuses. Continues leveling from improvements and population growth.</div>
+          </div>
+          <div class="assign-step">
+            <div class="assign-turn">TURNS 30+</div>
+            <div class="assign-action">Reassigned based on need: back to fleet as Admiral if war looms, or stays as Governor if economy is the priority.</div>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">HOW MANY HEROES SHOULD YOU MAINTAIN?</div>
+          The general answer scales with game phase:<br><br>
+          <strong>Early game (turns 1–25):</strong> 1–2 heroes. One explorer/governor, one optional second if available from the market cheaply.<br>
+          <strong>Mid game (turns 25–60):</strong> 2–3 heroes. One permanent capital Governor, one Admiral for your primary combat fleet, one Counselor if you're conquering.<br>
+          <strong>Late game (turns 60+):</strong> 3–5 heroes. Each major system and each active war front benefits from a dedicated hero. Hero upkeep cost (Dust per turn per hero) scales with their level — factor this into your Dust budget before recruiting.
+        </div>
+
+        <div class="trait-block teal">
+          <div class="trait-label teal">HERO UPKEEP — THE HIDDEN DUST COST</div>
+          Every hero costs Dust per turn proportional to their level. A Level 10 hero costs significantly more upkeep than a Level 3 hero. In the early game when Dust is tight, maintaining 3 heroes you can't fully utilize is worse than maintaining 1 hero you develop rapidly. Recruit heroes when you have a specific role for them — not speculatively. The hero market refreshes each election cycle; a hero you pass on this cycle may not return, but another suitable hero usually will.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T7: HERO MARKET -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">The Hero Market</h2>
+        <div class="topic-subtitle">The market refreshes each election cycle. It sells heroes from all factions — including ones with skill trees your faction can't normally access.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🛒</span>
+        <span class="block-title">Market Mechanics and What to Buy</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="market-grid">
+          <div class="market-card">
+            <div class="market-card-label">WHAT TO BUY</div>
+            <div class="market-card-body">Heroes with top-tier Admiral damage skills from powerful factions (Sophons, Vodyani) — these are game-breaking in fleet combat and available to any faction that can afford them. A Sophon Admiral hero bought by a Lumeris player brings the same +40% energy damage to the Lumeris fleet. Counselors with Force Ecstatic skill if pursuing conquest. Any hero filling a role you currently have no hero for.</div>
+          </div>
+          <div class="market-card">
+            <div class="market-card-label">WHAT TO SKIP</div>
+            <div class="market-card-body">Heroes who duplicate a role you already fill well. Heroes at very high levels with steep upkeep costs when your Dust budget is tight. Heroes whose best skills are in late tiers you won't reach for 20+ turns — the market will refresh before they're useful; buy them closer to when you can use those skills.</div>
+          </div>
+          <div class="market-card">
+            <div class="market-card-label">MARKET TIMING</div>
+            <div class="market-card-body">The market refreshes at each election (every ~20 turns). If a hero you want is in the current market, buying them this turn vs. next turn makes little difference — but waiting until the next refresh cycle to "see what comes next" usually costs you the hero you wanted. Decide each cycle: buy now or wait for next refresh.</div>
+          </div>
+          <div class="market-card">
+            <div class="market-card-label">COST STRUCTURE</div>
+            <div class="market-card-body">Hero purchase price is paid in Dust and scales with their current level. A Level 1 hero costs a fraction of a Level 5 hero. Buying low and leveling yourself is almost always more Dust-efficient than buying a pre-leveled hero — the exception is crisis situations where you need a specific skill immediately and can't wait 15 turns to level into it.</div>
+          </div>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T8: THE ACADEMY -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">The Galactic Academy</h2>
+        <div class="topic-subtitle">A mid-game system that grants a permanent hero recruitment advantage. Controlling it changes the hero landscape for the rest of the game.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Academy Mechanics and Why It's Worth Colonizing</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT THE ACADEMY DOES</div>
+          The Galactic Academy is a special system that appears mid-game (typically around turn 20–35, revealed by exploration or quest). The faction that colonizes and controls the Academy system gains access to an expanded hero recruitment pool — heroes become available faster, at lower cost, and occasionally with unique skills unavailable on the standard market. The controlling faction also gains a Science bonus per turn from the Academy's system improvements.<br><br>
+          Importantly, the Academy's hero pool includes heroes from <em>all factions</em>, with slightly preferential access for the controlling faction. For a Lumeris player, controlling the Academy is often the fastest path to acquiring a high-tier Sophon Admiral hero.
+        </div>
+
+        <div class="trait-block gold">
+          <div class="trait-label gold">THE COLONIZATION PRIORITY CASE</div>
+          The Academy is frequently located in an isolated or off-lane system — accessible via off-lane colonization for Lumeris but requiring a fleet expedition for most other factions. This means:<br><br>
+          <strong>For Lumeris:</strong> If you've scouted the Academy location early, you can claim it the same turn you probe it if you have the Dust. No other faction can respond in time via standard colonization.<br>
+          <strong>For all factions:</strong> Colonizing the Academy system before opponents is worth diverting a colony ship from other targets, because the long-term hero recruitment advantage compounds across the entire remaining game. Even 10 turns of Academy control before an opponent contests it accelerates your hero development significantly.
+        </div>
+
+        <div class="trait-block teal">
+          <div class="trait-label teal">USING THE ACADEMY STRATEGICALLY</div>
+          Once you control the Academy:<br><br>
+          <strong>Recruit a high-tier Admiral</strong> as your first Academy action — particularly a Sophon or Vodyani hero if available, whose damage skill trees are otherwise inaccessible to your faction.<br>
+          <strong>Use Academy heroes to fill role gaps</strong> — if your empire lacks a Counselor and you're planning a conquest campaign, the Academy's broader pool makes finding one faster than waiting for the standard market cycle.<br>
+          <strong>If contested:</strong> An opponent colonizing the same Academy system triggers a diplomacy or military response situation. Decide whether the Academy is worth defending militarily — it usually is, as losing it reverses the hero recruitment advantage entirely.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">ACADEMY QUEST CURIOSITY TRAP</div>
+          Several faction questlines have a stage requiring you to "discover the Academy location" by investigating specific atmospheric curiosities. The Academy's location is not revealed on the map until this quest stage is completed — meaning other factions may reach it first if their questline triggers earlier. If you have explorers near suspected Academy locations (typically in central or cross-lane systems), investigate atmospheric curiosities proactively. Finding the Academy before the quest triggers still counts toward quest completion.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Hero assignment decisions — XP, timing, skills, and the Academy</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'vol3';
+  const TOTAL = 8;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "Turn 1. Your starting hero is a Seeker/Lumeris type. You have one Caravel explorer in your home system. Three curiosities are visible in adjacent systems — two are anomalies (planets), one is in a minor faction's home system. Your home system currently generates 55 Science per turn.",
+      q: "What is the single highest-value action for your hero this turn?",
+      opts: [
+        "Assign the hero as Governor of your home system immediately to start gaining FIDSI bonuses.",
+        "Attach the hero to the Caravel and investigate all three curiosities, starting with the minor faction's system — each investigation grants hero XP, the minor faction curiosities reduce future bribe costs, and the anomaly investigations may yield resource data. The FIDSI bonus from Governor assignment is valuable but the hero is only Level 1 with minimal skills. Farming to Level 3 via curiosities first is worth the 5–8 turn delay before Governor assignment.",
+        "Keep the hero as a standalone ship to maximize map coverage speed.",
+        "Immediately pay Dust to level the hero to Level 3 so Governor skills are available sooner."
+      ],
+      correct: 1,
+      explain: "Curiosity investigation is the highest XP-per-turn action available in the early game. A Level 1 hero assigned as Governor provides almost no FIDSI bonus — their first meaningful skill is usually at Level 2 or 3. The 5–8 turns spent farming XP to reach Level 3 via curiosities results in a significantly stronger Governor than assigning immediately at Level 1. The minor faction curiosities specifically reduce bribe costs AND grant relationship progress, making them doubly valuable. Paying Dust to level is wasteful at this stage — natural XP via curiosities achieves the same result for free."
+    },
+    {
+      scenario: "Turn 18. Your hero is Level 4, currently governing your capital. A war with a neighbor looks likely within 5–6 turns — they've moved military fleets toward your border. Your hero has two relevant skills available: Tier 2 Admiral skill (+18% fleet damage) or Tier 2 Governor skill (+12% to all system FIDSI). A reassignment cooldown is 3 turns.",
+      q: "Which skill do you take, and when do you reassign the hero to fleet command?",
+      opts: [
+        "Take the Governor FIDSI skill now — economy is always more important than combat preparation.",
+        "Take the Admiral damage skill and reassign the hero to your combat fleet immediately this turn — with a 3-turn cooldown, waiting until war is declared means the hero won't be active in combat until 3 turns into the war. The +18% fleet damage applies to every battle; the FIDSI bonus applies to your capital. At this stage of the game, winning the first 2–3 battles with superior damage output is worth more than 5–6 turns of extra FIDSI before the war.",
+        "Take the Admiral skill but keep the hero as Governor until war is officially declared, then reassign.",
+        "Don't reassign — keep the hero as Governor and recruit a separate combat hero from the market for the war."
+      ],
+      correct: 1,
+      explain: "The 3-turn cooldown is the critical factor here. Reassigning on the turn war is declared means the hero is inactive for the first 3 turns of the war — potentially missing the decisive early engagements entirely. Reassigning now (turn 18, with war in 5–6 turns) means the hero is fully operational as Admiral by turn 21 — before the first battle. The Admiral damage skill is also a stronger pick than the FIDSI bonus in this specific context: +18% fleet damage affects every ship in every battle, while +12% FIDSI on one system affects one system's output. In a war scenario, combat impact outweighs marginal per-turn income."
+    },
+    {
+      scenario: "Turn 40. You've just conquered an enemy system. It has an Approval rating of 22 (Angry) due to enemy population, occupation penalty, and overcolonization. Your empire-wide Approval is currently 81 (below Ecstatic threshold of 85). Your only Counselor hero is Level 6 with the Force Ecstatic skill.",
+      q: "What is the correct hero deployment, and what does it accomplish?",
+      opts: [
+        "Leave the Counselor in your capital — one system at Angry Approval isn't worth moving a hero for.",
+        "Assign the Counselor to the conquered system immediately. Force Ecstatic overrides the system's actual Approval modifiers — the system jumps to Ecstatic (85+) the turn the Counselor is assigned. This removes the Angry system from dragging your empire-wide average below 85, recovering the +30% FIDSI Ecstatic bonus across your entire empire. Keep the Counselor there for 5–8 turns while you build happiness improvements, then rotate them to the next conquest.",
+        "Enact 'Toys for Boys' law instead — it gives empire-wide Approval boost more efficiently.",
+        "Raze the system to eliminate the Approval penalty entirely."
+      ],
+      correct: 1,
+      explain: "An Angry system at 22 Approval is actively pulling your empire-wide average below the 85 Ecstatic threshold, costing you +30% FIDSI on every system simultaneously. The Counselor's Force Ecstatic skill instantly resolves this by overriding the system's Approval to 85+ regardless of all other modifiers. The math: recovering Ecstatic on a 5-system empire that generates 300 FIDSI/turn restores 90 FIDSI/turn (30% of 300) — significantly more valuable than any individual improvement in that system. 'Toys for Boys' provides a temporary empire-wide +25 Approval for 10 turns and is a valid support action, but it doesn't fix the underlying conquered system penalty. Razing destroys a system you just invested military resources in capturing."
+    },
+    {
+      scenario: "Turn 28. The Galactic Academy location has just been revealed by a questline. It's in a system 4 star lanes from your nearest colony — requiring a colony ship expedition of 4 turns travel time. You are not Lumeris. A competitor's border is 2 star lanes from the Academy. You have 600 Industry queued in your home system and 1,200 Dust in reserve.",
+      q: "Do you divert a colony ship to claim the Academy?",
+      opts: [
+        "No — 4 turns travel time is too long. The competitor will likely claim it first anyway.",
+        "Yes — divert your next available colony ship immediately. Even if the competitor is 2 lanes away, you likely have a 2-turn lead if you act this turn. The Academy's long-term hero recruitment advantage compounds for the rest of the game: faster access to high-tier heroes from all factions, including skill trees your faction can't normally access. Losing 4–5 turns of colonizing another system is a small cost compared to 50+ turns of Academy recruitment advantage. If the competitor reaches it first, evaluate whether contesting it militarily is worth the diplomatic cost.",
+        "Send an explorer ship to investigate it first, then decide based on what systems are in the constellation.",
+        "Ignore it — the hero market provides the same heroes without needing to control the Academy."
+      ],
+      correct: 1,
+      explain: "The Academy is a permanent compounding advantage — the faction that controls it gets faster, cheaper access to the best heroes in the game for the rest of the match. A 2-turn lead over the nearest competitor means you should act immediately without hesitation. The 4-turn travel cost is paid once; the Academy's benefit is paid back every election cycle thereafter. The hero market does provide some access to cross-faction heroes but on a slower refresh cycle and at full price — the Academy's advantage is speed and cost reduction, not exclusivity. An explorer ship investigation first wastes 2–4 turns that your competitor doesn't have to waste."
+    }
+  ];
+</script>
+<script src="es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

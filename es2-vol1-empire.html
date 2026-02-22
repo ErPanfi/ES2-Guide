@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.1 — Empire & Economy</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="es2-guide.css">
+<style>
+    :root {
+    --accent:     var(--vol1-accent);
+    --accent-rgb: var(--vol1-accent-rgb);
+    --accent-dim: rgba(var(--vol1-accent-rgb), 0.11);
+  }
+  body::before{background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(var(--vol1-accent-rgb), .04) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 80% 20%,rgba(var(--vol3-accent-rgb), .04) 0%,transparent 70%);}
+  h1.page-title{text-shadow:0 0 30px rgba(var(--vol1-accent-rgb), .3);}
+  .progress-mini-fill{background:linear-gradient(90deg,var(--vol1-accent),var(--vol3-accent));box-shadow:0 0 8px rgba(var(--vol1-accent-rgb), .5);}
+  .tag-mech{background:rgba(var(--vol1-accent-rgb), .11);color:var(--vol1-accent);border-color:rgba(var(--vol1-accent-rgb), .25);}
+  .nav-item.active,.nav-item:hover{background:rgba(var(--vol1-accent-rgb), .09);}
+  .nav-item.active{color:var(--vol1-accent);border-left-color:var(--vol1-accent);}
+  .topic-num{color:var(--vol1-accent);background:rgba(var(--vol1-accent-rgb), .11);border-color:rgba(var(--vol1-accent-rgb), .3);}
+  .callout-tip{background:rgba(var(--vol1-accent-rgb), .09);border-left-color:var(--vol1-accent);}
+  .callout-tip .callout-label{color:var(--vol1-accent);}
+  .step-list li .step-n{color:var(--vol1-accent);background:rgba(var(--vol1-accent-rgb), .11);}
+  .sidebar-logo .game-name{color:var(--vol1-accent);}
+  .vol-prev{color:var(--vol0-accent);border-color:rgba(var(--vol0-accent-rgb), .3);background:rgba(var(--vol0-accent-rgb), .07);}
+  .vol-prev:hover{background:rgba(var(--vol0-accent-rgb), .16);}
+  .vol-next{color:var(--vol1-accent);border-color:rgba(var(--vol1-accent-rgb), .3);background:rgba(var(--vol1-accent-rgb), .07);}
+  .vol-next:hover{background:rgba(var(--vol1-accent-rgb), .16);}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="game-name">VOLUME 1</div>
+    <div class="guide-name">Empire &<br>Economy</div>
+  </div>
+  <div class="nav-section-label">// Economy</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">🍀 FIDSI Deep Dive <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🏗️ System Development <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🌍 Planet Specialization <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">💱 Trade Companies <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-section-label">// Empire</div>
+  <div class="nav-item" onclick="scrollByID('t5')">👥 Population Mechanics <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🦸 Heroes: Leveling & Roles <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">⚗️ Tech Tree Strategy <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🗳️ Politics & Laws <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+  
+  
+  <div class="vol-link" style="background:rgba(var(--vol0-accent-rgb),0.08);border:1px solid rgba(var(--vol0-accent-rgb),0.20);color:var(--vol0-accent);" onclick="location.href='es2-vol0-exploration.html'">← Vol.0: Exploration</div>
+  <div class="vol-link" style="background:rgba(var(--vol2-accent-rgb),0.08);border:1px solid rgba(var(--vol2-accent-rgb),0.20);color:var(--vol2-accent);margin-top:6px;" onclick="location.href='es2-vol2-combat.html'">Vol.2: Combat & Victory →</div>
+  
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+
+  </nav>
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb">ES2 // <span>Vol.1</span> // Empire & Economy</div>
+    <h1 class="page-title">Empire &<br>Economy</h1>
+    <p class="page-subtitle">This volume covers everything that makes your empire run: how FIDSI is actually calculated (the order matters), the System Development mechanic most players never find, how Trade Companies generate passive Dust, how population and heroes work as active tools rather than passive stats, and how the political system shapes your laws. Same depth as all other volumes — read, apply, mark done.</p>
+  </div>
+
+  <!-- T1: FIDSI -->
+  <div class="topic" id="t1">
+    <div class="topic-header"><div class="topic-num">01</div><div>
+      <h2 class="topic-title">FIDSI: How Your Resources Are Actually Calculated</h2>
+      <div class="topic-subtitle">The calculation order matters — multipliers compound, and Approval hits everything last</div>
+    </div></div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')"><span class="block-icon">⚙️</span><span class="block-title">The 5-Step Calculation Order</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>FIDSI (Food, Industry, Dust, Science, Influence) is not a simple sum of building outputs. Each resource is calculated in a specific sequence — and understanding that order changes which improvements you prioritize.</p>
+        <ul class="step-list">
+          <li><span class="step-n">STEP 1</span><span><strong>Base planet output × population.</strong> Each planet produces a base rate of each FIDSI per population unit. Planet type determines this: Lava → heavy Industry; Arctic → heavy Science; Fertile → high Food. Actual output = base rate × number of pop units on that planet.</span></li>
+          <li><span class="step-n">STEP 2</span><span><strong>Racial bonuses added.</strong> Each population unit's racial bonus is added to their per-unit output. A Sophon pop on an Arctic planet adds +1–4 Science/pop (depending on tech level) on top of the planet's base. This stacks per unit — 5 Sophon pops on one planet = 5× the racial bonus before any building multipliers apply.</span></li>
+          <li><span class="step-n">STEP 3</span><span><strong>Flat building bonuses applied.</strong> All "+X per pop" or "+X per planet" improvements are added here. These are additive with each other.</span></li>
+          <li><span class="step-n">STEP 4</span><span><strong>Percentage multipliers applied.</strong> All "+X% FIDSI" improvements multiply the sum from steps 1–3. This is why percentage bonuses are much stronger in developed systems — they multiply a larger base. On a system producing 5 Science, +20% = 1 Science. On a system producing 50 Science, +20% = 10 Science.</span></li>
+          <li><span class="step-n">STEP 5</span><span><strong>Approval modifier applied last.</strong> The final output from steps 1–4 is multiplied by the system's Approval modifier: +20% at Elated, 0% at Content, −30% or worse at Angry. This hits all FIDSI simultaneously — including your percentage bonus buildings. A system at Angry approval might effectively halve a system you spent 30 turns developing.</span></li>
+        </ul>
+        <div class="callout callout-tip">
+          <div class="callout-label">PRACTICAL IMPLICATION: BUILD ORDER MATTERS</div>
+          Build flat-bonus improvements first to establish a large base, then layer in percentage multipliers once the base is high. A +20% Science building on a 5-output system gives 1 Science. The same building on a 40-output system gives 8 Science. Percentage multipliers are mid-to-late game investments, not early ones.
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')"><span class="block-icon">😤</span><span class="block-title">Approval: the Hidden Multiplier That Silently Destroys Bad Empires</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>Approval is calculated per system, not empire-wide. Each system has its own Approval percentage that acts as a final multiplier on all FIDSI produced there (Influence is immune to Approval). The empire-wide HUD average hides that some systems may be at Angry while others are Elated.</p>
+        <table class="ref-table">
+          <tr><th>Factor</th><th>Effect</th><th>Notes</th></tr>
+          <tr><td class="cell-key">Colonizing a new system</td><td class="cell-bad">−5 to −15 Approval empire-wide</td><td>Scales with how many systems you already own</td></tr>
+          <tr><td class="cell-key">Conquering an enemy system</td><td class="cell-bad">Massive local penalty (~−60 in new system)</td><td>New ownership + faction change penalty stacks</td></tr>
+          <tr><td class="cell-key">Faction preference mismatch</td><td class="cell-bad">Per-planet unhappiness</td><td>Pops prefer certain planet types; wrong type = unhappy</td></tr>
+          <tr><td class="cell-key">Luxury resources in system</td><td class="cell-good">+Approval bonus per unique luxury</td><td>Stacks — 3 different luxuries in one system = triple bonus</td></tr>
+          <tr><td class="cell-key">Happiness improvements</td><td class="cell-good">Flat Approval bonus</td><td>First priority to build in conquered systems</td></tr>
+          <tr><td class="cell-key">Counselor Hero assigned</td><td class="cell-good">+Approval per hero level</td><td>Tier 4 Counselor skill forces Ecstatic regardless of penalties</td></tr>
+        </table>
+        <div class="callout callout-warn">
+          <div class="callout-label">THE CONQUERED SYSTEM TRAP</div>
+          When you capture an enemy system, its Approval crashes — often below 30%. All that Industry and Science is running at 70% efficiency or worse. Before using that system for anything, build 1–2 happiness improvements and assign a Counselor Hero. A high-level Counselor's Tier 4 skill forces system Approval to Ecstatic regardless of base penalties — making freshly conquered systems immediately productive.
+        </div>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T2: SYSTEM DEV -->
+  <div class="topic" id="t2">
+    <div class="topic-header"><div class="topic-num">02</div><div>
+      <h2 class="topic-title">System Development: The Most Underused Mechanic</h2>
+      <div class="topic-subtitle">A permanent empire-wide multiplier hidden in the Economy screen — most players never find it</div>
+    </div></div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')"><span class="block-icon">🏗️</span><span class="block-title">What System Development Is and How It Works</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>System Development is a three-tier upgrade accessed via <strong>F3 (Economy Screen) → System Development panel</strong> on the right side. It is not in any system's normal build queue. Each level is unlocked by advancing the Economy & Trade tech tree to the corresponding stage:</p>
+        <ul class="step-list">
+          <li><span class="step-n">UNLOCK</span><span>L1 (Basic) unlocks at Economy & Trade Stage 3. L2 (Advanced) at Stage 4. L3 (Endless) at Stage 5. You must push Economy & Trade to at least Stage 3 to access this at all — another reason never to ignore that branch.</span></li>
+          <li><span class="step-n">CHOOSE</span><span>Once unlocked, you open the panel and choose <strong>luxury resources</strong> to commit: L1 = 1 luxury type, L2 = 2 different types, L3 = 3 different types. <strong>This choice is permanent for the entire game.</strong> Hover each resource option to read its per-system bonus before confirming. The bonus type ranges from flat Industry, to per-pop FIDSI, to percentage multipliers, to Approval bonuses.</span></li>
+          <li><span class="step-n">BUILD</span><span>After confirming, every system in your empire gets a new queued improvement: "Level X Modernization." It costs 0 Industry and takes only 1–3 turns to complete. Queue it in all your systems simultaneously — there is no reason to stagger. It also unlocks Spaceport slots for population movement between systems.</span></li>
+        </ul>
+        <div class="callout callout-gold">
+          <div class="callout-label">ECONOMIC VICTORY CONNECTION</div>
+          Economic Victory requires accumulating 450,000 Dust total. System Development is one of the highest-leverage tools for this goal: a single well-chosen L1 bonus (e.g. +% Dust or large flat Dust/system) applied to 8–10 systems immediately adds hundreds of Dust per turn permanently. Reaching Economy Stage 3 fast and triggering System Development L1 as early as possible is the central strategy for Economic Victory runs.
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')"><span class="block-icon">🎯</span><span class="block-title">Choosing the Right Luxury Resources</span><span class="block-tag tag-strategy">STRATEGY</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>Since the choice is permanent, treat it like a faction-defining decision. Match to your victory path:</p>
+        <table class="ref-table">
+          <tr><th>Your Situation</th><th>Best Resource Type</th><th>Why</th></tr>
+          <tr><td class="cell-key">Science Victory</td><td>+% FIDSI or +Science/pop bonuses</td><td>Multiplies research output across all systems simultaneously</td></tr>
+          <tr><td class="cell-key">Economic Victory</td><td>+% Dust or large flat Dust/system</td><td>Compounds with Trade Company income multiplicatively</td></tr>
+          <tr><td class="cell-key">Rapid Conquest expansion</td><td>+Approval resource</td><td>Offsets the approval hit from colonizing many systems fast</td></tr>
+          <tr><td class="cell-key">High-pop systems</td><td>+X per Population</td><td>Scales linearly with every pop unit — enormous in 5-planet systems</td></tr>
+          <tr><td class="cell-key">Industry-focused builds</td><td>Large flat Industry bonus</td><td>Hits every system immediately, regardless of pop size</td></tr>
+        </table>
+        <div class="callout callout-warn">
+          <div class="callout-label">CHOOSE RESOURCES YOU ACTUALLY OWN</div>
+          You must own at least 1 unit of the chosen luxury at selection time. The bigger risk is choosing a resource that an opponent can blockade or that you've already traded away your entire stock of. Always choose resources reliably generated within your own territory.
+        </div>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T3: PLANET SPEC -->
+  <div class="topic" id="t3">
+    <div class="topic-header"><div class="topic-num">03</div><div>
+      <h2 class="topic-title">Planet Specialization: Per-Planet Roles</h2>
+      <div class="topic-subtitle">Specializations scale with population — match them to a planet's natural strength, not the system's identity</div>
+    </div></div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')"><span class="block-icon">🌍</span><span class="block-title">How Planet Specializations Work</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>Planet Specialization (the wrench icon when clicking an individual planet) grants a per-population bonus to that specific planet — unlike system improvements, which apply to the whole system. Specializations scale directly with how many pops are on that planet and automatically upgrade as you research higher-tier versions.</p>
+        <table class="ref-table">
+          <tr><th>Specialization</th><th>Bonus per Pop</th><th>Unlocked by</th><th>Political Effect</th></tr>
+          <tr><td class="cell-key">Food (Terraforming)</td><td>+Food/pop</td><td>Science & Exploration Stage 2</td><td>+Ecologist votes</td></tr>
+          <tr><td class="cell-key">Industry (Mining Drills)</td><td>+Industry/pop</td><td>Economy & Trade Stage 2</td><td>+Industrialist votes</td></tr>
+          <tr><td class="cell-key">Dust (Exchange Network)</td><td>+Dust/pop</td><td>Economy & Trade Stage 1</td><td>+Pacifist votes</td></tr>
+          <tr><td class="cell-key">Science (Lab Complex)</td><td>+Science/pop</td><td>Science & Exploration Stage 1</td><td>+Scientist votes</td></tr>
+          <tr><td class="cell-key">Influence (Cultural Center)</td><td>+Influence/pop</td><td>Empire Development Stage 1</td><td>+Religious votes</td></tr>
+          <tr><td class="cell-key">Resource Extraction</td><td>+% resource deposit output</td><td>Economy & Trade Stage 3</td><td>+Industrialist votes</td></tr>
+        </table>
+        <div class="callout callout-tip">
+          <div class="callout-label">RULE: AMPLIFY THE PLANET'S NATURAL STRENGTH</div>
+          Match the specialization to the planet's highest base output. A Lava planet with high natural Industry output benefits enormously from an Industry spec. That same spec on a 2-Industry Arctic planet is nearly wasted. Always: Arctic/Tundra → Science spec. Lava/Volcanic → Industry spec. Fertile/Jungle → Food spec. Planets sitting on strategic resource deposits → Resource Extraction spec.
+        </div>
+        <div class="callout callout-gold">
+          <div class="callout-label">SCIENCE VICTORY CONNECTION</div>
+          Science Victory requires researching 4 Endless Technologies across 4 different tech branches. Dust specializations on high-pop planets compound with Trade Company income for Dust, while Science specializations on Arctic planets directly accelerate the research required to reach Stage 5 in all four tech branches. Biasing your specializations toward Science on your best Arctic planets is the single highest-leverage action for a Science Victory run.
+        </div>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T4: TRADE COMPANIES -->
+  <div class="topic" id="t4">
+    <div class="topic-header"><div class="topic-num">04</div><div>
+      <h2 class="topic-title">Trade Companies & Trade Routes</h2>
+      <div class="topic-subtitle">The passive Dust engine — route length matters more than destination richness</div>
+    </div></div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')"><span class="block-icon">💱</span><span class="block-title">How Trade Company Income Is Calculated</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>Trade Companies generate Dust (and some Science) through trade routes connecting an HQ system to Subsidiary systems via star lanes. The income formula compounds multiple factors:</p>
+        <table class="ref-table">
+          <tr><th>Factor</th><th>Impact</th><th>Action</th></tr>
+          <tr><td class="cell-key">Route length (star lane hops)</td><td class="cell-good">Very High</td><td>Place Subsidiary as far from HQ as possible — every system on the route contributes income</td></tr>
+          <tr><td class="cell-key">Population on route systems</td><td class="cell-good">Very High</td><td>High-pop systems anywhere along the path multiply route income</td></tr>
+          <tr><td class="cell-key">Trade Company level</td><td class="cell-good">Very High</td><td>Leveling the company (F3 → invest Dust) multiplies all income — highest ROI action available</td></tr>
+          <tr><td class="cell-key">Luxury resources in HQ/Sub</td><td class="cell-good">High</td><td>Luxury production in HQ and Subsidiary boosts Luxury income component</td></tr>
+          <tr><td class="cell-key">Dust Freighters purchased</td><td>Medium</td><td>Buy after the company is leveled to at least 5 — level matters more early</td></tr>
+          <tr><td class="cell-key">System Development level</td><td>Medium</td><td>Higher-level systems produce more trade value at HQ and Sub locations</td></tr>
+        </table>
+        <div class="callout callout-warn">
+          <div class="callout-label">ROUTE DISRUPTION IS A STRATEGIC THREAT</div>
+          Trade routes follow star lanes exactly and break when any system on the route is blockaded or captured. If an enemy cuts your trade routes, your Dust income collapses. Always defend HQ and Subsidiary systems with fleets. When planning routes, prefer paths that stay entirely within your territory.
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')"><span class="block-icon">📍</span><span class="block-title">HQ Placement, Subsidiary Strategy & Network Expansion</span><span class="block-tag tag-strategy">STRATEGY</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <ul class="step-list">
+          <li><span class="step-n">01</span><span><strong>Place HQ in your richest, most-developed system.</strong> The HQ system's Dust output, population, System Development level, and luxury resources all directly boost company income. Your home system is usually best in early-to-mid game.</span></li>
+          <li><span class="step-n">02</span><span><strong>Place Subsidiaries at maximum star-lane distance from HQ.</strong> Route length is the dominant income multiplier. Find the system in your empire requiring the most hops to reach from HQ — that's your first Subsidiary. Second Subsidiary goes in the opposite deep direction.</span></li>
+          <li><span class="step-n">03</span><span><strong>Research "Galactic Security Charter" (Economy Stage 3) for +2 Subsidiaries.</strong> More Subsidiaries = more routes = more income. Research it as soon as your first company is running.</span></li>
+          <li><span class="step-n">04</span><span><strong>Sign Trade Agreements with peaceful neighbors.</strong> Routes can extend into partner territory, and their systems become valid endpoints — doubling effective route length without you owning those systems. Best early-game income leverage.</span></li>
+          <li><span class="step-n">05</span><span><strong>Level the company before buying Freighters.</strong> In F3 → Trade Company, invest Dust to raise company level. Early levels have the highest ROI. Always reach at least level 5 before spending on Freighters.</span></li>
+        </ul>
+        <div class="callout callout-gold">
+          <div class="callout-label">ECONOMIC VICTORY — THE CORE MECHANISM</div>
+          Economic Victory requires 450,000 total accumulated Dust. A well-managed Trade Company network at level 8–10 can generate 300–500+ Dust per turn. At that rate, Economic Victory is achievable by turn 130–160 even without optimal FIDSI. The key levers in sequence: (1) Get to Economy Stage 3 for System Development + Trade Company unlock. (2) Place HQ in best system, Subsidiaries at maximum distance. (3) Level companies aggressively. (4) Sign Trade Agreements with all non-hostile neighbors. (5) Use Pacifist party laws for +Dust bonuses. Track your cumulative Dust total in F3 — Economic Victory is the only victory condition where you can calculate exactly how many turns remain.
+        </div>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T5: POPULATION -->
+  <div class="topic" id="t5">
+    <div class="topic-header"><div class="topic-num">05</div><div>
+      <h2 class="topic-title">Population Mechanics & Movement</h2>
+      <div class="topic-subtitle">Population is your primary FIDSI multiplier — and once Spaceports unlock, it's actively deployable</div>
+    </div></div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')"><span class="block-icon">👥</span><span class="block-title">How Population Growth and Output Work</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>Population is the multiplier for almost every FIDSI output — a planet with 6 pop produces 6× its base per-pop rate. Growth is driven entirely by Food surplus: (Food produced − Food consumed per turn). Food consumed ≈ 10 per population unit. When surplus fills the growth bar, a new pop unit is added to the highest-FIDSI available planet in the system.</p>
+        <p>Key rules:</p>
+        <ul class="step-list">
+          <li><span class="step-n">CAP</span><span>Each planet has a population cap by type and size. A small Lava planet caps at 2 pop; a large Fertile planet may cap at 6. Once a system hits total cap across all planets, Food surplus is wasted — colonize more planets in the system or move pops out via Spaceports.</span></li>
+          <li><span class="step-n">RACE</span><span>Each pop unit has a race tag determining its per-pop bonus and preferred planet type. Sophon pops on Arctic planets add high Science/pop. Placing the right race on the right planet type is free FIDSI from racial preference bonuses.</span></li>
+          <li><span class="step-n">ASSIMILATION</span><span>Minor faction pops (acquired through diplomacy) often have unique bonuses unavailable to major factions — e.g. +Influence/pop or +Dust/pop on specific planet types. These are among the highest-value pop types in the game and should be grown deliberately on matching planet types.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')"><span class="block-icon">🚀</span><span class="block-title">Moving Population Between Systems</span><span class="block-tag tag-strategy">STRATEGY</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>Once System Development L2 is built (Economy Stage 4), Spaceport slots unlock in your systems. Spaceports allow you to transfer population units between systems — turning population from a passive resource into an active deployment tool.</p>
+        <ul class="step-list">
+          <li><span class="step-n">HOW</span><span>Click a system → click the Spaceport slot → select "Transport" → choose a pop unit and a destination system. The pop moves in a few turns and begins generating FIDSI at the destination immediately.</span></li>
+          <li><span class="step-n">USE 1</span><span><strong>Match race to planet type.</strong> Move Sophon pops to Arctic planets in your Science systems, Craver pops to Lava planets in your Industry systems. These racial preference bonuses are entirely free FIDSI from correct placement.</span></li>
+          <li><span class="step-n">USE 2</span><span><strong>Move capped pops to developing systems.</strong> If your home system is at population cap, pops there are generating FIDSI but can't grow further. Moving some to a developing system with open planet slots immediately starts their FIDSI contribution there while also enabling growth.</span></li>
+          <li><span class="step-n">USE 3</span><span><strong>Fix conquered systems rapidly.</strong> Move your high-value pops into freshly conquered systems to immediately boost their output, or move foreign pops out to reduce racial Approval penalties.</span></li>
+        </ul>
+        <div class="callout callout-warn">
+          <div class="callout-label">POP MOVEMENT CAUSES APPROVAL PENALTY</div>
+          Moving a population unit into a system triggers an Approval penalty in the receiving system — "immigrants" cause local unrest. Assign a Counselor Hero to the receiving system before transferring, or build Approval improvements first. The penalty is temporary (5–10 turns), but tipping an already-low system into Angry status collapses its FIDSI output at the worst possible moment.
+        </div>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T6: HEROES -->
+  <div class="topic" id="t6">
+    <div class="topic-header"><div class="topic-num">06</div><div>
+      <h2 class="topic-title">Heroes: Classes, Leveling & Skill Investment</h2>
+      <div class="topic-subtitle">Heroes are your strongest economic and military lever — if used in the right role, leveled correctly</div>
+    </div></div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')"><span class="block-icon">🦸</span><span class="block-title">The 4 Hero Classes and Their Correct Roles</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>Heroes come in 4 classes. The critical mistake is cross-training — assigning a Guardian as a governor hoping for both fleet and system bonuses. A Guardian's fleet skills do nothing when governing, and vice versa. Match class to role strictly.</p>
+        <table class="ref-table">
+          <tr><th>Class</th><th>Best Role</th><th>Key Benefits</th><th>Never Do This</th></tr>
+          <tr><td class="cell-key">Guardian</td><td>Fleet Admiral</td><td>+Damage, +Hull HP, +Shield capacity, +Manpower, unique battle tactics</td><td>Assign as governor — fleet skills go idle</td></tr>
+          <tr><td class="cell-key">Counselor</td><td>System Governor</td><td>+Approval, +Dust, +Food, +Influence; Tier 4 forces Ecstatic on system permanently</td><td>Combat fleet — minimal battle bonuses</td></tr>
+          <tr><td class="cell-key">Overseer</td><td>System Governor (specialist)</td><td>+Food on Fertile planets, +Industry on Hot planets, resource bonuses, reduces overcrowding penalties</td><td>Any combat role — purely economic</td></tr>
+          <tr><td class="cell-key">Privateer</td><td>Fleet / Exploration</td><td>+Movement speed, +Sensor range, +Exploration bonuses, decent combat support</td><td>Main combat admiral — lacks raw fleet power of Guardians</td></tr>
+        </table>
+        <div class="callout callout-tip">
+          <div class="callout-label">SENATE ROLE — THE THIRD USE FOR HEROES</div>
+          The highest-level hero of a political party can serve as that party's Senator when the party holds power. Senator heroes apply their governor/fleet skills as empire-wide passive bonuses — not just to one system, but to all of them. A high-level Counselor Senator gives empire-wide Approval and Dust bonuses. This makes leveling Counselors a priority even if they never see combat.
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')"><span class="block-icon">⬆️</span><span class="block-title">How XP Works — and How to Level Heroes Fast</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p><strong>Governors level dramatically faster than fleet admirals.</strong> A governor gains XP every turn from the system's output, plus a large XP bonus whenever a system improvement or ship completes construction. A fleet admiral gains XP only from exploring or winning battles — and only if the enemy holds their ground.</p>
+        <ul class="step-list">
+          <li><span class="step-n">LEVELING TRICK</span><span>To level a combat-destined Guardian quickly, assign them as governor of your highest-Industry system first. They'll gain levels rapidly from construction completions. Once they reach your target level (8–10 for strong fleet bonuses), move them to the combat fleet. You'll have a well-leveled admiral in half the turns it would take from combat alone.</span></li>
+          <li><span class="step-n">SKILL DISCIPLINE</span><span>Heroes have 4 skill tiers unlocking at 4/8/12/16 skill points. Commit to one role from level 1. Investing any points in governor skills on a future admiral wastes the slots that would unlock better combat Tiers later. No exceptions.</span></li>
+          <li><span class="step-n">WORKFLOW</span><span><strong>Turn 1:</strong> Assign starting hero as governor of home system. <strong>Turn 15–20:</strong> Hero is level 5–6 from construction XP. If they're a Guardian, move to combat fleet now; hire a Counselor replacement from the Academy. <strong>Turn 30+:</strong> 3+ heroes — Guardian in fleet (full fleet skills), Counselor governing your best economic system, Overseer on your production system.</span></li>
+        </ul>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T7: TECH TREE -->
+  <div class="topic" id="t7">
+    <div class="topic-header"><div class="topic-num">07</div><div>
+      <h2 class="topic-title">Tech Tree Navigation: What to Research and When</h2>
+      <div class="topic-subtitle">4 quadrants, 5 stages each — ignoring any quadrant has specific painful consequences</div>
+    </div></div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')"><span class="block-icon">⚗️</span><span class="block-title">What Each Quadrant Gates</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Quadrant</th><th>What's Locked Without It</th><th>Must-Have Milestones</th></tr>
+          <tr><td class="cell-key">Military</td><td>Medium & Large ship hulls (stuck on Small), advanced weapons, Behemoths, troop upgrades</td><td>Stage 2: Medium hulls. Stage 3: Large hulls. Stage 4: Behemoth. Stage 5: Endless Military techs</td></tr>
+          <tr><td class="cell-key">Science & Exploration</td><td>Colonizing non-standard planets (Barren, Arctic, Gas Giant), wormholes, advanced probe modules, Xenobiology</td><td>Stage 2: Arctic/Barren colonization. Stage 3: Wormholes + Xenobiology. Stage 5: Endless Science techs</td></tr>
+          <tr><td class="cell-key">Economy & Trade</td><td>Strategic resource exploitation, System Development (all 3 levels), Trade Companies, Industry specializations</td><td>Stage 3: System Dev L1 + Trade Companies. Stage 4: System Dev L2. Stage 5: System Dev L3 + Endless Economy techs</td></tr>
+          <tr><td class="cell-key">Empire Development</td><td>Political laws, Influence generation, Obelisks (Wonder Victory), advanced Assimilation</td><td>Stage 3: Autonomous Administration. Stage 5: Obelisks + Endless Empire techs</td></tr>
+        </table>
+        <div class="callout callout-gold">
+          <div class="callout-label">SCIENCE VICTORY — TECH TREE REQUIREMENT</div>
+          Science Victory requires 4 Endless Technologies from 4 different tech branches. All 4 Endless Technologies are only available at Stage 5 of their respective quadrants. You must reach Stage 5 in all four quadrants to win. This means Science Victory is the only victory condition that demands balanced tech tree progression — you cannot afford to ignore any quadrant if this is your goal.
+        </div>
+        <div class="callout callout-warn">
+          <div class="callout-label">THE STAGE GATE TRAP</div>
+          Unlocking Stage 3 requires 2–3 techs from Stage 2. Players who go deep in one quadrant while barely touching others arrive at mid-game unable to colonize Arctic planets, unable to build Large ships, and lacking System Development. Map the minimum Stage progression required across all quadrants for your victory path — then don't fall behind on any of them.
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')"><span class="block-icon">🗺️</span><span class="block-title">Early-Game Research Priority Order (Turns 1–40)</span><span class="block-tag tag-strategy">STRATEGY</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <ul class="step-list">
+          <li><span class="step-n">T1–5</span><span><strong>Economy & Trade Stage 1:</strong> Pick any tech to start accumulating Stage 1 progress. "Domestic Trade" gives early Industry bonuses; "Graviton Research" unlocks strategic resources. Both are fine starting points.</span></li>
+          <li><span class="step-n">T5–15</span><span><strong>Military Stage 2 (Medium hulls):</strong> Your starting fleet is Small-hull only. Medium hulls have significantly more module slots and HP. Without this, you lose mid-game combat regardless of your other strategy.</span></li>
+          <li><span class="step-n">T15–25</span><span><strong>Economy Stage 2–3:</strong> Getting to Stage 3 unlocks System Development L1 and Trade Companies. This is your economic turning point — every turn delayed here is a turn your systems produce at unboosted rates.</span></li>
+          <li><span class="step-n">T25–35</span><span><strong>Science & Exploration Stage 2:</strong> Colonization of Barren and Arctic planets — common in the mid-galaxy and inaccessible without this. Also unlocks Tier 2 curiosity detection and investigation.</span></li>
+          <li><span class="step-n">T35+</span><span><strong>Diverge based on victory path.</strong> Science → push all quadrants toward Stage 5. Conquest → Military Stage 3 (Large hulls) + Empire Stage 3 (Autonomous Administration). Economic → Economy Stage 4–5 (System Dev L2/L3 + Trade Company expansion).</span></li>
+        </ul>
+        <div class="callout callout-tip">
+          <div class="callout-label">THE STAGE BOUNDARY BONUS ROW — MOST PLAYERS MISS THIS</div>
+          Between stage tiers in the tech screen, there are small icons representing free bonuses unlocked just by reaching that stage — no separate building required. Reaching Economy Stage 3 automatically gives System Development L1 access even before building anything. Reaching Military Stage 3 gives a free fleet movement bonus. Hover the icons between stages to see what each boundary grants.
+        </div>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T8: POLITICS -->
+  <div class="topic" id="t8">
+    <div class="topic-header"><div class="topic-num">08</div><div>
+      <h2 class="topic-title">The Political System: Parties, Laws & Elections</h2>
+      <div class="topic-subtitle">6 parties, galaxy-wide laws every ~20 turns — controlling this is a meaningful competitive edge</div>
+    </div></div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')"><span class="block-icon">🗳️</span><span class="block-title">How Parties, Votes & Laws Work</span><span class="block-tag tag-mech">MECHANIC</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <p>6 political parties (Industrialists, Scientists, Militarists, Pacifists, Ecologists, Religious) each hold Senate seats based on empire-wide political support. The party with the most seats enacts an automatic law in effect between elections (roughly every 20 turns). The law grows stronger as the party stays in power: Established → Entrenched. An Entrenched Industrialist law might give +15% Industry empire-wide — a free bonus on par with multiple research upgrades.</p>
+        <p>Political support comes from:</p>
+        <ul class="step-list">
+          <li><span class="step-n">POP TYPE</span><span>Each population unit has a political ideology. Sophon pops → Scientist support; Craver pops → Militarist/Industrialist; minor faction pops → varies. The more of a given pop type you have, the more that party is supported empire-wide.</span></li>
+          <li><span class="step-n">SPECIALIZATIONS</span><span>Industry specs → Industrialist votes; Science specs → Scientist votes; Food specs → Ecologist; Dust specs → Pacifist; Influence specs → Religious. This is the most controllable lever — you can swing elections by changing your specialization focus over 10–15 turns.</span></li>
+          <li><span class="step-n">HEROES</span><span>Heroes have political leanings visible on their hero card. Assigning politically-aligned heroes as governors adds that party's support in that system, multiplied by hero level. A high-level hero significantly swings their system's political balance.</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')"><span class="block-icon">⚖️</span><span class="block-title">Which Party to Back and When to Switch</span><span class="block-tag tag-strategy">STRATEGY</span><span class="block-chevron">▾</span></div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Party</th><th>Entrenched Law Effect</th><th>Best For</th><th>How to Empower</th></tr>
+          <tr><td class="cell-key">Industrialists</td><td>+Industry empire-wide, reduced ship upkeep</td><td>Conquest, Wonder, early expansion</td><td>Industry planet specs, Craver pops</td></tr>
+          <tr><td class="cell-key">Scientists</td><td>+Science empire-wide</td><td>Science Victory</td><td>Science specs, Sophon pops</td></tr>
+          <tr><td class="cell-key">Militarists</td><td>+Fleet capacity, +Manpower</td><td>Supremacy, late-war Conquest</td><td>Military improvements, Guardian heroes as governors</td></tr>
+          <tr><td class="cell-key">Pacifists</td><td>+Dust income, +Diplomacy bonuses</td><td>Economic Victory, Lumeris</td><td>Dust specs, trade-focused improvements</td></tr>
+          <tr><td class="cell-key">Ecologists</td><td>+Approval, +Food, +Population growth</td><td>Rapid expansion phases</td><td>Food specs, Terraforming improvements</td></tr>
+          <tr><td class="cell-key">Religious</td><td>+Influence generation empire-wide</td><td>Senate dominance, cultural defense</td><td>Influence specs, Religious improvements</td></tr>
+        </table>
+        <div class="callout callout-gold">
+          <div class="callout-label">ECONOMIC VICTORY — PACIFIST LAW</div>
+          For Economic Victory, the Pacifist Entrenched law is a direct Dust income multiplier empire-wide. Combine it with Dust planet specializations, Trade Company investment, and System Development Dust bonuses for stacked compounding income. If the Pacifist law is active and Entrenched for 50+ turns, it alone can contribute tens of thousands of Dust toward the 450k requirement.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">SWITCHING PARTY POWER</div>
+          Change your planet specializations empire-wide over 5–10 turns, and move politically-aligned heroes between systems. The shift shows up in the next election. Typical arc: early game → Industrialists (Industry builds fastest). Mid game → Scientists (for Science Victory) or stay Industrialists (for Conquest). Late game → Militarists (fleet capacity for large-scale war).
+        </div>
+        <div class="done-row"><span class="done-label">UNDERSTOOD & APPLIED</span><button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header"><div class="topic-num">🧠</div><div>
+      <h2 class="topic-title">Scenario Quiz</h2>
+      <div class="topic-subtitle">Economy & Empire decisions — apply what you've learned</div>
+    </div></div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+</main>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol1';
+const TOTAL = 8;
+let qIdx = 0;
+let answered = false;
+const quizzes = [
+  {
+    scenario: "Turn 25. Your home system generates 40 Science/turn. You have two Science improvements available: (A) '+8 flat Science' and (B) '+20% System Science.' You're pursuing Science Victory.",
+    q: "Which do you build first, and does the order matter?",
+    opts: [
+      "Always build the % multiplier first — it compounds everything below it.",
+      "Build the flat +8 Science first. At 40 base Science, +20% = 8 anyway — identical today. But as your base grows to 80–100+ through population and System Development, the percentage multiplier becomes far more powerful. Build flat first to grow the base, then layer in the multiplier.",
+      "The order doesn't matter — both give the same long-term output.",
+      "Build neither — prioritize Industry to build ships faster and protect your Science systems."
+    ],
+    correct: 1,
+    explain: "At 40 base Science, +20% = 8 — identical to the flat bonus. But the flat bonus stays at +8 forever regardless of base. Once your base grows to 100 Science (through population growth, racial bonuses, System Development), the +20% multiplier gives 20 Science vs the flat's +8. The correct build order is always: flat bonuses first to establish a large base, then percentage multipliers to multiply that large base. This is the single most important FIDSI optimization principle."
+  },
+  {
+    scenario: "Turn 30. You've just unlocked Economy Stage 3 and can choose System Development L1. Available luxury resources: Eden Incense (+Approval/system), Jadonyx (+60 flat Industry/system), Hyperium (+5% all FIDSI). You're pursuing Economic Victory.",
+    q: "Which resource should you choose for L1?",
+    opts: [
+      "Hyperium — +5% FIDSI multiplies everything including future Dust growth.",
+      "Jadonyx — flat +60 Industry immediately accelerates production empire-wide.",
+      "Eden Incense — Economic Victory requires peaceful expansion. More colonies = more Dust production points. Approval bonuses offset the Approval penalty from colonizing aggressively, keeping all your systems producing at full efficiency.",
+      "The choice is irrelevant — System Development L1 impact is minimal regardless of resource."
+    ],
+    correct: 0,
+    explain: "For Economic Victory, the goal is maximizing cumulative Dust accumulation across hundreds of turns. Hyperium's +5% FIDSI multiplier applies to your entire FIDSI output — including Dust — across every system, and it multiplies on top of all existing bonuses. Over 150+ turns across 8–12 systems, this compounds into thousands of additional Dust. Eden Incense is better for Conquest (where colonization Approval hits are the main bottleneck). Jadonyx is good for Industry-focused builds. For Economic Victory, the percentage Dust/FIDSI multiplier wins over time."
+  },
+  {
+    scenario: "You have a Guardian hero at level 5 governing your industrial home system. Your main combat fleet has no hero assigned. War starts in 10 turns.",
+    q: "What's the optimal hero management approach for the next 10 turns?",
+    opts: [
+      "Move the Guardian to the combat fleet immediately — 10 turns of fleet bonuses is worth it.",
+      "Keep the Guardian governing for 7–8 more turns to collect construction XP and level up, then move to the fleet just before war. Simultaneously hire a Counselor from the Academy to take over governance.",
+      "Keep the Guardian as governor permanently — losing that XP source is too costly.",
+      "Move the Guardian to the fleet but invest their remaining skill points in governor skills since the fleet will often orbit your systems."
+    ],
+    correct: 1,
+    explain: "Governors gain XP from construction completions — if your industrial system has several projects queued, staying 7–8 more turns likely earns 2–3 more levels, meaning a significantly stronger fleet admiral during the actual war. Moving them just before war ensures transit completes before combat begins. Hiring a Counselor replacement in parallel ensures no governance gap. Skill-splitting (option D) is always wrong — governor skills on a combat hero are permanently wasted points that would have unlocked stronger combat Tier 3–4 skills."
+  },
+  {
+    scenario: "Turn 50. Industrialists are Entrenched. You're now pivoting to Science Victory and want Scientists to take power. You have 18 turns until the next election.",
+    q: "What is the fastest reliable way to shift political control?",
+    opts: [
+      "Declare war — combat builds Militarist support, which naturally bleeds toward Scientist support over time.",
+      "Change all planet specializations empire-wide from Industry to Science specs over the next 10 turns, and reassign any Scientist-leaning heroes to governor roles in your largest systems. This directly shifts hundreds of political support points before the election.",
+      "Wait — political power naturally drifts toward balanced parties over time without intervention.",
+      "Hire new Scientist heroes from the Academy but leave them unassigned to accumulate passive political support."
+    ],
+    correct: 1,
+    explain: "Planet specializations are the fastest, most direct political lever. Switching empire-wide from Industry to Science specs changes hundreds of political support points within 5–10 turns. Heroes with Scientist leanings governing your highest-population systems add further support multiplied by hero level. Together, these can swing a majority from Industrialists to Scientists within 15 turns — in time for the election. Unassigned heroes generate zero political bonus; they must be in governor roles to contribute political support."
+  }
+];
+</script>
+<script src="es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.6 — Special Factions</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="es2-guide.css">
+<style>
+  /* Vol 4 accent: gold — unique, prestigious */
+    :root {
+    --accent:     var(--vol6-accent);
+    --accent-rgb: var(--vol6-accent-rgb);
+    --accent-dim: rgba(var(--vol6-accent-rgb), 0.11);
+  }
+  .progress-mini-fill { background: linear-gradient(90deg, var(--vol1-accent), var(--vol0-accent)); }
+  body::before { background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, rgba(var(--vol1-accent-rgb), 0.05) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 20%, rgba(var(--vol0-accent-rgb), 0.04) 0%, transparent 70%); }
+  h1.page-title { text-shadow: 0 0 30px rgba(var(--vol1-accent-rgb), 0.35); }
+  .topic-num { color:var(--accent); background:var(--accent-dim); border-color:rgba(var(--vol1-accent-rgb), 0.3); }
+  .tag-mech { background:var(--accent-dim); color:var(--accent); border-color:rgba(var(--vol1-accent-rgb), 0.25); }
+  .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:var(--accent-dim); }
+  .nav-item:hover { background:var(--accent-dim); }
+  .step-list li .step-n { color:var(--accent); background:var(--accent-dim); }
+  .callout-tip { border-left-color:var(--accent); background:var(--accent-dim); }
+  .callout-tip .callout-label { color:var(--accent); }
+
+  /* Faction identity badges
+  .faction-badge {
+    display:inline-flex; align-items:center; gap:8px;
+    padding:5px 14px; border-radius:20px; font-family:'Share Tech Mono',monospace;
+    font-size:var(--ts_sectionTitle); letter-spacing:2px; margin-bottom:16px; font-weight:700;
+  }
+  .badge-vodyani { background:rgba(var(--vol3-accent-rgb), 0.15); color:var(--vol3-accent); border:1px solid rgba(var(--vol3-accent-rgb), 0.3); }
+  .badge-craver  { background:rgba(var(--red-rgb), 0.15);  color:var(--vol2-accent); border:1px solid rgba(var(--red-rgb), 0.3); }
+  .badge-riftborn{ background:rgba(var(--vol4-accent-rgb), 0.15); color:var(--vol4-accent); border:1px solid rgba(var(--vol4-accent-rgb), 0.3); }
+  .badge-umbral  { background:rgba(var(--vol0-accent-rgb), 0.12);  color:var(--vol0-accent); border:1px solid rgba(var(--vol0-accent-rgb), 0.3); }
+  .badge-lumeris { background:rgba(var(--vol1-accent-rgb), 0.15); color:var(--vol1-accent); border:1px solid rgba(var(--vol1-accent-rgb), 0.3); }
+  .badge-horatio { background:rgba(var(--green-rgb), 0.12); color:var(--green); border:1px solid rgba(var(--green-rgb), 0.3); }
+
+  .faction-rule {
+    background:var(--card2); border:1px solid var(--border); border-radius:6px;
+    padding:12px 16px; margin:10px 0; font-size:var(--ts_table); line-height:1.7;
+  }
+  .faction-rule .rule-label {
+    font-family:'Share Tech Mono',monospace; font-size:var(--ts_sectionTitle); letter-spacing:2px;
+    margin-bottom:4px; font-weight:700;
+  }*/
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="game-name">VOLUME 6</div>
+    <div class="guide-name">Faction<br>Guides II</div>
+  </div>
+  <div class="nav-section-label">// Unique Factions</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">🦋 Vodyani <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🐛 Cravers <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">❄️ Riftborn <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">👁️ Umbral Choir <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-section-label">// Distinctive Factions</div>
+  <div class="nav-item" onclick="scrollByID('t5')">💰 Lumeris <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🧬 Horatio <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+  
+  <div class="vol-link" style="background:rgba(var(--vol5-accent-rgb),0.08);border:1px solid rgba(var(--vol5-accent-rgb),0.20);color:var(--vol5-accent);" onclick="location.href='es2-vol5-factions.html'">← Vol.5: Faction Guides</div>
+  
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+
+  </nav>
+
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb">ES2 // <span>Vol.6</span> // Faction Guides II</div>
+    <h1 class="page-title">Faction<br>Guides II</h1>
+    <p class="page-subtitle">Four factions break the normal rules of ES2 so fundamentally that Volumes 0–3 are partially inapplicable to them. This volume covers each unique faction's rule-breaking mechanics, what strategies those mechanics enable, and how to play each one correctly. Two additional factions with highly distinctive (but not rule-breaking) playstyles round out the guide.</p>
+  </div>
+
+  <!-- T1: VODYANI -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Vodyani — The Nomadic Ark Civilization</h2>
+        <div class="topic-subtitle">No traditional colonies. No planet FIDSI. Everything comes from Arks orbiting systems.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🦋</span>
+        <span class="block-title">Core Mechanic: Arks Replace Colonization</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-vodyani">◈ VODYANI — THE LOST</div>
+        <p>The Vodyani do not colonize planets. They cannot build System Improvements, cannot grow population on planets, and are completely immune to the Approval system. Instead, they build and upgrade massive ships called <strong>Arks</strong>. An Ark orbiting a system "claims" that system and generates all FIDSI from its own internal modules — completely independent of the system's planets.</p>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol3-accent)">RULE BREAK 1 — NO COLONIZATION</div>
+          Vodyani never build colony ships. Systems are claimed by moving an Ark into orbit. The Ark's modules determine what FIDSI the system produces. The system's planets are irrelevant to Vodyani FIDSI output — though the system's star lane position and resource deposits still matter.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol3-accent)">RULE BREAK 2 — ESSENCE INSTEAD OF FOOD</div>
+          Vodyani population does not grow from Food. Instead, population units (called "the Lost") are generated by consuming <strong>Essence</strong> — a special resource harvested from minor factions. To gain a new population unit, you must orbit a minor faction's home system with an Ark and extract Essence from them. Each extraction reduces the minor faction's population and relation with you. Minor factions can be harvested to death.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol3-accent)">RULE BREAK 3 — NO APPROVAL SYSTEM</div>
+          Vodyani have no Approval mechanic at all. There is no happiness modifier on their FIDSI. Expanding as rapidly as possible has no Approval cost. The constraint instead is Ark construction cost and Essence availability.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">VODYANI PRIORITY ORDER</div>
+          1. Build your first additional Ark as fast as possible (your home Ark has limited module slots).<br>
+          2. Explore the galaxy to find minor factions — your Essence supply. Scout specifically for minor faction locations, not necessarily good planet systems.<br>
+          3. Upgrade Ark modules: FIDSI modules on each Ark determine your empire's output. Treat Ark upgrades exactly as you would system improvements — Industry modules first, then Science, then Dust.<br>
+          4. The Ark also serves as a fleet — a well-upgraded Ark can fight alongside military ships. Don't neglect its combat modules entirely.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T2: CRAVERS -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Cravers — The Devouring Hive</h2>
+        <div class="topic-subtitle">No Approval system. No diplomacy. Planets degrade over time and must be abandoned. Conquest is not optional — it's survival.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🐛</span>
+        <span class="block-title">Core Mechanics: Depletion & Forced Expansion</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-craver">◈ CRAVERS — CONCRETE HIVE</div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol2-accent)">RULE BREAK 1 — PLANET DEPLETION</div>
+          Every planet in a Craver system degrades over time. Each colonized planet has a Depletion counter that increments each turn. As the counter rises, the planet's FIDSI output progressively decreases — starting at −5% and reaching −50% or more on fully depleted planets. Depletion cannot be stopped or reversed. A Craver player must continuously conquer new systems to replace depleted ones, or their empire's production collapses from within.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol2-accent)">RULE BREAK 2 — NO DIPLOMACY</div>
+          Cravers cannot form treaties, alliances, or trade agreements. No other faction will sign agreements with them. The only diplomatic state available to Cravers is hostility. This means no Trade Company route extensions through neighbor territory, no Research Agreements, and no Senate coalition building. Every mechanic in Vol.3 is inapplicable to Cravers.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol2-accent)">RULE BREAK 3 — MODIFIED APPROVAL</div>
+          Cravers do not experience standard Approval penalties from expansion. Instead, they have a unique "Pacification" mechanic: conquered populations are pacified rather than unhappy, and the Approval equivalent is managed through the Pacification buildings rather than Happiness improvements. Rapid expansion has much lower penalties for Cravers than for any other faction.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE DEPLETION TIMELINE — PLAN YOUR CONQUEST CALENDAR</div>
+          Depletion accelerates around turns 40–60 on your earliest colonies. Before that window, you must have new systems ready to absorb your population and production needs. The correct play: always have your next conquest target identified 15–20 turns before you need it. If your home system is at 40% depletion and you have no new system ready to colonize, you're already behind. Cravers always win fast (Conquest) or lose slowly (depletion spiral).
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">EXPLOITATION BUILDINGS: EXTRACT MAXIMUM VALUE BEFORE DEPLETION</div>
+          Cravers have access to unique "Extraction" improvements that massively boost FIDSI output of a specific resource — but at the cost of dramatically accelerating depletion on that planet. When a system is already heavily depleted and you're planning to abandon it anyway, build Extraction improvements to squeeze maximum Industry or Science from the dying planets before you move on. Extract, deplete fully, abandon, conquer new. That's the Craver loop.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T3: RIFTBORN -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Riftborn — The Manufactured Civilization</h2>
+        <div class="topic-subtitle">Population is not grown from Food — it is built in factories using Industry. Every system mechanic changes as a result.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">❄️</span>
+        <span class="block-title">Core Mechanic: Population as Industrial Output</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-riftborn">◈ RIFTBORN — THE ANNEXERS</div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol4-accent)">RULE BREAK 1 — MANUFACTURED POPULATION</div>
+          Riftborn do not grow population from Food. Food is completely irrelevant to their population growth. Instead, population units are produced as a buildable item in the system's construction queue — exactly like building a ship or a system improvement. Each pop unit costs a set amount of Industry and takes a set number of turns to complete. Food improvements, Food specializations, and Food planet types provide zero population growth value to Riftborn. Redirect every slot that would be spent on Food to Industry.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol4-accent)">RULE BREAK 2 — VIRTUAL PLANETS (POCKET RIFTS)</div>
+          Riftborn can build "Pocket Rifts" — virtual extra planets that exist in a system without needing a physical planet slot. Pocket Rifts can be populated and specialized just like real planets but are constructed improvements rather than natural terrain. This means Riftborn can exceed the natural planet cap of any system by adding Pocket Rifts — a unique population and FIDSI expansion path unavailable to any other faction.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol4-accent)">RULE BREAK 3 — COLONIZATION PREFERENCE</div>
+          Since Food is irrelevant, Riftborn don't care about Fertile planets. Their colonization preference is entirely based on Industry potential (Lava/Volcanic planets) and planet count. An all-Lava system that would be mediocre for any other faction is ideal for Riftborn — maximum Industry output fuels their manufactured population engine.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">RIFTBORN PRIORITY ORDER</div>
+          1. Maximize Industry above everything else — it is both your ship-building AND your population-building resource simultaneously. Every Industry improvement is twice as valuable as for other factions.<br>
+          2. Prioritize Lava/Volcanic systems on colonization, not Fertile/Jungle. Fertile systems with no Industry output are nearly worthless.<br>
+          3. Build Pocket Rifts in high-Industry systems to expand their population cap and unlock more FIDSI potential. Each Pocket Rift can then be specialized for Science or Dust.<br>
+          4. Queue population units during turns when your Industry is briefly idle between ship construction. Never let your Industry queue sit empty.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T4: UMBRAL CHOIR -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Umbral Choir — The Possessors</h2>
+        <div class="topic-subtitle">No direct colonization. They possess other factions' systems and use them as their own — completely invisible.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">👁️</span>
+        <span class="block-title">Core Mechanic: Possession Instead of Colonization</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-umbral">◈ UMBRAL CHOIR — THE HIDDEN ONES</div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol0-accent)">RULE BREAK 1 — POSSESSION MECHANIC</div>
+          The Umbral Choir's primary expansion mechanic is <strong>Possession</strong>: they can "possess" systems owned by other factions, including opponents, and extract a portion of those systems' FIDSI output as their own — without the owner knowing. A possessed system continues to appear normal to the owner, who sees no change in their output (they don't lose anything visible). But the Umbral Choir receives a shadow income from those systems behind the scenes. One Umbral empire can feed off multiple opponents simultaneously.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol0-accent)">RULE BREAK 2 — SHADOW PRESENCE</div>
+          The Umbral Choir maintains a fleet of invisible ships — ships that cannot be detected by opponents on the galaxy map under normal circumstances. These shadow ships can orbit opponent systems to set up Possession, investigate curiosities without being seen, and conduct espionage actions without triggering the normal detection probability. Counter-hacking and advanced sensor techs are the only ways opponents can reveal Umbral ships.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol0-accent)">RULE BREAK 3 — LIMITED DIRECT COLONIZATION</div>
+          The Umbral Choir can colonize systems normally, but their direct FIDSI from owned systems is intentionally weaker than other factions. Their power scaling comes from Possession income stacked across many opponent systems. A well-played Umbral Choir in a 4-player game might be receiving shadow income from all three opponents simultaneously — total FIDSI extraction that no single traditional empire can match.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">POSSESSION RISK: DETECTION</div>
+          Possession is not risk-free. Opponents who invest in hacking counter-measures and high-level sensor tech can detect Umbral shadow ships orbiting their systems and force them to retreat. Each detected Possession breaks the income link for that system. The Umbral Choir must balance aggressive Possession (maximizing income) against the risk of detection — prioritize possessing opponents who are not investing in Hacking Network defense.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">UMBRAL PRIORITY ORDER</div>
+          1. Build shadow ships and send them toward the richest opponent systems as early as turn 10–15.<br>
+          2. Possess the highest-FIDSI systems first — opponent Science hubs and Industry centers provide the best shadow income.<br>
+          3. Maintain a minimum real military to deter direct attack — opponents who discover you may retaliate militarily even if they can't see your shadow fleet.<br>
+          4. Best victory paths: Science (Possession from high-Science opponents accelerates research) and Score (broad FIDSI extraction inflates total score). Conquest is difficult with limited real military.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T5: LUMERIS -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Lumeris — The Trade Empire</h2>
+        <div class="topic-subtitle">Standard colonization, but with a Trade Company cap of 5 (vs. 3 for all others) and unique Dust-multiplying mechanics</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">💰</span>
+        <span class="block-title">What Makes Lumeris Different</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-lumeris">◈ LUMERIS — THE MERCHANTS</div>
+        <p>Lumeris play largely like a standard faction — they colonize normally, grow population from Food, and use the standard Approval system. Their uniqueness comes from three stacking Dust advantages:</p>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol1-accent)">TRADE COMPANY CAP: 5 INSTEAD OF 3</div>
+          Where all other factions max out at 3 Trade Companies, Lumeris can operate 5 simultaneously. Since each additional Trade Company compounds income multiplicatively across all its routes, two extra companies at high level can generate more Dust per turn than a faction's entire FIDSI mining output. The Lumeris Dust economy is categorically in a different tier from all other factions if correctly managed.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol1-accent)">DUST FACTION ABILITY — BUYING INFLUENCE</div>
+          Lumeris can spend Dust to directly purchase Senate Influence, political support, and even diplomatic relation boosts. Where other factions must invest time and Influence resource, Lumeris converts their abundant Dust into political power directly. In the late game when their Dust income is 2–3× any opponent's, this turns Senate seats into a purchasable commodity.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol1-accent)">ECONOMIC VICTORY ADVANTAGE</div>
+          With 5 Trade Companies and the highest per-turn Dust income in the game, Economic victory (450,000 cumulative Dust) is Lumeris's natural path. Reach it ~20–30 turns faster than any other faction can. The primary threat is war — military aggression disrupts trade routes. Lumeris must invest in diplomacy and defensive military to protect their income network.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">LUMERIS PRIORITY ORDER</div>
+          1. Sign Trade Agreements with every neighbor immediately — route extension is your income multiplier.<br>
+          2. Build Trade Company HQs as fast as possible; always have all 5 companies operational by turn 50.<br>
+          3. Level each company to at least 5 before building the next — level matters more than company count at low levels.<br>
+          4. Spend Dust on Senate seat purchases to maintain Pacifist political dominance, which further boosts Dust via their entrenched law.<br>
+          5. Maintain a defensive military and a Non-Aggression network — one blockaded Trade Company route during peak income is catastrophically expensive.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T6: HORATIO -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Horatio — The Gene-Shapers</h2>
+        <div class="topic-subtitle">Standard mechanics, but population cloning creates custom races — the strongest pop-type bonuses in the game</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🧬</span>
+        <span class="block-title">Cloning Mechanics and Gene Combination</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-horatio">◈ HORATIO — THE BEAUTIFUL</div>
+        <p>Horatio is the only faction that can create custom population types by splicing together traits from different races they've encountered. Their unique ability is <strong>Gene Fusion</strong>: by collecting genetic samples from other factions (through combat, exploration, and diplomacy) and spending Dust, they can combine traits from two different races into a new Horatio-specific pop type with bonuses from both parents.</p>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--green)">GENE FUSION — HOW IT WORKS</div>
+          In the Genetics screen (unique to Horatio), you see all races whose genetic samples you've collected. Select two races as "parents." The resulting fusion pop inherits a combination of both parents' FIDSI bonuses and racial traits. The combination is not always straightforward — some trait combinations are more powerful than others (e.g., fusing Sophon +Science with a race that has +Approval creates a Science-generating pop that also doesn't generate Approval problems).
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--green)">SAMPLE COLLECTION</div>
+          Collecting genetic samples requires: fighting in combat (each battle against a faction gives samples of their pop type), peaceful gene sharing agreements (unique to Horatio — other factions can agree to share samples diplomatically), or assimilating minor factions (whose pop type samples you gain). The more factions you've met and fought or traded with, the more gene combinations you have available.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--green)">POPULATION REPLACEMENT</div>
+          Once a Gene Fusion type is created, Horatio can replace existing population units in their systems with the new custom type. Over time, all their population gradually becomes the custom fused type, providing the combined bonuses across their entire empire. A fully optimized Horatio empire's per-pop FIDSI bonuses can exceed any other faction's by 30–50%.
+        </div>
+
+        <div class="callout callout-gold">
+          <div class="callout-label">OPTIMAL HORATIO GENE STRATEGY</div>
+          The most powerful fusion targets in most games:<br>
+          <strong>Sophon + any high-Industry minor faction:</strong> Creates a Science/Industry dual-output pop — the two most important FIDSI resources combined in one type.<br>
+          <strong>Any high-Approval pop + Cravers:</strong> Cravers have strong FIDSI output but terrible Approval. Fusing their FIDSI stats with a high-Approval race creates a powerhouse pop with no downsides.<br>
+          The key insight: the gene system essentially lets Horatio design their ideal population. Identify which two FIDSI resources your victory path needs most, then specifically hunt samples from races strong in those two areas.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">HORATIO PRIORITY ORDER</div>
+          1. Meet and fight (or trade with) as many factions as possible early — samples require contact.<br>
+          2. Make your first Gene Fusion by turn 25–30, targeting bonuses that amplify your chosen victory path.<br>
+          3. Begin replacing population in your home system with the fused type immediately — home system benefits from the combo bonus while the type grows toward other systems.<br>
+          4. Make a second Gene Fusion around turn 50 using a different combination — assign the second type to a different system role (e.g., first fusion for Industry systems, second for Science systems).
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Faction-specific decision-making — apply what you've learned</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'vol6';
+  const TOTAL = 6;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "You are playing Riftborn. Turn 15. You have two colonized systems. One has 2 Fertile planets and 1 Lava planet. The other has 3 Lava planets. Your Industry queue is currently empty between ship projects.",
+      q: "Where should you build Food improvements, and what should you queue in your Industry gap?",
+      opts: [
+        "Build Food improvements in the Fertile-planet system — Riftborn still need Food for population growth.",
+        "Never build Food improvements — Food is completely irrelevant to Riftborn population growth. Queue manufactured population units in your highest-Industry system (the 3-Lava system) during the Industry gap between ships.",
+        "Build Food improvements to maintain Approval — Riftborn have the standard Approval system.",
+        "Queue Food improvements in both systems — more Food means faster expansion for all factions."
+      ],
+      correct: 1,
+      explain: "Riftborn population is manufactured using Industry — Food provides zero population growth for this faction. Every Food improvement is a wasted slot that should have been an Industry improvement or population unit in the queue. The 3-Lava system is your highest-Industry producer and therefore your fastest population factory. Whenever the Industry queue is between ship projects, queue a population unit — they take a set amount of Industry turns to complete, and letting the queue sit empty wastes that production permanently."
+    },
+    {
+      scenario: "You are playing Cravers. Turn 40. Your home system's planets are at 35% depletion, producing noticeably less FIDSI than at game start. You have a neighbor with two well-developed systems adjacent to your border.",
+      q: "What should you be doing NOW, and what mistake would losing Craver players make at this point?",
+      opts: [
+        "Build Happiness improvements in your home system to slow depletion.",
+        "Begin preparing for war against your neighbor — identify their troop composition, build up Manpower, and start Coordinator siege on one of their systems. You need to have new systems ready to absorb your population before depletion reaches 60–70% and production collapses. Losing players wait until the crisis is obvious at 70%+ depletion, then rush a war they're not ready for.",
+        "Sign a peace treaty with the neighbor and focus on internal development.",
+        "Build Extraction improvements in your home system to maximize output before abandoning it."
+      ],
+      correct: 1,
+      explain: "The Craver depletion curve accelerates — at 35% you're still productive, but 60–70% depletion is a production crisis. The war to acquire new systems takes 10–20 turns to complete (positioning, siege, invasion, stabilization). That means you need to START the war at 35–40% depletion, not when the crisis is already visible. The classic Craver mistake is reactively declaring war when depletion is already critical — by then you're fighting from a weakening production base against an opponent who had time to prepare defenses. Note: Extraction improvements are valid to build at 60–70% depletion on a planet you're actively planning to abandon — squeeze the last value out before leaving."
+    },
+    {
+      scenario: "You are playing Vodyani. Turn 20. You've located three minor factions within 4 hops of your starting Ark. One has 200 Essence available, one has 350 Essence, and one has 500 Essence. You need 2 additional population units.",
+      q: "Which minor faction should you harvest Essence from first, and what long-term risk does repeated harvesting create?",
+      opts: [
+        "Harvest from the 200-Essence faction first — smaller harvests are less harmful.",
+        "Harvest from the 500-Essence faction first — it can sustain the most extraction before dying, giving you the most long-term supply. However, over-harvesting any minor faction will eventually deplete and destroy them permanently, eliminating that Essence source. Spread harvesting across all three to preserve all three sources as long as possible.",
+        "Don't harvest minor factions — it damages diplomatic relations with other major factions.",
+        "Harvest from all three simultaneously using multiple Arks."
+      ],
+      correct: 1,
+      explain: "The 500-Essence faction can sustain the most total extractions — harvest it first as it's the most resilient source. But the critical long-term management principle is to spread extraction across all three sources rather than depleting any single one quickly. A fully depleted minor faction disappears permanently — losing a future Essence source that cannot be recovered. In a galaxy with limited minor factions, every source is precious. Vodyani who harvest one faction to death early find themselves in an Essence drought later when population growth is needed most. Regarding other major factions: they may dislike your Essence harvesting (it's visible to everyone as a hostile act against minor factions) but Vodyani have no choice — it's their only population growth mechanism."
+    },
+    {
+      scenario: "You are playing Horatio. Turn 22. You've collected genetic samples from Sophons (strong +Science/pop) and from a conquered Craver system (strong +Industry/pop, −Approval/pop). You need to make your first Gene Fusion decision.",
+      q: "Is the Sophon + Craver fusion a good choice, and what is the main consideration?",
+      opts: [
+        "No — Craver genes introduce too much Approval penalty; never fuse negative-trait races.",
+        "Yes — the Sophon+Craver fusion creates a pop type with both +Science/pop and +Industry/pop, combining the two most valuable FIDSI resources. The −Approval trait from Cravers is partially diluted in the fusion process (combined bonuses are weighted averages), and the combined Science+Industry output makes it one of the strongest possible fusions for almost any victory path. Assign Counselor Heroes to systems populated with this type to manage the residual Approval penalty.",
+        "It depends entirely on your chosen victory path — only fuse traits that exactly match your single victory condition.",
+        "Never fuse with captured/conquered faction samples — the genes are incompatible with Horatio biology."
+      ],
+      correct: 1,
+      explain: "Sophon+Craver is one of the strongest available fusions precisely because it combines the two most universally valuable FIDSI resources. The Craver −Approval trait is real but manageable: the fusion dilutes it (it's not full Craver Approval penalty), and Counselor Heroes assigned to those systems can fully compensate. The key insight of Gene Fusion is that negative traits are partial while positive traits are also partial — you're getting the combined upside of both races at reduced strength, which almost always outweighs the downside when your chosen combination covers two critical FIDSI outputs. A pop generating both Science and Industry per unit is producing two resources simultaneously that other factions need two separate pop types to cover."
+    }
+  ];
+</script>
+<script src="es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
