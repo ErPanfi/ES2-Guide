@@ -74,6 +74,23 @@ Faction deep-dives follow the naming pattern `es2-Fac{NN}-{faction}.html`.
 
 ---
 
+## Completed Volumes — Status
+
+| File | Status | Topics | Notes |
+|------|--------|--------|-------|
+| es2-vol0-exploration.html | Complete, content awaiting user revision | 7 | |
+| es2-vol1-empire.html | Complete, content awaiting user revision | 8 | |
+| es2-vol2-combat.html | Complete, content awaiting user revision | — | |
+| es2-vol3-heroes.html | Complete, content awaiting user revision | — | |
+| es2-vol4-diplomacy.html | Complete, content awaiting user revision | — | |
+| es2-vol5-factions.html | Complete, content awaiting user revision | — | |
+| es2-vol6-factions-special.html | Complete, content awaiting user revision | — | |
+| es2-Fac01-lumeris.html | Complete, content awaiting user revision  | 13 | Compliance-fixed Feb 2026 |
+| es2-Fac02-horatio.html | Complete, content awaiting user revision | — | |
+| es2-Fac03-sophons.html | Complete, content awaiting user revision | — | |
+
+---
+
 ## Shared Dependencies
 
 Every HTML file must link these two externals in `<head>` and at the bottom of `<body>`:
@@ -363,22 +380,7 @@ COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc
 
 ---
 
-## Completed Volumes — Status
 
-| File | Status | Topics | Notes |
-|------|--------|--------|-------|
-| es2-vol0-exploration.html | Complete, content awaiting user revision | 7 | |
-| es2-vol1-empire.html | Complete, content awaiting user revision | 8 | |
-| es2-vol2-combat.html | Complete, content awaiting user revision | — | |
-| es2-vol3-heroes.html | Complete, content awaiting user revision | — | |
-| es2-vol4-diplomacy.html | Complete, content awaiting user revision | — | |
-| es2-vol5-factions.html | Complete, content awaiting user revision | — | |
-| es2-vol6-factions-special.html | Complete, content awaiting user revision | — | |
-| es2-Fac01-lumeris.html | Complete, content awaiting user revision  | 13 | Compliance-fixed Feb 2026 |
-| es2-Fac02-horatio.html | Complete, content awaiting user revision | — | |
-| es2-Fac03-sophons.html | Complete, content awaiting user revision | — | |
-
----
 
 ## Planned Enhancements
 
