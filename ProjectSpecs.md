@@ -337,6 +337,7 @@ COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc
 | es2-vol6-factions-special.html | Complete, content awaiting user revision | — | |
 | es2-Fac01-lumeris.html | Complete, content awaiting user revision  | 13 | Compliance-fixed Feb 2026 |
 | es2-Fac02-horatio.html | Complete, content awaiting user revision | — | |
+| es2-Fac03-sophons.html | Complete, content awaiting user revision | — | |
 
 ---
 

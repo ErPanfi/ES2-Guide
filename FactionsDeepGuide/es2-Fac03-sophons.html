@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Sophons: Science Snowball Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<style>
+  /* Sophons: blue #2d8fff + cyan highlight */
+  :root {
+    --accent:            var(--sophon-color);
+    --accent-rgb:        var(--sophon-color-rgb);
+    --accent-dim:        rgba(var(--sophon-color-rgb), 0.11);
+    --accent-bright-rgb: var(--cyan-rgb);
+    --accent-bright:     var(--cyan);
+  }
+
+  .progress-mini-fill { background: linear-gradient(90deg, var(--sophon-color), var(--cyan)); }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--sophon-color-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--cyan-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--sophon-color-rgb), 0.03) 0%, transparent 60%); }
+
+  h1.page-title { text-shadow: 0 0 40px rgba(var(--sophon-color-rgb), 0.45), 0 0 80px rgba(var(--sophon-color-rgb), 0.15); }
+
+  .topic-num        { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--sophon-color-rgb), 0.35); }
+  .tag-mech         { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--sophon-color-rgb), 0.3); }
+  .tag-strat        { background: rgba(var(--cyan-rgb), 0.09); color: var(--cyan); border-color: rgba(var(--cyan-rgb), 0.25); }
+  .tag-source       { background: rgba(var(--sophon-color-rgb), 0.08); color: var(--sophon-color); border-color: rgba(var(--sophon-color-rgb), 0.2);
+                      font-size: var(--ts_sectionTitle); letter-spacing: 1.5px; padding: 2px 8px; border-radius: 4px;
+                      border: 1px solid; font-family: 'Share Tech Mono', monospace; }
+
+  .nav-item.active  { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .nav-item:hover   { background: var(--accent-dim); }
+  .step-list li .step-n { color: var(--accent); background: var(--accent-dim); }
+  .callout-tip      { border-left-color: var(--accent); background: var(--accent-dim); }
+  .callout-tip .callout-label { color: var(--accent); }
+
+  /* Sophon identity badge */
+  .faction-badge {
+    background: rgba(var(--sophon-color-rgb), 0.15); color: var(--accent-bright);
+    border: 1px solid rgba(var(--sophon-color-rgb), 0.35);
+  }
+
+  /* Trait blocks */
+  .trait-block {
+    background: var(--card2); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); border-radius: 6px;
+    padding: 13px 16px; margin: 10px 0; font-size: var(--ts_sectionLabel); line-height: 1.75;
+  }
+  .trait-block.warn { border-left-color: var(--red); }
+  .trait-block.cyan { border-left-color: var(--cyan); }
+
+  .trait-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px; margin-bottom: 5px; font-weight: 700; color: var(--accent); }
+  .trait-label.warn { color: var(--red); }
+  .trait-label.cyan { color: var(--cyan); }
+
+  /* Source attribution */
+  .source-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px;
+    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle); }
+  .src-pill { padding: 2px 9px; border-radius: 10px; letter-spacing: 1px;
+    background: rgba(var(--sophon-color-rgb), 0.08); color: var(--sophon-color);
+    border: 1px solid rgba(var(--sophon-color-rgb), 0.2); }
+  .src-pill.unverified { background: rgba(var(--gold-rgb), 0.08); color: var(--gold);
+    border-color: rgba(var(--gold-rgb), 0.25); }
+
+  /* Turn-order timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
+  .tl-row {
+    display: grid; grid-template-columns: 100px 1fr;
+    border-left: 2px solid rgba(var(--sophon-color-rgb), 0.25); padding-left: 16px;
+    padding-bottom: 18px; position: relative;
+  }
+  .tl-row:last-child { padding-bottom: 0; }
+  .tl-row::before {
+    content: ''; position: absolute; left: -6px; top: 4px;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 8px rgba(var(--sophon-color-rgb), 0.5);
+  }
+  .tl-turn { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    color: var(--accent); letter-spacing: 1px; padding-top: 2px; font-weight: 700; }
+  .tl-body { font-size: var(--ts_sectionLabel); line-height: 1.7; color: var(--text); }
+  .tl-body strong { color: var(--accent-bright); }
+
+  /* Ship cards */
+  .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; margin: 16px 0; }
+  .ship-card { background: var(--card2); border: 1px solid var(--border);
+    border-top: 2px solid var(--accent); border-radius: 8px; padding: 14px 16px; }
+  .ship-card.skip-top { border-top-color: var(--red); }
+  .ship-card.gold-top { border-top-color: var(--gold); }
+  .ship-card.cyan-top { border-top-color: var(--cyan); }
+  .ship-name { font-family: 'Orbitron', sans-serif; font-size: var(--ts_quizTitle); font-weight: 700;
+    color: var(--accent-bright); letter-spacing: 2px; margin-bottom: 2px; }
+  .ship-role { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; }
+  .ship-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
+  .ship-stat { display: flex; justify-content: space-between; font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle); color: var(--text-dim); border-top: 1px solid var(--border);
+    margin-top: 8px; padding-top: 8px; }
+  .ship-stat span:last-child { color: var(--accent); font-weight: 700; }
+
+  /* Omniscience decay visualiser */
+  .omni-bar-wrap { margin: 16px 0; }
+  .omni-bar-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .omni-bar { height: 22px; border-radius: 4px; background: var(--border); overflow: hidden; display: flex; }
+  .omni-seg { display: flex; align-items: center; justify-content: center;
+    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    font-weight: 700; letter-spacing: 1px; flex-shrink: 0; }
+
+  /* PIONEER concept box */
+  .pioneer-box {
+    background: linear-gradient(135deg, rgba(var(--sophon-color-rgb), 0.08), rgba(var(--cyan-rgb), 0.06));
+    border: 1px solid rgba(var(--sophon-color-rgb), 0.3); border-radius: 8px;
+    padding: 18px 20px; margin: 16px 0;
+  }
+  .pioneer-title { font-family: 'Orbitron', sans-serif; font-size: var(--ts_topicTitle); font-weight: 700;
+    color: var(--accent-bright); letter-spacing: 3px; margin-bottom: 10px; }
+
+  /* Quest branch grid */
+  .quest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 14px 0; }
+  .quest-card { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
+  .quest-card.best  { border-color: rgba(var(--sophon-color-rgb), 0.45); }
+  .quest-card.conditional { border-color: rgba(var(--gold-rgb), 0.35); }
+  .quest-card.skip  { border-color: rgba(var(--red-rgb), 0.3); }
+  .quest-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px; font-weight: 700; margin-bottom: 6px; }
+  .quest-label.best  { color: var(--accent); }
+  .quest-label.conditional { color: var(--gold); }
+  .quest-label.skip  { color: var(--red); }
+  .quest-body  { font-size: var(--ts_quizTitle); line-height: 1.6; color: var(--text); }
+
+  /* Hero path comparison */
+  .hero-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
+  .hero-path { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
+  .hero-path.preferred { border-color: rgba(var(--sophon-color-rgb), 0.45); }
+  .hero-path-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px; font-weight: 700; margin-bottom: 8px; }
+  .hero-path-label.preferred { color: var(--accent); }
+  .hero-path-label.secondary { color: var(--text-dim); }
+  .hero-path-body { font-size: var(--ts_quizTitle); line-height: 1.6; color: var(--text); }
+
+  /* Victory path table */
+  .victory-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: var(--ts_table); }
+  .victory-table th { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px; text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
+  .victory-table td { padding: 9px 12px; border-bottom: 1px solid rgba(var(--sophon-color-rgb), 0.08); line-height: 1.55; }
+  .victory-table td:first-child { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
+    letter-spacing: 1.5px; white-space: nowrap; }
+  .vic-s  { color: var(--green); font-weight: 700; }
+  .vic-a  { color: var(--accent); font-weight: 700; }
+  .vic-b  { color: var(--gold); font-weight: 700; }
+  .vic-c  { color: var(--red); }
+
+  @media (max-width: 700px) {
+    .hero-compare { grid-template-columns: 1fr; }
+    .quest-grid   { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════════════ SIDEBAR ══════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="game-name">FACTION DEEP DIVE</div>
+    <div class="guide-name">The<br>Sophons</div>
+  </div>
+
+  <div class="nav-section-label">// Core Mechanics</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">🔭 Omniscience <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🏭 The Industry Problem <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🪐 Planet Priority <span class="nav-check" id="nc3"></span></div>
+
+  <div class="nav-section-label">// Strategy</div>
+  <div class="nav-item" onclick="scrollByID('t4')">🦸 Hero Development <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🧩 Faction Quest <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🧪 Tech Priorities <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Fleet & Victory</div>
+  <div class="nav-item" onclick="scrollByID('t7')">🚀 Fleet Design <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🏆 Victory Paths <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-item" onclick="scrollByID('t9')">📋 Turns 1–30 Playbook <span class="nav-check" id="nc9"></span></div>
+
+  <div class="nav-section-label">// Practice</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<main class="main">
+
+  <div class="page-header">
+    <div class="breadcrumb">
+      <a href="../index.html">ES2 Guide</a> // <span>Faction Deep Dive</span> // The Sophons
+    </div>
+    <h1 class="page-title">◈ THE SOPHONS</h1>
+    <p class="page-subtitle">Omniscience makes you the cheapest researcher in the galaxy — but only if you stay ahead of everyone else. This guide is about understanding the decay curve, fixing structural weaknesses before they stall the empire, and knowing when the "science faction" should skip Science Victory entirely.</p>
+  </div>
+
+  <!-- ══ T1: OMNISCIENCE ══ -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Omniscience — The Decay Curve</h2>
+        <div class="topic-subtitle">A 50% science discount that collapses to zero as your rivals catch up. The entire Sophon playstyle is a consequence of this mechanic.</div>
+      </div>
+    </div>
+
+    <!-- Block 1a: How it works -->
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🔭</span>
+        <span class="block-title">Mechanics: What Omniscience Actually Does</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-sophon">◈ SOPHONS — THE SCIENTISTS</div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--sophon-color)">THE DISCOUNT FORMULA</div>
+          When you research a technology that no other faction has yet discovered, you pay <strong>50% of its listed Science cost</strong>. As more factions research the same tech, the discount decreases linearly. When exactly half the factions in the game have researched a given tech, your discount on it hits 0% — you pay full price, just like everyone else. The tech screen shows the current Omniscience % for every available research item; check it every turn.
+          <br><br>
+          <em style="font-size:var(--ts_sectionTitle);color:var(--text-dim)">⚠ The linearity of the decay is described as such in community documentation but has a "TODO: confirm" note in the fan wiki. Treat the precise formula as approximately correct, not exact.</em>
+        </div>
+
+        <!-- Visual decay bar -->
+        <div class="omni-bar-wrap">
+          <div class="omni-bar-label"><span>FACTIONS WITH THIS TECH →</span><span>DISCOUNT ↓</span></div>
+          <div class="omni-bar">
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.8);color:var(--bg)">50%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.55);color:var(--bg)">37%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.35);color:var(--text)">25%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.18);color:var(--text)">12%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--red-rgb),0.25);color:var(--red)">0%</div>
+          </div>
+          <div class="omni-bar-label" style="margin-top:4px">
+            <span style="color:var(--sophon-color)">NONE</span>
+            <span>¼ of factions</span>
+            <span>½ of factions</span>
+          </div>
+        </div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--red)">CRITICAL EXCEPTION: SHIP TECHS PAY FULL PRICE</div>
+          Omniscience does <strong>not apply to faction-specific ship research</strong> — hull unlocks, upgrade techs, and ship-related research paths all cost full Science regardless of whether any other faction has researched them. This means the tech advantage Omniscience provides translates to empire and military tech, not to fleet power directly. Plan ship research budget separately.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+          <span class="src-pill">WIKI (decay note flagged)</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Block 1b: Pioneer strategy -->
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">The Pioneer Imperative — Staying on the Frontier</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="pioneer-box">
+          <div class="pioneer-title">THE PIONEER PRINCIPLE</div>
+          The Omniscience bonus exists only on the frontier — technologies nobody else has touched yet. The correct Sophon posture is not to race toward specific techs at maximum discount, but to maintain a <strong>broad undiscovered frontier position</strong> across all tech trees simultaneously. If you specialise too early (e.g., pure Science tree), you will be researching those techs at 50% but leaving vast swathes of Economy and Military tree to other factions, who will eventually arrive at your Science frontier and collapse your advantage there too.
+        </div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--sophon-color)">WHAT FALLING BEHIND ACTUALLY COSTS</div>
+          A Sophon player who loses frontier position — either by falling behind in Science output or by researching too narrowly — starts paying full price for everything. At that point you are playing an inferior version of most other factions: low Industry base, weak diplomacy, feeble infantry. The entire faction identity depends on maintaining the discount, which depends on maintaining pace.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TURN-BY-TURN DISCIPLINE</div>
+          Before selecting your next research target, scan the tech screen for Omniscience discount percentages. A 40%+ discount is essentially free Science — always prioritise these unless the tech unlocks nothing useful. A tech at 5% discount is nearly full price; treat it like any other faction would and research it only if it gates something critical.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+          <span class="src-pill">REDDIT01 — IMPOSSIBLE BUILD ORDER</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T2: INDUSTRY PROBLEM ══ -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">The Industry Problem — Two Fixes, One Sequence</h2>
+        <div class="topic-subtitle">Sophons have structurally weak Industry. Research outpaces production — you unlock things you cannot build. Solve this first, not last.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🏭</span>
+        <span class="block-title">Why the Problem Exists and How to Fix It</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE STRUCTURAL WEAKNESS</div>
+          Sophons start on a cold-planet home system — Boreal as the default colonised planet, with Arctic and Tundra nearby. Cold planets produce high Science per population unit but mediocre Industry and poor Food. The result is an empire that researches quickly but builds slowly. A Sophon player who invests only in Science finds themselves 2–3 tech stages ahead of rivals but unable to build medium hulls fast enough to matter, and colonising new systems at half the pace of factions with better Industry.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">FIX 1 — JADONYX LUXURY RESOURCE (EARLY GAME)</div>
+          If your starting luxury resource is Jadonyx, tech toward System Development Stage 1 as a first priority. The Jadonyx system upgrade provides an immediate Industry bonus that addresses the early-game production bottleneck. Among the common starting luxuries, Jadonyx is the highest-leverage early Industry fix available without requiring any quest progress. This is a condition-dependent fix — it only applies if Jadonyx is available in your empire.
+        </div>
+
+        <div class="trait-block cyan">
+          <div class="trait-label cyan">FIX 2 — MAVROS MINOR FACTION (MID-GAME)</div>
+          The Mavros are a minor faction that appear consistently as a faction quest reward for Sophons. They are widely regarded by the community as the most complementary minor faction for this race: their population provides a strong per-pop Industry bonus that directly compensates for the Sophon cold-planet weakness. Prioritise Mavros acquisition as part of the faction quest sequence; once assimilated, spread Mavros pops to high-priority production systems. According to one experienced Reddit poster, Mavros "effectively fix the Sophon's biggest weakness."
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE INDUSTRY TRAP — MOST COMMON SOPHON FAILURE MODE</div>
+          Researching technologies you cannot afford to use is not an advantage — it is deferred liability. A Sophon empire with advanced hull techs unlocked but 40 Industry/turn per system will build military at the same pace as an early-game Craver. Fix Industry in systems 1–2 before your Science output becomes exceptional. The sequence matters: Industry improvements first, Science improvements second.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT01 — IMPOSSIBLE BUILD ORDER</span>
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T3: PLANET PRIORITY ══ -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Planet Priority — What to Colonise and Why</h2>
+        <div class="topic-subtitle">Cold planets maximise Sophon per-pop Science output. Arid planets are the early Industry and Food fix. Know which to target in which phase.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🪐</span>
+        <span class="block-title">Cold Planet Core + Arid Supplementary</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr>
+            <th>Planet Type</th>
+            <th>Sophon Value</th>
+            <th>Priority</th>
+          </tr>
+          <tr>
+            <td class="cell-key">Arctic / Tundra / Boreal</td>
+            <td class="cell-good">Highest per-pop Science output. Cold planet bonus amplifies the base Sophon Science trait. Your Science core systems should be cold-dominant.</td>
+            <td class="cell-good">★★★ CORE</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Arid / Mediterranean</td>
+            <td>Tier-1 colonisable (no tech required). Provides Industry and Food that cold planets lack. The Arid planet in the YT02 playthrough was prioritised immediately for its Industry contribution despite not being Sophon's best planet type.</td>
+            <td class="cell-good">★★★ EARLY FIX</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Terran / Jungle</td>
+            <td>Good Food for population growth; average Science. Useful for growth acceleration in mid-game, especially when Food is bottlenecking colonisation speed.</td>
+            <td>★★ USEFUL</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Lava / Ash / Desert (Hot)</td>
+            <td>Poor baseline FIDSI for Sophons. Worth colonising if the system has strong strategic resource deposits or if it's needed for territorial control.</td>
+            <td class="cell-bad">★ SITUATIONAL</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Toxic / Radioactive</td>
+            <td class="cell-bad">Tier-3 colonisation tech required. Generally not worth the tech cost unless the system contains exceptional resources or strategic positioning value.</td>
+            <td class="cell-bad">★ LOW</td>
+          </tr>
+        </table>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--sophon-color)">THE SETTLE-IMMEDIATELY PRINCIPLE</div>
+          YT02's expert playthrough is explicit on this: "As soon as you find a good enough place to settle you just do it right away." Do not hold colony ships waiting for a perfect system. A Tundra or Boreal system close by is usually better than an ideal system three explorations away. The Sophon early-game Food bottleneck means population grows slowly — every turn a system isn't colonised is a turn your empire isn't growing.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+          <span class="src-pill">WIKI — PLANET TYPES</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T4: HERO DEVELOPMENT ══ -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Hero Development — The Admiral Path vs. the Governor Trap</h2>
+        <div class="topic-subtitle">The Sophon starting hero is a Counselor. The governor instinct is wrong. Burning Light at level 8 nearly doubles fleet damage — that ceiling matters.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">Skill Tree Analysis — Governor vs. Admiral</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="hero-compare">
+          <div class="hero-path preferred">
+            <div class="hero-path-label preferred">ADMIRAL PATH — HIGH CEILING</div>
+            <div class="hero-path-body">
+              The Sophon Counselor hero tree's fleet branch contains <strong>Burning Light</strong>: +40% energy weapon damage to the entire fleet per level, stackable twice. At level 8, this gives +80% energy weapon damage — approaching a near-doubling of fleet offensive output if built around energy weapons (lasers/beams). Combined with the Sophon Carrier's excellent weapon slot count, a Burning Light admiral turns a moderate fleet into a decisive military instrument.
+              <br><br>
+              The fleet branch also offers +8 move points at a higher tier and extra shield capacity — both synergistic with the Sophon ship roster.
+            </div>
+          </div>
+          <div class="hero-path">
+            <div class="hero-path-label secondary">GOVERNOR PATH — LOWER CEILING</div>
+            <div class="hero-path-body">
+              The governor Science skill gives +10 Science on system, +1 per hero level. At level 3, that's +13 Science — useful, but not transformative. YT02 compares this directly to the Lumeris Seeker hero, which gives +20 Science per level: "Compare that to the Sophon ability here — plus 10 on system and one per hero level, so when you drop him back on your system at level three he would only be giving 26 Science instead of 40."
+              <br><br>
+              The governor path is viable for a pure Science Victory where military risk is low. It is not the high-ceiling path.
+            </div>
+          </div>
+        </div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--sophon-color)">RECOMMENDED SEQUENCE</div>
+          Explore with the hero on the fleet for XP (turns 1–12 approximately). During this phase the hero earns levels fast from curiosity exploration and combat with pirates. Around turn 10–15, make the commitment: if you are building toward a fleet-based victory (Supremacy or Conquest), invest in the Counselor damage skills leading toward Burning Light and keep the hero on fleet duty. If you are on a secure island with no military pressure and targeting Science Victory, returning the hero to governor around turn 15 is defensible — but acknowledge the lower ceiling you're accepting.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">NOTE ON UNCERTAINTY</div>
+          The Reddit01 author explicitly expresses uncertainty about this choice: "I am beginning to think this is the wrong choice, however, and that my starting hero should be leveled as a fleet hero instead of a governor." This is an experienced player questioning the governor path after extended play at Impossible difficulty — treat the admiral path as the better-evidenced choice, but acknowledge the decision is map-dependent.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+          <span class="src-pill">REDDIT01 — IMPOSSIBLE BUILD ORDER</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T5: FACTION QUEST ══ -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">The Faction Quest — Branch Analysis</h2>
+        <div class="topic-subtitle">Three branches with meaningfully different payoffs. The community leans toward the movement engine. Understand the conditions where other branches are competitive.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🧩</span>
+        <span class="block-title">First Branch — Which Path and When</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="quest-grid">
+          <div class="quest-card best">
+            <div class="quest-label best">MOVEMENT ENGINE — DEFAULT BEST</div>
+            <div class="quest-body">Grants an engine upgrade to your explorer ship and requires orbiting two systems in a different constellation. Both the upgrade and the quest condition push you toward exploration, which is already your highest-priority activity. The free movement engine is phenomenal utility on an already fast faction, and the groundwork (finding another constellation) is usually laid before you need to make this choice. Reddit01: "This always seems like the correct option when available."</div>
+          </div>
+          <div class="quest-card conditional">
+            <div class="quest-label conditional">DIPLOMAT PATH — CONDITIONAL</div>
+            <div class="quest-body">Pushes toward Influence generation and eventually the Republic government with the Scientist forced law. Conditionally strong when: you start near multiple minor factions, you have Eden Incense as your luxury resource, and you can maintain government stability. The caveat: Democracy is volatile, and Sophons have below-average Influence generation, making the political stability requirement difficult to sustain. Reddit01 author notes uncertainty about whether benefits ever match the engine.</div>
+          </div>
+          <div class="quest-card skip">
+            <div class="quest-label skip">MILITARY DROP — WEAKEST</div>
+            <div class="quest-body">Drops a military fleet near your systems. The fleet can wander to enemy territory, requires the quest condition to be met in a specific way, and directly competes with your already-tight early build queue. For Science Victory the military utility is minimal at this stage; for Supremacy the fleet is useful but the opportunity cost of not taking the movement engine is high. Reddit01: "I do not use the Military option."</div>
+          </div>
+        </div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--sophon-color)">SECOND WAVE — INDUSTRY LAW vs. SCIENCE LAW</div>
+          When the second set of quest options opens, the community consensus favours the Industry law. It directly addresses the Sophon structural weakness (Industry), whereas the Science law provides a bonus that is partially redundant given Omniscience. Reddit01: "This, along with the Mavros, effectively fixes the Sophon's biggest weakness, and the other laws seem less useful, even when going for a fast science victory." The one counterargument: the Science law combined with Omniscience discounts reaches Endless Research faster on the bottom tech tree — this is a viable niche case, not a general recommendation.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT01 — IMPOSSIBLE BUILD ORDER</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T6: TECH PRIORITIES ══ -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Tech Priorities — When to Accept Low Discount</h2>
+        <div class="topic-subtitle">Omniscience maximisation taken to its logical extreme breaks down fast. Some techs are gates you must pass regardless of the discount on them.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🧪</span>
+        <span class="block-title">The Discount Framework — Priority, Gates, and Traps</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <table class="ref-table">
+          <tr>
+            <th>Discount Range</th>
+            <th>Decision Rule</th>
+          </tr>
+          <tr>
+            <td class="cell-key">40%–50%</td>
+            <td class="cell-good">Always prioritise. Near-maximum discount is essentially free Science. Research this now regardless of whether it was your planned next target, unless it unlocks nothing useful at all.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">20%–39%</td>
+            <td>Research when strategically necessary. At this range the saving is real but not overwhelming. If the tech gates something you need this cycle, take it. If not, check whether a higher-discount option is available in another tree.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">5%–19%</td>
+            <td>Treat as near full-price. Research when needed, not because the number looks appealing. Don't delay a critical gate tech hoping the discount recovers — once other factions have it, the discount stays low.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">0%</td>
+            <td class="cell-bad">Full price — exactly what every other faction pays. Research immediately if it's a required gate (Titanium processing, Hyperium, colonisation techs). Do not delay critical path items for the sake of waiting for a discount that will not return.</td>
+          </tr>
+        </table>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--sophon-color)">MANDATORY GATE TECHS — ALWAYS RESEARCH ON TIME</div>
+          Certain technologies must be researched regardless of Omniscience discount because they gate everything else: Titanium (early Industry buildings), Hyperium (mid-game military), colonisation tier upgrades for key planet types in your neighbourhood, and the trade and economic infrastructure techs. Delaying these because of a low discount is a strategic error. Reddit01 is explicit: "I begin researching titanium tech [turn 1] and always put its building into the construction queue as soon as it is available. Nets me at least 30 production with the buildings."
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE INVERSE MISTAKE — RESEARCHING USELESS DISCOUNTS</div>
+          The other common failure: researching a tech at 45% discount because the number looks appealing when the tech unlocks nothing immediately useful. A 45% discount on a dead-end tech is still a wasted turn. Omniscience is a multiplier on the Science cost of useful research — it does not make useless research useful.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT01 — IMPOSSIBLE BUILD ORDER</span>
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T7: FLEET DESIGN ══ -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Fleet Design — Hull by Hull</h2>
+        <div class="topic-subtitle">Sophon ships are standardised and honest — no gimmicks. The Explorer is a surprisingly capable early tank. The Hunter is the workhorse. The Carrier excels late.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Hull Analysis and Recommended Loadouts</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="ship-grid">
+
+          <div class="ship-card cyan-top">
+            <div class="ship-name">DEAD SEA CLASS</div>
+            <div class="ship-role">EXPLORER — EARLY DEFENCE</div>
+            <div class="ship-body">
+              6 total modules — 1 more than any standard Attacker class. Default includes 4 defensive slots, which makes it an unusually tanky early ship. You start with +2 move points from Fast Travelers, so <strong>no engine module is needed in early game</strong>. Loadout: 2 weapons (matching your available type) + as many defensive modules as available.
+              <br><br>
+              <strong>Best role:</strong> Early-game defensive deterrent parked over border systems. Holds ground against pirates and early aggression while you build proper military. Weak as a rusher (only 2 weapons, 100 crew). Enhanced variant gains a third weapon slot — viable late-game screen ship.
+            </div>
+            <div class="ship-stat"><span>MODULES</span><span>6 (5 standard)</span></div>
+            <div class="ship-stat"><span>ENGINE NEEDED EARLY?</span><span style="color:var(--green)">NO — 2 MP INNATE</span></div>
+          </div>
+
+          <div class="ship-card skip-top">
+            <div class="ship-name">KILO CLASS</div>
+            <div class="ship-role">ATTACKER — OFTEN SKIPPED</div>
+            <div class="ship-body">
+              The standard Attacker. Not bad, but the Hunter is reachable quickly enough that investing heavily in Attacker production is generally a waypoint rather than a destination. Where the Attacker shines: cheap Protector + Attacker fleets for early war economy when strategic resources are scarce. If Adamantian or Antimatter are absent from your galaxy, you may be forced to develop this line further. The Enhanced Attacker does significantly more damage than the Hunter baseline — but is more fragile, making it a poor fit for the Industry-constrained Sophon, where replacing destroyed ships is expensive.
+            </div>
+            <div class="ship-stat"><span>COMMUNITY VERDICT</span><span style="color:var(--gold)">SITUATIONAL</span></div>
+          </div>
+
+          <div class="ship-card">
+            <div class="ship-name">HUNTER CLASS</div>
+            <div class="ship-role">MEDIUM — CORE WORKHORSE</div>
+            <div class="ship-body">
+              The backbone of any Sophon mid-game fleet. Reachable fast with Omniscience advantage on the prerequisite techs. Resilient, efficient, and available before most factions can field comparable vessels. Reddit02 (ALTRez09): "Hunters can be opened terrifyingly quickly and spammed to decimate the AI for the first 3/4ths of the game."
+              <br><br>
+              Enhanced Hunters do 15% more damage than normal Carriers and are the preferred late-game combat ship before the Enhanced Carrier becomes available.
+            </div>
+            <div class="ship-stat"><span>FLEET ROLE</span><span style="color:var(--green)">PRIMARY COMBATANT</span></div>
+          </div>
+
+          <div class="ship-card cyan-top">
+            <div class="ship-name">COLLIDER CLASS</div>
+            <div class="ship-role">CARRIER — LATE-GAME ANCHOR</div>
+            <div class="ship-body">
+              5 weapon slots + 5 defensive slots in baseline configuration — more balanced than most faction carriers. YT01: "A jack-of-all-trades done right — bears more weapons than most ships of similar design and can bear more defensives than most ships of similar design." Adding a damage amplifier to the utility slot maximises weapon output.
+              <br><br>
+              Brings sustained damage output through the full battle duration (unlike small ship swarms where losses reduce total DPS). Sophons have a tech advantage that compounds the Carrier's already superior design, per YT01.
+            </div>
+            <div class="ship-stat"><span>WEAPON + DEFENSE</span><span>5 + 5 BASE</span></div>
+            <div class="ship-stat"><span>COMMUNITY VERDICT</span><span style="color:var(--cyan)">EXCELLENT</span></div>
+          </div>
+
+          <div class="ship-card gold-top">
+            <div class="ship-name">PROTECTOR CLASS</div>
+            <div class="ship-role">SUPPORT — INVASION SPECIALIST</div>
+            <div class="ship-body">
+              High support slot count makes it the invasion hull of choice: 2 movement + 2 manpower deployment modules (or 4 manpower on Enhanced Protectors). Sophons have Feeble Warriors — reduced infantry health — making ground invasions structurally harder. The Protector compensates by deploying more and better-supported manpower. Build a dedicated invasion fleet separate from your combat fleet.
+              <br><br>
+              Can also support various fleet utility roles (cloaking, extra Science modules, speed buffs for the flotilla).
+            </div>
+            <div class="ship-stat"><span>KEY USE</span><span style="color:var(--gold)">INVASION + SUPPORT</span></div>
+          </div>
+
+        </div>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--sophon-color)">FLEET COMPOSITION — RECOMMENDED PROGRESSION</div>
+          <strong>Early:</strong> Explorer fleet (2 weapons + defensive modules) — no engine needed. Handles pirates and deters aggression.<br>
+          <strong>Mid:</strong> All-Hunter fleet with Explorers filling Command Point remainder. This is the primary combat tool from roughly turn 25 to turn 60.<br>
+          <strong>Late:</strong> Hunter fleet + 1 Carrier anchor with damage amplifier. When Enhanced Hunters unlock, transition primary fleet to Enhanced Hunters. Add a separate Protector-based invasion fleet when planning ground assaults.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">ENERGY WEAPONS — THE SOPHON PREFERENCE</div>
+          The hero Burning Light skill specifically buffs energy weapon damage (+40%/level). Commit to lasers/beams across your fleet if you are building toward the admiral path. Energy weapons also synergise with the Collider's weapon slots. This is a faction-wide loadout preference, not optional.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01 — SHIP GUIDE (PANAGON)</span>
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+          <span class="src-pill">REDDIT02 — FLEET COMPOSITION</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T8: VICTORY PATHS ══ -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Victory Paths — The Thematic Mismatch</h2>
+        <div class="topic-subtitle">Science Victory is thematically obvious. It is also mechanically harder than Supremacy for Sophons at higher difficulties. Understand why before committing.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Victory Path Assessment</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <table class="victory-table">
+          <tr>
+            <th>Victory Type</th>
+            <th>Rating</th>
+            <th>Analysis</th>
+          </tr>
+          <tr>
+            <td class="cell-key">SUPREMACY</td>
+            <td><span class="vic-s">S-TIER</span></td>
+            <td>Energy-weapon fleet with Burning Light admiral is the Sophon's highest-leverage path. Hunters become available quickly via Omniscience. Achievable before rivals consolidate, often in the first 80–100 turns on standard speed. Directly leverages the faction's hero ceiling and ship quality without needing to solve Science Victory's Endless tech problem.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">CONQUEST</td>
+            <td><span class="vic-a">A-TIER</span></td>
+            <td>Uses the same fleet infrastructure as Supremacy with a higher territory requirement. Viable; the Feeble Warriors weakness makes planet assaults harder but is manageable with a dedicated Protector invasion fleet. Requires more systems than Supremacy but is still leveraging Sophon military strengths.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">SCIENCE</td>
+            <td><span class="vic-b">B-TIER</span></td>
+            <td>Requires 4 sequential Endless-tier technologies — the most expensive research in the game, each more costly than the last. By the time you're researching the 3rd and 4th Endless techs, rivals will have the earlier ones, collapsing your Omniscience discount on exactly the most expensive items. Genuinely winnable, and thematically appropriate, but harder than the alternatives at Endless difficulty. The Science Victory path is best pursued on lower difficulty settings or in favourable map conditions (isolated start, few rivals).</td>
+          </tr>
+          <tr>
+            <td class="cell-key">WONDER</td>
+            <td><span class="vic-b">B-TIER</span></td>
+            <td>Requires sustained Industry output that Sophons must invest to develop. Achievable with proper Industry fixes in place. Not the natural Sophon path but not impossible.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">ECONOMIC / SCORE</td>
+            <td><span class="vic-c">C-TIER</span></td>
+            <td>Neither directly leverages Omniscience nor the fleet strengths. Viable by default but other factions do these better. Score Victory becomes more accessible in the late game if Sophons have snowballed Science output significantly — but you should probably have won via Supremacy by then.</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">ON FACTION STRENGTH — HONEST ASSESSMENT</div>
+          YT02's expert player is explicit: Sophons are "the second or third weakest race in the game." This is not a nerf complaint — it is a recognition that the Omniscience mechanic rewards proactive play and punishes passive science accumulation. Sophons are not weak; they require a specific approach. The faction that "does science" actually wins fastest by hitting enemies with an energy weapon fleet before those enemies can research their way to parity. The snowball is real; you have to choose when to cash it in.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+          <span class="src-pill">REDDIT01 — IMPOSSIBLE BUILD ORDER</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ T9: TURNS 1–30 PLAYBOOK ══ -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">Turns 1–30 Playbook</h2>
+        <div class="topic-subtitle">A conditional opening framework — the branches matter. Starting luxury, proximity to minor factions, and galaxy shape all shift the correct sequence.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">📋</span>
+        <span class="block-title">Turn-by-Turn Opening Framework</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURN 1</div>
+            <div class="tl-body">
+              <strong>Build queue:</strong> Drone Networks (quick Industry boost, worth the early queue slot). <strong>Research:</strong> Titanium tech — mandatory gate, low discount is irrelevant. <strong>Hero:</strong> Assign to explorer fleet, equip 2 probes, explore home system curiosities for XP. <strong>Ships:</strong> Send in opposite directions to reveal as much as possible. <strong>Luxury check:</strong> If starting luxury is Jadonyx — note to prioritise System Development Stage 1 tech early. If Dust Trees — ship retrofitting becomes easier. If Transvine — Toys for Boys law can be dropped sooner. <strong>Law:</strong> Enact Toys for Boys if available (small Industry penalty, Science + Dust gain — net positive at this stage). Enact Species Stability Act on Turn 2 for the Dust boost until the election on Turn 10.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 2–5</div>
+            <div class="tl-body">
+              <strong>Exploration priority:</strong> Scout systems for Tundra, Boreal, or Arid planets to colonise. <strong>Minor faction check:</strong> If a minor faction is visible nearby, open Xenolinguistics immediately — the diplomatic chain (Praise, then Improve Image before exploring their curiosities) provides free yields, potential ships, and an assimilation path. The Influence bottleneck for assimilation is real; start the relationship clock early. <strong>Faction quest:</strong> Available around turn 5 — evaluate which branch is offered (see T5). <strong>Do not:</strong> Neglect scouting toward other constellations if the movement-engine quest branch is available.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 5–15</div>
+            <div class="tl-body">
+              <strong>Drone Networks complete — queue next:</strong> Titanium Industry building the turn before it unlocks (net +30 Industry). <strong>Second colony:</strong> Settle the closest viable system with Tundra, Boreal, or Arid planets. Settle immediately on finding it — don't wait for a better option. <strong>Hero:</strong> Keep on exploration fleet through this phase for XP accumulation; return to system when the Titanium building completes to capture the build-completion XP spike. <strong>Research fork:</strong> (a) Near minor faction → Xenolinguistics chain. (b) Jadonyx luxury → System Development Stage 1. (c) Neither → Sap technology in the bottom tree, then Warp Drive for inter-constellation exploration.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 10–20</div>
+            <div class="tl-body">
+              <strong>First election (turn 10):</strong> Evaluate political parties — Democracy is volatile; do not over-invest in Influence generation unless pursuing the diplomat quest path. <strong>Explorer hulls:</strong> After Drone Networks + Titanium building complete, slot 3 explorer hulls (1 engine, 1 probe each) if no nearby threats and Steppes tech isn't urgent. This enables passive curiosity income while Industry catches up. If near an opponent, prioritise settling border systems and station a scout over outposts to prevent blockading. <strong>Hero decision:</strong> Around turn 12–15, commit to admiral or governor path (see T4).
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 20–30</div>
+            <div class="tl-body">
+              <strong>Faction quest second wave:</strong> Take the Industry law unless a strong case exists for the Science law (see T5). <strong>Mavros:</strong> If the faction quest rewards Mavros, begin spreading their population to high-priority Industry systems immediately. <strong>Military:</strong> First Hunter hulls should be in queue by turn 25 if no earlier military pressure. <strong>Science check:</strong> By turn 30, your Omniscience discount should still be meaningful on most mid-tree techs — if it's collapsed across the board, you have fallen behind the frontier and need to adjust research focus outward to less-explored trees. YT02 benchmark: ~112 Science/turn at turn 30 on this approach (on Endless difficulty with suboptimal early events).
+            </div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">REDDIT01 — IMPOSSIBLE BUILD ORDER</span>
+          <span class="src-pill">YT02 — EXPERT GUIDE T1–30</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══ QUIZ ══ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario & Diagnostic Quiz</h2>
+        <div class="topic-subtitle">Four decision scenarios, four empire diagnostics. Scenarios test specific choices; diagnostics train you to read your own game state.</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac03';
+  const TOTAL = 9;
+  let qIdx = 0;
+  let answered = false;
+
+  /* ── QUIZ DATA ────────────────────────────────────────────────────────────
+     8 questions: 4 SCENARIO (S) + 4 DIAGNOSTIC (D), interleaved S/D/S/D...
+  ──────────────────────────────────────────────────────────────────────── */
+  const quizzes = [
+    /* ── S1: Omniscience tech selection ── */
+    {
+      scenario: "[SCENARIO] Turn 18. You have two research options immediately useful to your build plan: (A) Military Stage 2, which unlocks Hunter-class hulls — currently at 8% Omniscience discount. Three factions already have it. (B) Economy Stage 2, which unlocks the System Development upgrade you need for Jadonyx — currently at 42% Omniscience discount. One faction has it. Both are needed this game. You have enough Science per turn to complete either in 4–5 turns.",
+      q: "Which do you research first, and what does this decision reveal about correct Sophon prioritisation?",
+      opts: [
+        "Military Stage 2 — Hunter hulls are more time-sensitive. Military windows close; economic opportunities persist.",
+        "Economy Stage 2 — the 42% discount makes it cost roughly half what it would for any other faction. Military Stage 2 at 8% is near full-price; the discount saving there is negligible. Research the cheap tech first, then pay near-full-price for Military Stage 2 afterward. The Science saved on Economy Stage 2 effectively buys you more turns of research elsewhere.",
+        "Both simultaneously — split Science output between them via the research queue.",
+        "Neither — at turn 18, neither tech tree should be prioritised over the bottom tree where Omniscience discounts are typically highest."
+      ],
+      correct: 1,
+      explain: "At 42% discount, Economy Stage 2 costs you roughly 58% of its listed price — a substantial saving in absolute Science terms. At 8%, Military Stage 2 costs you 92% of full price — you may as well be playing any other faction. The correct Sophon discipline is to always take the high-discount tech when both options are genuinely needed, sequencing the low-discount gate tech immediately after. The total Science expenditure is lower, and you lose no time on the Military path: you research it 4–5 turns later at near-full-price, having banked a real Science saving on the Economy tech. Letting a 42% discount expire to research something at 8% is one of the most wasteful decisions a Sophon player can make."
+    },
+
+    /* ── D1: Industry trap diagnosis ── */
+    {
+      scenario: "[DIAGNOSTIC] Turn 22. Sophon player on Impossible difficulty. Empire snapshot: 3 systems, all with Science improvements built but no Industry improvements. Research queue shows Era 3 Economy techs unlocked. Industry output: 35/turn in system 1 (capital), 28/turn in system 2, 21/turn in system 3. Current fleet: 2 Explorer ships. No Hunter hulls researched. Hero assigned as governor, level 4, providing +14 Science/turn to the capital. Omniscience discounts: averaging 25% across available techs. The player is happy with their Science output and plans to unlock Hunters next turn.",
+      q: "Identify the primary strategic error in this empire, and describe the correct corrective sequence.",
+      opts: [
+        "The hero should have been kept on the exploration fleet longer — a level 4 hero by turn 22 is underlevel.",
+        "There is no meaningful error. This is a reasonable Science-focused Sophon build at turn 22.",
+        "The Industry trap: all three systems have only Science improvements, leaving Industry at 35/28/21 — well below what's needed to build Hunters in a reasonable timeframe. Hunters at 35 Industry/turn will take 15+ turns per ship. The correct sequence was: build one Industry improvement in each system before pivoting to Science improvements. The governor hero path compounds the problem — a fleet admiral path would have produced earlier military capability. Corrective action now: queue Industry improvements in all three systems immediately; accept the Science output dip; do not unlock more techs until Industry can actually build what you're unlocking.",
+        "The Omniscience average of 25% at turn 22 is the primary problem — the player has fallen behind the tech frontier and should abandon economic development for a pure-research sprint."
+      ],
+      correct: 2,
+      explain: "This is the Industry trap in its pure form. The player has researched Era 3 Economy and presumably Era 2-3 Military techs, but has Industry output that makes actually building anything from those trees impractical. At 35/turn, a Hunter hull (rough cost ~180 Industry at standard speed) takes ~5 turns per ship — manageable for one system, but with 3 systems all low on Industry, the empire's total military production is painfully slow. The fix requires accepting a period of lower Science output while Industry improvements pay off. The hero path reinforces the problem: a governor at level 4 gives +14 Science, which is meaningful, but a fleet admiral at level 4 would already have combat skills that matter once Hunters are actually built. The 25% Omniscience average is fine — it's not the issue. The issue is that Science divorced from Industry production capacity produces nothing deployable."
+    },
+
+    /* ── S2: Hero commitment turn ── */
+    {
+      scenario: "[SCENARIO] Turn 14. Your starting hero (Sophon Counselor) is at level 5, currently on the exploration fleet. You have just explored the last visible curiosity in your immediate neighbourhood. No more nearby curiosity targets are accessible without multi-turn travel. The empire has 2 colonies; military situation is quiet (no adjacent rivals, 2 pirates in range). Burning Light is 3 skill tiers away — accessible around level 8. Your Science Victory is your current plan.",
+      q: "What is the correct hero assignment this turn, and what condition would change your answer?",
+      opts: [
+        "Return the hero to the capital as governor immediately — Science Victory demands maximum Science output, and the governor path provides that.",
+        "Keep the hero on the fleet indefinitely — always maintain combat-ready heroes in case of surprise aggression.",
+        "Return the hero to a colony as governor for the next 6–8 turns to accumulate Science, then reassign to fleet when Burning Light becomes accessible. However: if during those turns an opportunity for aggressive early expansion appears (weak rival nearby, Hunters ready), reassign to fleet earlier. For Science Victory with a quiet map, the governor path is defensible here — but only because you're committing with full awareness of the ceiling difference vs. the admiral path.",
+        "Disband the fleet entirely and commit the hero as a full-time governor — exploration is complete, fleet has no purpose."
+      ],
+      correct: 2,
+      explain: "This is the one scenario where the governor path is legitimately defensible: quiet map, Science Victory, no immediate military pressure, and the hero is actively between useful fleet tasks. Returning to governor for 6–8 turns of +Science output while waiting for Burning Light to become accessible is not wrong. What matters is the awareness: you are accepting a lower ceiling in exchange for Science output now, and you need a clear trigger to switch back — specifically, either Hunters becoming available and a military objective presenting itself, or Burning Light entering reach. Disbanding the fleet is wrong (pirates spawn; defensive capacity matters). Permanent fleet commitment on a quiet map wastes the governor Science contribution during turns when the hero has no viable fleet targets. Option C captures the conditional nature of the correct play."
+    },
+
+    /* ── D2: Omniscience collapse diagnosis ── */
+    {
+      scenario: "[DIAGNOSTIC] Turn 30. Sophon player. Current Science output: 95/turn. Omniscience bonus across all available tech screen items: 0–8% on every single tech visible. The player has been focusing research entirely on the Science and Military trees since turn 1, reasoning that these are most important for their Science Victory plan. Economy and Expansion trees are largely untouched — multiple techs there have 35–45% Omniscience discounts still available.",
+      q: "What has gone wrong, and what should the player do immediately?",
+      opts: [
+        "Nothing has gone wrong — 0–8% discounts at turn 30 means the player is researching the right popular techs. This is expected Sophon mid-game.",
+        "The player has over-specialised in Science and Military trees, allowing rivals to catch up on exactly those techs and collapsing discounts there. Meanwhile, Economy and Expansion trees — where 35–45% discounts still exist — have been ignored. The player should immediately pivot research to the high-discount Economy and Expansion techs, banking the Science savings there, then return to Military/Science techs once those discounts improve (if other factions fall behind on those trees) or accept full price on them as needed. The frontier is not in the trees you focus on — it's in the trees your rivals don't.",
+        "The correct fix is to increase Science output first — 95/turn is too low at turn 30. Once Science output is higher, the 0% discounts become irrelevant.",
+        "The player should declare war immediately to slow rivals' research by forcing them to spend on military — this is the correct way to defend Omniscience discounts."
+      ],
+      correct: 1,
+      explain: "This is the classic Omniscience collapse failure mode, and it's a direct consequence of misunderstanding the Pioneer Principle (T1). By focusing exclusively on Science and Military trees, the player let rivals research those exact techs, collapsing discounts there to near-zero. Meanwhile, Economy and Expansion trees — which rivals were also not prioritising — still have a 35–45% discount frontier open. The correct Sophon discipline is to maintain a broad research front, not a narrow one. The pivot to Economy/Expansion is not a retreat from the player's victory plan — it is how Sophons extract maximum value from their unique mechanic. The Science output level (95/turn) is fine for turn 30 with suboptimal conditions per the YT02 benchmark; the issue is entirely about discount exploitation, not raw Science volume."
+    },
+
+    /* ── S3: Low-discount gate tech decision ── */
+    {
+      scenario: "[SCENARIO] Turn 9. You have just finished Titanium tech. The Titanium Industry building is queued. Looking at the tech screen: Hyperium Processing is at 4% Omniscience discount (many factions have it). However, Hyperium deposits are present in your second system and accessing Hyperium Processing would immediately allow you to build mid-game military modules. Alternatively, Peb-Scale Accelerators (Arid colonisation) is at 38% discount — and there's an Arid system 2 lanes away with 4 planets that you want to settle.",
+      q: "Which tech do you research, and what principle governs this choice?",
+      opts: [
+        "Hyperium Processing — military capability always takes priority, regardless of discount.",
+        "Peb-Scale Accelerators — at 38% discount you're paying 62% of full price; at 4% you're paying 96%. The colonisation tech is far cheaper in Science terms and opens a 4-planet Arid system that directly fixes the Industry and Food problem. Research the high-discount tech, settle the system, then research Hyperium Processing at near-full-price. The Hyperium modules can wait 4–5 turns.",
+        "Neither — at turn 9, both techs are premature. Continue developing the Science and Economy trees where discounts are higher.",
+        "Research both simultaneously by splitting research output across the turn."
+      ],
+      correct: 1,
+      explain: "Peb-Scale Accelerators at 38% discount vs. Hyperium Processing at 4% is a clear application of the discount framework from T6: 38% is firmly in the 'always prioritise' range; 4% is near full-price and should be treated as such. The colonisation tech also produces an immediate strategic benefit — a 4-planet Arid system that addresses the two structural weaknesses (Industry and Food). Hyperium Processing at 4% can be researched immediately after, costing only slightly more Science than it would have at 0%, and the military capability it unlocks is available roughly 4–5 turns later than if you'd rushed it. The Science saving on Accelerators effectively pays for a meaningful portion of Hyperium Processing. This is the core Sophon decision loop: high discount first, full-price gates immediately after, never the reverse."
+    },
+
+    /* ── D3: Fleet composition diagnosis ── */
+    {
+      scenario: "[DIAGNOSTIC] Turn 45. Sophon player. Fleet composition: 6 Explorer ships (Dead Sea class, 2 weapons + 2 defensive modules each), 0 Hunters, 0 Carriers. The player has had Hunters unlocked for 12 turns but has not built any, reasoning that the Explorer fleet wins against pirates comfortably and Industry is too low to build more ships quickly. Hero is on fleet at level 7 — one level from Burning Light. An adjacent rival faction has a fleet of 4 Hunter-class ships and is moving toward a border system.",
+      q: "Identify the compounding errors in this situation and the correct immediate actions.",
+      opts: [
+        "The only error is Industry being too low. Build more Industry improvements and the fleet situation resolves itself.",
+        "The hero should have been returned to governor at level 5 — fleet heroes are suboptimal for Sophons.",
+        "Two compounding errors: (1) Hunters were available for 12 turns but not built — the Explorer fleet that handles pirates is not equivalent to Hunters in real combat against another faction's Hunters. 6 Explorers vs. 4 rival Hunters is likely a loss. (2) The hero is at level 7, one level from Burning Light — the entire admiral investment is about to pay off, but there are no Hunters to benefit from it. Immediate actions: use Dust to buy out at least 2–3 Hunter hulls this turn regardless of Industry cost (Sophon cannot afford to lose border system control at turn 45); assign hero to the Hunter fleet the moment any Hunter is ready; accept the Dust expenditure as necessary to salvage the military situation the player created by under-building.",
+        "No errors are present — 6 Explorers at turn 45 is a reasonable fleet size for a Science-focused faction."
+      ],
+      correct: 2,
+      explain: "This snapshot shows two distinct failure modes that reinforce each other. First: the industry-military disconnect. Having Hunters unlocked for 12 turns but not building them is the Industry Trap (T2) manifesting as a military gap — the player confused 'winning against pirates with Explorers' with 'having a viable military.' Against actual faction fleets, Explorers at 6 ships will struggle against 4 rival Hunters. Second: the Burning Light problem. A level 7 admiral with Burning Light one level away is extremely close to the hero's high-ceiling payoff — but with no Hunters to carry energy weapons, that payoff delivers zero value in the current engagement. The correct immediate response is aggressive buyout using Dust reserves: spending Dust to accelerate ship production is exactly what Dust is for in military crises, and it's better to pay the premium than to lose a border system with a Supremacy-threatening implication at turn 45."
+    },
+
+    /* ── S4: Victory path pivot ── */
+    {
+      scenario: "[SCENARIO] Turn 55, Endless difficulty, standard speed. You are playing Sophons. Current state: Science Victory progress at 2 of 4 Endless techs researched (2 remain — each will take approximately 18–22 turns at your current Science output of 180/turn). Omniscience discounts on the remaining Endless techs: 5% on the next, 0% on the final one. Your fleet (5 Hunters, Burning Light hero at level 8, +80% energy weapon damage) has already won two battles this game. Two rival empires are vulnerable: Empire A has 3 systems and a weak fleet; Empire B has 4 systems and no military presence. Supremacy requires eliminating 4 of 8 rivals — you have eliminated 0 so far.",
+      q: "Do you continue toward Science Victory or pivot to Supremacy, and what is the key insight driving this decision?",
+      opts: [
+        "Continue Science Victory — you have already invested in 2 Endless techs, and abandoning the path wastes that research.",
+        "Pivot to Supremacy immediately. The remaining Endless techs at 5% and 0% Omniscience discount will cost near full-price — you lose the faction advantage on the most expensive research in the game. Meanwhile you have a level 8 admiral with +80% energy weapon damage and a viable Hunter fleet. Supremacy requires eliminating 4 rivals: Empire A (3 systems, weak fleet) and Empire B (4 systems, no military) together represent 2 of the 4 required eliminations and appear achievable. The window where your fleet holds a decisive energy weapon technology advantage is finite — rivals are researching too. Cashing in the military snowball now is better than spending 40 more turns on discountless Endless tech research.",
+        "Neither — at turn 55 on Endless difficulty, you should focus on diplomatic victory to avoid further military confrontation.",
+        "Continue Science Victory, but buyout the remaining Endless techs immediately using accumulated Dust to compress the timeline."
+      ],
+      correct: 1,
+      explain: "This is the key Sophon strategic pivot question, and it tests whether the player understands that Omniscience's value is front-loaded. The 2 Endless techs already researched were expensive regardless of discount by that point in the game — the sunk cost is real but irrelevant to the forward decision. What matters: the remaining 2 Endless techs will cost near full-price (5% and 0% discounts), requiring roughly 36–44 turns of research at 180 Science/turn. Over that same period, a fleet with +80% energy weapon damage can likely eliminate 4 vulnerable rivals well before rivals close the technology gap. Option D (buying out Endless techs with Dust) is superficially clever but ignores that the Dust cost of Endless techs is enormous and would likely bankrupt the empire's military budget. The Burning Light admiral window is the Sophon's highest-leverage asset at turn 55 — use it before rivals field equivalent fleets."
+    },
+
+    /* ── D4: Full game state diagnosis ── */
+    {
+      scenario: "[DIAGNOSTIC] Turn 35, Endless difficulty. Sophon player. Full empire snapshot: 4 systems; Science output 145/turn; Industry output 55/turn (capital), 40/turn (system 2), 35/turn (systems 3 & 4); Food: barely positive in all systems, slowing population growth. Hero: governor in capital, level 6, providing +16 Science. Tech: Era 3 Science and Military unlocked, Era 2 Economy only. Fleet: 3 Explorers. Hunters unlocked but not started. No Mavros in empire. Faction quest completed — took the Science law (not Industry law). Omniscience discounts: averaging 15% across all available techs. The player reports feeling 'ahead on science but stuck — can't seem to make progress.'",
+      q: "List the specific compounding decisions that produced this stuck state, in order of their impact.",
+      opts: [
+        "The only real problem is the 145/turn Science output — it should be higher by turn 35. Everything else is acceptable.",
+        "The stuck state has a single cause: not building Hunters yet. Fix that and the empire recovers.",
+        "Four compounding decisions, in order of impact: (1) Science law instead of Industry law from faction quest — this directly perpetuates the Industry problem the questline was designed to fix, and means Mavros acquisition was also missed or deprioritised; (2) Governor hero path at level 6 — the faction's highest-ceiling combat asset is delivering +16 Science instead of +80% fleet damage, which is a massive opportunity cost on a map where military expansion is the path out; (3) All systems under-developed on Industry (55/40/35/35) — no Hunters started at turn 35 means the military window is narrowing; (4) Era 2 Economy only — System Development upgrades are not available, meaning planet yields and population slots are underdeveloped. The 'stuck' feeling is correct: the player built Science without the infrastructure to deploy Science's outputs.",
+        "The problem is the galaxy settings — Endless difficulty without favourable starting conditions makes Sophons unplayable by turn 35."
+      ],
+      correct: 2,
+      explain: "This is a compound failure state that illustrates how Sophon mistakes reinforce each other. The Science law choice (instead of Industry law) is the highest-impact single decision because it foreclosed the primary faction-quest fix for the structural weakness — and Mavros, which typically accompanies that quest path, is absent. The governor hero at level 6 represents 6 levels of levelling invested in a path with a +16 Science ceiling, when the same levels on the admiral path would now be approaching Burning Light (+80% fleet damage). Low Industry across all systems means Hunters cannot be built efficiently even if queued now. Era 2 Economy only means the system development tier that would add population slots and planet yields was never unlocked. Each decision seemed locally reasonable (Science law for a Science faction; governor for Science output; skip Economy tree for Military tree) but the combination produces an empire that researches what it cannot build, with a hero who cannot fight, in systems that cannot grow. The corrective path requires accepting 10–15 turns of catch-up investment in Industry improvements and Economy techs before the empire's Science advantage translates into deployable power."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
