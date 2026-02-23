@@ -9,6 +9,43 @@ A multi-volume HTML guide for **Endless Space 2** (including all DLCs), targetin
 
 ---
 
+## Source Integrity Rules
+
+**This project's core promise is that all claims are traceable to a source. The following rules
+are non-negotiable and apply to every session.**
+
+### What counts as a valid source
+A source is valid only if Claude actually retrieved and read it during the current session:
+- User-uploaded files (transcripts, Reddit threads, documents) — always valid
+- Wiki or web pages successfully fetched via web_fetch or web_search in the current session,
+  where the actual content (not just navigation) was returned and read — valid
+- Project knowledge files read via the view tool in the current session — valid
+
+### What does NOT count as a valid source
+- Any URL or source type Claude mentions from general training knowledge without having fetched
+  it in the current session — NOT valid, even if the source plausibly exists
+- Steam guides, Reddit threads, wiki pages, or any other web resource that Claude searched for
+  but could not successfully retrieve (e.g. returned navigation chrome, empty content, or a
+  render wall) — NOT valid
+- "Community knowledge" or "generally accepted" claims that Claude cannot trace to a specific
+  document read in the current session — NOT valid
+
+### How to handle uncertain or unverified claims
+- If a claim is drawn from general training knowledge rather than a retrieved source, either
+  omit it or flag it explicitly inline with a callout or note: "Source not verified — treat as
+  plausible community knowledge pending confirmation"
+- Never create a src-pill, source attribution, or citation for a source that was not actually
+  read in the current session
+- If a web fetch fails or returns unusable content, note the failure and do not cite that source
+
+### What to do when sources are thin
+If the user-provided sources do not cover a topic adequately and web retrieval fails, the correct
+response is to say so explicitly — either in the planning discussion or via an inline uncertainty
+flag in the built content — rather than filling the gap with unattributed training knowledge
+presented as sourced fact.
+
+---
+
 ## File Structure
 
 ```
