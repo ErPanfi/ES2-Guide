@@ -46,48 +46,48 @@ presented as sourced fact.
 
 ---
 
-## File Structure
+## File Structure & Status
+
+Files are organized into three subdirectories:
 
 ```
-es2-guide.css              ← shared design system. Can be updated if needed, but this should be done rarely
-es2-guide.js               ← shared JS: progress tracking, quiz, mobile nav. Can be updated if needed, but this should be done rarely
-es2-vol0-exploration.html  ← Vol.0: Exploration & Early Game
-es2-vol1-empire.html       ← Vol.1: Empire & Economy
-es2-vol2-combat.html       ← Vol.2: Combat & Victory
-es2-vol3-heroes.html       ← Vol.3: Heroes
-es2-vol4-diplomacy.html    ← Vol.4: Diplomacy
-es2-vol5-factions.html     ← Vol.5: Standard Factions
-es2-vol6-factions-special.html  ← Vol.6: Special Factions
-es2-Fac01-lumeris.html    ← Faction deep-dive: The Lumeris 
-es2-Fac02-horatio.html    ← Faction deep-dive: The Horatio
-es2-Fac03-sophons.html    ← Faction deep-dive: The Sophons 
-index.html                 ← Main page 
+./CSSnJS/              ← shared CSS and JS (edit rarely)
+./GeneralGuide/        ← general guide volumes
+./FactionsDeepGuide/   ← faction deep-dive volumes
+./index.html           ← guide landing page
 ```
 
-The files must follow this subdirectory structure:
-```
-./CSSnJS/                 ← shared CSS and JS files live in here
-./GeneralGuide/           ← All the HTML files that make the volumes of the general guide  live in here
-./FactionsDeepGuide/      ← All the HTML files that make the faction deep dives volumes live in here
-```
-Faction deep-dives follow the naming pattern `es2-Fac{NN}-{faction}.html`.
+Naming conventions:
+- General volumes: `es2-vol{N}-{topic}.html`
+- Faction deep-dives: `es2-Fac{NN}-{faction}.html`
 
----
+**Shared infrastructure** (no status tracking):
 
-## Completed Volumes — Status
+| File | Role |
+|------|------|
+| `CSSnJS/es2-guide.css` | Shared design system — edit rarely |
+| `CSSnJS/es2-guide.js` | Shared JS: progress, quiz, mobile nav — edit rarely |
+| `index.html` | Guide landing page with links to all volumes |
+
+**General Guide volumes:**
 
 | File | Status | Topics | Notes |
 |------|--------|--------|-------|
-| es2-vol0-exploration.html | Complete, content awaiting user revision | 7 | |
-| es2-vol1-empire.html | Complete, content awaiting user revision | 8 | |
-| es2-vol2-combat.html | Complete, content awaiting user revision | — | |
-| es2-vol3-heroes.html | Complete, content awaiting user revision | — | |
-| es2-vol4-diplomacy.html | Complete, content awaiting user revision | — | |
-| es2-vol5-factions.html | Complete, content awaiting user revision | — | |
-| es2-vol6-factions-special.html | Complete, content awaiting user revision | — | |
-| es2-Fac01-lumeris.html | Complete, content awaiting user revision  | 13 | Compliance-fixed Feb 2026 |
-| es2-Fac02-horatio.html | Complete, content awaiting user revision | — | |
-| es2-Fac03-sophons.html | Complete, content awaiting user revision | — | |
+| `GeneralGuide/es2-vol0-exploration.html` | Complete, awaiting review | 7 | |
+| `GeneralGuide/es2-vol1-empire.html` | Complete, awaiting review | 8 | Planned Enhancement |
+| `GeneralGuide/es2-vol2-combat.html` | Complete, awaiting review | 8 | |
+| `GeneralGuide/es2-vol3-heroes.html` | Complete, awaiting review | 8 | |
+| `GeneralGuide/es2-vol4-diplomacy.html` | Complete, awaiting review | 7 | |
+| `GeneralGuide/es2-vol5-factions.html` | Complete, awaiting review | 8 | |
+| `GeneralGuide/es2-vol6-factions-special.html` | Complete, awaiting review | 4 | |
+
+**Faction Deep-Dive volumes:**
+
+| File | Status | Topics | Notes |
+|------|--------|--------|-------|
+| `FactionsDeepGuide/es2-Fac01-lumeris.html` | Complete, content awaiting user revision | 13 | |
+| `es2-Fac02-horatio.html` | Complete, content awaiting user revision | 10 | |
+| `es2-Fac03-sophons.html` | Complete, content awaiting user revision | 9 | |
 
 ---
 
