@@ -228,7 +228,7 @@
         </div>
 
         <div class="source-row">
-          <span class="src-pill">STEAM GUIDE</span><span class="src-pill">REDDIT 01</span><span class="src-pill">VIDEO T03</span>
+          <span class="src-pill">YT04-UPDATED</span><span class="src-pill">STEAM GUIDE</span><span class="src-pill">REDDIT 01</span><span class="src-pill">VIDEO T03</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -312,7 +312,8 @@
 
         <div class="trait-block warn">
           <div class="trait-label warn">FOOD DRAIN — THE CRITICAL CONSTRAINT</div>
-          When a Lumeris outpost is placed, the game automatically routes Food from your nearest connected system to feed the outpost's growth. This drain is significant: <strong>~32 Food per turn per outpost</strong>, deducted from the source system's surplus. If your capital has 40 Food surplus and you place two outposts simultaneously, your capital goes negative — population begins shrinking immediately. The correct response: only place a second outpost when your largest food-producing system can sustain the drain without going negative. Alternatively, place off-piste outposts (isolated by star lane gaps) — these grow slower but do <strong>not</strong> pull Food from your connected systems, eliminating the drain entirely.
+          When a Lumeris outpost is placed, the game automatically routes Food from your nearest connected system to feed the outpost's growth. This drain is significant: <strong>~31.7 Food per turn per outpost</strong> (exact figure observed in expert play), deducted from the source system's surplus. If your capital has 40 Food surplus and you place two outposts simultaneously, your capital goes negative — population begins shrinking immediately. The correct response: only place a second outpost when your largest food-producing system can sustain the drain without going negative. Alternatively, place off-piste outposts (isolated by star lane gaps) — these grow slower but do <strong>not</strong> pull Food from your connected systems, eliminating the drain entirely.<br><br>
+          <strong>Patch note:</strong> A prior version of the game also drained food for ships in transit to off-piste outposts. This has been fixed — ships travelling to off-piste outposts no longer cause additional food drain on the source system.
         </div>
 
         <div class="trait-block">
@@ -441,7 +442,7 @@
         <div class="callout callout-tip">
           <div class="callout-label">THE APPROVAL RECOVERY TOOLKIT</div>
           When overcolonization pushes you below Ecstatic, your recovery options in order of speed:<br>
-          <strong>1. Enact "Toys for Boys" law</strong> — applies +25 Approval empire-wide for 10 turns. Fast and free if Scientists are in power.<br>
+          <strong>1. Enact "Toys for Boys" law</strong> — applies +25 Approval empire-wide for 10 turns. Fast and free if Scientists are in power. <em>Timing caveat:</em> early in the game, activating Toys for Boys costs −10% system Industry, which may hurt more than the Approval gain helps if your Industry is tight. The expert playthrough only activates it in the late game (around turn 27+) when empire-wide production is large enough that the Industry penalty is trivial versus the +30% Approval bonus from being Ecstatic/Devoted. Don't reflexively activate it on turn 1.<br>
           <strong>2. Luxury resource improvements</strong> — "Dust Trees as National Pride" and similar improvements give permanent per-pop Approval bonuses in that system.<br>
           <strong>3. Sell an outpost</strong> — the planet broker works in reverse. Selling an underperforming outpost removes its overcolonization penalty immediately and refunds Dust. Late game refunds can reach 20,000 Dust. Use this actively, not just as an emergency measure.
         </div>
@@ -483,7 +484,7 @@
           Pacifist entrenched law gives Dust and Approval bonuses — appealing for a Dust-focused faction. But Industrialist entrenched law reduces ship and improvement Industry costs by a meaningful percentage. For Lumeris, this is more valuable because:<br><br>
           (1) <strong>You buyout ships with Dust, not Industry.</strong> But lower Industry costs mean improvements complete faster, freeing Industry for more improvement spam, accelerating system development, and compounding your FIDSI output faster.<br>
           (2) <strong>Industrialist law enables the questline continuation path</strong> — the Lumeris faction quest has a critical branch requiring Industrialist dominance for several turns. Arriving at that requirement without Industrialists in power forces you to scramble an expensive last-minute election campaign during a quest deadline.<br>
-          (3) The Ecologist party's entrenched law (+25 Industry when at Ecstatic) is also a strong secondary option and plays well with the Lumeris Approval advantages — consider it if you can't win an Industrialist majority cleanly.
+          (3) The Ecologist party's entrenched law (<strong>+25 Industry when at Ecstatic</strong>) is a strong secondary option confirmed by expert play — one playthrough chose Ecologist over Industrialist specifically for this law and its reliable activation condition. It plays well with Lumeris's Approval advantages since you should be at Ecstatic often. A viable choice when you can't secure an Industrialist majority cleanly, or when your empire is more Industry-starved than Dust-starved.
         </div>
 
         <div class="trait-block">
@@ -534,18 +535,22 @@
         <p>Minor factions (covered in Vol.0) are covered here from the Lumeris-specific angle: Dust generation makes investing in them cheaper per turn relative to income than for any other faction, and the curiosity interaction reduces bribe costs significantly.</p>
 
         <div class="trait-block">
-          <div class="trait-label">THE CURIOSITY-BRIBE INTERACTION</div>
-          Every curiosity you investigate in a minor faction's home system increases your relationship with them by a flat amount — and simultaneously reduces the Dust cost of the next bribe tier. The sequence:<br><br>
-          <strong>Bribe cost before curiosities:</strong> 25 → 75 → 125 Dust per tier.<br>
-          <strong>After investigating 3 curiosities in their system:</strong> 25 → 75 → (jump is smaller or free). Investigating 3 curiosities before paying any bribes can save 50–100 Dust across the relationship arc. Always investigate curiosities first, then bribe — never bribe before investigating.
+          <div class="trait-label">THE CURIOSITY-BRIBE INTERACTION — CORRECT SEQUENCE</div>
+          The bribe cost tiers for minor factions are 25 → 75 → 125 → 200 Dust. Each curiosity you investigate in their home system reduces each upcoming tier by 25. After 3 curiosities, those tiers become 0 → 50 → 100 → 175 — a cumulative saving of 75 Dust across the relationship arc.<br><br>
+          <strong>The correct sequence is:</strong> pay the <em>first</em> bribe (25 Dust) immediately on contact, then investigate their curiosities. The reason: the first bribe starts a 10-turn relationship clock — delay it and you lose turns of passive relationship growth. Then the curiosities discount all subsequent (more expensive) bribe tiers, where the savings are largest. Never bribe the second or third tier without investigating curiosities first. The expert playthrough confirms: 100 Dust initial bribe → 3 curiosities investigated → relationships now growing efficiently with all future tiers discounted.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">DEVELOPMENT GRANTS — DELAY ASSIMILATION FOR ONGOING INCOME</div>
+          When you complete a minor faction's assistance quest, you receive Development Grants — a per-turn bonus of Science, Dust, and Manpower that lasts for approximately 10–15 turns before expiring (at which point you can pay 15 luxuries to renew). While Development Grants are active, the minor faction's system is producing more for your empire than it would immediately after assimilation — because assimilation ends the per-turn grant income and replaces it with the assimilation integration trait and system access. The strategic calculation: if the assimilation integration trait (e.g., Mavros's −10% Industry cost) is highly valuable to you right now, assimilate early. If you're not ready to absorb the overcolonization Approval hit, keep Development Grants active and delay assimilation — you keep the income without the penalty. Only assimilate when you can absorb it cleanly.
         </div>
 
         <div class="trait-block">
           <div class="trait-label">INVESTMENT ROI — ACTUAL NUMBERS</div>
-          From the expert playthrough: 100 Dust invested in the Mavros minor faction on turn 5 returned 6 Dust + 8 Science per turn by turn 9 (4 turns × ~3.5/turn = 14 Dust recovered, then ongoing). By turn 14, the investment was fully repaid and generating net 18 Dust + Science per turn. With "Trusted Broker" law reducing bribe costs by ~25%, initial investment payback drops to ~3 turns. Every minor faction reached "Friendly" status provides:<br><br>
+          From the expert playthrough (updated source): 100 Dust invested in the Mavros minor faction on turn 5 returned 6 Dust + 8 Science per turn by turn 9 (4 turns of relationship growth). By turn 14 the investment was fully repaid and generating a net 18 Dust + Science per turn. When the relationship hit the next tier: 36 Dust + 60 Science per turn from that single minor faction alone — at that point generating more Science than the player's entire civilization. Every minor faction at "Friendly" provides:<br><br>
           — Resource trickle per turn (Dust, Science, or Food depending on faction)<br>
-          — A free population unit of their race delivered to your nearest system (see Vol.0)<br>
-          — Curiosity investigation access (their system's curiosities become available)
+          — A free population unit of their race delivered to your nearest system<br>
+          — Curiosity investigation access (their system's curiosities become available to your scouts)
         </div>
 
         <div class="trait-block">
@@ -561,7 +566,7 @@
         </div>
 
         <div class="source-row">
-          <span class="src-pill">VIDEO T03</span><span class="src-pill">STEAM GUIDE</span>
+          <span class="src-pill">YT04-UPDATED</span><span class="src-pill">VIDEO T03</span><span class="src-pill">STEAM GUIDE</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -889,19 +894,20 @@
           <div class="tl-row">
             <div class="tl-turn">TURN 1</div>
             <div class="tl-body">
-              <strong>Attach hero to Caravel fleet.</strong> Do not keep hero as solo ship — attach to fleet so they gain XP from curiosity investigations. Refit the Caravel: remove one weapon module, add a second probe launcher (costs ~40 Dust — worth it for the curiosity coverage). Check home system approval: if above 70, defer the first law for now and save Influence. Queue <strong>Xeno-Industrial Infrastructure</strong> in the home system build queue — this is first-build for every Lumeris game without exception. Start researching <strong>Xenolinguistics</strong> as your first tech (unlocks Xeno-Industrial, boosts early Science).
+              <strong>Attach hero to Caravel fleet.</strong> Do not keep hero as solo ship — attach to fleet so they gain XP from curiosity investigations. Refit the Caravel: remove one weapon module, add a probe launcher and one engine (~30–40 Dust — spend only what keeps your Dust store stable). Queue <strong>Xeno-Industrial Infrastructure</strong> in the home system build queue — this is first-build for every Lumeris game without exception. Start researching <strong>Xenolinguistics</strong> as your first tech (unlocks Xeno-Industrial while boosting Science). Check the first law slot: at 70+ Approval (Happy), defer activating any law for now and save Influence. "Toys for Boys" sounds appealing but carries a −10% Industry penalty that hurts in the early game; hold it for the mid-to-late game when Industry is no longer the bottleneck.
             </div>
           </div>
           <div class="tl-row">
             <div class="tl-turn">TURNS 1–5</div>
             <div class="tl-body">
-              <strong>Scout aggressively for range, not curiosity depth.</strong> Cover as many star lanes as possible to map colonization targets. Specifically look for: systems with 4–5 planets, strategic/luxury resource deposits (especially Hyperium and Titanium), and minor faction locations. Investigate curiosities in minor faction systems <em>before</em> paying any bribes — each curiosity reduces subsequent bribe costs. Probe any unconnected systems within visual range; off-piste colonization targets don't need lane access. Check for a Tree of Worlds system — if found, it is your first colonization target regardless of other stats.
+              <strong>Scout aggressively for range, not curiosity depth.</strong> Cover as many star lanes as possible to map colonization targets. Specifically look for: systems with 4–5 planets, strategic/luxury resource deposits (especially Hyperium and Titanium), and minor faction locations. Named planets (those with unique names rather than the system name + a number) give outsized bonuses — prioritize systems containing them.<br><br>
+              <strong>Minor faction contact sequence:</strong> Pay the first bribe (25 Dust) immediately on contact to start the 10-turn relationship clock. Then investigate all their curiosities. Each curiosity reduces upcoming bribe tiers by 25, so you want those discounts applied to the more expensive second and third tiers (75→50, 125→100), not the cheap first tier. Never investigate before contacting — you lose turns of passive relationship growth. Probe any unconnected systems within visual range; off-piste colonization targets don't need lane access. Check for a Tree of Worlds system — if found, it is your first colonization target regardless of other stats.
             </div>
           </div>
           <div class="tl-row">
             <div class="tl-turn">TURN 3–6</div>
             <div class="tl-body">
-              <strong>First bribe — 25 Dust on your nearest minor faction</strong> after investigating their curiosities. Activate "Trusted Broker" law to reduce subsequent bribe costs by ~25%. Begin selling Hyperium/Titanium on the market in batches of 10–20 per turn to build toward your first outpost cost (250 Dust). Do not sell your entire stockpile in one transaction.
+              <strong>Second bribe tier on your nearest minor faction</strong> — now discounted from 75 to ~50 Dust if you investigated curiosities first. Activate "Trusted Broker" law to further reduce subsequent bribe costs. Begin selling Hyperium/Titanium on the market in batches of 10–20 per turn to build toward your first outpost cost (250 Dust). Do not sell your entire stockpile in one transaction — you'll tank the price on yourself.
             </div>
           </div>
           <div class="tl-row">
@@ -937,7 +943,7 @@
         </div>
 
         <div class="source-row">
-          <span class="src-pill">VIDEO T03</span><span class="src-pill">STEAM GUIDE</span><span class="src-pill">REDDIT 01</span>
+          <span class="src-pill">YT04-UPDATED</span><span class="src-pill">VIDEO T03</span><span class="src-pill">STEAM GUIDE</span><span class="src-pill">REDDIT 01</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -989,7 +995,7 @@
         "Queue a military Attacker ship immediately — you need military before economic development."
       ],
       correct: 1,
-      explain: "Xeno-Industrial Infrastructure is the first build for every Lumeris game — it provides a significant Industry bonus that accelerates every subsequent build. Xenolinguistics is the correct first research because it unlocks Xeno-Industrial while also providing a Science bonus. Refitting the Caravel for probes costs 40 Dust and pays for itself in curiosity XP for the hero and resources found. Placing an outpost on turn 1 without broader galaxy scouting violates the TAKT principle — you may be committing your first 250 Dust to an average system when a Tree of Worlds or resource-rich system is one probe away. Scout first, colonize when you have information."
+      explain: "Xeno-Industrial Infrastructure is the first build for every Lumeris game — it provides a significant Industry bonus that accelerates every subsequent build. Xenolinguistics is the correct first research because it unlocks Xeno-Industrial while also providing a Science bonus. Refitting the Caravel for probes costs ~30–40 Dust and pays for itself quickly in curiosity XP and resources found. Placing an outpost on turn 1 without broader galaxy scouting violates the TAKT principle — you may be committing your first 250 Dust to an average system when a Tree of Worlds or resource-rich system is one probe away. When you make first contact with a minor faction: pay the first bribe (25 Dust) immediately to start the relationship clock, then investigate their curiosities — the discounts from curiosities apply to the more expensive later tiers, not the cheap first one."
     },
     {
       scenario: "Turn 8. Your capital has +58 Food surplus. You've found two potential outpost targets: System A is lane-connected, 3 planets, fertile, no special resources. System B is off-piste (not lane-connected), 2 planets, but contains a Tree of Worlds and an average Hyperion deposit.",
