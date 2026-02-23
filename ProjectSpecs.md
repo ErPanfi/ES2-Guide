@@ -21,8 +21,10 @@ es2-vol3-heroes.html       ← Vol.3: Heroes
 es2-vol4-diplomacy.html    ← Vol.4: Diplomacy
 es2-vol5-factions.html     ← Vol.5: Standard Factions
 es2-vol6-factions-special.html  ← Vol.6: Special Factions
-es2-Fac01-lumeris.html  ← Faction deep-dive: The Lumeris (in-progress)
-index.html                 ← Main page (in progress, waiting for all the deep dives)
+es2-Fac01-lumeris.html    ← Faction deep-dive: The Lumeris 
+es2-Fac02-horatio.html    ← Faction deep-dive: The Horatio
+es2-Fac03-sophons.html    ← Faction deep-dive: The Sophons 
+index.html                 ← Main page 
 ```
 
 The files must follow this subdirectory structure:
