@@ -341,6 +341,53 @@ COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc
 
 ---
 
+## Planned Enhancements
+
+### Vol.1 — Empire Diagnostic Routines (planned)
+
+**Concept origin:** Emerged during the Sophons deep-dive (Fac03) session. The Sophons quiz
+introduced a "diagnostic" question format distinct from scenario questions: instead of presenting
+a decision point, a diagnostic question presents a complete empire snapshot at a specific turn
+and asks the player to identify what went wrong and in what order of impact.
+
+**On the format's effectiveness:** The diagnostic format is a deliberate experiment. The hypothesis
+is that it trains a qualitatively different skill — reading your own game state rather than
+memorising correct responses to known situations. Whether it actually achieves this more
+effectively than scenario questions is unproven. Treat it as a promising format to test during
+content review, not as an established success. Gather player feedback before expanding it further.
+
+**Why Vol.1:** The diagnostic skill depends on faction-agnostic mechanics that live in Vol.1:
+FIDSI ratios, the relationship between Science output and Industry capacity, population growth
+gates, and Approval thresholds and their multiplier effects. Vol.1 is the correct home for a
+general-purpose bottleneck-identification framework that players can then apply through the
+faction-specific lens of each deep-dive.
+
+**What to add:** One new topic (or expansion of an existing topic) covering:
+- How to identify the primary bottleneck in an empire each turn — the constraint that, if removed,
+  unlocks the most value; not always the lowest number on the screen
+- The relationship between Science unlocks and Industry capacity: researching what you cannot
+  build is not progress
+- Population growth and Approval as a coupled gate: population growth requires new systems (which
+  reduce Approval on annexation), but Approval thresholds act as empire-wide FIDSI multipliers,
+  meaning new population added under degraded Approval is less productive than existing population
+  under good Approval. Expansion is therefore not unconditionally good — the net value of a new
+  system depends on whether the Approval cost is paid back by that system's FIDSI contribution
+  within a reasonable timeframe. This coupling is one of the most commonly misunderstood
+  mechanics by intermediate players and deserves explicit treatment
+- A worked example: a faction-agnostic "stuck at turn 35" snapshot with a compound failure state,
+  showing how to sequence the diagnosis (identify primary constraint first, then secondary, then
+  corrective order)
+
+**Quiz format:** Include 2–3 diagnostic questions in the same format trialled in Fac03 — full
+empire snapshot as scenario, "identify the error and corrective sequence" as the question.
+Faction-agnostic or using a generic unnamed empire. Assess their effectiveness during content
+review before committing to the format more broadly.
+
+**Tone note:** The diagnostic content should feel like teaching the player to be their own
+analyst, not like a checklist. The framing "what is your primary bottleneck this turn" is more
+useful than "check these five things in order."
+---
+
 ## Workflow for New Sessions
 
 1. Claude reads `es2-guide.css` and `es2-guide.js` from project files to confirm the design system
