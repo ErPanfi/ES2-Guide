@@ -251,7 +251,7 @@ Sidebar nav items that correspond to tracked topics must have `<span class="nav-
   <nav class="sidebar"> ... </nav>
   <main class="main">
     <div class="page-header">
-      <div class="breadcrumb"><a href="../index.html">ES2</a> // <span>Vol.N</span> // Title</div>
+      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.N</span> // Title</div>
       <h1 class="page-title">Title</h1>
       <p class="page-subtitle">...</p>
     </div>
