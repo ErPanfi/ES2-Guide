@@ -300,6 +300,7 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 ```html
 <nav class="sidebar">
   <div class="sidebar-logo">
+    <a href="../index.html" class="linkToIndex">ES2</a>
     <div class="game-name">VOLUME N</div>
     <div class="guide-name">Title<br>Subtitle</div>
   </div>
