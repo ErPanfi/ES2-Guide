@@ -420,14 +420,20 @@
     transform: translateX(0);
   }
 
-  .sidebar .vol-card
+  .sidebar .vol-card.vol-next
   {
     font-size:var(--ts_sectionLabel);
     font-family: 'Share Tech Mono', monospace;
-
     width:80%;
     margin:auto;
     color: var(--card-accent);
+    border-color: var(--card-accent);
+  }
+
+  .sidebar-logo .vol-card
+  {
+    --card-accent: var(--text-bright);
+    --card-accent-rgb: var(--text-bright-rgb);
     border-color: var(--card-accent);
   }
 
