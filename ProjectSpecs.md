@@ -21,6 +21,51 @@ A source is valid only if Claude actually retrieved and read it during the curre
   where the actual content (not just navigation) was returned and read — valid
 - Project knowledge files read via the view tool in the current session — valid
 
+### Source Quality Hierarchy
+
+All claims in this guide must be traceable to a source retrieved and read in the current session
+(see Source Integrity Rules). When two sources conflict, resolve the conflict using this hierarchy
+— higher tier always wins. Document the conflict and resolution in the planning discussion before
+writing content.
+
+#### Tier 1 — User-uploaded files (highest trust)
+Files directly uploaded by the user in the current session. These represent curated,
+session-specific primary material and take precedence over everything else. If a Tier 1 source
+conflicts with any lower tier, always trust the uploaded file and flag the discrepancy explicitly.
+
+#### Tier 2 — Authoritative ES2 community sources
+Any page successfully fetched from the following domains, treated as equally reliable among
+themselves:
+- `wiki.endless-space.com/`
+- `endless-space-2.fandom.com/wiki/Endless_Space_2_Wiki`
+- `community.amplitude-studios.com/amplitude-studios/endless-space-2/`
+- `www.reddit.com/r/EndlessSpace/`
+
+When two Tier 2 sources conflict with each other, flag the conflict explicitly in the content
+rather than silently picking one — the reader should know the mechanic is disputed.
+
+#### Tier 3 — Other web sources
+Any page successfully fetched from the web that does not belong to a Tier 2 domain (e.g. Steam
+guides, YouTube transcripts obtained via fetch, personal blogs, other wikis). Useful for
+corroboration but should not be the sole source for a mechanical claim. If a Tier 3 source
+conflicts with a Tier 2 source, trust Tier 2 and note the discrepancy if it is meaningful.
+
+#### Tier 4 — Claude's training data (lowest trust)
+General knowledge from training, not retrieved from any source in the current session. Must never
+be presented as a sourced fact. Permissible uses:
+- Filling genuine gaps where no higher-tier source is available, provided it is explicitly flagged
+  inline as unverified (e.g. "unconfirmed — not sourced in this session")
+- Generating plausible hypotheses to test against higher-tier sources
+- Never cite training data with a src-pill or any other source attribution marker
+
+#### Conflict resolution protocol
+When sources at different tiers contradict each other:
+1. Higher tier always wins on the factual claim
+2. The conflict must be reported to the user but NOT included in the generated file content. The only exception to this rule is if 
+two Tier 2 sources do conflict: if that's the case present both positions INTO the generated file and flag the mechanic as disputed.
+4. If uncertainty cannot be resolved within the available sources, say so rather than picking
+   one arbitrarily.
+
 ### What does NOT count as a valid source
 - Any URL or source type Claude mentions from general training knowledge without having fetched
   it in the current session — NOT valid, even if the source plausibly exists
