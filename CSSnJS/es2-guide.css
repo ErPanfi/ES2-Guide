@@ -155,6 +155,22 @@
     margin-bottom: 20px;
   }
 
+
+  a.linkToIndex, a.linkToIndex:visited   { color: var(--text-bright); text-decoration: none;}
+
+  .sidebar-logo a.linkToIndex
+  {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--ts_pageTitle);
+    display:block;
+    float:left;
+    padding-right: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    border-right: 2px solid silver;
+  }
+
   .sidebar-logo .game-name {
     font-family: 'Orbitron', sans-serif;
     font-size: var(--ts_logoText);
@@ -262,8 +278,7 @@
     letter-spacing: 1px;
     margin-bottom: 16px;
   }
-  
-  .breadcrumb a, .breadcrumb a:visited   { color: var(--text-bright); text-decoration: none;}
+
   .breadcrumb span { color: var(--accent); }
   
   .breadcrumb #navHider
