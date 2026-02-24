@@ -135,6 +135,111 @@
     z-index: 1;
   }
 
+  /* ── Volume cards effects ──────────────────────────────────── */
+  .vol-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.18s, border-color 0.18s, transform 0.15s;
+    margin-bottom: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .vol-card::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: var(--card-accent);
+    opacity: 0;
+    transition: opacity 0.18s;
+  }
+
+  .vol-card.right::before
+  {
+    right: 0;
+  }
+
+  .vol-card.left::before
+  {
+    left: 0;
+  }
+
+  .vol-card:hover {
+    background: rgba(var(--card-accent-rgb), 0.07);
+    border-color: rgba(var(--card-accent-rgb), 0.25);
+    transform: translateX(-4px);
+  }
+
+  .vol-card:hover::before {
+    opacity: 1;
+  }
+
+  .vol-card-emoji {
+    font-size: calc(var(--ts_mainText) * 1.5);
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+    filter: drop-shadow(0 0 6px rgba(var(--card-accent-rgb), 0.4));
+    transition: filter 0.18s;
+  }
+
+  .vol-card:hover .vol-card-emoji {
+    filter: drop-shadow(0 0 10px rgba(var(--card-accent-rgb), 0.7));
+  }
+
+  .vol-card-text {
+    flex: 1;
+  }
+
+  .vol-card-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: var(--card-accent);
+    letter-spacing: 2px;
+    margin-bottom: 3px;
+    opacity: 0.8;
+  }
+
+  .vol-card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: var(--ts_topicTitle);
+    font-weight: 600;
+    color: var(--text-bright);
+    line-height: 1.2;
+  }
+
+  .vol-card-sub {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: var(--ts_sectionLabel);
+    color: var(--text);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  .vol-card-arrow {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionLabel);
+    color: var(--card-accent);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition: opacity 0.18s, transform 0.18s;
+    flex-shrink: 0;
+  }
+
+  .vol-card:hover .vol-card-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+
   /* SIDEBAR NAV */
   .sidebar {
     width: 25%;
@@ -316,126 +421,6 @@
     line-height: 1.6;
   }
 
-  /* ── Volume cards effects ──────────────────────────────────── */
-  .vol-card {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 16px 20px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.18s, border-color 0.18s, transform 0.15s;
-    margin-bottom: 8px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .vol-card::before {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 3px;
-    background: var(--card-accent);
-    opacity: 0;
-    transition: opacity 0.18s;
-  }
-
-  .vol-card.right::before
-  {
-    right: 0;
-  }
-
-  .vol-card.left::before
-  {
-    left: 0;
-  }
-
-  .vol-card:hover {
-    background: rgba(var(--card-accent-rgb), 0.07);
-    border-color: rgba(var(--card-accent-rgb), 0.25);
-    transform: translateX(-4px);
-  }
-
-  .vol-card:hover::before {
-    opacity: 1;
-  }
-
-  .vol-card-emoji {
-    font-size: calc(var(--ts_mainText) * 1.5);
-    flex-shrink: 0;
-    width: 40px;
-    text-align: center;
-    filter: drop-shadow(0 0 6px rgba(var(--card-accent-rgb), 0.4));
-    transition: filter 0.18s;
-  }
-
-  .vol-card:hover .vol-card-emoji {
-    filter: drop-shadow(0 0 10px rgba(var(--card-accent-rgb), 0.7));
-  }
-
-  .vol-card-text {
-    flex: 1;
-  }
-
-  .vol-card-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle);
-    color: var(--card-accent);
-    letter-spacing: 2px;
-    margin-bottom: 3px;
-    opacity: 0.8;
-  }
-
-  .vol-card-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: var(--ts_topicTitle);
-    font-weight: 600;
-    color: var(--text-bright);
-    line-height: 1.2;
-  }
-
-  .vol-card-sub {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: var(--ts_sectionLabel);
-    color: var(--text);
-    line-height: 1.4;
-    margin-top: 2px;
-  }
-
-  .vol-card-arrow {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionLabel);
-    color: var(--card-accent);
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 0.18s, transform 0.18s;
-    flex-shrink: 0;
-  }
-
-  .vol-card:hover .vol-card-arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  .sidebar .vol-card.vol-next
-  {
-    font-size:var(--ts_sectionLabel);
-    font-family: 'Share Tech Mono', monospace;
-    width:80%;
-    margin:auto;
-    color: var(--card-accent);
-    border-color: var(--card-accent);
-  }
-
-  .sidebar-logo .vol-card
-  {
-    --card-accent: var(--text-bright);
-    --card-accent-rgb: var(--text-bright-rgb);
-    border-color: var(--card-accent);
-  }
 
   /* TOPIC SECTIONS */
   .topic {
