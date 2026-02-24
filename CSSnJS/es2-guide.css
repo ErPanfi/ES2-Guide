@@ -262,6 +262,14 @@
   }
 
 
+  .sidebar-logo .vol-card
+  {
+    --card-accent: var(--text-bright);
+    --card-accent-rgb: var(--text-bright-rgb);
+    border-color: var(--card-accent);
+    transform: none;
+  }
+
   a.linkToIndex, a.linkToIndex:visited   { color: var(--text-bright); text-decoration: none;}
 
   .sidebar-logo a.linkToIndex
@@ -366,6 +374,17 @@
     font-size:var(--ts_sectionLabel);
   }
   */
+  .sidebar .vol-card.vol-next, .sidebar .vol-card.vol-prev
+  {
+    font-size:var(--ts_sectionLabel);
+    font-family: 'Share Tech Mono', monospace;
+    width:80%;
+    margin:auto;
+    margin-top: 10px;
+    color: var(--card-accent);
+    border-color: var(--card-accent);
+  }
+
 
   /* MAIN */
   .main {
