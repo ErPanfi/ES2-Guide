@@ -29,6 +29,8 @@
   .step-list li .step-n { color: var(--accent); background: var(--accent-dim); }
   .callout-tip      { border-left-color: var(--accent); background: var(--accent-dim); }
   .callout-tip .callout-label { color: var(--accent); }
+  .vol-prev{--card-accent: var(--vol2-accent); --card-accent-rgb:var(--vol2-accent-rgb);}
+  .vol-next{--card-accent: var(--vol4-accent); --card-accent-rgb:var(--vol4-accent-rgb);}
 
   /* ── Hero Class Cards ── */
   .hero-grid {
@@ -254,7 +256,7 @@
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <a href="../index.html" class="linkToIndex">ES2</a>
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
     <div class="game-name">VOLUME 3</div>
     <div class="guide-name">Heroes &amp;<br>Academy</div>
   </div>
@@ -279,8 +281,8 @@
   
   
 
-  <div class="vol-link" style="background:rgba(var(--vol2-accent-rgb),0.08);border:1px solid rgba(var(--vol2-accent-rgb),0.20);color:var(--vol2-accent);" onclick="location.href='es2-vol2-combat.html'">← Vol.2: Combat & Victory</div>
-  <div class="vol-link" style="background:rgba(var(--vol4-accent-rgb),0.08);border:1px solid rgba(var(--vol4-accent-rgb),0.20);color:var(--vol4-accent);margin-top:6px;" onclick="location.href='es2-vol4-diplomacy.html'">Vol.4: Diplomacy & Espionage →</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol2-combat.html'"><div class="vol-card-arrow">←</div> Vol.2: Combat & Victory</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol4-diplomacy.html'">Vol.4: Diplomacy & Espionage <div class="vol-card-arrow">→</div></div>
   
   <div class="progress-mini">
     <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>

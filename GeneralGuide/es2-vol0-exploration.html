@@ -24,15 +24,14 @@
   .step-list li .step-n{color:var(--vol0-accent);background:rgba(var(--vol0-accent-rgb), .11);}
   .sidebar-logo .game-name{color:var(--vol0-accent);}
 
-  .vol-next{color:var(--vol0-accent);border:1px solid rgba(var(--vol0-accent-rgb), .3);background:rgba(var(--vol0-accent-rgb), .07);}
-  .vol-next:hover{background:rgba(var(--vol0-accent-rgb), .16);}
+  .vol-next{--card-accent: var(--vol1-accent); --card-accent-rgb:var(--vol1-accent-rgb);}
 </style>
 </head>
 <body>
 <div class="layout">
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <a href="../index.html" class="linkToIndex">ES2</a>
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
     <div class="game-name">VOLUME 0</div>
     <div class="guide-name">Exploration<br>& Early Game</div>
   </div>
@@ -47,8 +46,8 @@
   <div class="nav-item" onclick="scrollByID('t7')">🌍 Minor Factions <span class="nav-check" id="nc7"></span></div>
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
-  
-  <div class="vol-link" style="background:rgba(var(--vol1-accent-rgb),0.08);border:1px solid rgba(var(--vol1-accent-rgb),0.20);color:var(--vol1-accent);margin-top:6px;" onclick="location.href='es2-vol1-empire.html'">Vol.1: Empire & Economy →</div>
+  <div class="nav-section-label">// Next Volumes</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol1-empire.html'">Vol.1: Empire & Economy<div class="vol-card-arrow">→</div></div>
   
   <div class="progress-mini">
     <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
