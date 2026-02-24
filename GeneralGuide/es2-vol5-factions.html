@@ -25,6 +25,8 @@
   .step-list li .step-n { color:var(--accent); background:var(--accent-dim); }
   .callout-tip { border-left-color:var(--accent); background:var(--accent-dim); }
   .callout-tip .callout-label { color:var(--accent); }
+  .vol-prev{--card-accent: var(--vol4-accent); --card-accent-rgb:var(--vol4-accent-rgb);}
+  .vol-next{--card-accent: var(--vol6-accent); --card-accent-rgb:var(--vol6-accent-rgb);}
 
 
 </style>
@@ -51,8 +53,8 @@
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   
-  <div class="vol-link" style="background:rgba(var(--vol4-accent-rgb),0.08);border:1px solid rgba(var(--vol4-accent-rgb),0.20);color:var(--vol4-accent);" onclick="location.href='es2-vol4-diplomacy.html'">← Vol.4: Diplomacy & Espionage</div>
-  <div class="vol-link" style="background:rgba(var(--vol6-accent-rgb),0.08);border:1px solid rgba(var(--vol6-accent-rgb),0.20);color:var(--vol6-accent);margin-top:6px;" onclick="location.href='es2-vol6-factions-special.html'">Vol.6: Special Factions →</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol4-exploration.html'"><div class="vol-card-arrow">←</div> Vol.4: Diplomacy & Espionage</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol6-combat.html'">Vol.6: Special Factions <div class="vol-card-arrow">→</div></div>
   
   <div class="progress-mini">
     <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>

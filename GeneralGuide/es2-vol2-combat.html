@@ -25,6 +25,9 @@
   .step-list li .step-n { color:var(--accent); background:var(--accent-dim); }
   .callout-tip { border-left-color:var(--accent); background:var(--accent-dim); }
   .callout-tip .callout-label { color:var(--accent); }
+  .vol-prev{--card-accent: var(--vol1-accent); --card-accent-rgb:var(--vol1-accent-rgb);}
+  .vol-next{--card-accent: var(--vol3-accent); --card-accent-rgb:var(--vol3-accent-rgb);}
+
 </style>
 </head>
 <body>
@@ -53,8 +56,8 @@
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   
   
-  <div class="vol-link" style="background:rgba(var(--vol1-accent-rgb),0.08);border:1px solid rgba(var(--vol1-accent-rgb),0.20);color:var(--vol1-accent);" onclick="location.href='es2-vol1-empire.html'">← Vol.1: Empire & Economy</div>
-  <div class="vol-link" style="background:rgba(var(--vol3-accent-rgb),0.08);border:1px solid rgba(var(--vol3-accent-rgb),0.20);color:var(--vol3-accent);margin-top:6px;" onclick="location.href='es2-vol3-heroes.html'">Vol.3: Heroes →</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol1-exploration.html'"><div class="vol-card-arrow">←</div> Vol.1: Empire & Economy</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol3-combat.html'">Vol.3: Heroes <div class="vol-card-arrow">→</div></div>
   
   <div class="progress-mini">
     <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
