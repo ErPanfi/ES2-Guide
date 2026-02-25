@@ -3,107 +3,20 @@
 
 ---
 
-## Project Identity
-
-A multi-volume HTML guide for **Endless Space 2** (including all DLCs), targeting players who already understand the basics and want deep mechanical and strategic understanding. No hand-holding. Technical, precise, traceable. Content claims must be sourced or flagged as uncertain.
-
----
-
-## Source Integrity Rules
-
-**This project's core promise is that all claims are traceable to a source. The following rules
-are non-negotiable and apply to every session.**
-
-### What counts as a valid source
-A source is valid only if Claude actually retrieved and read it during the current session:
-- User-uploaded files (transcripts, Reddit threads, documents) — always valid
-- Wiki or web pages successfully fetched via web_fetch or web_search in the current session,
-  where the actual content (not just navigation) was returned and read — valid
-- Project knowledge files read via the view tool in the current session — valid
-
-### Source Quality Hierarchy
-
-All claims in this guide must be traceable to a source retrieved and read in the current session
-(see Source Integrity Rules). When two sources conflict, resolve the conflict using this hierarchy
-— higher tier always wins. Document the conflict and resolution in the planning discussion before
-writing content.
-
-#### Tier 1 — User-uploaded files (highest trust)
-Files directly uploaded by the user in the current session. These represent curated,
-session-specific primary material and take precedence over everything else. If a Tier 1 source
-conflicts with any lower tier, always trust the uploaded file and flag the discrepancy explicitly.
-
-#### Tier 2 — Authoritative ES2 community sources
-Any page successfully fetched from the following domains, treated as equally reliable among
-themselves:
-- `wiki.endless-space.com/`
-- `endless-space-2.fandom.com/wiki/Endless_Space_2_Wiki`
-- `community.amplitude-studios.com/amplitude-studios/endless-space-2/`
-- `www.reddit.com/r/EndlessSpace/`
-
-When two Tier 2 sources conflict with each other, flag the conflict explicitly in the content
-rather than silently picking one — the reader should know the mechanic is disputed.
-
-#### Tier 3 — Other web sources
-Any page successfully fetched from the web that does not belong to a Tier 2 domain (e.g. Steam
-guides, YouTube transcripts obtained via fetch, personal blogs, other wikis). Useful for
-corroboration but should not be the sole source for a mechanical claim. If a Tier 3 source
-conflicts with a Tier 2 source, trust Tier 2 and note the discrepancy if it is meaningful.
-
-#### Tier 4 — Claude's training data (lowest trust)
-General knowledge from training, not retrieved from any source in the current session. Must never
-be presented as a sourced fact. Permissible uses:
-- Filling genuine gaps where no higher-tier source is available, provided it is explicitly flagged
-  inline as unverified (e.g. "unconfirmed — not sourced in this session")
-- Generating plausible hypotheses to test against higher-tier sources
-- Never cite training data with a src-pill or any other source attribution marker
-
-#### Conflict resolution protocol
-When sources at different tiers contradict each other:
-1. Higher tier always wins on the factual claim
-2. The conflict must be reported to the user but NOT included in the generated file content. The only exception to this rule is if 
-two Tier 2 sources do conflict: if that's the case present both positions INTO the generated file and flag the mechanic as disputed.
-4. If uncertainty cannot be resolved within the available sources, say so rather than picking
-   one arbitrarily.
-
-### What does NOT count as a valid source
-- Any URL or source type Claude mentions from general training knowledge without having fetched
-  it in the current session — NOT valid, even if the source plausibly exists
-- Steam guides, Reddit threads, wiki pages, or any other web resource that Claude searched for
-  but could not successfully retrieve (e.g. returned navigation chrome, empty content, or a
-  render wall) — NOT valid
-- "Community knowledge" or "generally accepted" claims that Claude cannot trace to a specific
-  document read in the current session — NOT valid
-
-### How to handle uncertain or unverified claims
-- If a claim is drawn from general training knowledge rather than a retrieved source, either
-  omit it or flag it explicitly inline with a callout or note: "Source not verified — treat as
-  plausible community knowledge pending confirmation"
-- Never create a src-pill, source attribution, or citation for a source that was not actually
-  read in the current session
-- If a web fetch fails or returns unusable content, note the failure and do not cite that source
-
-### What to do when sources are thin
-If the user-provided sources do not cover a topic adequately and web retrieval fails, the correct
-response is to say so explicitly — either in the planning discussion or via an inline uncertainty
-flag in the built content — rather than filling the gap with unattributed training knowledge
-presented as sourced fact.
-
----
-
 ## File Structure & Status
 
 Files are organized into three subdirectories:
 
 ```
 ./CSSnJS/              ← shared CSS and JS (edit rarely)
-./GeneralGuide/        ← general guide volumes
+./GeneralGuide_OLD/    ← Legacy general guide volumes: content to be discarded and rebuild from sources
+./Specs/               ← Contains the various .md files with all the various reference documents for Claude
 ./FactionsDeepGuide/   ← faction deep-dive volumes
 ./index.html           ← guide landing page
 ```
 
 Naming conventions:
-- General volumes: `es2-vol{N}-{topic}.html`
+- General volumes: `es2-vol{N}-{slug}.html`
 - Faction deep-dives: `es2-Fac{NN}-{faction}.html`
 
 **Shared infrastructure** (no status tracking):
@@ -112,27 +25,44 @@ Naming conventions:
 |------|------|
 | `CSSnJS/es2-guide.css` | Shared design system — edit rarely |
 | `CSSnJS/es2-guide.js` | Shared JS: progress, quiz, mobile nav — edit rarely |
+| `Specs/VolumeTopics_General.md` | An index of the Volumes and topics which should be covered by the general guide |
+| `Specs/ContentSpecs.md` | The reference document that instruct Claude on how to generate the guide content |
 | `index.html` | Guide landing page with links to all volumes |
 
-**General Guide volumes:**
+**General Guide volumes:** (To be rebuilt) 
 
-| File | Status | Topics | Notes |
-|------|--------|--------|-------|
-| `GeneralGuide/es2-vol0-exploration.html` | Complete, awaiting review | 7 | |
-| `GeneralGuide/es2-vol1-empire.html` | Complete, awaiting review | 8 | Planned Enhancement |
-| `GeneralGuide/es2-vol2-combat.html` | Complete, awaiting review | 8 | |
-| `GeneralGuide/es2-vol3-heroes.html` | Complete, awaiting review | 8 | |
-| `GeneralGuide/es2-vol4-diplomacy.html` | Complete, awaiting review | 7 | |
-| `GeneralGuide/es2-vol5-factions.html` | Complete, awaiting review | 6 | Contains United Empire, Sophons, Unfallen, Nakalim, Hissho, Vaulters |
-| `GeneralGuide/es2-vol6-factions-special.html` | Complete, awaiting review | 6 | Contains Lumeris, Horatio, Vodyani, Cravers, Riftborns, Umbral Choir |
+| File | Title | Topics | Status |
+|------|-------|--------|--------|
+| `GeneralGuide/es2-vol0-gamestart.html` | Game Start Essentials | 8 | Pending rebuild |
+| `GeneralGuide/es2-vol1-economy.html` | Inside your Empire: Material & Money | 9 | Pending rebuild |
+| `GeneralGuide/es2-vol2-politics.html` | Inside your Empire: People & Ideas | 7 | Pending rebuild |
+| `GeneralGuide/es2-vol3-exploration.html` | Outside your Empire | 10 | Pending rebuild |
+| `GeneralGuide/es2-vol4-combat.html` | Ships, Combat & Military | 10 | Pending rebuild |
+| `GeneralGuide/es2-vol5-heroes.html` | Heroes & the Academy | 10 | Pending rebuild |
+| `GeneralGuide/es2-vol6-diplomacy.html` | Diplomacy & Espionage | 7 | Pending rebuild |
+| `GeneralGuide/es2-vol7-factions.html` | Faction Guides — Beginner | 6 | Pending rebuild |
+| `GeneralGuide/es2-vol8-factions-expert.html` | Faction Guides — Intermediate & Expert | 6 | Pending rebuild |
+
+
+**Legacy files (superseded by the restructure — do not use as templates):**
+
+| File | Notes |
+|------|-------|
+| `GeneralGuide_OLD/es2-vol0-exploration.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol1-empire.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol2-combat.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol3-heroes.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol4-diplomacy.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol5-factions.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol6-factions-special.html` | Content to be discarded — rebuild from sources |
 
 **Faction Deep-Dive volumes:**
 
 | File | Status | Topics | Notes |
 |------|--------|--------|-------|
 | `FactionsDeepGuide/es2-Fac01-lumeris.html` | Complete, content awaiting user revision | 13 | |
-| `es2-Fac02-horatio.html` | Complete, content awaiting user revision | 10 | |
-| `es2-Fac03-sophons.html` | Complete, content awaiting user revision | 9 | |
+| `FactionsDeepGuide/es2-Fac02-horatio.html` | Complete, content awaiting user revision | 10 | |
+| `FactionsDeepGuide/es2-Fac03-sophons.html` | Complete, content awaiting user revision | 9 | |
 
 ---
 
@@ -173,12 +103,14 @@ Google Fonts link (also required in `<head>`):
 | Volume | Accent var | RGB var | Color |
 |--------|-----------|---------|-------|
 | Vol.0 | `--vol0-accent` | `--vol0-accent-rgb` | Teal-green #00c9a7 |
-| Vol.1 | `--vol1-accent` | `--vol1-accent-rgb` | Gold #e8a020 |
-| Vol.2 | `--vol2-accent` | `--vol2-accent-rgb` | Red #e84040 |
-| Vol.3 | `--vol3-accent` | `--vol3-accent-rgb` | Purple #8b5cf6 |
-| Vol.4 | `--vol4-accent` | `--vol4-accent-rgb` | Blue #2d8fff |
+| Vol.1 | `--vol1-accent` | `--vol1-accent-rgb` | Light salmon #FFA07A |
+| Vol.2 | `--vol2-accent` | `--vol2-accent-rgb` | Gold #e8a020 |
+| Vol.3 | `--vol3-accent` | `--vol3-accent-rgb` | Blue #2d8fff |
+| Vol.4 | `--vol4-accent` | `--vol4-accent-rgb` | Red #e84040 |
 | Vol.5 | `--vol5-accent` | `--vol5-accent-rgb` | Mint #00d4a0 |
-| Vol.6 | `--vol6-accent` | `--vol6-accent-rgb` | Violet #c084fc |
+| Vol.6 | `--vol6-accent` | `--vol6-accent-rgb` | Purple #8b5cf6 |
+| Vol.7 | `--vol7-accent` | `--vol7-accent-rgb` | Cold cyan #00e5ff |
+| Vol.8 | `--vol8-accent` | `--vol8-accent-rgb` | Pale Sacred Gold #e8d48b |
 
 **Faction identity colors:**
 | Faction | Color var | RGB var | Color |
@@ -201,7 +133,7 @@ Faction deep-dives use the corresponding faction identity color as their base, a
 
 ### Per-page `:root` override (required in every file's `<style>`)
 
-Minimal volumes (vol0–vol6):
+Minimal volumes (vol0–vol8):
 ```css
 :root {
   --accent:     var(--volN-accent);
@@ -399,15 +331,6 @@ Factions deep dive should not have the two `vol-link` elements in the sidebar, b
 - `<span class="block-tag tag-strat">STRATEGY</span>` — strategic advice
 - Other tags can be added as needed
 
----
-
-## Content Standards
-
-- **Audience:** Players past the tutorial, comfortable with basic FIDSI and combat, seeking depth
-- **Tone:** Direct, technical, no hand-holding. Assume the reader has played 10+ hours
-- **Claims must be sourced.** If a mechanic is uncertain or version-dependent, say so explicitly rather than stating it as fact
-- **Sources used so far:** Reddit threads (r/EndlessSpace), YouTube video transcripts (ship design guides, faction playthroughs). Cite source type in `<span class="tag-source">` pills where used in faction deep-dives
-- **Quiz scenarios** must be concrete in-game situations with specific numbers (turn, Dust amount, approval %) — not abstract. All four options must be plausible; wrong answers should represent common mistakes
 
 ---
 
@@ -423,63 +346,12 @@ Faction files are more elaborate than the main volumes and introduce additional 
 - **`.ship-grid` / `.ship-card`** — ship hull comparison cards
 - **`.takt-box` / `.takt-title`** — TAKT concept callout (Lumeris-specific but reusable)
 
-COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc. (not `'vol6'` which is already taken by the special factions overview).
+COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc.
 
----
-
-
-
-## Planned Enhancements
-
-### Vol.1 — Empire Diagnostic Routines (planned)
-
-**Concept origin:** Emerged during the Sophons deep-dive (Fac03) session. The Sophons quiz
-introduced a "diagnostic" question format distinct from scenario questions: instead of presenting
-a decision point, a diagnostic question presents a complete empire snapshot at a specific turn
-and asks the player to identify what went wrong and in what order of impact.
-
-**On the format's effectiveness:** The diagnostic format is a deliberate experiment. The hypothesis
-is that it trains a qualitatively different skill — reading your own game state rather than
-memorising correct responses to known situations. Whether it actually achieves this more
-effectively than scenario questions is unproven. Treat it as a promising format to test during
-content review, not as an established success. Gather player feedback before expanding it further.
-
-**Why Vol.1:** The diagnostic skill depends on faction-agnostic mechanics that live in Vol.1:
-FIDSI ratios, the relationship between Science output and Industry capacity, population growth
-gates, and Approval thresholds and their multiplier effects. Vol.1 is the correct home for a
-general-purpose bottleneck-identification framework that players can then apply through the
-faction-specific lens of each deep-dive.
-
-**What to add:** One new topic (or expansion of an existing topic) covering:
-- How to identify the primary bottleneck in an empire each turn — the constraint that, if removed,
-  unlocks the most value; not always the lowest number on the screen
-- The relationship between Science unlocks and Industry capacity: researching what you cannot
-  build is not progress
-- Population growth and Approval as a coupled gate: population growth requires new systems (which
-  reduce Approval on annexation), but Approval thresholds act as empire-wide FIDSI multipliers,
-  meaning new population added under degraded Approval is less productive than existing population
-  under good Approval. Expansion is therefore not unconditionally good — the net value of a new
-  system depends on whether the Approval cost is paid back by that system's FIDSI contribution
-  within a reasonable timeframe. This coupling is one of the most commonly misunderstood
-  mechanics by intermediate players and deserves explicit treatment
-- A worked example: a faction-agnostic "stuck at turn 35" snapshot with a compound failure state,
-  showing how to sequence the diagnosis (identify primary constraint first, then secondary, then
-  corrective order)
-
-**Quiz format:** Include 2–3 diagnostic questions in the same format trialled in Fac03 — full
-empire snapshot as scenario, "identify the error and corrective sequence" as the question.
-Faction-agnostic or using a generic unnamed empire. Assess their effectiveness during content
-review before committing to the format more broadly.
-
-**Tone note:** The diagnostic content should feel like teaching the player to be their own
-analyst, not like a checklist. The framing "what is your primary bottleneck this turn" is more
-useful than "check these five things in order."
 ---
 
 ## Workflow for New Sessions
 
 1. Claude reads `es2-guide.css` and `es2-guide.js` from project files to confirm the design system
-2. User uploads the specific file being worked on (faction guide, new volume, etc.)
-3. User uploads source material (Reddit threads, video transcripts, wiki exports, etc.) in order to integrate or substitute what Claude can find on the internet on its own
-4. Claude works on the file, outputs the result to `/mnt/user-data/outputs/`
-5. User downloads and replaces their local copy
+2. Claude works on the file, outputs the result to `/mnt/user-data/outputs/`
+3. User downloads the generated file and commit it into the git repository that is linked in the project Knowledge Base
