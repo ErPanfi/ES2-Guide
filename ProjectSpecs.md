@@ -123,8 +123,8 @@ Naming conventions:
 | `GeneralGuide/es2-vol2-combat.html` | Complete, awaiting review | 8 | |
 | `GeneralGuide/es2-vol3-heroes.html` | Complete, awaiting review | 8 | |
 | `GeneralGuide/es2-vol4-diplomacy.html` | Complete, awaiting review | 7 | |
-| `GeneralGuide/es2-vol5-factions.html` | Complete, awaiting review | 8 | |
-| `GeneralGuide/es2-vol6-factions-special.html` | Complete, awaiting review | 4 | |
+| `GeneralGuide/es2-vol5-factions.html` | Complete, awaiting review | 6 | Contains United Empire, Sophons, Unfallen, Nakalim, Hissho, Vaulters |
+| `GeneralGuide/es2-vol6-factions-special.html` | Complete, awaiting review | 6 | Contains Lumeris, Horatio, Vodyani, Cravers, Riftborns, Umbral Choir |
 
 **Faction Deep-Dive volumes:**
 
@@ -345,7 +345,7 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 ```html
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <a href="../index.html" class="linkToIndex">ES2</a>
+    <a href="../index.html" class="vol-card right linkToIndex" style="--card-accent: var(--text-bright); --card-accent-rgb: var(--text-bright);">ES2</a>
     <div class="game-name">VOLUME N</div>
     <div class="guide-name">Title<br>Subtitle</div>
   </div>
@@ -354,8 +354,9 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
     🔧 Topic Name <span class="nav-check" id="nc1"></span>
   </div>
   <!-- vol navigation links -->
-  <div class="vol-link vol-prev" onclick="location.href='es2-volN-prev.html'">← Vol.N-1: Name</div>
-  <div class="vol-link vol-next" onclick="location.href='es2-volN-next.html'">Vol.N+1: Name →</div>
+  <div class="nav-section-label">// Next Volumes</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-volN-prev.html'"><div class="vol-card-arrow">←</div> Vol.N-1: Name</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-volN-next.html'">Vol.N+1: Name <div class="vol-card-arrow">→</div></div>
   <!-- progress bar -->
   <div class="progress-mini">
     <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>

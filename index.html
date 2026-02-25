@@ -124,99 +124,6 @@
     background: var(--border);
   }
 
-  /* ── Volume cards ──────────────────────────────────────────── */
-  .vol-card {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 16px 20px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.18s, border-color 0.18s, transform 0.15s;
-    margin-bottom: 8px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .vol-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--card-accent);
-    opacity: 0;
-    transition: opacity 0.18s;
-  }
-
-  .vol-card:hover {
-    background: rgba(var(--card-accent-rgb), 0.07);
-    border-color: rgba(var(--card-accent-rgb), 0.25);
-    transform: translateX(4px);
-  }
-
-  .vol-card:hover::before {
-    opacity: 1;
-  }
-
-  .vol-card-emoji {
-    font-size: calc(var(--ts_mainText) * 1.5);
-    flex-shrink: 0;
-    width: 40px;
-    text-align: center;
-    filter: drop-shadow(0 0 6px rgba(var(--card-accent-rgb), 0.4));
-    transition: filter 0.18s;
-  }
-
-  .vol-card:hover .vol-card-emoji {
-    filter: drop-shadow(0 0 10px rgba(var(--card-accent-rgb), 0.7));
-  }
-
-  .vol-card-text {
-    flex: 1;
-  }
-
-  .vol-card-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle);
-    color: var(--card-accent);
-    letter-spacing: 2px;
-    margin-bottom: 3px;
-    opacity: 0.8;
-  }
-
-  .vol-card-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: var(--ts_topicTitle);
-    font-weight: 600;
-    color: var(--text-bright);
-    line-height: 1.2;
-  }
-
-  .vol-card-sub {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: var(--ts_sectionLabel);
-    color: var(--text);
-    line-height: 1.4;
-    margin-top: 2px;
-  }
-
-  .vol-card-arrow {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionLabel);
-    color: var(--card-accent);
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 0.18s, transform 0.18s;
-    flex-shrink: 0;
-  }
-
-  .vol-card:hover .vol-card-arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
 
   /* ── Faction card badge ────────────────────────────────────── */
   .vol-card-badge {
@@ -303,7 +210,7 @@
     <div class="index-col">
       <div class="col-label">// General Guide</div>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol0-exploration.html"
+      <a class="vol-card left" href="GeneralGuide/es2-vol0-exploration.html"
          style="--card-accent: var(--vol0-accent); --card-accent-rgb: var(--vol0-accent-rgb);">
         <div class="vol-card-emoji">🔭</div>
         <div class="vol-card-text">
@@ -314,7 +221,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol1-empire.html"
+      <a class="vol-card left" href="GeneralGuide/es2-vol1-empire.html"
          style="--card-accent: var(--vol1-accent); --card-accent-rgb: var(--vol1-accent-rgb);">
         <div class="vol-card-emoji">🍀</div>
         <div class="vol-card-text">
@@ -325,7 +232,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol2-combat.html"
+      <a class="vol-card left" href="GeneralGuide/es2-vol2-combat.html"
          style="--card-accent: var(--vol2-accent); --card-accent-rgb: var(--vol2-accent-rgb);">
         <div class="vol-card-emoji">⚔️</div>
         <div class="vol-card-text">
@@ -336,7 +243,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol3-heroes.html"
+      <a class="vol-card left" href="GeneralGuide/es2-vol3-heroes.html"
          style="--card-accent: var(--vol3-accent); --card-accent-rgb: var(--vol3-accent-rgb);">
         <div class="vol-card-emoji">🦸</div>
         <div class="vol-card-text">
@@ -347,7 +254,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol4-diplomacy.html"
+      <a class="vol-card left" href="GeneralGuide/es2-vol4-diplomacy.html"
          style="--card-accent: var(--vol4-accent); --card-accent-rgb: var(--vol4-accent-rgb);">
         <div class="vol-card-emoji">🤝</div>
         <div class="vol-card-text">
@@ -358,7 +265,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol5-factions.html"
+      <a class="vol-card left" href="GeneralGuide/es2-vol5-factions.html"
          style="--card-accent: var(--vol5-accent); --card-accent-rgb: var(--vol5-accent-rgb);">
         <div class="vol-card-emoji">🧬</div>
         <div class="vol-card-text">
@@ -369,7 +276,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol6-factions-special.html"
+      <a class="vol-card left" href="GeneralGuide/es2-vol6-factions-special.html"
          style="--card-accent: var(--vol6-accent); --card-accent-rgb: var(--vol6-accent-rgb);">
         <div class="vol-card-emoji">🦋</div>
         <div class="vol-card-text">
@@ -386,7 +293,7 @@
     <div class="index-col">
       <div class="col-label">// Faction Deep Dives</div>
 
-      <a class="vol-card" href="FactionsDeepGuide/es2-Fac01-lumeris.html"
+      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac01-lumeris.html"
          style="--card-accent: var(--lumeris-color); --card-accent-rgb: var(--lumeris-color-rgb);">
         <div class="vol-card-emoji">💰</div>
         <div class="vol-card-text">
@@ -397,7 +304,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="FactionsDeepGuide/es2-Fac02-horatio.html"
+      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac02-horatio.html"
          style="--card-accent: var(--horatio-color); --card-accent-rgb: var(--horatio-color-rgb);">
         <div class="vol-card-emoji">🧬</div>
         <div class="vol-card-text">
@@ -408,7 +315,7 @@
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="FactionsDeepGuide/es2-Fac03-sophons.html"
+      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac03-sophons.html"
          style="--card-accent: var(--sophon-color); --card-accent-rgb: var(--sophon-color-rgb);">
         <div class="vol-card-emoji">🔭</div>
         <div class="vol-card-text">
