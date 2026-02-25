@@ -18,7 +18,6 @@
     radial-gradient(ellipse 60% 40% at 20% 50%, rgba(var(--vol5-accent-rgb), 0.04) 0%, transparent 70%),
     radial-gradient(ellipse 50% 30% at 80% 20%, rgba(var(--vol4-accent-rgb), 0.04) 0%, transparent 70%); }
   h1.page-title { text-shadow: 0 0 30px rgba(var(--vol5-accent-rgb), 0.3); }
-  .topic-num { color:var(--accent); background:var(--accent-dim); border-color:rgba(var(--vol5-accent-rgb), 0.3); }
   .tag-mech { background:var(--accent-dim); color:var(--accent); border-color:rgba(var(--vol5-accent-rgb), 0.25); }
   .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:var(--accent-dim); }
   .nav-item:hover { background:var(--accent-dim); }
@@ -41,12 +40,12 @@
     <div class="guide-name">Faction<br>Guides</div>
   </div>
   <div class="nav-section-label">// Standard Factions</div>
-  <div class="nav-item active" onclick="scrollByID('t1')">⚔️ United Empire <span class="nav-check" id="nc1"></span></div>
-  <div class="nav-item" onclick="scrollByID('t2')">🔭 Sophons <span class="nav-check" id="nc2"></span></div>
-  <div class="nav-item" onclick="scrollByID('t3')">🌿 Unfallen <span class="nav-check" id="nc3"></span></div>
-  <div class="nav-item" onclick="scrollByID('t4')">🏛️ Nakalim <span class="nav-check" id="nc4"></span></div>
-  <div class="nav-item" onclick="scrollByID('t5')">🪶 Hissho <span class="nav-check" id="nc5"></span></div>
-  <div class="nav-item" onclick="scrollByID('t6')">🌀 Vaulters <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item active" style="color:var(--ue-color);" onclick="scrollByID('t1')">⚔️ United Empire <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" style="color:var(--sophon-color);" onclick="scrollByID('t2')">🔭 Sophons <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" style="color:var(--unfallen-color);" onclick="scrollByID('t3')">🌿 Unfallen <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" style="color:var(--nakalim-color);" onclick="scrollByID('t4')">🏛️ Nakalim <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" style="color:var(--hissho-color);" onclick="scrollByID('t5')">🪶 Hissho <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" style="color:var(--vaulters-color);" onclick="scrollByID('t6')">🌀 Vaulters <span class="nav-check" id="nc6"></span></div>
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   
@@ -70,7 +69,7 @@
   <!-- T1: UNITED EMPIRE -->
   <div class="topic" id="t1">
     <div class="topic-header">
-      <div class="topic-num">01</div>
+      <div class="topic-num badge-ue">01</div>
       <div>
         <h2 class="topic-title">United Empire — Industrial Expansion Machine</h2>
         <div class="topic-subtitle">The game's widest expander, with a unique Dust-buyout mechanic and the most powerful battle card in the game</div>
@@ -121,7 +120,7 @@
   <!-- T2: SOPHONS -->
   <div class="topic" id="t2">
     <div class="topic-header">
-      <div class="topic-num">02</div>
+      <div class="topic-num badge-sophon">02</div>
       <div>
         <h2 class="topic-title">Sophons — The Science Snowball Faction</h2>
         <div class="topic-subtitle">Omniscience gives up to 50% Science discount on any tech nobody else has researched — a bonus that demands a specific playstyle</div>
@@ -177,7 +176,7 @@
   <!-- T3: UNFALLEN -->
   <div class="topic" id="t3">
     <div class="topic-header">
-      <div class="topic-num">03</div>
+      <div class="topic-num badge-unfallen">03</div>
       <div>
         <h2 class="topic-title">Unfallen — The Vine Network Faction</h2>
         <div class="topic-subtitle">Colonization via vine-ships instead of colony ships — free, instant, and permanent once connected</div>
@@ -233,7 +232,7 @@
   <!-- T6: NAKALIM -->
   <div class="topic" id="t4">
     <div class="topic-header">
-      <div class="topic-num">04</div>
+      <div class="topic-num badge-nakalim">04</div>
       <div>
         <h2 class="topic-title">Nakalim — The Ancient Empire Reawakening</h2>
         <div class="topic-subtitle">Start with 2 tech stages already researched but with a 50% FIDSI penalty — Temples and Relics remove the penalty and unlock Cathedral bonuses</div>
@@ -293,7 +292,7 @@
   <!-- T5: HISSHO -->
   <div class="topic" id="t5">
     <div class="topic-header">
-      <div class="topic-num">05</div>
+      <div class="topic-num badge-hissho">05</div>
       <div>
         <h2 class="topic-title">Hissho — Keii, Honor & the Tall War Empire</h2>
         <div class="topic-subtitle">Keii replaces Approval entirely — gained through battle and honor, lost through retreat and peace. Colonization is strictly capped.</div>
@@ -373,7 +372,7 @@
   <!-- T4: VAULTERS -->
   <div class="topic" id="t6">
     <div class="topic-header">
-      <div class="topic-num">06</div>
+      <div class="topic-num  badge-vaulters">06</div>
       <div>
         <h2 class="topic-title">Vaulters — Instant Colonization & Portal Teleportation</h2>
         <div class="topic-subtitle">One colony ship, but colonies appear instantly with no outpost phase — and a portal network makes distance irrelevant</div>

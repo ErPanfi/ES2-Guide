@@ -18,7 +18,6 @@
     radial-gradient(ellipse 60% 40% at 20% 50%, rgba(var(--vol1-accent-rgb), 0.05) 0%, transparent 70%),
     radial-gradient(ellipse 50% 30% at 80% 20%, rgba(var(--vol0-accent-rgb), 0.04) 0%, transparent 70%); }
   h1.page-title { text-shadow: 0 0 30px rgba(var(--vol1-accent-rgb), 0.35); }
-  .topic-num { color:var(--accent); background:var(--accent-dim); border-color:rgba(var(--vol1-accent-rgb), 0.3); }
   .tag-mech { background:var(--accent-dim); color:var(--accent); border-color:rgba(var(--vol1-accent-rgb), 0.25); }
   .nav-item.active { color:var(--accent); border-left-color:var(--accent); background:var(--accent-dim); }
   .nav-item:hover { background:var(--accent-dim); }
@@ -40,14 +39,14 @@
     <div class="game-name">VOLUME 6</div>
     <div class="guide-name">Faction<br>Guides II</div>
   </div>
-  <div class="nav-section-label">// Unique Factions</div>
-  <div class="nav-item active" onclick="scrollByID('t1')">🦋 Vodyani <span class="nav-check" id="nc1"></span></div>
-  <div class="nav-item" onclick="scrollByID('t2')">🪳 Cravers <span class="nav-check" id="nc2"></span></div>
-  <div class="nav-item" onclick="scrollByID('t3')">❄️ Riftborn <span class="nav-check" id="nc3"></span></div>
-  <div class="nav-item" onclick="scrollByID('t4')">👁️ Umbral Choir <span class="nav-check" id="nc4"></span></div>
   <div class="nav-section-label">// Distinctive Factions</div>
-  <div class="nav-item" onclick="scrollByID('t5')">💰 Lumeris <span class="nav-check" id="nc5"></span></div>
-  <div class="nav-item" onclick="scrollByID('t6')">🧬 Horatio <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item active" style="color:var(--lumeris-color);" onclick="scrollByID('t1')">💰 Lumeris <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item"  style="color:var(--horatio-color);" onclick="scrollByID('t2')">🧬 Horatio <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-section-label">// Unique Factions</div>
+  <div class="nav-item"  style="color:var(--vodyani-color);" onclick="scrollByID('t3')">🦋 Vodyani <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item"  style="color:var(--cravers-color);" onclick="scrollByID('t4')">🪳 Cravers <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" style="color:var(--riftborn-color);" onclick="scrollByID('t5')">❄️ Riftborn <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" style="color:var(--umbral-color);" onclick="scrollByID('t6')">👁️ Umbral Choir <span class="nav-check" id="nc4"></span></div>
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   
@@ -67,17 +66,125 @@
     <p class="page-subtitle">Four factions break the normal rules of ES2 so fundamentally that Volumes 0–3 are partially inapplicable to them. This volume covers each unique faction's rule-breaking mechanics, what strategies those mechanics enable, and how to play each one correctly. Two additional factions with highly distinctive (but not rule-breaking) playstyles round out the guide.</p>
   </div>
 
-  <!-- T1: VODYANI -->
+
+
+  <!-- T1: LUMERIS -->
   <div class="topic" id="t1">
     <div class="topic-header">
-      <div class="topic-num">01</div>
+      <div class="topic-num badge-lumeris">01</div>
+      <div>
+        <h2 class="topic-title">Lumeris — The Trade Empire</h2>
+        <div class="topic-subtitle">Standard colonization, but with a Trade Company cap of 5 (vs. 3 for all others) and unique Dust-multiplying mechanics</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">💰</span>
+        <span class="block-title">What Makes Lumeris Different</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-lumeris">◈ LUMERIS — THE MERCHANTS</div>
+        <p>Lumeris play largely like a standard faction — they colonize normally, grow population from Food, and use the standard Approval system. Their uniqueness comes from three stacking Dust advantages:</p>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol1-accent)">TRADE COMPANY CAP: 5 INSTEAD OF 3</div>
+          Where all other factions max out at 3 Trade Companies, Lumeris can operate 5 simultaneously. Since each additional Trade Company compounds income multiplicatively across all its routes, two extra companies at high level can generate more Dust per turn than a faction's entire FIDSI mining output. The Lumeris Dust economy is categorically in a different tier from all other factions if correctly managed.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol1-accent)">DUST FACTION ABILITY — BUYING INFLUENCE</div>
+          Lumeris can spend Dust to directly purchase Senate Influence, political support, and even diplomatic relation boosts. Where other factions must invest time and Influence resource, Lumeris converts their abundant Dust into political power directly. In the late game when their Dust income is 2–3× any opponent's, this turns Senate seats into a purchasable commodity.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--vol1-accent)">ECONOMIC VICTORY ADVANTAGE</div>
+          With 5 Trade Companies and the highest per-turn Dust income in the game, Economic victory (450,000 cumulative Dust) is Lumeris's natural path. Reach it ~20–30 turns faster than any other faction can. The primary threat is war — military aggression disrupts trade routes. Lumeris must invest in diplomacy and defensive military to protect their income network.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">LUMERIS PRIORITY ORDER</div>
+          1. Sign Trade Agreements with every neighbor immediately — route extension is your income multiplier.<br>
+          2. Build Trade Company HQs as fast as possible; always have all 5 companies operational by turn 50.<br>
+          3. Level each company to at least 5 before building the next — level matters more than company count at low levels.<br>
+          4. Spend Dust on Senate seat purchases to maintain Pacifist political dominance, which further boosts Dust via their entrenched law.<br>
+          5. Maintain a defensive military and a Non-Aggression network — one blockaded Trade Company route during peak income is catastrophically expensive.
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T2: HORATIO -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num badge-horatio">02</div>
+      <div>
+        <h2 class="topic-title">Horatio — The Gene-Shapers</h2>
+        <div class="topic-subtitle">Standard mechanics, but population cloning creates custom races — the strongest pop-type bonuses in the game</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🧬</span>
+        <span class="block-title">Cloning Mechanics and Gene Combination</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="faction-badge badge-horatio">◈ HORATIO — THE BEAUTIFUL</div>
+        <p>Horatio is the only faction that can create custom population types by splicing together traits from different races they've encountered. Their unique ability is <strong>Gene Fusion</strong>: by collecting genetic samples from other factions (through combat, exploration, and diplomacy) and spending Dust, they can combine traits from two different races into a new Horatio-specific pop type with bonuses from both parents.</p>
+
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--horatio-color)">GENE FUSION — HOW IT WORKS</div>
+          In the Genetics screen (unique to Horatio), you see all races whose genetic samples you've collected. Select two races as "parents." The resulting fusion pop inherits a combination of both parents' FIDSI bonuses and racial traits. The combination is not always straightforward — some trait combinations are more powerful than others (e.g., fusing Sophon +Science with a race that has +Approval creates a Science-generating pop that also doesn't generate Approval problems).
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--horatio-color)">SAMPLE COLLECTION</div>
+          Collecting genetic samples requires: fighting in combat (each battle against a faction gives samples of their pop type), peaceful gene sharing agreements (unique to Horatio — other factions can agree to share samples diplomatically), or assimilating minor factions (whose pop type samples you gain). The more factions you've met and fought or traded with, the more gene combinations you have available.
+        </div>
+        <div class="faction-rule">
+          <div class="rule-label" style="color:var(--horatio-color)">POPULATION REPLACEMENT</div>
+          Once a Gene Fusion type is created, Horatio can replace existing population units in their systems with the new custom type. Over time, all their population gradually becomes the custom fused type, providing the combined bonuses across their entire empire. A fully optimized Horatio empire's per-pop FIDSI bonuses can exceed any other faction's by 30–50%.
+        </div>
+
+        <div class="callout callout-gold">
+          <div class="callout-label">OPTIMAL HORATIO GENE STRATEGY</div>
+          The most powerful fusion targets in most games:<br>
+          <strong>Sophon + any high-Industry minor faction:</strong> Creates a Science/Industry dual-output pop — the two most important FIDSI resources combined in one type.<br>
+          <strong>Any high-Approval pop + Cravers:</strong> Cravers have strong FIDSI output but terrible Approval. Fusing their FIDSI stats with a high-Approval race creates a powerhouse pop with no downsides.<br>
+          The key insight: the gene system essentially lets Horatio design their ideal population. Identify which two FIDSI resources your victory path needs most, then specifically hunt samples from races strong in those two areas.
+        </div>
+        <div class="callout callout-tip">
+          <div class="callout-label">HORATIO PRIORITY ORDER</div>
+          1. Meet and fight (or trade with) as many factions as possible early — samples require contact.<br>
+          2. Make your first Gene Fusion by turn 25–30, targeting bonuses that amplify your chosen victory path.<br>
+          3. Begin replacing population in your home system with the fused type immediately — home system benefits from the combo bonus while the type grows toward other systems.<br>
+          4. Make a second Gene Fusion around turn 50 using a different combination — assign the second type to a different system role (e.g., first fusion for Industry systems, second for Science systems).
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- T3: VODYANI -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num badge-vodyani">03</div>
       <div>
         <h2 class="topic-title">Vodyani — The Nomadic Ark Civilization</h2>
         <div class="topic-subtitle">No traditional colonies. No planet FIDSI. Everything comes from Arks orbiting systems.</div>
       </div>
     </div>
-    <div class="content-block open" id="cb1a">
-      <div class="block-header" onclick="toggle('cb1a')">
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
         <span class="block-icon">🦋</span>
         <span class="block-title">Core Mechanic: Arks Replace Colonization</span>
         <span class="block-tag tag-mech">MECHANIC</span>
@@ -109,7 +216,7 @@
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
-          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
         </div>
       </div>
     </div>
@@ -117,17 +224,17 @@
 
   <hr class="topic-divider">
 
-  <!-- T2: CRAVERS -->
-  <div class="topic" id="t2">
+  <!-- T4: CRAVERS -->
+  <div class="topic" id="t4">
     <div class="topic-header">
-      <div class="topic-num">02</div>
+      <div class="topic-num badge-cravers">04</div>
       <div>
         <h2 class="topic-title">Cravers — The Devouring Hive</h2>
         <div class="topic-subtitle">No Approval system. No diplomacy. Planets degrade over time and must be abandoned. Conquest is not optional — it's survival.</div>
       </div>
     </div>
-    <div class="content-block open" id="cb2a">
-      <div class="block-header" onclick="toggle('cb2a')">
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
         <span class="block-icon">🪳</span>
         <span class="block-title">Core Mechanics: Depletion & Forced Expansion</span>
         <span class="block-tag tag-mech">MECHANIC</span>
@@ -159,7 +266,7 @@
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
-          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
         </div>
       </div>
     </div>
@@ -167,17 +274,17 @@
 
   <hr class="topic-divider">
 
-  <!-- T3: RIFTBORN -->
-  <div class="topic" id="t3">
+  <!-- T5: RIFTBORN -->
+  <div class="topic" id="t5">
     <div class="topic-header">
-      <div class="topic-num">03</div>
+      <div class="topic-num badge-riftborn">05</div>
       <div>
         <h2 class="topic-title">Riftborn — The Manufactured Civilization</h2>
         <div class="topic-subtitle">Population is not grown from Food — it is built in factories using Industry. Every system mechanic changes as a result.</div>
       </div>
     </div>
-    <div class="content-block open" id="cb3a">
-      <div class="block-header" onclick="toggle('cb3a')">
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
         <span class="block-icon">❄️</span>
         <span class="block-title">Core Mechanic: Population as Industrial Output</span>
         <span class="block-tag tag-mech">MECHANIC</span>
@@ -208,7 +315,7 @@
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
-          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
         </div>
       </div>
     </div>
@@ -216,17 +323,17 @@
 
   <hr class="topic-divider">
 
-  <!-- T4: UMBRAL CHOIR -->
-  <div class="topic" id="t4">
+  <!-- T6: UMBRAL CHOIR -->
+  <div class="topic" id="t6">
     <div class="topic-header">
-      <div class="topic-num">04</div>
+      <div class="topic-num badge-umbral">06</div>
       <div>
         <h2 class="topic-title">Umbral Choir — The Possessors</h2>
         <div class="topic-subtitle">No direct colonization. They possess other factions' systems and use them as their own — completely invisible.</div>
       </div>
     </div>
-    <div class="content-block open" id="cb4a">
-      <div class="block-header" onclick="toggle('cb4a')">
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
         <span class="block-icon">👁️</span>
         <span class="block-title">Core Mechanic: Possession Instead of Colonization</span>
         <span class="block-tag tag-mech">MECHANIC</span>
@@ -258,112 +365,6 @@
           2. Possess the highest-FIDSI systems first — opponent Science hubs and Industry centers provide the best shadow income.<br>
           3. Maintain a minimum real military to deter direct attack — opponents who discover you may retaliate militarily even if they can't see your shadow fleet.<br>
           4. Best victory paths: Science (Possession from high-Science opponents accelerates research) and Score (broad FIDSI extraction inflates total score). Conquest is difficult with limited real military.
-        </div>
-        <div class="done-row">
-          <span class="done-label">UNDERSTOOD & APPLIED</span>
-          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="topic-divider">
-
-  <!-- T5: LUMERIS -->
-  <div class="topic" id="t5">
-    <div class="topic-header">
-      <div class="topic-num">05</div>
-      <div>
-        <h2 class="topic-title">Lumeris — The Trade Empire</h2>
-        <div class="topic-subtitle">Standard colonization, but with a Trade Company cap of 5 (vs. 3 for all others) and unique Dust-multiplying mechanics</div>
-      </div>
-    </div>
-    <div class="content-block open" id="cb5a">
-      <div class="block-header" onclick="toggle('cb5a')">
-        <span class="block-icon">💰</span>
-        <span class="block-title">What Makes Lumeris Different</span>
-        <span class="block-tag tag-mech">MECHANIC</span>
-        <span class="block-chevron">▾</span>
-      </div>
-      <div class="block-body">
-        <div class="faction-badge badge-lumeris">◈ LUMERIS — THE MERCHANTS</div>
-        <p>Lumeris play largely like a standard faction — they colonize normally, grow population from Food, and use the standard Approval system. Their uniqueness comes from three stacking Dust advantages:</p>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">TRADE COMPANY CAP: 5 INSTEAD OF 3</div>
-          Where all other factions max out at 3 Trade Companies, Lumeris can operate 5 simultaneously. Since each additional Trade Company compounds income multiplicatively across all its routes, two extra companies at high level can generate more Dust per turn than a faction's entire FIDSI mining output. The Lumeris Dust economy is categorically in a different tier from all other factions if correctly managed.
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">DUST FACTION ABILITY — BUYING INFLUENCE</div>
-          Lumeris can spend Dust to directly purchase Senate Influence, political support, and even diplomatic relation boosts. Where other factions must invest time and Influence resource, Lumeris converts their abundant Dust into political power directly. In the late game when their Dust income is 2–3× any opponent's, this turns Senate seats into a purchasable commodity.
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--vol1-accent)">ECONOMIC VICTORY ADVANTAGE</div>
-          With 5 Trade Companies and the highest per-turn Dust income in the game, Economic victory (450,000 cumulative Dust) is Lumeris's natural path. Reach it ~20–30 turns faster than any other faction can. The primary threat is war — military aggression disrupts trade routes. Lumeris must invest in diplomacy and defensive military to protect their income network.
-        </div>
-        <div class="callout callout-tip">
-          <div class="callout-label">LUMERIS PRIORITY ORDER</div>
-          1. Sign Trade Agreements with every neighbor immediately — route extension is your income multiplier.<br>
-          2. Build Trade Company HQs as fast as possible; always have all 5 companies operational by turn 50.<br>
-          3. Level each company to at least 5 before building the next — level matters more than company count at low levels.<br>
-          4. Spend Dust on Senate seat purchases to maintain Pacifist political dominance, which further boosts Dust via their entrenched law.<br>
-          5. Maintain a defensive military and a Non-Aggression network — one blockaded Trade Company route during peak income is catastrophically expensive.
-        </div>
-        <div class="done-row">
-          <span class="done-label">UNDERSTOOD & APPLIED</span>
-          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="topic-divider">
-
-  <!-- T6: HORATIO -->
-  <div class="topic" id="t6">
-    <div class="topic-header">
-      <div class="topic-num">06</div>
-      <div>
-        <h2 class="topic-title">Horatio — The Gene-Shapers</h2>
-        <div class="topic-subtitle">Standard mechanics, but population cloning creates custom races — the strongest pop-type bonuses in the game</div>
-      </div>
-    </div>
-    <div class="content-block open" id="cb6a">
-      <div class="block-header" onclick="toggle('cb6a')">
-        <span class="block-icon">🧬</span>
-        <span class="block-title">Cloning Mechanics and Gene Combination</span>
-        <span class="block-tag tag-mech">MECHANIC</span>
-        <span class="block-chevron">▾</span>
-      </div>
-      <div class="block-body">
-        <div class="faction-badge badge-horatio">◈ HORATIO — THE BEAUTIFUL</div>
-        <p>Horatio is the only faction that can create custom population types by splicing together traits from different races they've encountered. Their unique ability is <strong>Gene Fusion</strong>: by collecting genetic samples from other factions (through combat, exploration, and diplomacy) and spending Dust, they can combine traits from two different races into a new Horatio-specific pop type with bonuses from both parents.</p>
-
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">GENE FUSION — HOW IT WORKS</div>
-          In the Genetics screen (unique to Horatio), you see all races whose genetic samples you've collected. Select two races as "parents." The resulting fusion pop inherits a combination of both parents' FIDSI bonuses and racial traits. The combination is not always straightforward — some trait combinations are more powerful than others (e.g., fusing Sophon +Science with a race that has +Approval creates a Science-generating pop that also doesn't generate Approval problems).
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">SAMPLE COLLECTION</div>
-          Collecting genetic samples requires: fighting in combat (each battle against a faction gives samples of their pop type), peaceful gene sharing agreements (unique to Horatio — other factions can agree to share samples diplomatically), or assimilating minor factions (whose pop type samples you gain). The more factions you've met and fought or traded with, the more gene combinations you have available.
-        </div>
-        <div class="faction-rule">
-          <div class="rule-label" style="color:var(--green)">POPULATION REPLACEMENT</div>
-          Once a Gene Fusion type is created, Horatio can replace existing population units in their systems with the new custom type. Over time, all their population gradually becomes the custom fused type, providing the combined bonuses across their entire empire. A fully optimized Horatio empire's per-pop FIDSI bonuses can exceed any other faction's by 30–50%.
-        </div>
-
-        <div class="callout callout-gold">
-          <div class="callout-label">OPTIMAL HORATIO GENE STRATEGY</div>
-          The most powerful fusion targets in most games:<br>
-          <strong>Sophon + any high-Industry minor faction:</strong> Creates a Science/Industry dual-output pop — the two most important FIDSI resources combined in one type.<br>
-          <strong>Any high-Approval pop + Cravers:</strong> Cravers have strong FIDSI output but terrible Approval. Fusing their FIDSI stats with a high-Approval race creates a powerhouse pop with no downsides.<br>
-          The key insight: the gene system essentially lets Horatio design their ideal population. Identify which two FIDSI resources your victory path needs most, then specifically hunt samples from races strong in those two areas.
-        </div>
-        <div class="callout callout-tip">
-          <div class="callout-label">HORATIO PRIORITY ORDER</div>
-          1. Meet and fight (or trade with) as many factions as possible early — samples require contact.<br>
-          2. Make your first Gene Fusion by turn 25–30, targeting bonuses that amplify your chosen victory path.<br>
-          3. Begin replacing population in your home system with the fused type immediately — home system benefits from the combo bonus while the type grows toward other systems.<br>
-          4. Make a second Gene Fusion around turn 50 using a different combination — assign the second type to a different system role (e.g., first fusion for Industry systems, second for Science systems).
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD & APPLIED</span>
