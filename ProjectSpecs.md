@@ -178,7 +178,7 @@ Google Fonts link (also required in `<head>`):
 | Vol.3 | `--vol3-accent` | `--vol3-accent-rgb` | Purple #8b5cf6 |
 | Vol.4 | `--vol4-accent` | `--vol4-accent-rgb` | Blue #2d8fff |
 | Vol.5 | `--vol5-accent` | `--vol5-accent-rgb` | Mint #00d4a0 |
-| Vol.6 | `--vol6-accent` | `--vol6-accent-rgb` | Violet #c084fc |
+| Vol.6 | `--vol6-accent` | `--vol6-accent-rgb` | Gold #e8a020 |
 
 **Faction identity colors:**
 | Faction | Color var | RGB var | Color |
