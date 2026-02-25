@@ -152,10 +152,137 @@ function toggle(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
+// scrollByID: triggers smooth scroll only.
+// Active state is managed exclusively by initScrollSpy — no manual class writes here.
 function scrollByID(id) {
   document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+}
+
+// ─── Scroll spy ───────────────────────────────────────────────────────────────
+
+// Maps each observed section ID to its corresponding sidebar nav-item element.
+// Both topic sections (t1, t2 … tN) and the quiz section are tracked.
+// The Observer is the single source of truth for the `active` class.
+//
+// Logic: "last scrolled past" — a section becomes active when its top edge
+// crosses above the viewport top (rootMargin pushes the trigger line to 0px
+// from the top). On page load t1 is active by default. At page bottom the
+// last nav-item is forced active via a scroll listener.
+
+function initScrollSpy() {
+  const sidebar = document.querySelector('.sidebar');
+  if (!sidebar){
+	  console.error("Can't find sidebar. Won't init ScrollSpy.");
+	 return;  
+  }
+
+  // Collect all nav-items that have an onclick targeting a section id.
+  // We derive the target id from the onclick attribute: scrollByID('tN') or scrollByID('quiz').
+  const navItems = Array.from(sidebar.querySelectorAll('.nav-item'));
+
+  // Build a map: sectionId → navItem
+  const idToNav = new Map();
+  navItems.forEach(function(item) {
+    const onclick = item.getAttribute('onclick') || '';
+    const match = onclick.match(/scrollByID\(['"]([^'"]+)['"]\)/);
+    if (match) {
+      idToNav.set(match[1], item);
+    }
+  });
+
+  if (idToNav.size === 0)
+  {	
+	console.warning("No items to watch. Won't init ScrollSpy.");
+	return;
+  }
+
+  // Ordered list of section IDs as they appear in the DOM
+  // (guaranteed by querySelectorAll document order).
+  const sectionIds = Array.from(idToNav.keys());
+
+  // Helper: set active on a nav-item, remove from all others.
+  function setActive(targetId) {
+    idToNav.forEach(function(navItem, id) {
+      navItem.classList.toggle('active', id === targetId);
+    });
+  }
+
+  // Default state: first section active on load.
+  setActive(sectionIds[0]);
+
+  // Track which sections have crossed above the top of the viewport.
+  // A section is "past" when its top edge is above the viewport top.
+  // We use a Set for O(1) membership tracking.
+  const passedSections = new Set();
+
+  // rootMargin: "-1px 0px 0px 0px" means the observer fires as soon as
+  // the top edge of a section crosses the very top of the viewport.
+  // threshold: 0 fires on any intersection change.
+  const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      const id = entry.target.id;
+
+      if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+        // Section has scrolled fully above the viewport top — mark as passed.
+        passedSections.add(id);
+      } else {
+        // Section is visible or below the fold — not passed.
+        passedSections.delete(id);
+      }
+    });
+
+    // Active section = last section in DOM order that has been passed.
+    // If nothing has been passed yet (top of page), default to first section.
+    let activeId = sectionIds[0];
+    for (let i = 0; i < sectionIds.length; i++) {
+      if (passedSections.has(sectionIds[i])) {
+        // The next section in sequence is now the active one.
+        activeId = sectionIds[Math.min(i + 1, sectionIds.length - 1)];
+      }
+    }
+
+    setActive(activeId);
+  }, {
+    root: null,          // viewport
+    rootMargin: '-1px 0px 0px 0px',
+    threshold: 0
+  });
+
+  // Observe every section that has a nav-item.
+  sectionIds.forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+
+  // ── Page-bottom guard ────────────────────────────────────────────────────
+  // When the user has scrolled to the very bottom, force the last nav-item
+  // active regardless of IntersectionObserver state (handles tall final
+  // sections that never fully scroll past the top edge).
+  const lastId = sectionIds[sectionIds.length - 1];
+
+  window.addEventListener('scroll', function() {
+    const scrollBottom = window.scrollY + window.innerHeight;
+    const pageHeight   = document.documentElement.scrollHeight;
+    // 4px tolerance for sub-pixel rounding across browsers.
+    if (scrollBottom >= pageHeight - 4) {
+      setActive(lastId);
+    }
+  }, { passive: true });
+
+}
+
+// ─── Core actions ─────────────────────────────────────────────────────────────
+
+function markDone(topicId, blockId, btn) {
+  if (doneTopics.has(topicId)) return;
+  doneTopics.add(topicId);
+  applyDoneUI(topicId);
+  saveCookie();
+  updateProgress();
+  showToast('\u2713 Topic mastered \u2014 progress saved');
+  if (doneTopics.size === TOTAL) {
+    setTimeout(() => showToast('\uD83C\uDFC6 Volume complete. On to the next.'), 3200);
+  }
 }
 
 // Apply the visual "done" state to a topic without triggering toasts or saves.
@@ -176,21 +303,7 @@ function applyDoneUI(topicId) {
   }
 }
 
-// ─── Core actions ─────────────────────────────────────────────────────────────
-
-function markDone(topicId, blockId, btn) {
-  if (doneTopics.has(topicId)) return;
-  doneTopics.add(topicId);
-  applyDoneUI(topicId);
-  saveCookie();
-  updateProgress();
-  showToast('\u2713 Topic mastered \u2014 progress saved');
-  if (doneTopics.size === TOTAL) {
-    setTimeout(() => showToast('\uD83C\uDFC6 Volume complete. On to the next.'), 3200);
-  }
-}
-
-// Restore saved progress from cookie — call once after the DOM is ready.
+// Restore saved progress from cookie, then initialise scroll spy.
 function initProgress() {
   loadCookie().forEach(function(topicId) {
     if (topicId) {
@@ -199,6 +312,7 @@ function initProgress() {
     }
   });
   updateProgress();
+  initScrollSpy();
 }
 
 // ─── Quiz ─────────────────────────────────────────────────────────────────────
@@ -217,9 +331,8 @@ function renderQuiz() {
     '</div>' +
     '<div class="quiz-explain" id="qexp"></div>' +
     '<button class="btn-next-q" id="btn-nq" onclick="nextQ()">' +
-      (qIdx < quizzes.length - 1 ? 'NEXT SCENARIO \u2192' : 'RESTART \u21BA') +
+      (qIdx < quizzes.length - 1 ? 'Next Question →' : 'Restart Quiz ↺') +
     '</button>';
-  answered = false;
 }
 
 function answer(i) {
@@ -227,18 +340,16 @@ function answer(i) {
   answered = true;
   const q = quizzes[qIdx];
   const opts = document.querySelectorAll('.quiz-opt');
-  const isOk = i === q.correct;
-  opts[i].classList.add(isOk ? 'correct' : 'wrong');
-  if (!isOk) opts[q.correct].classList.add('correct');
-  opts.forEach(function(o) { o.style.pointerEvents = 'none'; });
-  const exp = document.getElementById('qexp');
-  exp.textContent = q.explain;
-  exp.className = 'quiz-explain show ' + (isOk ? 'ok' : 'bad');
-  document.getElementById('btn-nq').classList.add('show');
-  showToast(isOk ? '\u2713 Correct analysis' : '\u2717 Review the explanation above');
+  opts.forEach(function(btn, idx) {
+    btn.disabled = true;
+    if (idx === q.correct) btn.classList.add('correct');
+    else if (idx === i)    btn.classList.add('wrong');
+  });
+  document.getElementById('qexp').textContent = q.explain;
 }
 
 function nextQ() {
   qIdx = (qIdx + 1) % quizzes.length;
+  answered = false;
   renderQuiz();
 }
