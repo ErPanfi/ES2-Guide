@@ -123,8 +123,8 @@ Naming conventions:
 | `GeneralGuide/es2-vol2-combat.html` | Complete, awaiting review | 8 | |
 | `GeneralGuide/es2-vol3-heroes.html` | Complete, awaiting review | 8 | |
 | `GeneralGuide/es2-vol4-diplomacy.html` | Complete, awaiting review | 7 | |
-| `GeneralGuide/es2-vol5-factions.html` | Complete, awaiting review | 8 | |
-| `GeneralGuide/es2-vol6-factions-special.html` | Complete, awaiting review | 4 | |
+| `GeneralGuide/es2-vol5-factions.html` | Complete, awaiting review | 6 | Contains United Empire, Sophons, Unfallen, Nakalim, Hissho, Vaulters |
+| `GeneralGuide/es2-vol6-factions-special.html` | Complete, awaiting review | 6 | Contains Lumeris, Horatio, Vodyani, Cravers, Riftborns, Umbral Choir |
 
 **Faction Deep-Dive volumes:**
 
