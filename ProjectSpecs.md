@@ -97,13 +97,13 @@ Files are organized into three subdirectories:
 
 ```
 ./CSSnJS/              ← shared CSS and JS (edit rarely)
-./GeneralGuide/        ← general guide volumes
+./GeneralGuide_OLD/        ← Legacy general guide volumes: content to be discarded and rebuild from sources
 ./FactionsDeepGuide/   ← faction deep-dive volumes
 ./index.html           ← guide landing page
 ```
 
 Naming conventions:
-- General volumes: `es2-vol{N}-{topic}.html`
+- General volumes: `es2-vol{N}-{slug}.html`
 - Faction deep-dives: `es2-Fac{NN}-{faction}.html`
 
 **Shared infrastructure** (no status tracking):
@@ -114,17 +114,32 @@ Naming conventions:
 | `CSSnJS/es2-guide.js` | Shared JS: progress, quiz, mobile nav — edit rarely |
 | `index.html` | Guide landing page with links to all volumes |
 
-**General Guide volumes:**
+**General Guide volumes:** (To be rebuilt) 
 
-| File | Status | Topics | Notes |
-|------|--------|--------|-------|
-| `GeneralGuide/es2-vol0-exploration.html` | Complete, awaiting review | 7 | |
-| `GeneralGuide/es2-vol1-empire.html` | Complete, awaiting review | 8 | Planned Enhancement |
-| `GeneralGuide/es2-vol2-combat.html` | Complete, awaiting review | 8 | |
-| `GeneralGuide/es2-vol3-heroes.html` | Complete, awaiting review | 8 | |
-| `GeneralGuide/es2-vol4-diplomacy.html` | Complete, awaiting review | 7 | |
-| `GeneralGuide/es2-vol5-factions.html` | Complete, awaiting review | 6 | Contains United Empire, Sophons, Unfallen, Nakalim, Hissho, Vaulters |
-| `GeneralGuide/es2-vol6-factions-special.html` | Complete, awaiting review | 6 | Contains Lumeris, Horatio, Vodyani, Cravers, Riftborns, Umbral Choir |
+| File | Title | Topics | Status |
+|------|-------|--------|--------|
+| `GeneralGuide/es2-vol0-gamestart.html` | Game Start Essentials | 8 | Pending rebuild |
+| `GeneralGuide/es2-vol1-economy.html` | Inside your Empire: Material & Money | 9 | Pending rebuild |
+| `GeneralGuide/es2-vol2-politics.html` | Inside your Empire: People & Ideas | 7 | Pending rebuild |
+| `GeneralGuide/es2-vol3-exploration.html` | Outside your Empire | 10 | Pending rebuild |
+| `GeneralGuide/es2-vol4-combat.html` | Ships, Combat & Military | 10 | Pending rebuild |
+| `GeneralGuide/es2-vol5-heroes.html` | Heroes & the Academy | 10 | Pending rebuild |
+| `GeneralGuide/es2-vol6-diplomacy.html` | Diplomacy & Espionage | 7 | Pending rebuild |
+| `GeneralGuide/es2-vol7-factions.html` | Faction Guides — Beginner | 6 | Pending rebuild |
+| `GeneralGuide/es2-vol8-factions-expert.html` | Faction Guides — Intermediate & Expert | 6 | Pending rebuild |
+
+
+**Legacy files (superseded by the restructure — do not use as templates):**
+
+| File | Notes |
+|------|-------|
+| `GeneralGuide_OLD/es2-vol0-exploration.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol1-empire.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol2-combat.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol3-heroes.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol4-diplomacy.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol5-factions.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol6-factions-special.html` | Content to be discarded — rebuild from sources |
 
 **Faction Deep-Dive volumes:**
 
