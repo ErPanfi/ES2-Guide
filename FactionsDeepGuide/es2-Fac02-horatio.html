@@ -6,7 +6,41 @@
 <title>ES2 — The Horatio: Gene-Shapers Deep Dive</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
 <style>
+  /* ── Fac02 — Horatio: narcissist pink / rose gold ─────────────────────── */
+  /* Residual rules after es2-factions-deepdive.css is linked.               */
+  /* Link order in <head>:                                                    */
+  /*   1. es2-guide.css                                                       */
+  /*   2. es2-factions-deepdive.css                                           */
+  /*   3. This <style> block                                                  */
+
+  :root {
+    --accent:            var(--horatio-color);
+    --accent-rgb:        var(--horatio-color-rgb);
+    --accent-dim:        rgba(var(--horatio-color-rgb), 0.10);
+    --accent-bright-rgb: 255,200,220;
+    --accent-bright:     rgb(var(--accent-bright-rgb));
+  }
+
+  /* Faction-specific starfield ambience */
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--horatio-color-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--horatio-color-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--horatio-color-rgb), 0.4),
+      0 0 80px rgba(var(--horatio-color-rgb), 0.15);
+  }
+
+  /* sidebar game-name tint */
+  .sidebar-logo .game-name { color: var(--accent); }
+</style>
+
+<!--style>
   /* Horatio: narcissist pink / rose gold */
   :root {
     --accent:             var(--horatio-color);
@@ -149,7 +183,7 @@
   .pop-cost-chip.cheap { background: rgba(var(--green-rgb),0.10); color: var(--green); border-color: rgba(var(--green-rgb),0.3); }
   .pop-cost-chip.mid   { background: rgba(var(--gold-rgb),0.10);  color: var(--gold);  border-color: rgba(var(--gold-rgb),0.3); }
   .pop-cost-chip.hard  { background: rgba(var(--red-rgb),0.10);   color: var(--red);   border-color: rgba(var(--red-rgb),0.3); }
-</style>
+</style-->
 </head>
 <body>
 <div class="layout">

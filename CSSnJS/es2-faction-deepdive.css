@@ -1,0 +1,477 @@
+/*
+ * es2-factions-deepdive.css
+ * Shared stylesheet for all Faction Deep-Dive volumes (FacNN-*.html).
+ *
+ * Link AFTER es2-guide.css and BEFORE the per-faction <style> block.
+ * Every faction file must still declare its :root accent override in a
+ * per-page <style> block (--accent, --accent-rgb, --accent-dim,
+ * --accent-bright, --accent-bright-rgb) — that is the ONLY css that
+ * belongs in the per-page style block alongside any truly unique
+ * faction-specific components.
+ *
+ * Rules here use only:
+ *   var(--accent)         — resolves to the faction colour
+ *   var(--accent-rgb)     — RGB triplet for rgba() calls
+ *   var(--accent-dim)     — pre-mixed low-alpha fill
+ *   var(--accent-bright)  — brighter highlight shade
+ *   var(--accent-bright-rgb)
+ *   Semantic vars: var(--red), var(--red-rgb), var(--gold), var(--gold-rgb),
+ *                  var(--green), var(--green-rgb), var(--cyan), var(--cyan-rgb)
+ *   Design-system vars:  var(--card2), var(--border), var(--text),
+ *                        var(--text-dim), var(--text-bright)
+ *   Typography tokens: var(--ts_*)
+ * No hardcoded hex, no hardcoded rgba R,G,B literals.
+ */
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   1. ACCENT-DRIVEN OVERRIDES  (nav, callouts, step-list, misc chrome)
+   These rules live here rather than per-page because they are identical
+   across every deep-dive — only the --accent value differs.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.nav-item.active {
+  color: var(--accent);
+  border-left-color: var(--accent);
+  background: var(--accent-dim);
+}
+.nav-item:hover { background: var(--accent-dim); }
+
+.callout-tip {
+  border-left-color: var(--accent);
+  background: var(--accent-dim);
+}
+.callout-tip .callout-label { color: var(--accent); }
+
+.step-list li .step-n {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.progress-mini-fill {
+  background: linear-gradient(90deg, var(--accent), var(--accent-bright));
+}
+
+/* topic-num badge */
+.topic-num {
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-color: rgba(var(--accent-rgb), 0.35);
+}
+
+/* block tag — mechanic flavour */
+.tag-mech {
+  background: var(--accent-dim);
+  color: var(--accent);
+  border-color: rgba(var(--accent-rgb), 0.3);
+}
+
+/* inline source tag (used inside prose) */
+.tag-source {
+  background: rgba(var(--accent-rgb), 0.10);
+  color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.25);
+  font-size: var(--ts_sectionTitle);
+  letter-spacing: 1.5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   2. FACTION IDENTITY BADGE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.faction-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionLabel);
+  letter-spacing: 3px;
+  padding: 4px 16px;
+  border-radius: 4px;
+  background: rgba(var(--accent-rgb), 0.15);
+  color: var(--accent-bright);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   3. TRAIT BLOCKS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.trait-block {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 6px;
+  padding: 13px 16px;
+  margin: 10px 0;
+  font-size: var(--ts_sectionLabel);
+  line-height: 1.75;
+}
+.trait-block.warn  { border-left-color: var(--red); }
+.trait-block.cyan  { border-left-color: var(--cyan); }
+.trait-block.gold  { border-left-color: var(--gold); }
+
+.trait-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.trait-label.warn { color: var(--red); }
+.trait-label.cyan { color: var(--cyan); }
+.trait-label.gold { color: var(--gold); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   4. SOURCE ATTRIBUTION PILLS
+   .src-pill colour follows --accent so it is automatically faction-tinted.
+   .src-pill.unverified always renders in gold regardless of faction.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.source-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0 4px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+}
+
+.src-pill {
+  padding: 2px 9px;
+  border-radius: 10px;
+  letter-spacing: 1px;
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--accent);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+}
+
+.src-pill.unverified {
+  background: rgba(var(--gold-rgb), 0.08);
+  color: var(--gold);
+  border-color: rgba(var(--gold-rgb), 0.25);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   5. TURN-ORDER TIMELINE
+   .tl-row column width is intentionally kept at 100px here (the common
+   value across all three files; Lumeris/Horatio used 90px).  If a faction
+   needs a narrower turn column, override grid-template-columns locally.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 14px 0;
+}
+
+.tl-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  border-left: 2px solid rgba(var(--accent-rgb), 0.25);
+  padding-left: 16px;
+  padding-bottom: 18px;
+  position: relative;
+}
+.tl-row:last-child { padding-bottom: 0; }
+
+.tl-row::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.5);
+}
+
+.tl-turn {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  color: var(--accent);
+  letter-spacing: 1px;
+  padding-top: 2px;
+  font-weight: 700;
+}
+
+.tl-body {
+  font-size: var(--ts_sectionLabel);
+  line-height: 1.7;
+  color: var(--text);
+}
+.tl-body strong { color: var(--accent-bright); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   6. SHIP CARDS
+   .ship-role colour deliberately uses --accent (not a hardcoded faction
+   var) so the tint always matches the current faction.
+   Border-top modifier classes cover all variants used across the three files.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ship-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+
+.ship-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+/* border-top colour overrides */
+.ship-card.warn-top  { border-top-color: var(--red); }
+.ship-card.red-top   { border-top-color: var(--red); }   /* Lumeris alias */
+.ship-card.skip-top  { border-top-color: var(--red); }   /* Sophons alias */
+.ship-card.gold-top  { border-top-color: var(--gold); }
+.ship-card.cyan-top  { border-top-color: var(--cyan); }
+
+.ship-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: var(--ts_quizTitle);
+  font-weight: 700;
+  color: var(--accent-bright);
+  letter-spacing: 2px;
+  margin-bottom: 4px;
+}
+
+.ship-role {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  color: var(--accent);
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.ship-body {
+  font-size: var(--ts_quizTitle);
+  line-height: 1.65;
+  color: var(--text);
+}
+
+/* Sophons-origin ship stat row — harmless to include for all factions */
+.ship-stat {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+.ship-stat span:last-child {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   7. CONCEPT CALLOUT BOX  (TAKT / PIONEER / GENE SEQUENCER / etc.)
+   Named .concept-box generically; .takt-box and .pioneer-box are kept as
+   aliases so existing HTML doesn't need to be touched.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.concept-box,
+.takt-box,
+.pioneer-box {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--accent-rgb), 0.08),
+    rgba(var(--accent-bright-rgb), 0.06)
+  );
+  border: 1px solid rgba(var(--accent-rgb), 0.3);
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin: 16px 0;
+}
+
+.concept-title,
+.takt-title,
+.pioneer-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: var(--ts_topicTitle);
+  font-weight: 700;
+  color: var(--accent-bright);
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   8. APPROVAL / STATUS BAR
+   Segment background colours are set inline with semantic vars
+   (var(--red), var(--gold), var(--green), var(--vol4-accent)) as per spec.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.approval-bar {
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  height: 28px;
+  margin: 12px 0;
+  font-size: var(--ts_sectionTitle);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.apv-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   9. OMNISCIENCE DECAY VISUALISER  (Sophons — harmless on other pages)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.omni-bar-wrap { margin: 16px 0; }
+
+.omni-bar-label {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  letter-spacing: 1.5px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.omni-bar {
+  height: 22px;
+  border-radius: 4px;
+  background: var(--border);
+  overflow: hidden;
+  display: flex;
+}
+
+.omni-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  font-weight: 700;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   10. QUEST BRANCH GRID  (Sophons — harmless on other pages)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.quest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.quest-card {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px 14px;
+  font-size: var(--ts_sectionLabel);
+  line-height: 1.65;
+}
+.quest-card strong { color: var(--accent-bright); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   11. PRIORITY TIER TABLE  (Horatio gene-splicing — harmless on other pages)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.splice-tier {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 14px 0;
+}
+
+.splice-tier-row {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  border-bottom: 1px solid var(--border);
+  font-size: var(--ts_sectionLabel);
+}
+.splice-tier-row:last-child { border-bottom: none; }
+
+.splice-tier-label {
+  padding: 10px 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  display: flex;
+  align-items: center;
+}
+.splice-tier-label.s { background: rgba(var(--green-rgb),  0.12); color: var(--green); }
+.splice-tier-label.a { background: rgba(var(--accent-rgb), 0.12); color: var(--accent); }
+.splice-tier-label.b { background: rgba(var(--gold-rgb),   0.10); color: var(--gold); }
+.splice-tier-label.c { background: rgba(var(--red-rgb),    0.08); color: var(--red); }
+
+.splice-tier-body {
+  padding: 10px 14px;
+  line-height: 1.7;
+  color: var(--text);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   12. POPULATION COST CHIPS  (Horatio — harmless on other pages)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.pop-cost-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+  align-items: center;
+}
+
+.pop-cost-chip {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: var(--ts_sectionTitle);
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 1px solid;
+}
+.pop-cost-chip.cheap { background: rgba(var(--green-rgb), 0.10); color: var(--green); border-color: rgba(var(--green-rgb), 0.3); }
+.pop-cost-chip.mid   { background: rgba(var(--gold-rgb),  0.10); color: var(--gold);  border-color: rgba(var(--gold-rgb),  0.3); }
+.pop-cost-chip.hard  { background: rgba(var(--red-rgb),   0.10); color: var(--red);   border-color: rgba(var(--red-rgb),   0.3); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   13. WEAPON / CELL TIER HIGHLIGHT  (Lumeris ref-table — harmless elsewhere)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.cell-tier {
+  background: rgba(var(--accent-rgb), 0.08);
+  color: var(--accent-bright);
+  font-weight: 700;
+}

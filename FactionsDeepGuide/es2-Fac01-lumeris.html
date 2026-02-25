@@ -6,7 +6,40 @@
 <title>ES2 Vol.6 — The Lumeris</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
 <style>
+  /* ── Fac01 — Lumeris: deep gold / amber ───────────────────────────────── */
+  /* Residual rules after es2-factions-deepdive.css is linked.               */
+  /* Link order in <head>:                                                    */
+  /*   1. es2-guide.css                                                       */
+  /*   2. es2-faction-deepdive.css                                           */
+  /*   3. This <style> block                                                  */
+
+  :root {
+    --accent:            var(--lumeris-color);
+    --accent-rgb:        var(--lumeris-color-rgb);
+    --accent-dim:        rgba(var(--lumeris-color-rgb), 0.11);
+    --accent-bright-rgb: 245,200,66;
+    --accent-bright:     rgb(var(--accent-bright-rgb));
+  }
+
+  /* Faction-specific starfield ambience */
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--lumeris-color-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--lumeris-color-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--lumeris-color-rgb), 0.4),
+      0 0 80px rgba(var(--lumeris-color-rgb), 0.15);
+  }
+
+  /* sidebar game-name tint */
+  .sidebar-logo .game-name { color: var(--accent); }
+</style>
+<!--style>
   /* Vol 6 — Lumeris: deep gold / amber. Money. */
   :root {
     --accent:             var(--lumeris-color);
@@ -129,7 +162,8 @@
     color: var(--accent-bright); letter-spacing: 3px; margin-bottom: 10px;
   }
 
-</style>
+</style-->
+
 </head>
 <body>
 <div class="layout">
