@@ -137,8 +137,7 @@ Minimal volumes (vol0–vol8):
 ```css
 :root {
   --accent:     var(--volN-accent);
-  --accent-rgb: var(--volN-accent-rgb);
-  --accent-dim: rgba(var(--volN-accent-rgb), 0.11);
+  --accent-dim: rgba(var(--volN-accent), 0.11);
 }
 ```
 
@@ -146,10 +145,8 @@ Faction deep-dives (example — Lumeris):
 ```css
 :root {
   --accent:             var(--lumeris-color);
-  --accent-rgb:         var(--lumeris-color-rgb);
-  --accent-dim:         rgba(var(--lumeris-color-rgb), 0.11);
-  --accent-bright-rgb:  245,200,66;
-  --accent-bright:      rgb(var(--accent-bright-rgb));
+  --accent-dim:         rgba(var(--accent), 0.11);
+  --accent-bright:  245,200,66;
 }
 ```
 
@@ -277,7 +274,7 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 ```html
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <a href="../index.html" class="vol-card right linkToIndex" style="--card-accent: var(--text-bright); --card-accent-rgb: var(--text-bright);">ES2</a>
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
     <div class="game-name">VOLUME N</div>
     <div class="guide-name">Title<br>Subtitle</div>
   </div>
