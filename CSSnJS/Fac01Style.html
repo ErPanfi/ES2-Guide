@@ -1,0 +1,32 @@
+<style>
+  /* ── Fac01 — Lumeris: deep gold / amber ───────────────────────────────── */
+  /* Residual rules after es2-factions-deepdive.css is linked.               */
+  /* Link order in <head>:                                                    */
+  /*   1. es2-guide.css                                                       */
+  /*   2. es2-factions-deepdive.css                                           */
+  /*   3. This <style> block                                                  */
+
+  :root {
+    --accent:            var(--lumeris-color);
+    --accent-rgb:        var(--lumeris-color-rgb);
+    --accent-dim:        rgba(var(--lumeris-color-rgb), 0.11);
+    --accent-bright-rgb: 245,200,66;
+    --accent-bright:     rgb(var(--accent-bright-rgb));
+  }
+
+  /* Faction-specific starfield ambience */
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--lumeris-color-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--lumeris-color-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--lumeris-color-rgb), 0.4),
+      0 0 80px rgba(var(--lumeris-color-rgb), 0.15);
+  }
+
+  /* sidebar game-name tint */
+  .sidebar-logo .game-name { color: var(--accent); }
+</style>

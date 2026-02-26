@@ -28,28 +28,34 @@
     --cyan-dim:    rgba(var(--cyan-rgb), 0.10);
 
     /* ── Per-volume accent colors (RGB triplets for rgba() composition) ──
-       Vol.0  Exploration      teal-green  #00c9a7
-       Vol.1  Empire & Economy gold        #e8a020
-       Vol.2  Combat & Victory red         #e84040
-       Vol.3  Heroes           purple      #8b5cf6
-       Vol.4  Diplomacy        blue        #2d8fff
-       Vol.5  Standard Factions mint       #00d4a0
-       Vol.6  Special Factions violet      #c084fc
-    ── */
-    --vol0-accent-rgb: 0,201,167;
+     * | Vol.0 | `--vol0-accent` | `--vol0-accent-rgb` | Teal-green #00c9a7 |
+     * | Vol.1 | `--vol1-accent` | `--vol1-accent-rgb` | Light salmon #FFA07A |
+     * | Vol.2 | `--vol2-accent` | `--vol2-accent-rgb` | Gold #e8a020 |
+     * | Vol.3 | `--vol3-accent` | `--vol3-accent-rgb` | Blue #2d8fff |
+     * | Vol.4 | `--vol4-accent` | `--vol4-accent-rgb` | Red #e84040 |
+     * | Vol.5 | `--vol5-accent` | `--vol5-accent-rgb` | Mint #00d4a0 |
+     * | Vol.6 | `--vol6-accent` | `--vol6-accent-rgb` | Purple #8b5cf6 |
+     * | Vol.7 | `--vol7-accent` | `--vol7-accent-rgb` | Cold cyan #00e5ff |
+     * | Vol.8 | `--vol8-accent` | `--vol8-accent-rgb` | Pale Sacred Gold #e8d48b |
+     *    ── */
     --vol0-accent:     #00c9a7;
-    --vol1-accent-rgb: 232,160,32;
-    --vol1-accent:     #e8a020;
-    --vol2-accent-rgb: 232,64,64;
-    --vol2-accent:     #e84040;
-    --vol3-accent-rgb: 139,92,246;
-    --vol3-accent:     #8b5cf6;
-    --vol4-accent-rgb: 45,143,255;
-    --vol4-accent:     #2d8fff;
-    --vol5-accent-rgb: 0,212,160;
-    --vol5-accent:     #00d4a0;
-    --vol6-accent-rgb: var(--gold-rgb);
-    --vol6-accent:     var(--gold);
+    --vol1-accent:     #FFA07A;
+    --vol2-accent:     #1cdb0c;
+    --vol3-accent:     #2d8fff;
+    --vol4-accent:     #e84040;
+    --vol5-accent:     #e8a020;
+    --vol6-accent:     #8b5cf6;
+    --vol7-accent:     #00e5ff;
+    --vol8-accent:     #e8d48b;
+    --vol0-accent-rgb: 0,201,167;
+    --vol1-accent-rgb: 255,160,122;
+    --vol2-accent-rgb: 28, 219, 12;
+    --vol3-accent-rgb: 45,143,255;
+    --vol4-accent-rgb: 232,64,64;
+    --vol5-accent-rgb: 232,160,32;
+    --vol6-accent-rgb: 139,92,246;
+    --vol7-accent-rgb: 0,229,255;
+    --vol8-accent-rgb: 232,212,139;
 
     /* ── Default accent (overridden per-volume in each HTML <style>) ── */
     --accent:     var(--vol4-accent);
