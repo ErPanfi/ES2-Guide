@@ -9,21 +9,9 @@
 <style>
   :root {
     --accent:     var(--vol0-accent);
-    --accent-rgb: var(--vol0-accent-rgb);
-    --accent-dim: rgba(var(--vol0-accent-rgb), 0.11);
+    --accent-dim: rgba(var(--vol0-accent), 0.11);
   }
-  body::before{background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(var(--vol0-accent-rgb), .05) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 80% 20%,rgba(var(--vol4-accent-rgb), .04) 0%,transparent 70%);}
-  h1.page-title{text-shadow:0 0 30px rgba(var(--vol0-accent-rgb), .3);}
-  .progress-mini-fill{background:linear-gradient(90deg,var(--vol0-accent),var(--vol4-accent));box-shadow:0 0 8px rgba(var(--vol0-accent-rgb), .5);}
-  .tag-mech{background:rgba(var(--vol0-accent-rgb), .11);color:var(--vol0-accent);border-color:rgba(var(--vol0-accent-rgb), .25);}
-  .nav-item.active,.nav-item:hover{background:rgba(var(--vol0-accent-rgb), .09);}
-  .nav-item.active{color:var(--vol0-accent);border-left-color:var(--vol0-accent);}
-  .topic-num{color:var(--vol0-accent);background:rgba(var(--vol0-accent-rgb), .11);border-color:rgba(var(--vol0-accent-rgb), .3);}
-  .callout-tip{background:rgba(var(--vol0-accent-rgb), .09);border-left-color:var(--vol0-accent);}
-  .callout-tip .callout-label{color:var(--vol0-accent);}
-  .step-list li .step-n{color:var(--vol0-accent);background:rgba(var(--vol0-accent-rgb), .11);}
-  .sidebar-logo .game-name{color:var(--vol0-accent);}
-  .vol-next{--card-accent: var(--vol1-accent); --card-accent-rgb: var(--vol1-accent-rgb);}
+  .vol-next{ --card-accent: var(--vol1-accent);}
 </style>
 </head>
 <body>
@@ -32,7 +20,7 @@
 <!-- SIDEBAR -->
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <a href="../index.html" class="vol-card right linkToIndex" style="--card-accent: var(--text-bright); --card-accent-rgb: var(--text-bright);">ES2</a>
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
     <div class="game-name">VOLUME 0</div>
     <div class="guide-name">Game Start<br>Essentials</div>
   </div>
