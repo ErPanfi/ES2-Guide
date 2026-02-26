@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ES2 Guide — Vol.3: Outside your Empire</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+  <style>
+    :root {
+      --accent:     var(--vol3-accent);
+      --accent-dim: rgba(var(--vol3-accent), 0.11);
+    }
+	.vol-next{ --card-accent: var(--vol4-accent);}
+	.vol-prev{ --card-accent: var(--vol2-accent);}
+
+  </style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ═══════════════════════════════════════ SIDEBAR ═══════════════════════════════════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <a href="../index.html" class="vol-card right linkToIndex" style="--card-accent: var(--text-bright); --card-accent-rgb: var(--text-bright);">ES2</a>
+      <div class="game-name">VOLUME 3</div>
+      <div class="guide-name">Outside your<br>Empire</div>
+    </div>
+
+    <div class="nav-section-label">// Navigation & Movement</div>
+    <div class="nav-item active" onclick="scrollByID('t1')">🧭 Movement & Star Lanes <span class="nav-check" id="nc1"></span></div>
+    <div class="nav-item" onclick="scrollByID('t2')">🔬 Science & Exploration Tree <span class="nav-check" id="nc2"></span></div>
+
+    <div class="nav-section-label">// Exploration Tools</div>
+    <div class="nav-item" onclick="scrollByID('t3')">📡 Probes & Expedition Power <span class="nav-check" id="nc3"></span></div>
+    <div class="nav-item" onclick="scrollByID('t4')">🔭 Curiosity Tiers & Rewards <span class="nav-check" id="nc4"></span></div>
+
+    <div class="nav-section-label">// Galaxy Features</div>
+    <div class="nav-item" onclick="scrollByID('t5')">⭐ Special Nodes & Science Behemoths <span class="nav-check" id="nc5"></span></div>
+    <div class="nav-item" onclick="scrollByID('t6')">⚠️ Anomalies: Risk & Removal <span class="nav-check" id="nc6"></span></div>
+    <div class="nav-item" onclick="scrollByID('t7')">🌍 Terraforming Behemoths <span class="nav-check" id="nc7"></span></div>
+
+    <div class="nav-section-label">// Other Actors</div>
+    <div class="nav-item" onclick="scrollByID('t8')">☠️ Pirates: Threat to Asset <span class="nav-check" id="nc8"></span></div>
+    <div class="nav-item" onclick="scrollByID('t9')">🤝 Minor Factions <span class="nav-check" id="nc9"></span></div>
+
+    <div class="nav-section-label">// Assessment</div>
+    <div class="nav-item" onclick="scrollByID('t10')">🏆 Turn 30: Science Victory <span class="nav-check" id="nc10"></span></div>
+
+    <div class="nav-section-label">// Volumes</div>
+    <div class="vol-card right vol-prev" onclick="location.href='es2-vol2-politics.html'"><div class="vol-card-arrow">←</div> Vol.2: People & Ideas</div>
+    <div class="vol-card left vol-next" onclick="location.href='es2-vol4-combat.html'">Vol.4: Ships & Combat <div class="vol-card-arrow">→</div></div>
+
+    <div class="progress-mini">
+      <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+      <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════ MAIN ═══════════════════════════════════════ -->
+  <main class="main">
+
+    <div class="page-header">
+      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.3</span> // Outside your Empire</div>
+      <h1 class="page-title">Outside your Empire</h1>
+      <p class="page-subtitle">Exploration mechanics, galaxy features, and the factions that exist beyond your borders — from movement fundamentals to the strategic depth of minor faction assimilation.</p>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T1 — MOVEMENT & STAR LANES
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t1">
+      <div class="topic-header">
+        <div class="topic-num">01</div>
+        <div>
+          <h2 class="topic-title">Exploring: Movement Points, Star Lanes, Wormholes and Warp Travel</h2>
+          <div class="topic-subtitle">How fleets move through the galaxy and the timing rules that can cost you a turn</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb1a">
+        <div class="block-header" onclick="toggle('cb1a')">
+          <span class="block-icon">🧭</span>
+          <span class="block-title">Movement Points and the Star Lane Network</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Every fleet has a pool of <strong>Movement Points</strong> (MPs) consumed each time the fleet moves along a star lane to an adjacent system. MPs are a per-ship stat displayed on the ship design screen. <strong>Fleet speed is capped by its slowest ship</strong> — one low-MP vessel in your fleet degrades the entire formation. If you retrofit a scout ship with a stack of engines, that scout alone can give the whole fleet a meaningful speed boost via fleet accelerator support modules.</p>
+
+          <p>The star lane network is the primary highway: two systems connected by a visible lane can be traversed in one movement action, provided the fleet has enough MPs. Once you have vision on a system — either by visiting it or by a probe passing through — that system remains visible permanently without a ship stationed there. Discovered systems also auto-reveal all star lanes emanating from them.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">FLEET SPEED BOTTLENECK</div>
+            When building mixed fleets, always check the slowest ship's MP value. A single colony ship or support vessel dragging your strike force to 6 MPs instead of 10 costs you real turns on long-range operations. Either keep slow ships in separate fleets or use fleet accelerator support modules to compensate.
+          </div>
+
+          <p>The <strong>Auto-Explore</strong> fleet stance fans the fleet out and autonomously follows open star lanes, revealing adjacent systems each turn. Useful in the early game, but be aware the AI pathing will not prioritize high-value directions — manual guidance beats auto-explore once you've scouted enough to see where the good systems are.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb1b">
+        <div class="block-header" onclick="toggle('cb1b')">
+          <span class="block-icon">⏱️</span>
+          <span class="block-title">The End-of-Turn Movement Rule</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>This is the rule that catches players out most often: <strong>if a fleet's movement order spans multiple turns, the final leg resolves at the end of the turn — not the beginning.</strong> This has a concrete tactical consequence.</p>
+
+          <p>Suppose a fleet is four turns away from a destination system and you set a multi-turn waypoint, then hit End Turn. The fleet will arrive at the destination system and sit there — but only after everything else on that turn has already resolved. If you intended to arrive and then attack a pirate fleet in that system on the same turn, you cannot: the attack opportunity has already passed for that turn. The pirates may also have moved by the following turn.</p>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">ALWAYS MOVE MANUALLY FOR SAME-TURN ACTIONS</div>
+            Whenever you need to arrive at a system <em>and</em> take an action there on the same turn — attack, establish a blockade, collect a curiosity — move the fleet manually before ending your turn. Multi-turn queued movement will cost you an entire action window on arrival.
+          </div>
+
+          <p>The <strong>Sleep</strong> fleet stance parks the fleet in orbit and wakes it automatically when a probe or enemy enters the system. Useful for stationing a patrol ship at a minor faction's system to intercept pirate spawns without consuming your attention each turn.</p>
+
+          <p>The <strong>Guard</strong> stance is distinct from Sleep: a guarding fleet actively intercepts any enemy ship entering the system, forcing it into orbit and halting its remaining MPs. While a fleet is guarding an enemy system, it also begins suppressing that system's resource output — luxury and strategic resources stop flowing to the defender. This is the blockade mechanic.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb1c">
+        <div class="block-header" onclick="toggle('cb1c')">
+          <span class="block-icon">🌀</span>
+          <span class="block-title">Wormholes, Warp Travel and Unconnected Systems</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p><strong>Wormholes</strong> are bidirectional connections between two systems that are not linked by a standard star lane. They appear on the galaxy map as a distinct connector type and function identically to star lanes for movement cost. Discovering a wormhole can dramatically cut travel time between distant galaxy sectors — finding one early that your opponent hasn't scouted yet is a genuine strategic edge.</p>
+
+          <p><strong>Warp travel</strong> (unlocked via the <em>Compact Warp Methods</em> technology in the Science & Exploration tree) allows fleets to access systems that are not connected to the star lane network at all — including moons. Without this technology, those systems are visible but completely inaccessible. Moons can contain curiosities, anomalies, and resources, so the tech has real value beyond just range extension.</p>
+
+          <p>The <strong>Ultra IR Astronomy</strong> technology (also in the Science tree) allows probes to discover special nodes and unconnected systems that wouldn't be found by standard star lane exploration. These nodes — black holes, asteroid fields, nebulae — are the locations where Science Behemoths park for passive bonuses. Without Ultra IR Astronomy, those nodes simply don't appear on your map.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">COLONY SHIP TIMING</div>
+            A common early mistake is immediately dispatching the colony ship toward an unexplored system. Hold it. With two probes, you have a one-in-three chance of the best available system being in the wrong direction. Spending 1–2 turns scouting adjacent lanes before committing the colony ship costs less total turns than moving it the wrong way and backtracking.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t1','cb1c',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T2 — SCIENCE & EXPLORATION TECH TREE
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t2">
+      <div class="topic-header">
+        <div class="topic-num">02</div>
+        <div>
+          <h2 class="topic-title">The Science & Exploration Tech Tree</h2>
+          <div class="topic-subtitle">Probes, movement, science production — and the two early techs that change what you can find</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb2a">
+        <div class="block-header" onclick="toggle('cb2a')">
+          <span class="block-icon">🗺️</span>
+          <span class="block-title">Tree Location and Structure</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The Science & Exploration tree occupies the <strong>bottom (south) quadrant</strong> of the tech circle. It is organized into five rings of increasing cost. Technologies in ring 2+ require at least one ring 1 research in that quadrant before they unlock.</p>
+
+          <p>This tree's function is threefold: it expands your physical reach in the galaxy (probe upgrades, movement tech), increases what you can detect and investigate (scanner tier techs), and feeds science production for the wider empire (buildings like Public–Private Partnerships).</p>
+
+          <table class="ref-table">
+            <tr><th>Early Priority</th><th>What It Does</th><th>Why It Matters</th></tr>
+            <tr><td class="cell-key">Baryonic Shielding</td><td>Unlocks advanced scanners</td><td class="cell-good">Required to detect and investigate Tier 2+ curiosities — without it, high-reward sites are invisible to your probes</td></tr>
+            <tr><td class="cell-key">Machine Bacteria</td><td>Unlocks improved probes (Titanium / Hyperium)</td><td class="cell-good">Better probes = lower cooldown, more probes per module, greater range — directly accelerates early exploration speed</td></tr>
+            <tr><td class="cell-key">Autonomous Materials</td><td>Cancels negative effects of mixed anomalies</td><td class="cell-good">Mixed anomalies have both a buff and a nerf; this tech strips the nerf while keeping the buff</td></tr>
+            <tr><td class="cell-key">OCP Investigation Unit</td><td>Nullifies detrimental anomaly effects</td><td class="cell-good">Essential if you colonized a system with a strong magnetic field or other FIDSI debuff</td></tr>
+            <tr><td class="cell-key">Compact Warp Methods</td><td>Enables travel to unconnected systems and moons</td><td>Opens an entire layer of the galaxy that is otherwise inaccessible</td></tr>
+            <tr><td class="cell-key">Ultra IR Astronomy</td><td>Probes can discover star-lane-unconnected nodes</td><td>Required to find black holes, asteroid fields and nebulae for special-node behemoth placement</td></tr>
+          </table>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb2b">
+        <div class="block-header" onclick="toggle('cb2b')">
+          <span class="block-icon">📊</span>
+          <span class="block-title">Science Production Buildings and the Research Queue</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The Science tree also contains science output buildings — most notably <strong>Public–Private Partnerships</strong>, which mirrors Xeno-Industrial Infrastructure from the Economy tree but for science instead of industry. On a high-adjacency planet, this building can near-double your science production from a single system. On a Terran Fertile planet, for instance, it provides the same kind of step-change that Xeno-Industrial does for industry.</p>
+
+          <p>Science has a <strong>storage cap of two turns' worth of production</strong>. If you're producing 44 science per turn, you can bank up to 88 before the overflow is wasted. This means it's safe to leave the research queue empty for one turn without losing output — but not two. Plan your queue so you're picking the next tech before overflow kicks in, not after.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">QUEUE ONE TECH AT A TIME</div>
+            Any science overflow from completing a tech automatically rolls into the next queued tech. If you leave the queue empty, overflow science is banked up to the two-turn cap. Queuing multiple techs in advance doesn't lose you anything, but the habit of queuing one and then checking what's next ensures you make deliberate choices rather than defaulting to whatever was pre-selected.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T3 — PROBES & EXPEDITION POWER
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t3">
+      <div class="topic-header">
+        <div class="topic-num">03</div>
+        <div>
+          <h2 class="topic-title">Probes & Expedition Power</h2>
+          <div class="topic-subtitle">The two ways probes are used, and why your hero should always be on the scout ship</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb3a">
+        <div class="block-header" onclick="toggle('cb3a')">
+          <span class="block-icon">📡</span>
+          <span class="block-title">Probe Mechanics: Range, Lifetime and Cooldown</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Probes are launched from ships that carry a probe module. The starting exploration ship comes with two probes. Probes can be added to hero ships as well, which is one of the best reasons to assign your starting hero to the scout fleet early — the hero ship's larger vision range and additional probe slots multiply your early coverage dramatically.</p>
+
+          <p>Each probe has three key stats:</p>
+          <ul class="step-list">
+            <li><span class="step-n">LIFETIME</span><span>How many turns the probe remains active and moving. A lifetime of 5 means the probe travels for 5 turns before expiring.</span></li>
+            <li><span class="step-n">RANGE</span><span>The vision radius of the probe at each position it passes through. A range of 4 reveals a 4-tile radius around its current location each turn.</span></li>
+            <li><span class="step-n">SPEED</span><span>How many tiles the probe travels per turn. A speed of 6 means it covers 6 tiles of distance per turn of lifetime.</span></li>
+          </ul>
+
+          <p>Probes have a <strong>cooldown before they regenerate</strong>. The cooldown depends on the probe module type — standard probes have a longer cooldown, while Hyperium probes regenerate faster. Managing your probe timing matters in the early game: launching all probes at once leaves you without coverage for the cooldown window. Staggering launches is often better than firing everything simultaneously.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb3b">
+        <div class="block-header" onclick="toggle('cb3b')">
+          <span class="block-icon">🔍</span>
+          <span class="block-title">Expeditions: Probes Used to Investigate Curiosities</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The second use of probes is to launch an <strong>expedition</strong> at a curiosity site. This is distinct from throwing a probe into open space. When you click the expedition icon next to a curiosity on a planet, the probe is consumed (starting a cooldown) and after some turns returns results: anomaly discoveries, resource deposits, loot, or quest triggers.</p>
+
+          <p>There is an alternative: <strong>investigating a curiosity via the system's build queue costs 100 Industry</strong>. At game start that is several turns of production. Using probes is free except for the cooldown. Always prefer probe expeditions over the build-queue method unless your probes are all on cooldown and the resource you might find would pay back the industry cost quickly (e.g., a luxury or strategic deposit in a system you're about to colonize).</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">HERO XP FROM PROBE DISCOVERIES</div>
+            Heroes gain experience for each curiosity discovered — including those found by probes launched from a scout ship in the same fleet. This is why keeping the hero assigned to the exploration fleet, not stationed as a governor, is the correct early-game move. Every probe expedition nets hero XP at zero additional cost.
+          </div>
+
+          <p>Some curiosities can trigger the discovery of <strong>exile population ships</strong>. These small civilian vessels automatically move toward your nearest system and, if they arrive safely, add a population unit. Exiles can include rare faction pops. There is no way to redirect their path once spawned — if pirates are between them and your system, you may lose the pop.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T4 — CURIOSITY TIERS, TYPES & REWARDS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t4">
+      <div class="topic-header">
+        <div class="topic-num">04</div>
+        <div>
+          <h2 class="topic-title">Curiosity Tiers, Types & Rewards</h2>
+          <div class="topic-subtitle">What curiosities are, what they yield, and why scanner technology gates your reward ceiling</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb4a">
+        <div class="block-header" onclick="toggle('cb4a')">
+          <span class="block-icon">🔭</span>
+          <span class="block-title">Curiosity Types and What They Tend to Yield</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Curiosities appear as small icons on planets and systems. They are one of exploration's primary reward mechanisms. Several named types exist:</p>
+
+          <table class="ref-table">
+            <tr><th>Type</th><th>Common Rewards</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Lifeform</td><td>Anomaly, loot, exile pops</td><td>Good chance of population exile spawns</td></tr>
+            <tr><td class="cell-key">Subterranean</td><td>Anomaly, strategic resource deposit</td><td>—</td></tr>
+            <tr><td class="cell-key">Ruins</td><td>Loot, Dust, technology fragments</td><td>—</td></tr>
+            <tr><td class="cell-key">Atmospheric</td><td>Anomaly, loot, luxury resource</td><td>Good chance of pop exiles; also exile pops</td></tr>
+            <tr><td class="cell-key">Guardian</td><td>Varies — often tied to quest rewards</td><td>—</td></tr>
+          </table>
+
+          <p>There is also at least one Unfallen-faction-specific curiosity type. All curiosity rewards have a probability distribution — the UI tooltip on hover shows the categories of outcomes (e.g., "high chance of anomaly / low chance of luxury resource") without guaranteeing specifics.</p>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">DON'T RUSH HOME SYSTEM CURIOSITIES</div>
+            Researching a curiosity on your starting system early carries a meaningful risk of triggering a negative anomaly before you have the tech to remove it. A detrimental anomaly applying a FIDSI nerf from turn 3 onward can compound into a significant economic setback. Leave home-system curiosities until you have OCP Investigation or Autonomous Materials researched, unless the reward probability is clearly favorable.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb4b">
+        <div class="block-header" onclick="toggle('cb4b')">
+          <span class="block-icon">🔬</span>
+          <span class="block-title">Curiosity Detection Tiers and Baryonic Shielding</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Curiosities are tiered — higher-tier curiosities offer significantly better rewards but require a minimum <strong>scanner detection level</strong> to find and investigate. The base exploration ship has a base scanner level. Without researching <strong>Baryonic Shielding</strong>, Tier 2+ curiosities exist in the galaxy but your probes will never detect them, and your ships won't be able to initiate expeditions even if they're parked next to one.</p>
+
+          <p>The implication: prioritizing Baryonic Shielding early doesn't just improve what you see — it changes what tier of rewards is even possible. A faction doing heavy exploration that skips Baryonic Shielding is systematically leaving the best curiosity rewards untouched throughout the early game.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">QUEST TRIGGERS FROM CURIOSITIES</div>
+            Some curiosity types can trigger a faction quest when explored. These quests often reveal the position of otherwise unknown systems or grant significant one-time rewards. Exploring broadly and quickly is therefore not just about resources — it's about quest progression. A curiosity you ignore is a quest chain you never started.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T5 — SPECIAL NODES & SCIENCE BEHEMOTHS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t5">
+      <div class="topic-header">
+        <div class="topic-num">05</div>
+        <div>
+          <h2 class="topic-title">Special Nodes and Science Behemoths</h2>
+          <div class="topic-subtitle">The passive FIDSI and tech-cost advantages that make science behemoths worth their unlock cost</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb5a">
+        <div class="block-header" onclick="toggle('cb5a')">
+          <span class="block-icon">⭐</span>
+          <span class="block-title">Special Nodes: What They Are and How to Find Them</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Special nodes are galaxy-map locations that exist outside the colonizable system network. They include <strong>asteroid fields, black holes, and nebulae</strong>. These nodes are not connected to the standard star lane grid and are therefore invisible without the <strong>Ultra IR Astronomy</strong> technology (Science tree), which enables probes to detect them.</p>
+
+          <p>On their own, special nodes don't do anything for your empire. Their value comes from parking a Behemoth — specifically one configured with special-node extraction modules — in orbit. A behemoth at a special node harvests resources from it, typically strategic resources or additional FIDSI yields, depending on the module loadout.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb5b">
+        <div class="block-header" onclick="toggle('cb5b')">
+          <span class="block-icon">🚀</span>
+          <span class="block-title">The Behemoth Unlock Prerequisite</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Behemoths (introduced in the Supremacy DLC) are not available from the start. Access is gated behind a <strong>cooperative galaxy-wide quest</strong>: all players collectively need to unlock a combined threshold of Military tech tree technologies. The threshold scales with game speed settings. Once reached by the galaxy as a whole, every player gains access to the <strong>Behemoth Blueprints</strong> technology — the prerequisite for all behemoth construction and specialization techs.</p>
+
+          <p>The Hissho faction is the exception: they can begin the game with a behemoth and their Senate Leader trait can raise the behemoth count limit, which is normally capped by researching specific technologies.</p>
+
+          <p>Three base chassis designs unlock with Behemoth Blueprints: Economic, Scientific, and Military. These are the starting points for further specialization.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb5c">
+        <div class="block-header" onclick="toggle('cb5c')">
+          <span class="block-icon">📈</span>
+          <span class="block-title">Science Behemoth: Passive FIDSI and Tech Cost Reduction</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The science behemoth's core value proposition comes in two layers:</p>
+
+          <p><strong>Layer 1 — System orbit bonus:</strong> A behemoth orbiting any system (yours or otherwise) provides a flat <strong>+10 to all FIDSI categories</strong> (Food, Industry, Dust, Science — not Influence) on that system. This is a passive bonus requiring no further action. The AI regularly exploits this by parking behemoths over their developed systems as both a boost and a defense anchor.</p>
+
+          <p><strong>Layer 2 — Tech cost reduction:</strong> With the appropriate behemoth module researched, the science behemoth grants a <strong>−15% cost reduction on a specific tech tree branch</strong>. A second behemoth doubles this to approximately −30%. Community experience with science victories confirms this stacking is one of the primary acceleration mechanisms — the initial investment in multiple behemoth tech researches pays back rapidly through compressed tech timelines.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">SCIENCE VICTORY CORE LOOP</div>
+            For science-victory-focused play: unlock behemoths, build one science behemoth (orbit your science-focused home system for +10 Science), research the tech cost reduction module, build a second science behemoth. The compound effect — more science production plus reduced tech cost — is the primary reason science victories can be competitive in speed against military paths.
+          </div>
+
+          <p>Behemoths cannot be embedded in a regular fleet — they move and fight alone. This means a military behemoth replacing your strike fleet is almost always a weaker choice than building one alongside a conventional fleet. A military behemoth's module count per slot is multiplied by ×4 (same as all large ships), but the isolation penalty usually outweighs raw firepower for most combat situations.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t5','cb5c',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T6 — ANOMALIES
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t6">
+      <div class="topic-header">
+        <div class="topic-num">06</div>
+        <div>
+          <h2 class="topic-title">Anomalies: Activation, Risk & Removal</h2>
+          <div class="topic-subtitle">Three anomaly categories, their FIDSI impact, and the tech path to neutralize detrimental effects</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb6a">
+        <div class="block-header" onclick="toggle('cb6a')">
+          <span class="block-icon">⚠️</span>
+          <span class="block-title">The Three Anomaly Categories</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Anomalies are persistent modifiers on individual planets, applied at discovery (via curiosity expedition or automatic on colonization). They fall into three categories:</p>
+
+          <table class="ref-table">
+            <tr><th>Category</th><th>Effect</th><th>Example</th></tr>
+            <tr><td class="cell-key">Beneficial</td><td class="cell-good">Pure FIDSI bonus — always positive</td><td class="cell-good">Antonov Rings: +Dust, +1 Science per population</td></tr>
+            <tr><td class="cell-key">Detrimental</td><td class="cell-bad">Pure FIDSI penalty — always negative</td><td class="cell-bad">Strong Magnetic Field: significant FIDSI nerf on that planet</td></tr>
+            <tr><td class="cell-key">Mixed</td><td>Has both a positive and a negative component simultaneously</td><td>Positive bonus to one FIDSI type, penalty to another</td></tr>
+          </table>
+
+          <p>Anomalies apply at the planet level, not the system level. A system can have multiple planets each carrying different anomalies. When evaluating a system for colonization, the anomaly mix on all its planets should factor into your decision — a highly detrimental anomaly on a planet you'll rely on heavily can undermine a system that looked promising on paper.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb6b">
+        <div class="block-header" onclick="toggle('cb6b')">
+          <span class="block-icon">🔧</span>
+          <span class="block-title">Anomaly Removal: OCP Investigation and Autonomous Materials</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Two Science tree technologies address anomaly removal:</p>
+
+          <ul class="step-list">
+            <li><span class="step-n">OCP INVESTIGATION UNIT</span><span>Nullifies the effect of detrimental anomalies entirely. If you colonized a system with a strong FIDSI nerf anomaly, this tech removes the penalty retroactively — the nerf is cancelled as soon as the tech is researched.</span></li>
+            <li><span class="step-n">AUTONOMOUS MATERIALS</span><span>Reduces the negative component of mixed anomalies. This allows you to keep the positive half of a mixed anomaly while eliminating the downside.</span></li>
+          </ul>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">TECH PRIORITY DEPENDS ON YOUR COLONIZED ANOMALIES</div>
+            OCP Investigation is only a high priority if you actually have detrimental anomalies on colonized planets. If your colonized systems are clean or only have beneficials, this tech slot is better spent elsewhere. Always check your existing systems' anomaly state before deciding when to research removal techs.
+          </div>
+
+          <p>Beneficial anomalies require no action — they are automatically active on the planet. There is no known tech that removes them (nor would you want one). The key risk management insight is: <strong>anomalies discovered through curiosity expeditions are randomized</strong>, so investigating a curiosity before colonizing a planet means you might reveal a detrimental anomaly that changes whether you want the system at all.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T7 — TERRAFORMING BEHEMOTHS (PLACEHOLDER)
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t7">
+      <div class="topic-header">
+        <div class="topic-num">07</div>
+        <div>
+          <h2 class="topic-title">Terraforming Behemoths</h2>
+          <div class="topic-subtitle">Planet-type conversion and the late-game population capacity unlock</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb7a">
+        <div class="block-header" onclick="toggle('cb7a')">
+          <span class="block-icon">🌍</span>
+          <span class="block-title">Terraforming Behemoth — Content Pending</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <div class="callout callout-warn">
+            <div class="callout-label">PLACEHOLDER — AWAITING SOURCE MATERIAL</div>
+            This topic requires dedicated source material before it can be written to the guide's accuracy standard. What is currently confirmed from available sources: terraforming behemoths exist as a distinct behemoth role and can convert destroyed planets into habitable ones. The Obliterator chassis (military behemoth upgrade) can destroy planets. Beyond these two facts, the mechanics of planet type conversion, tech prerequisites, conversion timelines, and population-capacity implications are not adequately sourced in the current session's material and have been deliberately omitted to avoid unverified claims.
+          </div>
+          <p>To complete this topic, please provide a transcript or wiki source covering terraforming behemoth mechanics — specifically: what planet types can be targeted, what the output type is, what tech is required, and how many turns the process takes.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T8 — PIRATES: THREAT TO ASSET
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t8">
+      <div class="topic-header">
+        <div class="topic-num">08</div>
+        <div>
+          <h2 class="topic-title">Pirates: From Threat to Asset</h2>
+          <div class="topic-subtitle">How pirates spawn, why they matter, and how to turn their presence into an advantage</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb8a">
+        <div class="block-header" onclick="toggle('cb8a')">
+          <span class="block-icon">☠️</span>
+          <span class="block-title">Pirate Spawning: Minor Factions as the Source</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>If the Pirates option is enabled at game setup, <strong>pirates spawn exclusively from minor faction systems</strong>. There is no other spawn source. This has a direct strategic implication: finding and controlling a minor faction's system controls the pirate spawning point for that galaxy node.</p>
+
+          <p>Pirates can travel between galaxy nodes — a pirate spawned from a minor faction in a distant arm can eventually reach your systems. However, they originate from the minor faction's specific location, which means keeping a ship at that system gives you persistent interception capability.</p>
+
+          <p>On <strong>Endless difficulty</strong>, pirate fleets field modernized ship designs — often better-equipped than early-game major faction ships. Treating them as a minor nuisance on higher difficulties is a mistake. A pirate fleet that catches your colony ship or lightly armed scout can end a colonization attempt outright.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb8b">
+        <div class="block-header" onclick="toggle('cb8b')">
+          <span class="block-icon">⚔️</span>
+          <span class="block-title">Turning Pirates into XP Farms</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Because pirates respawn from minor faction systems on a predictable cycle, a fleet stationed at the spawning system fights them as they appear. This converts the pirate threat into a controlled hero and fleet XP source. The pattern is straightforward:</p>
+
+          <ul class="step-list">
+            <li><span class="step-n">STEP 1</span><span>Locate the minor faction system that is your region's pirate spawn point.</span></li>
+            <li><span class="step-n">STEP 2</span><span>Station a fleet there on Sleep or Guard stance.</span></li>
+            <li><span class="step-n">STEP 3</span><span>Each pirate spawn triggers a battle — your fleet fights and gains XP. Pirates sometimes retreat rather than fighting to the end.</span></li>
+          </ul>
+
+          <p>For the <strong>Hissho</strong>, killing pirates also generates <em>Kei</em> (their unique resource), making this strategy especially potent. In the early game when Kei generation is low, a pirate farm near a minor faction can sustain the Kei economy while the empire is still small.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">PIRATE RETREAT BEHAVIOR</div>
+            Pirates will sometimes retreat from a losing battle rather than fighting to destruction. This means your fleet won't always finish a pirate engagement in one turn. The retreat behavior appears to be probabilistic — the exact programming logic isn't documented in available sources.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T9 — MINOR FACTIONS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t9">
+      <div class="topic-header">
+        <div class="topic-num">09</div>
+        <div>
+          <h2 class="topic-title">Minor Factions: Long-term Tributes and Assimilation</h2>
+          <div class="topic-subtitle">Three paths to a minor faction's system, and why passive tribute income compounds throughout the game</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb9a">
+        <div class="block-header" onclick="toggle('cb9a')">
+          <span class="block-icon">🤝</span>
+          <span class="block-title">The Relation Bar: Influence Spending and Passive Tribute</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Each minor faction has a <strong>Diplomatic Relation bar</strong> that fills from 0 to 100 via Influence spending. The two active Influence actions are <strong>Praise</strong> (a direct relation point purchase, cost increases with each use) and <strong>Assist</strong> (triggers a quest — completing the quest grants relation points, often more efficiently than Praise).</p>
+
+          <p>Even before assimilation, a minor faction with a filled or partially filled relation bar generates <strong>passive tribute</strong> each turn — Manpower, Dust, Science, and/or Food depending on the minor faction's type. In the early game when your FIDSI numbers are small, a single well-developed minor faction relationship can contribute more Science per turn than your entire civilization's output. This is not an exaggeration: some Horatio playthroughs show a minor faction relationship accounting for 30%+ of total science output by the mid-game.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">AT 50 RELATION: DEVELOPMENT GRANTS</div>
+            At 50 relation points, some minor factions unlock a special action called <em>Development Grants</em>. This costs 15 of a randomly selected luxury resource (usually purchasable from the Marketplace) and provides a significant science boost. This is one of the best early-game science accelerators available and worth planning your Marketplace purchases around if you have a minor faction nearby.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb9b">
+        <div class="block-header" onclick="toggle('cb9b')">
+          <span class="block-icon">🏛️</span>
+          <span class="block-title">Three Assimilation Paths: Praise, Assist, and Conquest</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Once the relation bar reaches 100, the <strong>Assimilate</strong> button unlocks. Assimilation converts the minor faction's system into one of your own: the population stays, you gain full control of the system and can build there freely. The minor faction's population type brings its own FIDSI traits and political party affiliation into your empire — who you assimilate shapes your population composition over time.</p>
+
+          <table class="ref-table">
+            <tr><th>Path</th><th>Method</th><th>Cost / Risk</th></tr>
+            <tr><td class="cell-key">Praise</td><td class="cell-good">Spend Influence repeatedly until relation = 100, then assimilate</td><td>Influence-heavy; Praise cost escalates with use</td></tr>
+            <tr><td class="cell-key">Assist Quest</td><td class="cell-good">Accept their quest, complete it, collect relation points</td><td>Variable — quests range from trivial to multi-turn military requirements</td></tr>
+            <tr><td class="cell-key">Conquest</td><td class="cell-bad">Declare war, station a ship with Manpower, invade</td><td class="cell-bad">Costs Manpower; no Influence required; hostile populations may integrate poorly</td></tr>
+          </table>
+
+          <p>Not assimilating is also a valid choice. <strong>Maintaining a minor faction as a tribute source without absorbing them</strong> keeps your Overcolonization count lower (which matters for Approval), gives you continued passive FIDSI from the relationship, and avoids absorbing a population that might destabilize your political balance. The decision to assimilate should weigh the system's FIDSI value against the Approval cost of adding another colony.</p>
+
+          <p>If you don't assimilate, the minor faction's population will still naturally <strong>migrate into your systems</strong> over time as you develop your empire and their pops find your systems more attractive. You gain the population benefits without the assimilation overhead.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t9','cb9b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T10 — SCIENCE VICTORY (PLACEHOLDER)
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t10">
+      <div class="topic-header">
+        <div class="topic-num">10</div>
+        <div>
+          <h2 class="topic-title">Turn 30 Assessment: Science Victory Condition</h2>
+          <div class="topic-subtitle">What the science victory requires, when to commit, and the self-defense problem</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb10a">
+        <div class="block-header" onclick="toggle('cb10a')">
+          <span class="block-icon">🏆</span>
+          <span class="block-title">Science Victory — Content Pending</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <div class="callout callout-warn">
+            <div class="callout-label">PLACEHOLDER — AWAITING SOURCE MATERIAL</div>
+            This topic requires dedicated sourcing before it can be written to accuracy standard. What is confirmed from available session sources: the science victory requires building a specific ship (the "Endless" vessel), which in turn requires building a factory and researching the victory condition technologies; it also requires eliminating at least half the empires in the galaxy. The Endless Research Park and the Intergalactic Technology Center are once-per-galaxy unique buildings that are significant accelerators, and science victories on Endless difficulty are benchmarked around turn 50 in medium galaxies with fast speed. The detailed step-by-step requirements, commitment window, era gates, and the military self-defense interaction (cross-reference Vol.4 T10) are not adequately sourced and have been omitted.
+          </div>
+          <p>To complete this topic, please provide a wiki page or transcript that covers the full science victory checklist — specifically the exact building and research prerequisites for the final victory ship, whether era gates apply, and the relationship between tech completion and the victory timer.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         QUIZ
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="quiz">
+      <div class="topic-header">
+        <div class="topic-num">Q</div>
+        <div>
+          <h2 class="topic-title">Scenario Quiz</h2>
+          <div class="topic-subtitle">Apply what you've learned — specific in-game situations with concrete numbers</div>
+        </div>
+      </div>
+      <div id="quiz-mount"></div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════ INLINE SCRIPT ═══════════════════ -->
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol3';
+const TOTAL = 10;
+let qIdx = 0;
+let answered = false;
+
+const quizzes = [
+  {
+    scenario: "Turn 4. Your starting system has two curiosities on its home planet. You have three probes available and your research queue shows Baryonic Shielding (6 turns) and Machine Bacteria (5 turns) as ring-1 options. Your colony ship is idle in orbit. Your nearest unexplored star lane leads to a 2-planet system. Two other lanes are unexplored.",
+    q: "What is the single biggest mistake you could make this turn?",
+    opts: [
+      "Launching all three probes down the single most promising star lane instead of spreading them",
+      "Investigating both home-system curiosities now before moving anything",
+      "Sending the colony ship immediately toward the nearest unexplored system",
+      "Queuing Baryonic Shielding before Machine Bacteria"
+    ],
+    correct: 2,
+    explain: "Sending the colony ship immediately is the critical mistake. With three unexplored lanes, you have a one-in-three chance the best system is in the opposite direction. Holding the colony ship for one more turn (while probes map the adjacent systems) costs at most one turn in transit but prevents the costly mistake of committing to the wrong direction. Splitting probes (A) is suboptimal but recoverable. Investigating home curiosities (B) risks a detrimental anomaly early but is arguable. Baryonic before Machine Bacteria (D) is a valid priority debate, not a clear mistake."
+  },
+  {
+    scenario: "Turn 12. You've colonized two systems. Your home system has a 'Strong Magnetic Field' anomaly on its second planet, currently causing a −4 Industry / −2 Science penalty per turn. You have 220 Science available and two tech options in the Science tree ring 2: OCP Investigation Unit (180 Science) and Autonomous Materials (200 Science). Your third planet in the home system has a mixed anomaly giving +3 Food / −2 Dust.",
+    q: "Which technology should you research first, and why?",
+    opts: [
+      "Autonomous Materials — it addresses two anomalies at once (strips the negative from the mixed anomaly and partially helps with the magnetic field)",
+      "OCP Investigation Unit — it fully eliminates the detrimental anomaly penalty, which is the more damaging of the two effects",
+      "Neither — anomaly removal should wait until you have OCP and Autonomous Materials queued together to apply both fixes simultaneously",
+      "OCP Investigation Unit, but only after finishing the current ring-1 queue to avoid losing science overflow"
+    ],
+    correct: 1,
+    explain: "OCP Investigation directly nullifies detrimental anomaly effects — the Strong Magnetic Field on your production planet is a compounding FIDSI loss that has been active for 12 turns and will continue until removed. At −6 combined loss per turn, 12 turns has already cost you 72 FIDSI points. Autonomous Materials (A) only addresses mixed anomalies, not purely detrimental ones — it would help the Food/Dust mixed anomaly on the third planet but would not touch the Magnetic Field. Option C loses additional turns of unnecessary penalty. Option D is irrelevant — science overflow handling doesn't require holding off on research that addresses an ongoing FIDSI drain."
+  },
+  {
+    scenario: "Turn 18. You have one minor faction at 60 relation — they provide +12 Science per turn as passive tribute. You have 400 Influence saved. Assimilating them would require reaching 100 relation (40 more points via Praise at ~30 Influence per increment, scaling up). Their system has two Arid planets with decent population slots and no anomalies. Assimilating would add 1 colony to your empire, currently at 3 colonized systems with Approval at 72%.",
+    q: "Should you assimilate immediately, and what is the most important factor in that decision?",
+    opts: [
+      "Yes — the +12 Science/turn stops once you assimilate and direct ownership of their system is always superior",
+      "No — the Approval cost of a 4th colony at 72% base Approval is the primary concern; the FIDSI value of their planets must be weighed against the multiplier loss",
+      "Yes — 400 Influence is enough to max the relation bar immediately, so opportunity cost is low",
+      "No — minor faction populations have lower base FIDSI than major faction pops and never justify the influence spend"
+    ],
+    correct: 1,
+    explain: "The Approval multiplier is the core issue (covered in Vol.2 T1). Adding a 4th colony reduces Approval. If Approval drops below a threshold (e.g., from 72% into the 60s), the empire-wide FIDSI multiplier decreases, meaning all existing population becomes less productive. The +12 Science passive tribute continues as long as you don't assimilate — you don't lose it by waiting. Option A is incorrect: tribute income is not cancelled by high relations, only by assimilation or war. Option C ignores the Approval cost entirely. Option D is false — minor faction pops vary widely and some are excellent FIDSI contributors."
+  },
+  {
+    scenario: "Turn 22. You're playing a science-focused empire. The behemoth unlock quest just completed galaxy-wide. You have 380 Industry and can build a science behemoth in 4 turns. Your home system produces 48 Science/turn and you have 2 other colonized systems. You have not yet researched the behemoth tech-cost-reduction module.",
+    q: "What is the correct sequence of actions to maximize science behemoth value?",
+    opts: [
+      "Build the science behemoth immediately and park it at your home system for the passive +10 Science bonus while you research the tech-cost-reduction module in parallel",
+      "Research the tech-cost-reduction module first, then build the behemoth — building before researching the module means the behemoth provides only the flat +10 bonus until research completes",
+      "Build two science behemoths simultaneously before researching any module, as the stacked orbit bonuses (+20 Science) exceed the single-behemoth +10 plus the tech reduction on most turn horizons",
+      "Wait until you have both the tech-cost-reduction module and the second behemoth tech unlocked before building any — the combined effect is strictly better than partial implementation"
+    ],
+    correct: 0,
+    explain: "Option A is correct because the +10 FIDSI system orbit bonus is active the moment the behemoth is in orbit — you don't need the tech-cost-reduction module researched to benefit from it. Starting the build immediately and researching the module in parallel means you lose no turns of the orbit bonus. Option B delays the orbit bonus with no benefit. Option C cannot be done simultaneously — behemoth count is limited by your researched technologies, and you cannot build a second science behemoth without the appropriate upgrade tech. Option D wastes multiple turns of +10 Science bonus while waiting for ideal conditions."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
