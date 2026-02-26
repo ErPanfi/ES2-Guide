@@ -17,78 +17,76 @@
 
   :root {
     --accent:            var(--horatio-color);
-    --accent-rgb:        var(--horatio-color-rgb);
-    --accent-dim:        rgba(var(--horatio-color-rgb), 0.10);
+    --accent-rgb:        var(--horatio-color);
+    --accent-dim:        rgba(var(--horatio-color), 0.10);
     --accent-bright-rgb: 255,200,220;
-    --accent-bright:     rgb(var(--accent-bright-rgb));
   }
 
   /* Faction-specific starfield ambience */
   body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--horatio-color-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--horatio-color-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--horatio-color), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--horatio-color), 0.04) 0%, transparent 65%),
     radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
   }
 
   h1.page-title {
     text-shadow:
-      0 0 40px rgba(var(--horatio-color-rgb), 0.4),
-      0 0 80px rgba(var(--horatio-color-rgb), 0.15);
+      0 0 40px rgba(var(--horatio-color), 0.4),
+      0 0 80px rgba(var(--horatio-color), 0.15);
   }
 
   /* sidebar game-name tint */
-  .sidebar-logo .game-name { color: var(--accent); }
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
 </style>
 
 <!--style>
   /* Horatio: narcissist pink / rose gold */
   :root {
     --accent:             var(--horatio-color);
-    --accent-rgb:         var(--horatio-color-rgb);
-    --accent-dim:         rgba(var(--horatio-color-rgb), 0.10);
+    --accent-rgb:         var(--horatio-color);
+    --accent-dim:         rgba(var(--horatio-color), 0.10);
     --accent-bright-rgb:  255,200,220;
-    --accent-bright:      rgb(var(--accent-bright-rgb));
   }
 
-  .progress-mini-fill { background: linear-gradient(90deg, var(--accent), var(--accent-bright)); }
+  .progress-mini-fill { background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent-bright-rgb))); }
 
   body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--horatio-color-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--horatio-color-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--horatio-color), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--horatio-color), 0.04) 0%, transparent 65%),
     radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%); }
 
-  h1.page-title { text-shadow: 0 0 40px rgba(var(--horatio-color-rgb), 0.4), 0 0 80px rgba(var(--horatio-color-rgb), 0.15); }
+  h1.page-title { text-shadow: 0 0 40px rgba(var(--horatio-color), 0.4), 0 0 80px rgba(var(--horatio-color), 0.15); }
 
-  .topic-num { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--horatio-color-rgb), 0.35); }
-  .tag-mech { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--horatio-color-rgb), 0.3); }
-  .tag-source { background: rgba(var(--horatio-color-rgb), 0.10); color: var(--horatio-color); border-color: rgba(var(--horatio-color-rgb), 0.25); font-size: var(--ts_sectionTitle); letter-spacing:1.5px; padding: 2px 8px; border-radius:4px; border:1px solid; font-family:'Share Tech Mono',monospace; }
+  .topic-num { color: rgb(var(--accent)); background: var(--accent-dim); border-color: rgba(var(--horatio-color), 0.35); }
+  .tag-mech { background: var(--accent-dim); color: rgb(var(--accent)); border-color: rgba(var(--horatio-color), 0.3); }
+  .tag-source { background: rgba(var(--horatio-color), 0.10); color: rgb(var(--horatio-color)); border-color: rgba(var(--horatio-color), 0.25); font-size: var(--ts_sectionTitle); letter-spacing:1.5px; padding: 2px 8px; border-radius:4px; border:1px solid; font-family:'Share Tech Mono',monospace; }
 
-  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .nav-item.active { color: rgb(var(--accent)); border-left-color: rgb(var(--accent)); background: var(--accent-dim); }
   .nav-item:hover { background: var(--accent-dim); }
-  .step-list li .step-n { color: var(--accent); background: var(--accent-dim); }
-  .callout-tip { border-left-color: var(--accent); background: var(--accent-dim); }
-  .callout-tip .callout-label { color: var(--accent); }
+  .step-list li .step-n { color: rgb(var(--accent)); background: var(--accent-dim); }
+  .callout-tip { border-left-color: rgb(var(--accent)); background: var(--accent-dim); }
+  .callout-tip .callout-label { color: rgb(var(--accent)); }
 
   /* Horatio identity badge */
   .faction-badge {
-    background: rgba(var(--horatio-color-rgb), 0.15); color: var(--accent-bright);
-    border: 1px solid rgba(var(--horatio-color-rgb), 0.35);
+    background: rgba(var(--horatio-color), 0.15); color: rgb(var(--accent-bright-rgb));
+    border: 1px solid rgba(var(--horatio-color), 0.35);
   }
 
   /* Faction trait blocks */
   .trait-block {
     background: var(--card2); border: 1px solid var(--border);
-    border-left: 3px solid var(--accent); border-radius: 6px;
+    border-left: 3px solid rgb(var(--accent)); border-radius: 6px;
     padding: 13px 16px; margin: 10px 0; font-size: var(--ts_sectionLabel); line-height: 1.75;
   }
-  .trait-block.warn { border-left-color: var(--red); }
+  .trait-block.warn { border-left-color: rgb(var(--red)); }
 
   .trait-label {
     font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
     letter-spacing: 2px; margin-bottom: 5px; font-weight: 700;
-    color: var(--accent);
+    color: rgb(var(--accent));
   }
-  .trait-label.warn { color: var(--red); }
+  .trait-label.warn { color: rgb(var(--red)); }
 
   /* Source attribution pills */
   .source-row {
@@ -97,57 +95,57 @@
   }
   .src-pill {
     padding: 2px 9px; border-radius: 10px; letter-spacing: 1px;
-    background: rgba(var(--horatio-color-rgb), 0.08); color: var(--horatio-color);
-    border: 1px solid rgba(var(--horatio-color-rgb), 0.2);
+    background: rgba(var(--horatio-color), 0.08); color: rgb(var(--horatio-color));
+    border: 1px solid rgba(var(--horatio-color), 0.2);
   }
 
   /* Turn-order timeline */
   .timeline { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
   .tl-row {
     display: grid; grid-template-columns: 90px 1fr;
-    border-left: 2px solid rgba(var(--horatio-color-rgb), 0.25); padding-left: 16px;
+    border-left: 2px solid rgba(var(--horatio-color), 0.25); padding-left: 16px;
     padding-bottom: 18px; position: relative;
   }
   .tl-row:last-child { padding-bottom: 0; }
   .tl-row::before {
     content: ''; position: absolute; left: -6px; top: 4px;
     width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); box-shadow: 0 0 8px rgba(var(--horatio-color-rgb), 0.5);
+    background: rgb(var(--accent)); box-shadow: 0 0 8px rgba(var(--horatio-color), 0.5);
   }
   .tl-turn {
     font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: var(--accent); letter-spacing: 1px; padding-top: 2px;
+    color: rgb(var(--accent)); letter-spacing: 1px; padding-top: 2px;
     font-weight: 700;
   }
   .tl-body { font-size: var(--ts_sectionLabel); line-height: 1.7; color: var(--text); }
-  .tl-body strong { color: var(--accent-bright); }
+  .tl-body strong { color: rgb(var(--accent-bright-rgb)); }
 
   /* Ship card grid */
   .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; margin: 16px 0; }
   .ship-card {
     background: var(--card2); border: 1px solid var(--border);
-    border-top: 2px solid var(--accent); border-radius: 8px; padding: 14px 16px;
+    border-top: 2px solid rgb(var(--accent)); border-radius: 8px; padding: 14px 16px;
   }
-  .ship-card.warn-top { border-top-color: var(--red); }
+  .ship-card.warn-top { border-top-color: rgb(var(--red)); }
   .ship-name {
     font-family: 'Orbitron', sans-serif; font-size: var(--ts_quizTitle); font-weight: 700;
-    color: var(--accent-bright); letter-spacing: 2px; margin-bottom: 4px;
+    color: rgb(var(--accent-bright-rgb)); letter-spacing: 2px; margin-bottom: 4px;
   }
   .ship-role {
     font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: var(--horatio-color); letter-spacing: 2px; margin-bottom: 10px;
+    color: rgb(var(--horatio-color)); letter-spacing: 2px; margin-bottom: 10px;
   }
   .ship-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
 
   /* GENE SEQUENCER concept callout */
   .takt-box {
-    background: linear-gradient(135deg, rgba(var(--horatio-color-rgb), 0.08), rgba(var(--accent-bright-rgb), 0.06));
-    border: 1px solid rgba(var(--horatio-color-rgb), 0.3); border-radius: 8px;
+    background: linear-gradient(135deg, rgba(var(--horatio-color), 0.08), rgba(var(--accent-bright-rgb), 0.06));
+    border: 1px solid rgba(var(--horatio-color), 0.3); border-radius: 8px;
     padding: 18px 20px; margin: 16px 0;
   }
   .takt-title {
     font-family: 'Orbitron', sans-serif; font-size: var(--ts_topicTitle); font-weight: 700;
-    color: var(--accent-bright); letter-spacing: 3px; margin-bottom: 10px;
+    color: rgb(var(--accent-bright-rgb)); letter-spacing: 3px; margin-bottom: 10px;
   }
 
   /* Priority tier table */
@@ -163,10 +161,10 @@
     padding: 10px 12px; font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
     font-weight: 700; letter-spacing: 1.5px; display: flex; align-items: center;
   }
-  .splice-tier-label.s { background: rgba(var(--green-rgb), 0.12); color: var(--green); }
-  .splice-tier-label.a { background: rgba(var(--horatio-color-rgb), 0.12); color: var(--horatio-color); }
-  .splice-tier-label.b { background: rgba(var(--gold-rgb), 0.10); color: var(--gold); }
-  .splice-tier-label.c { background: rgba(var(--red-rgb), 0.08); color: var(--red); }
+  .splice-tier-label.s { background: rgba(var(--green), 0.12); color: rgb(var(--green)); }
+  .splice-tier-label.a { background: rgba(var(--horatio-color), 0.12); color: rgb(var(--horatio-color)); }
+  .splice-tier-label.b { background: rgba(var(--gold), 0.10); color: rgb(var(--gold)); }
+  .splice-tier-label.c { background: rgba(var(--red), 0.08); color: rgb(var(--red)); }
   .splice-tier-body {
     padding: 10px 14px; line-height: 1.7; color: var(--text);
   }
@@ -180,9 +178,9 @@
     font-size: var(--ts_sectionTitle); font-weight: 700; letter-spacing: 1px;
     border: 1px solid;
   }
-  .pop-cost-chip.cheap { background: rgba(var(--green-rgb),0.10); color: var(--green); border-color: rgba(var(--green-rgb),0.3); }
-  .pop-cost-chip.mid   { background: rgba(var(--gold-rgb),0.10);  color: var(--gold);  border-color: rgba(var(--gold-rgb),0.3); }
-  .pop-cost-chip.hard  { background: rgba(var(--red-rgb),0.10);   color: var(--red);   border-color: rgba(var(--red-rgb),0.3); }
+  .pop-cost-chip.cheap { background: rgba(var(--green),0.10); color: rgb(var(--green)); border-color: rgba(var(--green),0.3); }
+  .pop-cost-chip.mid   { background: rgba(var(--gold),0.10);  color: rgb(var(--gold));  border-color: rgba(var(--gold),0.3); }
+  .pop-cost-chip.hard  { background: rgba(var(--red),0.10);   color: rgb(var(--red));   border-color: rgba(var(--red),0.3); }
 </style-->
 </head>
 <body>
@@ -230,7 +228,7 @@
 <main class="main">
   <div class="page-header">
     <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.02</span> // The Horatio</div>
-    <h1 class="page-title">The<br>Horatio</h1>
+    <h1 class="page-title"><img src="../images/Races/HoratioIcon.webp"> The<br>Horatio</h1>
     <p class="page-subtitle">A trillion clones of the galaxy's most perfect being. Horatio plays like a standard faction in the early game, then diverges radically: the gene splicing system is not a side mechanic — it is the entire mid-to-late-game strategy. The player who understands which genes to acquire, in what order, when to splice, and how to breed populations for the sacrifice is playing a completely different game than everyone else on the map.</p>
   </div>
 
@@ -264,7 +262,7 @@
           <div class="trait-label">FOOD &amp; POPULATION MACHINE — THE FOUNDATION</div>
           Horatio's base racial bonuses give <strong>+3 Food per Horatio pop on hot planets</strong> and <strong>+2 Approval on hot planets</strong>. Their starting planet, Horatio Prime, is Mediterranean — not the ideal category, but their Ecologist government grants the "Hardship Ready" law, allowing colonization of <em>any non-gas planet type</em> from the start of the game. This means Horatio can expand into any environment they find and breed their population anywhere. As spliced bonuses stack, more Food means faster population growth, which means more Horatio pops producing more spliced FIDSI — a reinforcing loop that compounds aggressively from the mid-game onward.
           <br><br>
-          <span style="color:var(--red);">⚠ VERIFY WITH SOURCE:</span> The exact Food bonus value per pop and the approval values may vary with version and planet type combinations. Community sources consistently cite these as strong Food-producers, but exact numbers should be confirmed against patch notes or in-game tooltips.
+          <span style="color:rgb(var(--red));">⚠ VERIFY WITH SOURCE:</span> The exact Food bonus value per pop and the approval values may vary with version and planet type combinations. Community sources consistently cite these as strong Food-producers, but exact numbers should be confirmed against patch notes or in-game tooltips.
         </div>
 
         <div class="trait-block warn">
@@ -340,7 +338,7 @@
           <br><br>
           The stacking is additive: after splicing Sophons (+2 Science/pop) and then Mavros (+1 Industry/pop), each Horatio unit produces their native bonuses plus +2 Science plus +1 Industry. With 30 Horatio pops across your empire and three or four good splices, the cumulative output advantage over non-Horatio factions becomes dramatic.
           <br><br>
-          <span style="color:var(--red);">⚠ VERIFY WITH SOURCE:</span> Exact reduction ratios for each faction's splice bonus are best confirmed from the in-game Genetics screen or from the community-maintained splice bonus tables. Different bonuses (flat vs. percentage) may be reduced differently.
+          <span style="color:rgb(var(--red));">⚠ VERIFY WITH SOURCE:</span> Exact reduction ratios for each faction's splice bonus are best confirmed from the in-game Genetics screen or from the community-maintained splice bonus tables. Different bonuses (flat vs. percentage) may be reduced differently.
         </div>
 
         <div class="trait-block warn">
@@ -352,7 +350,7 @@
           <div class="trait-label warn">FOOD CONSUMPTION PENALTY — THE HIDDEN COST</div>
           Each splice also adds a food consumption penalty to Horatio population units. The penalty grows with each splice performed. In the early game with few Horatio pops this is negligible; in the late game with 80+ Horatio pops empire-wide and 6 splices completed, the cumulative food drain can be significant — potentially requiring dedicated food-producing systems to offset. This is another reason not to splice every available population reflexively: each splice costs you both the sacrificed pops and ongoing Food per Horatio unit.
           <br><br>
-          <span style="color:var(--red);">⚠ VERIFY WITH SOURCE:</span> Exact Food penalty per splice needs confirmation. Community discussions confirm the penalty exists and compounds, but specific values vary by patch version.
+          <span style="color:rgb(var(--red));">⚠ VERIFY WITH SOURCE:</span> Exact Food penalty per splice needs confirmation. Community discussions confirm the penalty exists and compounds, but specific values vary by patch version.
         </div>
 
         <div class="source-row">
@@ -474,7 +472,7 @@
           <div class="callout-label">PRACTICAL SEQUENCER DECISION TABLE</div>
           <table style="width:100%;border-collapse:collapse;font-size:var(--ts_sectionLabel);">
             <thead>
-              <tr style="border-bottom:1px solid var(--border);color:var(--accent);font-family:'Share Tech Mono',monospace;font-size:var(--ts_sectionTitle);">
+              <tr style="border-bottom:1px solid var(--border);color:rgb(var(--accent));font-family:'Share Tech Mono',monospace;font-size:var(--ts_sectionTitle);">
                 <th style="text-align:left;padding:6px 8px;">SITUATION</th>
                 <th style="text-align:left;padding:6px 8px;">DECISION</th>
               </tr>
@@ -482,23 +480,23 @@
             <tbody>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:6px 8px;">Horatio count &lt; 10, strong alien bonus available</td>
-                <td style="padding:6px 8px;color:var(--gold);">Wait. Let Horatio grow first.</td>
+                <td style="padding:6px 8px;color:rgb(var(--gold));">Wait. Let Horatio grow first.</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:6px 8px;">Target race at 19 pops, 20-pop collection bonus is good</td>
-                <td style="padding:6px 8px;color:var(--gold);">Wait 1 more birth cycle, collect bonus, then splice.</td>
+                <td style="padding:6px 8px;color:rgb(var(--gold));">Wait 1 more birth cycle, collect bonus, then splice.</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:6px 8px;">Target race very hard to re-acquire (Vodyani, Riftborn)</td>
-                <td style="padding:6px 8px;color:var(--red);">Hold. Only splice when Horatio count is 20+.</td>
+                <td style="padding:6px 8px;color:rgb(var(--red));">Hold. Only splice when Horatio count is 20+.</td>
               </tr>
               <tr style="border-bottom:1px solid var(--border);">
                 <td style="padding:6px 8px;">Target race easy to re-acquire (minor faction), large Horatio count</td>
-                <td style="padding:6px 8px;color:var(--green);">Splice. The cost is recoverable.</td>
+                <td style="padding:6px 8px;color:rgb(var(--green));">Splice. The cost is recoverable.</td>
               </tr>
               <tr>
                 <td style="padding:6px 8px;">Splice bonus is food or flat-minor (only +1 food/pop)</td>
-                <td style="padding:6px 8px;color:var(--red);">Skip. The food penalty from the splice may exceed the bonus.</td>
+                <td style="padding:6px 8px;color:rgb(var(--red));">Skip. The food penalty from the splice may exceed the bonus.</td>
               </tr>
             </tbody>
           </table>
@@ -622,7 +620,7 @@
           <div class="trait-label">THE MONOLITH GOAL — ALL HORATIO, EVERYWHERE</div>
           The endgame population ideal for Horatio is a fully monolithic empire of Horatio pops carrying every spliced bonus. Each alien pop type still present in your systems is producing weaker FIDSI than a well-spliced Horatio would. Once you've completed all your planned splices, begin systematically eliminating non-Horatio pops: concentrate them in dedicated systems, splicing the last ones when possible, and using the <strong>Genetic Alteration Lab</strong> improvement (Tier 4 Empire Development research) — it converts non-Horatio pops in the host system to Horatio each turn for an Industry cost. Note: it doesn't let you choose which alien type; only build it on systems where you've already spliced the remaining alien pop types.
           <br><br>
-          <span style="color:var(--red);">⚠ NOTE:</span> Be careful with pops whose collection bonuses (at 20 or 50) you're still benefiting from. Don't eliminate a pop type until you've confirmed the collection bonus is either no longer relevant or you've already surpassed that threshold benefit period.
+          <span style="color:rgb(var(--red));">⚠ NOTE:</span> Be careful with pops whose collection bonuses (at 20 or 50) you're still benefiting from. Don't eliminate a pop type until you've confirmed the collection bonus is either no longer relevant or you've already surpassed that threshold benefit period.
         </div>
 
         <div class="trait-block warn">
