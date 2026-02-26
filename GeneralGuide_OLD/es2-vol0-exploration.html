@@ -9,22 +9,22 @@
 <style>
     :root {
     --accent:     var(--vol0-accent);
-    --accent-rgb: var(--vol0-accent-rgb);
-    --accent-dim: rgba(var(--vol0-accent-rgb), 0.11);
+    --accent-rgb: var(--vol0-accent);
+    --accent-dim: rgba(var(--vol0-accent), 0.11);
   }
-  body::before{background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(var(--vol0-accent-rgb), .05) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 80% 20%,rgba(var(--vol4-accent-rgb), .04) 0%,transparent 70%);}
-  h1.page-title{text-shadow:0 0 30px rgba(var(--vol0-accent-rgb), .3);}
-  .progress-mini-fill{background:linear-gradient(90deg,var(--vol0-accent),var(--vol4-accent));box-shadow:0 0 8px rgba(var(--vol0-accent-rgb), .5);}
-  .tag-mech{background:rgba(var(--vol0-accent-rgb), .11);color:var(--vol0-accent);border-color:rgba(var(--vol0-accent-rgb), .25);}
-  .nav-item.active,.nav-item:hover{background:rgba(var(--vol0-accent-rgb), .09);}
-  .nav-item.active{color:var(--vol0-accent);border-left-color:var(--vol0-accent);}
-  .topic-num{color:var(--vol0-accent);background:rgba(var(--vol0-accent-rgb), .11);border-color:rgba(var(--vol0-accent-rgb), .3);}
-  .callout-tip{background:rgba(var(--vol0-accent-rgb), .09);border-left-color:var(--vol0-accent);}
-  .callout-tip .callout-label{color:var(--vol0-accent);}
-  .step-list li .step-n{color:var(--vol0-accent);background:rgba(var(--vol0-accent-rgb), .11);}
-  .sidebar-logo .game-name{color:var(--vol0-accent);}
+  body::before{background:radial-gradient(ellipse 60% 40% at 20% 50%,rgba(var(--vol0-accent), .05) 0%,transparent 70%),radial-gradient(ellipse 50% 30% at 80% 20%,rgba(var(--vol4-accent), .04) 0%,transparent 70%);}
+  h1.page-title{text-shadow:0 0 30px rgba(var(--vol0-accent), .3);}
+  .progress-mini-fill{background:linear-gradient(90deg,rgb(var(--vol0-accent)),rgb(var(--vol4-accent)));box-shadow:0 0 8px rgba(var(--vol0-accent), .5);}
+  .tag-mech{background:rgba(var(--vol0-accent), .11);color:rgb(var(--vol0-accent));border-color:rgba(var(--vol0-accent), .25);}
+  .nav-item.active,.nav-item:hover{background:rgba(var(--vol0-accent), .09);}
+  .nav-item.active{color:rgb(var(--vol0-accent));border-left-color:rgb(var(--vol0-accent));}
+  .topic-num{color:rgb(var(--vol0-accent));background:rgba(var(--vol0-accent), .11);border-color:rgba(var(--vol0-accent), .3);}
+  .callout-tip{background:rgba(var(--vol0-accent), .09);border-left-color:rgb(var(--vol0-accent));}
+  .callout-tip .callout-label{color:rgb(var(--vol0-accent));}
+  .step-list li .step-n{color:rgb(var(--vol0-accent));background:rgba(var(--vol0-accent), .11);}
+  .sidebar-logo .game-name{color:rgb(var(--vol0-accent));}
 
-  .vol-next{--card-accent: var(--vol1-accent); --card-accent-rgb:var(--vol1-accent-rgb);}
+  .vol-next{--card-accent: var(--vol1-accent); --card-accent-rgb: var(--vol1-accent);}
 </style>
 </head>
 <body>
@@ -182,7 +182,7 @@
       <div class="block-body">
         <p>Pirates spawn from <strong>Pirate Lairs</strong> (skull icons on the galaxy map). Each Lair has an internal countdown timer; when it expires, a fleet spawns and moves toward the nearest non-allied empire system. Fleet strength scales with game age — the longer you wait, the stronger they get. Three productive actions are available:</p>
         <ul class="step-list">
-          <li><span class="step-n">HACK</span><span><strong>Use the Hacking Network (Penumbra DLC) to run "Hack Autodroids" on the Lair — this steals some of its stockpiled resources without combat.</strong> Other useful pirate hacking results include "Falsify Logs" (improves relations), "Eavesdrop" (−50% pirate diplomacy cost), and "Sabotage Supplies" (delays the next pirate fleet spawn by +4 turns). See <a href="es2-vol4-diplomacy.html" style="color:var(--accent);text-decoration:underline;">Vol.4: Diplomacy &amp; Espionage</a> for the full hacking system.</span></li>
+          <li><span class="step-n">HACK</span><span><strong>Use the Hacking Network (Penumbra DLC) to run "Hack Autodroids" on the Lair — this steals some of its stockpiled resources without combat.</strong> Other useful pirate hacking results include "Falsify Logs" (improves relations), "Eavesdrop" (−50% pirate diplomacy cost), and "Sabotage Supplies" (delays the next pirate fleet spawn by +4 turns). See <a href="es2-vol4-diplomacy.html" style="color:rgb(var(--accent));text-decoration:underline;">Vol.4: Diplomacy &amp; Espionage</a> for the full hacking system.</span></li>
           <li><span class="step-n">NAP</span><span><strong>Buy a Non-Aggression Pact from the diplomatic popup when orbiting.</strong> The Dust cost varies by threat level. At 35–40 Dust/turn early income, a 150–200 Dust NAP typically protects for 15+ turns — strongly positive return when your fleet is too weak to fight back. Buy NAPs on Lairs within striking distance of your systems.</span></li>
           <li><span class="step-n">DESTROY</span><span><strong>Invade and eliminate the Lair once Medium-hull ships are available.</strong> Permanently removes that spawn point, gives a large one-time loot drop, and sometimes completes quest rewards. Prioritize Lairs on your borders — eliminating a flank threat frees your military for forward operations.</span></li>
         </ul>

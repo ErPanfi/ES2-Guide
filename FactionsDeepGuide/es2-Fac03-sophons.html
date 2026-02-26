@@ -17,196 +17,41 @@
 
   :root {
     --accent:            var(--sophon-color);
-    --accent-rgb:        var(--sophon-color-rgb);
-    --accent-dim:        rgba(var(--sophon-color-rgb), 0.11);
-    --accent-bright-rgb: var(--cyan-rgb);
-    --accent-bright:     var(--cyan);
+    --accent-rgb:        var(--sophon-color);
+    --accent-dim:        rgba(var(--sophon-color), 0.11);
+    --accent-bright-rgb: var(--cyan);
   }
 
   /* Faction-specific starfield ambience */
   body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--sophon-color-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--cyan-rgb), 0.04) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--sophon-color-rgb), 0.03) 0%, transparent 60%);
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--sophon-color), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--cyan), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--sophon-color), 0.03) 0%, transparent 60%);
   }
 
   h1.page-title {
     text-shadow:
-      0 0 40px rgba(var(--sophon-color-rgb), 0.45),
-      0 0 80px rgba(var(--sophon-color-rgb), 0.15);
+      0 0 40px rgba(var(--sophon-color), 0.45),
+      0 0 80px rgba(var(--sophon-color), 0.15);
   }
 
   /* sidebar game-name tint */
-  .sidebar-logo .game-name { color: var(--accent); }
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
 
   /* Sophons-only: .tag-strat — science/strategy action tag */
   /* (tag-mech is already handled by the shared CSS)        */
   .tag-strat {
-    background: rgba(var(--cyan-rgb), 0.09);
-    color: var(--cyan);
-    border-color: rgba(var(--cyan-rgb), 0.25);
+    background: rgba(var(--cyan), 0.09);
+    color: rgb(var(--cyan));
+    border-color: rgba(var(--cyan), 0.25);
   }
 
   /* Sophons-only: progress-mini two-tone (sophon→cyan instead of accent→bright) */
   .progress-mini-fill {
-    background: linear-gradient(90deg, var(--sophon-color), var(--cyan));
+    background: linear-gradient(90deg, rgb(var(--sophon-color)), rgb(var(--cyan)));
   }
 </style>
 
-<!--style>
-  /* Sophons: blue #2d8fff + cyan highlight */
-  :root {
-    --accent:            var(--sophon-color);
-    --accent-rgb:        var(--sophon-color-rgb);
-    --accent-dim:        rgba(var(--sophon-color-rgb), 0.11);
-    --accent-bright-rgb: var(--cyan-rgb);
-    --accent-bright:     var(--cyan);
-  }
-
-  .progress-mini-fill { background: linear-gradient(90deg, var(--sophon-color), var(--cyan)); }
-
-  body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--sophon-color-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--cyan-rgb), 0.04) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--sophon-color-rgb), 0.03) 0%, transparent 60%); }
-
-  h1.page-title { text-shadow: 0 0 40px rgba(var(--sophon-color-rgb), 0.45), 0 0 80px rgba(var(--sophon-color-rgb), 0.15); }
-
-  .topic-num        { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--sophon-color-rgb), 0.35); }
-  .tag-mech         { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--sophon-color-rgb), 0.3); }
-  .tag-strat        { background: rgba(var(--cyan-rgb), 0.09); color: var(--cyan); border-color: rgba(var(--cyan-rgb), 0.25); }
-  .tag-source       { background: rgba(var(--sophon-color-rgb), 0.08); color: var(--sophon-color); border-color: rgba(var(--sophon-color-rgb), 0.2);
-                      font-size: var(--ts_sectionTitle); letter-spacing: 1.5px; padding: 2px 8px; border-radius: 4px;
-                      border: 1px solid; font-family: 'Share Tech Mono', monospace; }
-
-  .nav-item.active  { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
-  .nav-item:hover   { background: var(--accent-dim); }
-  .step-list li .step-n { color: var(--accent); background: var(--accent-dim); }
-  .callout-tip      { border-left-color: var(--accent); background: var(--accent-dim); }
-  .callout-tip .callout-label { color: var(--accent); }
-
-  /* Sophon identity badge */
-  .faction-badge {
-    background: rgba(var(--sophon-color-rgb), 0.15); color: var(--accent-bright);
-    border: 1px solid rgba(var(--sophon-color-rgb), 0.35);
-  }
-
-  /* Trait blocks */
-  .trait-block {
-    background: var(--card2); border: 1px solid var(--border);
-    border-left: 3px solid var(--accent); border-radius: 6px;
-    padding: 13px 16px; margin: 10px 0; font-size: var(--ts_sectionLabel); line-height: 1.75;
-  }
-  .trait-block.warn { border-left-color: var(--red); }
-  .trait-block.cyan { border-left-color: var(--cyan); }
-
-  .trait-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px; margin-bottom: 5px; font-weight: 700; color: var(--accent); }
-  .trait-label.warn { color: var(--red); }
-  .trait-label.cyan { color: var(--cyan); }
-
-  /* Source attribution */
-  .source-row { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px;
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle); }
-  .src-pill { padding: 2px 9px; border-radius: 10px; letter-spacing: 1px;
-    background: rgba(var(--sophon-color-rgb), 0.08); color: var(--sophon-color);
-    border: 1px solid rgba(var(--sophon-color-rgb), 0.2); }
-  .src-pill.unverified { background: rgba(var(--gold-rgb), 0.08); color: var(--gold);
-    border-color: rgba(var(--gold-rgb), 0.25); }
-
-  /* Turn-order timeline */
-  .timeline { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
-  .tl-row {
-    display: grid; grid-template-columns: 100px 1fr;
-    border-left: 2px solid rgba(var(--sophon-color-rgb), 0.25); padding-left: 16px;
-    padding-bottom: 18px; position: relative;
-  }
-  .tl-row:last-child { padding-bottom: 0; }
-  .tl-row::before {
-    content: ''; position: absolute; left: -6px; top: 4px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); box-shadow: 0 0 8px rgba(var(--sophon-color-rgb), 0.5);
-  }
-  .tl-turn { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: var(--accent); letter-spacing: 1px; padding-top: 2px; font-weight: 700; }
-  .tl-body { font-size: var(--ts_sectionLabel); line-height: 1.7; color: var(--text); }
-  .tl-body strong { color: var(--accent-bright); }
-
-  /* Ship cards */
-  .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 14px; margin: 16px 0; }
-  .ship-card { background: var(--card2); border: 1px solid var(--border);
-    border-top: 2px solid var(--accent); border-radius: 8px; padding: 14px 16px; }
-  .ship-card.skip-top { border-top-color: var(--red); }
-  .ship-card.gold-top { border-top-color: var(--gold); }
-  .ship-card.cyan-top { border-top-color: var(--cyan); }
-  .ship-name { font-family: 'Orbitron', sans-serif; font-size: var(--ts_quizTitle); font-weight: 700;
-    color: var(--accent-bright); letter-spacing: 2px; margin-bottom: 2px; }
-  .ship-role { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; }
-  .ship-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
-  .ship-stat { display: flex; justify-content: space-between; font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle); color: var(--text-dim); border-top: 1px solid var(--border);
-    margin-top: 8px; padding-top: 8px; }
-  .ship-stat span:last-child { color: var(--accent); font-weight: 700; }
-
-  /* Omniscience decay visualiser */
-  .omni-bar-wrap { margin: 16px 0; }
-  .omni-bar-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 4px; display: flex; justify-content: space-between; }
-  .omni-bar { height: 22px; border-radius: 4px; background: var(--border); overflow: hidden; display: flex; }
-  .omni-seg { display: flex; align-items: center; justify-content: center;
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    font-weight: 700; letter-spacing: 1px; flex-shrink: 0; }
-
-  /* PIONEER concept box */
-  .pioneer-box {
-    background: linear-gradient(135deg, rgba(var(--sophon-color-rgb), 0.08), rgba(var(--cyan-rgb), 0.06));
-    border: 1px solid rgba(var(--sophon-color-rgb), 0.3); border-radius: 8px;
-    padding: 18px 20px; margin: 16px 0;
-  }
-  .pioneer-title { font-family: 'Orbitron', sans-serif; font-size: var(--ts_topicTitle); font-weight: 700;
-    color: var(--accent-bright); letter-spacing: 3px; margin-bottom: 10px; }
-
-  /* Quest branch grid */
-  .quest-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; margin: 14px 0; }
-  .quest-card { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; }
-  .quest-card.best  { border-color: rgba(var(--sophon-color-rgb), 0.45); }
-  .quest-card.conditional { border-color: rgba(var(--gold-rgb), 0.35); }
-  .quest-card.skip  { border-color: rgba(var(--red-rgb), 0.3); }
-  .quest-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px; font-weight: 700; margin-bottom: 6px; }
-  .quest-label.best  { color: var(--accent); }
-  .quest-label.conditional { color: var(--gold); }
-  .quest-label.skip  { color: var(--red); }
-  .quest-body  { font-size: var(--ts_quizTitle); line-height: 1.6; color: var(--text); }
-
-  /* Hero path comparison */
-  .hero-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 14px 0; }
-  .hero-path { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; }
-  .hero-path.preferred { border-color: rgba(var(--sophon-color-rgb), 0.45); }
-  .hero-path-label { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px; font-weight: 700; margin-bottom: 8px; }
-  .hero-path-label.preferred { color: var(--accent); }
-  .hero-path-label.secondary { color: var(--text-dim); }
-  .hero-path-body { font-size: var(--ts_quizTitle); line-height: 1.6; color: var(--text); }
-
-  /* Victory path table */
-  .victory-table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: var(--ts_table); }
-  .victory-table th { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px; text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
-  .victory-table td { padding: 9px 12px; border-bottom: 1px solid rgba(var(--sophon-color-rgb), 0.08); line-height: 1.55; }
-  .victory-table td:first-child { font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 1.5px; white-space: nowrap; }
-  .vic-s  { color: var(--green); font-weight: 700; }
-  .vic-a  { color: var(--accent); font-weight: 700; }
-  .vic-b  { color: var(--gold); font-weight: 700; }
-  .vic-c  { color: var(--red); }
-
-  @media (max-width: 700px) {
-    .hero-compare { grid-template-columns: 1fr; }
-    .quest-grid   { grid-template-columns: 1fr; }
-  }
-</style-->
 </head>
 <body>
 <div class="layout">
@@ -250,7 +95,7 @@
     <div class="breadcrumb">
       <a href="../index.html" class="linkToIndex">ES2 Guide</a> // <span>Faction Deep Dive</span> // The Sophons
     </div>
-    <h1 class="page-title">◈ THE SOPHONS</h1>
+    <h1 class="page-title"><img src="../images/Races/SophonsIcon.webp">  The<br>Sophons</h1>
     <p class="page-subtitle">Omniscience makes you the cheapest researcher in the galaxy — but only if you stay ahead of everyone else. This guide is about understanding the decay curve, fixing structural weaknesses before they stall the empire, and knowing when the "science faction" should skip Science Victory entirely.</p>
   </div>
 
@@ -276,7 +121,7 @@
         <div class="faction-badge badge-sophon">◈ SOPHONS — THE SCIENTISTS</div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--sophon-color)">THE DISCOUNT FORMULA</div>
+          <div class="rule-label" style="color:rgb(var(--sophon-color))">THE DISCOUNT FORMULA</div>
           When you research a technology that no other faction has yet discovered, you pay <strong>50% of its listed Science cost</strong>. As more factions research the same tech, the discount decreases linearly. When exactly half the factions in the game have researched a given tech, your discount on it hits 0% — you pay full price, just like everyone else. The tech screen shows the current Omniscience % for every available research item; check it every turn.
           <br><br>
           <em style="font-size:var(--ts_sectionTitle);color:var(--text-dim)">⚠ The linearity of the decay is described as such in community documentation but has a "TODO: confirm" note in the fan wiki. Treat the precise formula as approximately correct, not exact.</em>
@@ -286,21 +131,21 @@
         <div class="omni-bar-wrap">
           <div class="omni-bar-label"><span>FACTIONS WITH THIS TECH →</span><span>DISCOUNT ↓</span></div>
           <div class="omni-bar">
-            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.8);color:var(--bg)">50%</div>
-            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.55);color:var(--bg)">37%</div>
-            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.35);color:var(--text)">25%</div>
-            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color-rgb),0.18);color:var(--text)">12%</div>
-            <div class="omni-seg" style="width:20%;background:rgba(var(--red-rgb),0.25);color:var(--red)">0%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color),0.8);color:var(--bg)">50%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color),0.55);color:var(--bg)">37%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color),0.35);color:var(--text)">25%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--sophon-color),0.18);color:var(--text)">12%</div>
+            <div class="omni-seg" style="width:20%;background:rgba(var(--red),0.25);color:rgb(var(--red))">0%</div>
           </div>
           <div class="omni-bar-label" style="margin-top:4px">
-            <span style="color:var(--sophon-color)">NONE</span>
+            <span style="color:rgb(var(--sophon-color))">NONE</span>
             <span>¼ of factions</span>
             <span>½ of factions</span>
           </div>
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--red)">CRITICAL EXCEPTION: SHIP TECHS PAY FULL PRICE</div>
+          <div class="rule-label" style="color:rgb(var(--red))">CRITICAL EXCEPTION: SHIP TECHS PAY FULL PRICE</div>
           Omniscience does <strong>not apply to faction-specific ship research</strong> — hull unlocks, upgrade techs, and ship-related research paths all cost full Science regardless of whether any other faction has researched them. This means the tech advantage Omniscience provides translates to empire and military tech, not to fleet power directly. Plan ship research budget separately.
         </div>
 
@@ -330,7 +175,7 @@
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--sophon-color)">WHAT FALLING BEHIND ACTUALLY COSTS</div>
+          <div class="rule-label" style="color:rgb(var(--sophon-color))">WHAT FALLING BEHIND ACTUALLY COSTS</div>
           A Sophon player who loses frontier position — either by falling behind in Science output or by researching too narrowly — starts paying full price for everything. At that point you are playing an inferior version of most other factions: low Industry base, weak diplomacy, feeble infantry. The entire faction identity depends on maintaining the discount, which depends on maintaining pace.
         </div>
 
@@ -451,7 +296,7 @@
         </table>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--sophon-color)">THE SETTLE-IMMEDIATELY PRINCIPLE</div>
+          <div class="rule-label" style="color:rgb(var(--sophon-color))">THE SETTLE-IMMEDIATELY PRINCIPLE</div>
           YT02's expert playthrough is explicit on this: "As soon as you find a good enough place to settle you just do it right away." Do not hold colony ships waiting for a perfect system. A Tundra or Boreal system close by is usually better than an ideal system three explorations away. The Sophon early-game Food bottleneck means population grows slowly — every turn a system isn't colonised is a turn your empire isn't growing.
         </div>
 
@@ -507,7 +352,7 @@
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--sophon-color)">RECOMMENDED SEQUENCE</div>
+          <div class="rule-label" style="color:rgb(var(--sophon-color))">RECOMMENDED SEQUENCE</div>
           Explore with the hero on the fleet for XP (turns 1–12 approximately). During this phase the hero earns levels fast from curiosity exploration and combat with pirates. Around turn 10–15, make the commitment: if you are building toward a fleet-based victory (Supremacy or Conquest), invest in the Counselor damage skills leading toward Burning Light and keep the hero on fleet duty. If you are on a secure island with no military pressure and targeting Science Victory, returning the hero to governor around turn 15 is defensible — but acknowledge the lower ceiling you're accepting.
         </div>
 
@@ -564,7 +409,7 @@
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--sophon-color)">SECOND WAVE — INDUSTRY LAW vs. SCIENCE LAW</div>
+          <div class="rule-label" style="color:rgb(var(--sophon-color))">SECOND WAVE — INDUSTRY LAW vs. SCIENCE LAW</div>
           When the second set of quest options opens, the community consensus favours the Industry law. It directly addresses the Sophon structural weakness (Industry), whereas the Science law provides a bonus that is partially redundant given Omniscience. Reddit01: "This, along with the Mavros, effectively fixes the Sophon's biggest weakness, and the other laws seem less useful, even when going for a fast science victory." The one counterargument: the Science law combined with Omniscience discounts reaches Endless Research faster on the bottom tech tree — this is a viable niche case, not a general recommendation.
         </div>
 
@@ -623,7 +468,7 @@
         </table>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--sophon-color)">MANDATORY GATE TECHS — ALWAYS RESEARCH ON TIME</div>
+          <div class="rule-label" style="color:rgb(var(--sophon-color))">MANDATORY GATE TECHS — ALWAYS RESEARCH ON TIME</div>
           Certain technologies must be researched regardless of Omniscience discount because they gate everything else: Titanium (early Industry buildings), Hyperium (mid-game military), colonisation tier upgrades for key planet types in your neighbourhood, and the trade and economic infrastructure techs. Delaying these because of a low discount is a strategic error. Reddit01 is explicit: "I begin researching titanium tech [turn 1] and always put its building into the construction queue as soon as it is available. Nets me at least 30 production with the buildings."
         </div>
 
@@ -675,7 +520,7 @@
               <strong>Best role:</strong> Early-game defensive deterrent parked over border systems. Holds ground against pirates and early aggression while you build proper military. Weak as a rusher (only 2 weapons, 100 crew). Enhanced variant gains a third weapon slot — viable late-game screen ship.
             </div>
             <div class="ship-stat"><span>MODULES</span><span>6 (5 standard)</span></div>
-            <div class="ship-stat"><span>ENGINE NEEDED EARLY?</span><span style="color:var(--green)">NO — 2 MP INNATE</span></div>
+            <div class="ship-stat"><span>ENGINE NEEDED EARLY?</span><span style="color:rgb(var(--green))">NO — 2 MP INNATE</span></div>
           </div>
 
           <div class="ship-card skip-top">
@@ -684,7 +529,7 @@
             <div class="ship-body">
               The standard Attacker. Not bad, but the Hunter is reachable quickly enough that investing heavily in Attacker production is generally a waypoint rather than a destination. Where the Attacker shines: cheap Protector + Attacker fleets for early war economy when strategic resources are scarce. If Adamantian or Antimatter are absent from your galaxy, you may be forced to develop this line further. The Enhanced Attacker does significantly more damage than the Hunter baseline — but is more fragile, making it a poor fit for the Industry-constrained Sophon, where replacing destroyed ships is expensive.
             </div>
-            <div class="ship-stat"><span>COMMUNITY VERDICT</span><span style="color:var(--gold)">SITUATIONAL</span></div>
+            <div class="ship-stat"><span>COMMUNITY VERDICT</span><span style="color:rgb(var(--gold))">SITUATIONAL</span></div>
           </div>
 
           <div class="ship-card">
@@ -695,7 +540,7 @@
               <br><br>
               Enhanced Hunters do 15% more damage than normal Carriers and are the preferred late-game combat ship before the Enhanced Carrier becomes available.
             </div>
-            <div class="ship-stat"><span>FLEET ROLE</span><span style="color:var(--green)">PRIMARY COMBATANT</span></div>
+            <div class="ship-stat"><span>FLEET ROLE</span><span style="color:rgb(var(--green))">PRIMARY COMBATANT</span></div>
           </div>
 
           <div class="ship-card cyan-top">
@@ -707,7 +552,7 @@
               Brings sustained damage output through the full battle duration (unlike small ship swarms where losses reduce total DPS). Sophons have a tech advantage that compounds the Carrier's already superior design, per YT01.
             </div>
             <div class="ship-stat"><span>WEAPON + DEFENSE</span><span>5 + 5 BASE</span></div>
-            <div class="ship-stat"><span>COMMUNITY VERDICT</span><span style="color:var(--cyan)">EXCELLENT</span></div>
+            <div class="ship-stat"><span>COMMUNITY VERDICT</span><span style="color:rgb(var(--cyan))">EXCELLENT</span></div>
           </div>
 
           <div class="ship-card gold-top">
@@ -718,13 +563,13 @@
               <br><br>
               Can also support various fleet utility roles (cloaking, extra Science modules, speed buffs for the flotilla).
             </div>
-            <div class="ship-stat"><span>KEY USE</span><span style="color:var(--gold)">INVASION + SUPPORT</span></div>
+            <div class="ship-stat"><span>KEY USE</span><span style="color:rgb(var(--gold))">INVASION + SUPPORT</span></div>
           </div>
 
         </div>
 
         <div class="faction-rule">
-          <div class="rule-label" style="color:var(--sophon-color)">FLEET COMPOSITION — RECOMMENDED PROGRESSION</div>
+          <div class="rule-label" style="color:rgb(var(--sophon-color))">FLEET COMPOSITION — RECOMMENDED PROGRESSION</div>
           <strong>Early:</strong> Explorer fleet (2 weapons + defensive modules) — no engine needed. Handles pirates and deters aggression.<br>
           <strong>Mid:</strong> All-Hunter fleet with Explorers filling Command Point remainder. This is the primary combat tool from roughly turn 25 to turn 60.<br>
           <strong>Late:</strong> Hunter fleet + 1 Carrier anchor with damage amplifier. When Enhanced Hunters unlock, transition primary fleet to Enhanced Hunters. Add a separate Protector-based invasion fleet when planning ground assaults.

@@ -6,24 +6,21 @@
 <title>ES2 — Comprehensive Guide</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="CSSnJS/es2-faction-deepdive.css">
 <style>
   :root {
     --accent:          var(--vol4-accent);
-    --accent-rgb:      var(--vol4-accent-rgb);
-    --accent-dim:      rgba(var(--vol4-accent-rgb), 0.11);
-    --vol7-accent-rgb: 0,229,255;
-    --vol7-accent:     #00e5ff;
-    --vol8-accent-rgb: 232,212,139;
-    --vol8-accent:     #e8d48b;
+    --accent-rgb:      var(--vol4-accent);
+    --accent-dim:      rgba(var(--vol4-accent), 0.11);
   }
 
   /* ── Page layout ───────────────────────────────────────────── */
   body { min-height: 100vh; }
 
   body::before { background:
-    radial-gradient(ellipse 55% 45% at 15% 20%, rgba(var(--vol0-accent-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 45% 40% at 85% 80%, rgba(var(--lumeris-color-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 35% 35% at 50% 50%, rgba(var(--vol4-accent-rgb), 0.03) 0%, transparent 60%); }
+    radial-gradient(ellipse 55% 45% at 15% 20%, rgba(var(--vol0-accent), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 40% at 85% 80%, rgba(var(--lumeris-color), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 35% 35% at 50% 50%, rgba(var(--vol4-accent), 0.03) 0%, transparent 60%); }
 
   .index-wrap {
     min-height: 100vh;
@@ -45,13 +42,15 @@
     bottom: -1px; left: 60px; right: 60px;
     height: 1px;
     background: linear-gradient(90deg,
-      var(--vol0-accent),
-      var(--vol1-accent),
-      var(--vol2-accent),
-      var(--vol3-accent),
-      var(--vol4-accent),
-      var(--vol5-accent),
-      var(--vol6-accent)
+      rgb(var(--vol0-accent)),
+      rgb(var(--vol1-accent)),
+      rgb(var(--vol2-accent)),
+      rgb(var(--vol3-accent)),
+      rgb(var(--vol4-accent)),
+      rgb(var(--vol5-accent)),
+      rgb(var(--vol6-accent)),
+      rgb(var(--vol7-accent)),
+      rgb(var(--vol8-accent))
     );
     opacity: 0.5;
   }
@@ -69,7 +68,7 @@
     font-family: 'Orbitron', sans-serif;
     font-size: calc(var(--ts_mainText) * 3.2);
     font-weight: 900;
-    color: var(--text-bright);
+    color: rgb(var(--text-bright));
     line-height: 1;
     letter-spacing: -1px;
     margin-bottom: 10px;
@@ -128,115 +127,6 @@
     background: var(--border);
   }
 
-  /* ── Volume cards ──────────────────────────────────────────── */
-  .vol-card {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    padding: 16px 20px;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    background: transparent;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background 0.18s, border-color 0.18s, transform 0.15s;
-    margin-bottom: 8px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .vol-card::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--card-accent);
-    opacity: 0;
-    transition: opacity 0.18s;
-  }
-
-  .vol-card:hover {
-    background: rgba(var(--card-accent-rgb), 0.07);
-    border-color: rgba(var(--card-accent-rgb), 0.25);
-    transform: translateX(4px);
-  }
-
-  .vol-card:hover::before {
-    opacity: 1;
-  }
-
-  .vol-card-emoji {
-    font-size: calc(var(--ts_mainText) * 1.5);
-    flex-shrink: 0;
-    width: 40px;
-    text-align: center;
-    filter: drop-shadow(0 0 6px rgba(var(--card-accent-rgb), 0.4));
-    transition: filter 0.18s;
-  }
-
-  .vol-card:hover .vol-card-emoji {
-    filter: drop-shadow(0 0 10px rgba(var(--card-accent-rgb), 0.7));
-  }
-
-  .vol-card-text {
-    flex: 1;
-  }
-
-  .vol-card-num {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle);
-    color: var(--card-accent);
-    letter-spacing: 2px;
-    margin-bottom: 3px;
-    opacity: 0.8;
-  }
-
-  .vol-card-title {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: var(--ts_topicTitle);
-    font-weight: 600;
-    color: var(--text-bright);
-    line-height: 1.2;
-  }
-
-  .vol-card-sub {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: var(--ts_sectionLabel);
-    color: var(--text);
-    line-height: 1.4;
-    margin-top: 2px;
-  }
-
-  .vol-card-arrow {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionLabel);
-    color: var(--card-accent);
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 0.18s, transform 0.18s;
-    flex-shrink: 0;
-  }
-
-  .vol-card:hover .vol-card-arrow {
-    opacity: 1;
-    transform: translateX(0);
-  }
-
-  /* ── Faction card badge ────────────────────────────────────── */
-  .vol-card-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px;
-    padding: 2px 10px;
-    border-radius: 20px;
-    border: 1px solid rgba(var(--card-accent-rgb), 0.3);
-    background: rgba(var(--card-accent-rgb), 0.10);
-    color: var(--card-accent);
-    margin-bottom: 8px;
-  }
 
   /* ── Coming soon placeholder ───────────────────────────────── */
   .coming-soon {
@@ -307,99 +197,99 @@
     <div class="index-col">
       <div class="col-label">// General Guide</div>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol0-gamestart.html"
-         style="--card-accent: var(--vol0-accent); --card-accent-rgb: var(--vol0-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol0-gamestart.html"
+         style="--card-accent: var(--vol0-accent); --card-accent-rgb: var(--vol0-accent);">
         <div class="vol-card-emoji">🚀</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.0</div>
+          <div class="vol-card-badge">◈ VOL.0 ◈</div>
           <div class="vol-card-title">Game Start Essentials</div>
           <div class="vol-card-sub">First 20 turns, FIDSI primer, scouting, heroes, politics and victory overview</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol1-economy.html"
-         style="--card-accent: var(--vol1-accent); --card-accent-rgb: var(--vol1-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol1-economy.html"
+         style="--card-accent: var(--vol1-accent); --card-accent-rgb: var(--vol1-accent);">
         <div class="vol-card-emoji">🏭</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.1</div>
+          <div class="vol-card-badge">◈ VOL.1 ◈</div>
           <div class="vol-card-title">Inside your Empire: Material & Money</div>
           <div class="vol-card-sub">FIDSI deep dive, population, resources, trade, Behemoths and economic victory</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol2-politics.html"
-         style="--card-accent: var(--vol2-accent); --card-accent-rgb: var(--vol2-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol2-politics.html"
+         style="--card-accent: var(--vol2-accent); --card-accent-rgb: var(--vol2-accent);">
         <div class="vol-card-emoji">🏛️</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.2</div>
+          <div class="vol-card-badge">◈ VOL.2 ◈</div>
           <div class="vol-card-title">Inside your Empire: People & Ideas</div>
           <div class="vol-card-sub">Approval, expansion, influence, parties, laws, government types and elections</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol3-exploration.html"
-         style="--card-accent: var(--vol3-accent); --card-accent-rgb: var(--vol3-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol3-exploration.html"
+         style="--card-accent: var(--vol3-accent); --card-accent-rgb: var(--vol3-accent);">
         <div class="vol-card-emoji">🔭</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.3</div>
+          <div class="vol-card-badge">◈ VOL.3 ◈</div>
           <div class="vol-card-title">Outside your Empire</div>
           <div class="vol-card-sub">Exploration, probes, curiosities, anomalies, pirates, minor factions and science victory</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol4-combat.html"
-         style="--card-accent: var(--vol4-accent); --card-accent-rgb: var(--vol4-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol4-combat.html"
+         style="--card-accent: var(--vol4-accent); --card-accent-rgb: var(--vol4-accent);">
         <div class="vol-card-emoji">⚔️</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.4</div>
+          <div class="vol-card-badge">◈ VOL.4 ◈</div>
           <div class="vol-card-title">Ships, Combat & Military</div>
           <div class="vol-card-sub">Ship design, combat system, battle cards, Behemoths, ground invasion and military victory</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol5-heroes.html"
-         style="--card-accent: var(--vol5-accent); --card-accent-rgb: var(--vol5-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol5-heroes.html"
+         style="--card-accent: var(--vol5-accent); --card-accent-rgb: var(--vol5-accent);">
         <div class="vol-card-emoji">🦸</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.5</div>
+          <div class="vol-card-badge">◈ VOL.5 ◈</div>
           <div class="vol-card-title">Heroes & the Academy</div>
           <div class="vol-card-sub">Classes, XP, skill trees, assignment strategy, the hero market and the Galactic Academy</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol6-diplomacy.html"
-         style="--card-accent: var(--vol6-accent); --card-accent-rgb: var(--vol6-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol6-diplomacy.html"
+         style="--card-accent: var(--vol6-accent); --card-accent-rgb: var(--vol6-accent);">
         <div class="vol-card-emoji">🤝</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.6</div>
-          <div class="vol-card-title">Diplomacy & Espionage</div>
-          <div class="vol-card-sub">Relation scores, agreements, war, Senate coalitions and the Penumbra hacking system</div>
+          <div class="vol-card-badge">◈ VOL.6 ◈</div>
+          <div class="vol-card-title">Diplomacy & Hacking</div>
+          <div class="vol-card-sub">Relation scores, agreements, war, Senate coalitions and the Penumbra DLC hacking system</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol7-factions.html"
-         style="--card-accent: var(--vol7-accent); --card-accent-rgb: var(--vol7-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol7-factions.html"
+         style="--card-accent: var(--vol7-accent); --card-accent-rgb: var(--vol7-accent);">
         <div class="vol-card-emoji">🔍</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.7</div>
+          <div class="vol-card-badge">◈ VOL.7 ◈</div>
           <div class="vol-card-title">Faction Guides — Beginner</div>
           <div class="vol-card-sub">United Empire, Sophons, Unfallen, Nakalim, Hissho, Vaulters</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="GeneralGuide/es2-vol8-factions-expert.html"
-         style="--card-accent: var(--vol8-accent); --card-accent-rgb: var(--vol8-accent-rgb);">
+      <a class="vol-card left" href="GeneralGuide/es2-vol8-factions-expert.html"
+         style="--card-accent: var(--vol8-accent); --card-accent-rgb: var(--vol8-accent);">
         <div class="vol-card-emoji">🔬</div>
         <div class="vol-card-text">
-          <div class="vol-card-num">VOL.8</div>
+          <div class="vol-card-badge">◈ VOL.8 ◈</div>
           <div class="vol-card-title">Faction Guides — Intermediate & Expert</div>
           <div class="vol-card-sub">Lumeris, Horatio, Vodyani, Cravers, Riftborn, Umbral Choir</div>
         </div>
@@ -412,33 +302,33 @@
     <div class="index-col">
       <div class="col-label">// Faction Deep Dives</div>
 
-      <a class="vol-card" href="FactionsDeepGuide/es2-Fac01-lumeris.html"
-         style="--card-accent: var(--lumeris-color); --card-accent-rgb: var(--lumeris-color-rgb);">
+      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac01-lumeris.html"
+         style="--card-accent: var(--lumeris-color); --card-accent-rgb: var(--lumeris-color);">
         <div class="vol-card-emoji">💰</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.01</div>
+          <div class="vol-card-badge">◈ FAC.01 ◈</div>
           <div class="vol-card-title">The Lumeris</div>
           <div class="vol-card-sub">Trade empire, Dust economy, TAKT decision framework, off-piste colonization and the Industrialist pivot</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="FactionsDeepGuide/es2-Fac02-horatio.html"
-         style="--card-accent: var(--horatio-color); --card-accent-rgb: var(--horatio-color-rgb);">
+      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac02-horatio.html"
+         style="--card-accent: var(--horatio-color); --card-accent-rgb: var(--horatio-color);">
         <div class="vol-card-emoji">🧬</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.02</div>
+          <div class="vol-card-badge">◈ FAC.02 ◈</div>
           <div class="vol-card-title">The Horatio</div>
           <div class="vol-card-sub">Gene splicing, GENE SEQUENCER framework, nursery systems, splice priority ranking and the 40-turn pipeline</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <a class="vol-card" href="FactionsDeepGuide/es2-Fac03-sophons.html"
-         style="--card-accent: var(--sophon-color); --card-accent-rgb: var(--sophon-color-rgb);">
-        <div class="vol-card-emoji">🔭</div>
+      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac03-sophons.html"
+         style="--card-accent: var(--sophon-color); --card-accent-rgb: var(--sophon-color);">
+        <div class="vol-card-emoji">🔬</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.03</div>
+          <div class="vol-card-badge">◈ FAC.03 ◈</div>
           <div class="vol-card-title">The Sophons</div>
           <div class="vol-card-sub">Omniscience decay curve, Industry problem, Burning Light admiral path, fleet design and the Supremacy vs. Science Victory tradeoff</div>
         </div>
