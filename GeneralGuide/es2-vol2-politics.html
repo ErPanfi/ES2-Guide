@@ -355,6 +355,46 @@
       </div>
     </div>
 
+    <div class="content-block" id="cb4c">
+      <div class="block-header" onclick="toggle('cb4c')">
+        <span class="block-icon">🪐</span>
+        <span class="block-title">Planet Traits: Class, Fertility, Climate &amp; Size</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every planet has four traits that together determine its FIDSI output, Approval impact, and population ceiling: <strong>Class</strong> (the specific type — Terran, Lava, Barren, etc.), <strong>Fertility</strong> (Fertile / Neutral / Sterile), <strong>Climate</strong> (Hot / Temperate / Cold), and <strong>Size</strong> (Tiny through Huge). Class is the most important single trait because it encodes specific base FIDSI values per pop. Fertility and Climate encode the <em>pattern</em> of those values and which tech/faction bonuses apply to the planet.</p>
+
+        <p><strong>Fertility — the population and Approval axis.</strong> This is the trait that most directly shapes expansion cost:</p>
+        <ul class="step-list">
+          <li><span class="step-n">FERTILE</span><span>Higher Food output, more even FIDSI spread, pop cap 5–10 per planet, <strong>0 Approval penalty</strong>. Techs and faction bonuses for Fertile planets are numerous. These are your growth engine planets — the ones that let you stack population without hurting Approval. Types: Atoll, Ocean, Forest, Terran (Temperate/Fertile); Jungle, Boreal (Hot/Cold Fertile); Monsoon (Temperate Fertile).</span></li>
+          <li><span class="step-n">NEUTRAL</span><span>Middling pop cap 3–9, <strong>−1 to −3 Approval penalty</strong>. Moderate FIDSI output — often a mix of Food and one other resource. Types: Savannah, Steppes, Monsoon (Temperate); Mediterranean, Tundra (Hot/Cold Neutral); Snow, Arid (Cold/Hot Neutral).</span></li>
+          <li><span class="step-n">STERILE</span><span>Extreme FIDSI peaks in one resource, but low or zero in others. Pop cap 1–6, <strong>−5 to −8 Approval penalty</strong>. Higher Dust focus overall. Tech and faction bonuses are concentrated in Industry/Dust. Types: Ash, Desert, Lava (Hot Sterile); Barren, Ice, Arctic (Cold Sterile); Toxic (Temperate Sterile).</span></li>
+        </ul>
+
+        <p><strong>Climate — which FIDSI stat the planet spikes.</strong></p>
+        <ul class="step-list">
+          <li><span class="step-n">HOT</span><span>Higher Industry per pop. Techs and faction bonuses that target Hot planets grant Industry bonuses. Examples: Lava (16 Industry/pop base), Ash (12 Industry), Desert (8 Industry, 1 Food). Hot planets are your forge worlds.</span></li>
+          <li><span class="step-n">COLD</span><span>Higher Science per pop. Techs and faction bonuses that target Cold planets grant Science bonuses. Examples: Barren (16 Science/pop base), Ice (12 Science), Arctic (8 Science, 1 Food). Cold planets are your research labs.</span></li>
+          <li><span class="step-n">TEMPERATE</span><span>Lower, more balanced Industry and Science — fewer tech/faction bonuses attach to the Temperate tag. The Temperate advantage is population density and Approval: Fertile Temperate planets (Atoll, Ocean, Forest, Terran) have zero Approval penalty and pop caps of 6–10, making them the best long-term growth platforms.</span></li>
+        </ul>
+
+        <p><strong>Size — the pop cap multiplier.</strong> All planet types can appear in Tiny, Small, Medium, Large, or Huge variants. Size, combined with the class's base pop range, sets the maximum population on that planet. A Huge Terran is significantly more valuable than a Tiny Terran — same FIDSI per pop, but far more pops. When scanning a system in the exploration view, the planet graphic's relative size is a quick proxy for this before you get detailed scout data.</p>
+
+        <p><strong>Gas Giants — a special case.</strong> Gas planets (G.Frozen, G.Cold, G.Temperate, G.Warm, G.Hot, G.Burning) require the <em>Extreme Atmospherics</em> tech and have unique mechanics. They are always a maximum pop cap of 1 (no growth, never scale with size), produce zero Food, and require the Stage 3 E&amp;T tech to colonize. In exchange they output extreme single-resource FIDSI per pop: G.Burning = 26 Industry/pop; G.Temperate = 26 Dust/pop; G.Frozen = 26 Science/pop; G.Cold = 14 Industry + 14 Science; G.Warm = 10 Industry + 18 Dust; G.Hot = 14 Industry + 14 Science. Their −5 Approval penalty and permanent pop cap of 1 mean they never grow — the entire value is that one pop's output. Place your highest-output pop type on a Gas Giant and it punches far above its system slot.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">READING A SYSTEM AT A GLANCE</div>
+          When you're deciding whether to colonize, the two questions to answer from the pre-scout view are: (1) How many planets? (2) What color/climate icons are dominant? A 4-planet system with two Hot icons and two Cold icons is a strong balanced system that produces Industry and Science at full development. A 3-planet system of all Sterile Hot types (Ash/Lava) is a production forge but carries a heavy Approval load and low pop potential — valuable in a mature empire, punishing early. A 5-planet Fertile Temperate system (Atoll/Ocean/Terran) is the expansion dream: zero Approval hit, high pop ceiling, fast payback.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
     <div class="content-block" id="cb4b">
       <div class="block-header" onclick="toggle('cb4b')">
         <span class="block-icon">📊</span>

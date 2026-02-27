@@ -687,34 +687,97 @@
     <hr class="topic-divider">
 
     <!-- ══════════════════════════════════════════════════════════════════
-         T10 — SCIENCE VICTORY (PLACEHOLDER)
+         T10 — SCIENCE VICTORY
     ══════════════════════════════════════════════════════════════════ -->
     <div class="topic" id="t10">
       <div class="topic-header">
         <div class="topic-num">10</div>
         <div>
           <h2 class="topic-title">Turn 30 Assessment: Science Victory Condition</h2>
-          <div class="topic-subtitle">What the science victory requires, when to commit, and the self-defense problem</div>
+          <div class="topic-subtitle">Four Endless technologies, six Tier 5 prerequisites each — and why the commitment window is earlier than it looks</div>
         </div>
       </div>
 
       <div class="content-block open" id="cb10a">
         <div class="block-header" onclick="toggle('cb10a')">
-          <span class="block-icon">🏆</span>
-          <span class="block-title">Science Victory — Content Pending</span>
+          <span class="block-icon">🔬</span>
+          <span class="block-title">The Win Condition: Four Endless Technologies</span>
           <span class="block-tag tag-mech">MECHANIC</span>
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
+          <p>The Science victory is won by <strong>researching all four Endless technologies</strong>. These are late-game techs that sit at the very top of the research tree and are not available from the start — each one unlocks only after you have researched <strong>three Tier 5 technologies in two specific tree quadrant combinations</strong>.</p>
+
+          <table class="ref-table">
+            <tr><th>Endless Technology</th><th>Prerequisite Quadrants</th><th>Tier 5 Required (each)</th></tr>
+            <tr><td class="cell-key">Might of the Endless</td><td>Military + Empire</td><td>3 in each</td></tr>
+            <tr><td class="cell-key">Wealth of the Endless</td><td>Military + Economy</td><td>3 in each</td></tr>
+            <tr><td class="cell-key">Power of the Endless</td><td>Science + Empire</td><td>3 in each</td></tr>
+            <tr><td class="cell-key">Genius of the Endless</td><td>Science + Economy</td><td>3 in each</td></tr>
+          </table>
+
+          <p>The implication is significant: <strong>a science victory demands broad tech tree investment, not deep specialization in the Science quadrant alone.</strong> You need Tier 5 Military technologies to unlock two of the four Endless techs. A player who fully neglects the Military tree cannot win by science. This is the built-in self-defense requirement — you must research enough military tech to unlock the prerequisites, which means you will also have access to meaningful military capability by the time you're in contention for a science win.</p>
+
           <div class="callout callout-warn">
-            <div class="callout-label">PLACEHOLDER — AWAITING SOURCE MATERIAL</div>
-            This topic requires dedicated sourcing before it can be written to accuracy standard. What is confirmed from available session sources: the science victory requires building a specific ship (the "Endless" vessel), which in turn requires building a factory and researching the victory condition technologies; it also requires eliminating at least half the empires in the galaxy. The Endless Research Park and the Intergalactic Technology Center are once-per-galaxy unique buildings that are significant accelerators, and science victories on Endless difficulty are benchmarked around turn 50 in medium galaxies with fast speed. The detailed step-by-step requirements, commitment window, era gates, and the military self-defense interaction (cross-reference Vol.4 T10) are not adequately sourced and have been omitted.
+            <div class="callout-label">ALLIANCE SCALING</div>
+            The number of Endless technologies required increases when you are in an alliance. Each additional allied faction adds to the combined research requirement. Forming alliances late in the game specifically to stack Endless techs can be counterproductive — enter alliances knowing they raise your own victory bar as well.
           </div>
-          <p>To complete this topic, please provide a wiki page or transcript that covers the full science victory checklist — specifically the exact building and research prerequisites for the final victory ship, whether era gates apply, and the relationship between tech completion and the victory timer.</p>
 
           <div class="done-row">
             <span class="done-label">UNDERSTOOD & APPLIED</span>
             <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb10b">
+        <div class="block-header" onclick="toggle('cb10b')">
+          <span class="block-icon">🗺️</span>
+          <span class="block-title">The Tech Path: What "Tier 5 in Two Quadrants" Actually Means</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Each tree quadrant has five rings. Ring 5 technologies are the most expensive and require progressive research through the earlier rings. To unlock all four Endless techs you need three Tier 5 completions in <em>each</em> of Military, Empire, Science, and Economy — because Military appears in two pairs, Economy in two pairs, and so on. In practice you need <strong>at minimum 3 Tier 5 techs in every quadrant</strong> to satisfy all four unlock conditions simultaneously.</p>
+
+          <p>This is not a short game plan. At turn 30 on a fast-speed medium galaxy, you are very unlikely to have Tier 5 access in any quadrant. The turn 30 assessment for science victory is therefore less about hitting a target and more about <strong>diagnosing whether your research trajectory will reach Tier 5 in all quadrants in time to compete</strong>.</p>
+
+          <p>Key questions at turn 30:</p>
+          <ul class="step-list">
+            <li><span class="step-n">QUESTION 1</span><span>What ring are you in for each quadrant? If you're still in ring 2–3 for Military or Economy at turn 30, your Endless tech timeline is in trouble.</span></li>
+            <li><span class="step-n">QUESTION 2</span><span>Have you unlocked behemoths and the tech-cost-reduction modules? The science behemoth's −15% per branch is your primary tool for compressing the Tier 5 timeline — if you don't have one orbiting yet, this is the most urgent accelerant available.</span></li>
+            <li><span class="step-n">QUESTION 3</span><span>Are you being pressured militarily? A science victory player who ignores their fleet until Tier 5 is near risks being conquered before the win condition is reachable. You need enough military presence to deter or repel aggression throughout the mid-game.</span></li>
+          </ul>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t10','cb10b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb10c">
+        <div class="block-header" onclick="toggle('cb10c')">
+          <span class="block-icon">⚡</span>
+          <span class="block-title">Accelerants: Unique Buildings and Behemoth Stacking</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Two once-per-galaxy unique buildings are major science victory accelerants: the <strong>Endless Research Park</strong> and the <strong>Intergalactic Technology Center</strong>. Both provide substantial science bonuses but can only be built once across the entire galaxy — whichever empire builds them first locks out all others. Racing to build these before a scientifically competitive opponent is a meaningful priority.</p>
+
+          <p>The science behemoth's tech-cost-reduction stacks with itself: a second science behemoth (with the appropriate module) doubles the reduction to approximately −30%. Combined with the flat +10 Science orbit bonus on your core system, two science behemoths represent the largest per-investment FIDSI leverage available in the mid-to-late game. Community experience benchmarks science victories at roughly <strong>turn 50 on fast speed in medium galaxies on Endless difficulty</strong> for optimized play — but this requires both behemoths, the unique buildings if accessible, and strong Science-quadrant development throughout.</p>
+
+          <p>The Sophons are the canonical science victory faction, with bonuses that make the Science quadrant faster and cheaper. Riftborn and Vaulters are noted as close alternatives. The Nakalim face structural disadvantages due to their scientific penalties and are poorly suited to this path.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">SCIENCE VICTORY IS A BROAD GAME, NOT A NARROW ONE</div>
+            The prerequisite structure forces you into every quadrant. A player going for a science victory who focuses only on the Science tree is building toward a wall. Deliberate mid-game investment in Military Tier 3–5 and Economy Tier 3–5 — even if you never plan to win militarily or economically — is not a detour. It is the actual path.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD & APPLIED</span>
+            <button class="done-btn" onclick="markDone('t10','cb10c',this)">✓ MARK DONE</button>
           </div>
         </div>
       </div>
@@ -796,6 +859,18 @@ const quizzes = [
     ],
     correct: 0,
     explain: "Option A is correct because the +10 FIDSI system orbit bonus is active the moment the behemoth is in orbit — you don't need the tech-cost-reduction module researched to benefit from it. Starting the build immediately and researching the module in parallel means you lose no turns of the orbit bonus. Option B delays the orbit bonus with no benefit. Option C cannot be done simultaneously — behemoth count is limited by your researched technologies, and you cannot build a second science behemoth without the appropriate upgrade tech. Option D wastes multiple turns of +10 Science bonus while waiting for ideal conditions."
+  },
+  {
+    scenario: "Turn 45, fast speed, medium galaxy. You are 6 turns from researching your 3rd Tier 5 Science technology and have 2 Tier 5 Empire techs already. You have no Tier 5 Military or Economy techs. A rival is at 1 Endless technology researched and is growing quickly. You have a small but functional defensive fleet.",
+    q: "Which of the following diagnoses of your situation is most accurate?",
+    opts: [
+      "You are on track — once you get your 3rd Tier 5 Science tech, you unlock Power of the Endless immediately and are one step from winning",
+      "You are critically behind — Power of the Endless requires Tier 5 in Science AND Empire (you have 2 Empire, need 3), and you have zero progress toward the Military prerequisites that block Might and Wealth of the Endless",
+      "Your military neglect is your primary problem — build warships immediately and stop all science research to address the military deficit",
+      "You should form an alliance with the leading rival to combine Endless tech counts and win cooperatively"
+    ],
+    correct: 1,
+    explain: "Option B is the correct diagnosis. Power of the Endless needs 3 Tier 5 in Science AND 3 Tier 5 in Empire — you have only 2 Empire Tier 5 techs, so even the most accessible Endless tech is still blocked. More critically, Might of the Endless (Military + Empire) and Wealth of the Endless (Military + Economy) both require Tier 5 Military progress you haven't started. A science victory player at turn 45 with zero Tier 5 Military research has a structural gap, not just a speed problem. Option A misreads the prerequisite — Power of the Endless needs 3 Tier 5 in Empire, not 2. Option C overcorrects — stopping all science would destroy your primary advantage. Option D is counterproductive: alliances increase the number of Endless techs required, not decrease them."
   }
 ];
 </script>
