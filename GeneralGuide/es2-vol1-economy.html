@@ -243,7 +243,7 @@
         <p>Population movement is an active optimization tool, not just an emergency measure. Common uses:</p>
 
         <ul class="step-list">
-          <li><span class="step-n">SPECIALIZATION</span><span>Move population types to planets where their FIDSI affinity matches. A pop with +Industry bonus belongs on a Hot planet; a pop with +Science bonus belongs on a Cold planet. This compound-multiplies with the planet's base output.</span></li>
+          <li><span class="step-n">SPECIALIZATION</span><span>Move population types to planets where their FIDSI affinity matches the planet's Climate tag. A pop with an Industry affinity bonus belongs on a <strong>Hot</strong> planet (Lava, Ash, Desert…); a pop with a Science affinity bonus belongs on a <strong>Cold</strong> planet (Barren, Ice, Arctic…). The compounding here is real: the pop's affinity bonus adds on top of the planet's base FIDSI output, both driven by the same Climate tag — so a Hot-affinity pop on a Hot planet gets the full base Industry output <em>plus</em> their bonus, whereas the same pop on a Cold planet contributes neither. Fertility works the same way: a Fertile-affinity pop on a Fertile planet (Terran, Ocean, Forest…) benefits from tag-matched Food output. Planet traits are covered in depth in Vol.2.</span></li>
           <li><span class="step-n">COLONY SEEDING</span><span>Instead of waiting for an outpost to grow its own population through food, you can import pops from a full system to kickstart a new colony's labor force immediately.</span></li>
           <li><span class="step-n">APPROVAL MANAGEMENT</span><span>Populations have political affiliations. Moving specific pop types can shift your system-level approval and your Senate composition simultaneously.</span></li>
         </ul>
@@ -263,7 +263,7 @@
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <p>Your empire accumulates population types through natural growth, minor faction assimilation, and conquest. Each type carries its own per-planet FIDSI bonuses — these are applied when that pop is working on a qualifying planet type. Check the pop tooltip in the system panel to see the conditions.</p>
+        <p>Your empire accumulates population types through natural growth, minor faction assimilation, and conquest. Each type carries its own per-planet FIDSI bonuses — these are applied when that pop is working on a planet whose <strong>Climate</strong> or <strong>Fertility</strong> tag matches the pop's affinity condition. Check the pop tooltip in the system panel to see the exact tag requirement. The three Climate tags are Hot (Industry-oriented), Cold (Science-oriented), and Temperate (balanced, fewer bonus interactions). The three Fertility tags are Fertile (Food-oriented, 0 Approval penalty, high pop cap), Neutral (moderate, minor Approval penalty), and Sterile (extreme Industry/Dust peaks, heavy Approval penalty, low pop cap). A pop that gets a bonus "on Hot planets" will trigger on any Hot planet — Lava, Ash, Desert, Mediterranean, Jungle — regardless of that planet's Fertility status. The tag system is additive: place the right pop type on the right planet type and you get the planet's base output <em>plus</em> the pop's affinity bonus stacking on top.</p>
 
         <p>Beyond per-planet bonuses, population types also grant <strong>empire-wide collection bonuses</strong> at specific thresholds (typically 10, 20, and 50 units of that type across your empire). These bonuses can be powerful: as an example, having 50 Lumeris pops empire-wide grants trade route blockade immunity and adds 25% of trade company income to Influence. Tracking these thresholds and deliberately breeding toward them is an intermediate-level optimization.</p>
 
@@ -797,14 +797,115 @@
           <tr><td class="cell-key">Tech Stage</td><td>Entering Stage 3 in primary tree</td><td>Over-researched low-value Stage 1/2 techs</td></tr>
         </table>
 
-        <div class="callout callout-warn">
-          <div class="callout-label">PLACEHOLDER — VICTORY CONDITIONS</div>
-          The specific requirements and scoring thresholds for the Economic Victory and Wonder Victory conditions are not yet fully sourced for this guide. This section will be expanded in a future revision. The Wonder Victory involves constructing the unique Wonder improvements (one per game globally) and maintaining them; the Economic Victory involves accumulating Dust beyond a scoring threshold. Both are late-game commitments — by Turn 30 you are laying the foundation, not completing the condition.
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9b">
+      <div class="block-header" onclick="toggle('cb9b')">
+        <span class="block-icon">💰</span>
+        <span class="block-title">Economic Victory: The Dust Threshold</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Economic Victory is awarded to the first faction to accumulate a total Dust earnings threshold — this is <strong>cumulative Dust earned over the entire game</strong>, not a current balance. Spending Dust does not reduce your progress. The threshold is calculated as: <code>450,000 × Speed Modifier × Size Modifier</code>.</p>
+
+        <table class="ref-table">
+          <tr><th>Game Speed</th><th>Modifier</th><th>Normal Galaxy Target</th></tr>
+          <tr><td class="cell-key">Fast</td><td>×0.75</td><td>337,500 Dust</td></tr>
+          <tr><td class="cell-key">Normal</td><td>×1.0</td><td>450,000 Dust</td></tr>
+          <tr><td class="cell-key">Slow</td><td>×1.5</td><td>675,000 Dust</td></tr>
+          <tr><td class="cell-key">Endless</td><td>×4.0</td><td>1,800,000 Dust</td></tr>
+        </table>
+
+        <table class="ref-table" style="margin-top:0.75rem">
+          <tr><th>Galaxy Size</th><th>Modifier</th></tr>
+          <tr><td class="cell-key">Tiny</td><td>×0.75</td></tr>
+          <tr><td class="cell-key">Small</td><td>×0.85</td></tr>
+          <tr><td class="cell-key">Medium</td><td>×1.0</td></tr>
+          <tr><td class="cell-key">Large</td><td>×1.4</td></tr>
+          <tr><td class="cell-key">Huge</td><td>×1.8</td></tr>
+          <tr><td class="cell-key">Colossal</td><td>×2.0</td></tr>
+          <tr><td class="cell-key">Exceptional</td><td>×2.5</td></tr>
+        </table>
+
+        <p style="margin-top:0.75rem">On Normal speed, Normal galaxy, the target is <strong>450,000 Dust total earned</strong>. At 300 turns that requires an average of 1,500 Dust/turn across the full game — which means early-game Dust output matters significantly since the accumulation clock starts at turn 1. The Lumeris are the natural fit (multiple Dust income sources), but any faction with strong Industrialist or Militarist political alignment can compete through Trade Companies and Marketplace leverage.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">SPENDING DOESN'T HURT YOU</div>
+          Because it's cumulative earnings — not current balance — you should never hoard Dust to chase this victory. Spend freely on buyouts, retrofits, and hero hiring. Every Dust you earn counts the moment it's generated. The strategy is maximizing Dust <em>income per turn</em> across as many turns as possible, not saving up a pile.
         </div>
 
         <div class="done-row">
           <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
-          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+          <button class="done-btn" onclick="markDone('t9','cb9b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9c">
+      <div class="block-header" onclick="toggle('cb9c')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Wonder Victory: Obelisks of All Space-Time</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Wonder Victory requires constructing a number of <strong>Obelisks of All Space-Time</strong> equal to the galaxy size requirement. Obelisks are unlocked only after reaching <strong>Stage 5 of the Empire Development tech tree</strong> — this is a hard gate that requires deep investment in that tree before you can even start building.</p>
+
+        <table class="ref-table">
+          <tr><th>Galaxy Size</th><th>Obelisks Required</th></tr>
+          <tr><td class="cell-key">Tiny / Small</td><td>2</td></tr>
+          <tr><td class="cell-key">Medium / Large</td><td>3</td></tr>
+          <tr><td class="cell-key">Huge / Colossal</td><td>4</td></tr>
+          <tr><td class="cell-key">Exceptional</td><td>5</td></tr>
+        </table>
+
+        <p style="margin-top:0.75rem">The first Obelisk costs <strong>20,000 Industry + 125 Titanium + 125 Hyperium + 80 Adamantian + 80 Antimatter + 40 Orichalcix + 40 Quadrinix</strong>. The second Obelisk costs 30,000 Industry and proportionally more of every resource. Each additional Obelisk scales upward in cost — this is a resource drain that demands you have <em>all six</em> strategic resources secured and stockpiled well before you start building.</p>
+
+        <p>An Obelisk under construction is visible to all empires on the map, making it a target for invasion or Umbral Choir conversion. The system hosting an Obelisk must be defended. Riftborn and United Empire are the natural fits — high Industry output and the ability to sustain the enormous resource cost.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE RESOURCE BOTTLENECK</div>
+          Obelisks consume all six strategic resources simultaneously. If you are pursuing Wonder Victory, you must treat resource acquisition as a strategic priority from mid-game. Do not sell strategic resources freely on the Marketplace after Turn 60–80 if Wonder is your path — you will need stockpiles of Orichalcix and Quadrinix (the hardest to accumulate) that take many turns to build up. Secure deposits early; hoard late.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9d">
+      <div class="block-header" onclick="toggle('cb9d')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">All Six Victory Conditions: What They Demand Economically</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>All six victory conditions are enabled by default and can be toggled at game setup. Even if you're not pursuing a specific condition, knowing what the other five demand helps you recognize when a rival is close — and when to apply pressure or pivot.</p>
+
+        <table class="ref-table">
+          <tr><th>Condition</th><th>Win Requirement</th><th>Economic Implication</th></tr>
+          <tr><td class="cell-key">Conquest</td><td>Control a fixed number of star systems by galaxy size: Tiny 16 · Small 19 · Normal 22 · Large 28 · Huge 32 · Colossal 36 · Exceptional 40. Warnings fire at 50% and 75% of the threshold. Galaxy density adds 33% more systems but does not raise the target. Alliance partners' systems count toward your total — but so does the requirement.</td><td>Demands wide expansion — Approval and Dust upkeep scale accordingly. Alliance membership inflates the requirement.</td></tr>
+          <tr><td class="cell-key">Supremacy</td><td>Control all major faction home systems</td><td>Military-driven, but the Industrial base to sustain fleet operations is essential. Vaulters' home system shifts to their first colony.</td></tr>
+          <tr><td class="cell-key">Science</td><td>Research all 4 Endless technologies</td><td>Requires 3 Tier 5 techs in specific tree pairs. Heavy Science investment; each Endless tech unlocked by crossing two trees simultaneously (e.g. Genius of the Endless = Science + Economy trees both at Tier 5 ×3).</td></tr>
+          <tr><td class="cell-key">Economic</td><td>Accumulate Dust earnings threshold</td><td>Maximize sustained Dust income from turn 1. Cumulative — spending doesn't set you back.</td></tr>
+          <tr><td class="cell-key">Wonder</td><td>Build N Obelisks (2–5 by galaxy size)</td><td>Requires Stage 5 Empire Dev tree + all 6 strategic resources in massive quantities. Industry-dominant late game.</td></tr>
+          <tr><td class="cell-key">Score</td><td>Highest score at game end (turn limit)</td><td>Broad — systems (+12), pops (+3), techs (+4 to +16), system levels (+6), wonders (+20), quests (+4), laws (+3). No single focus dominates; well-rounded empires win naturally.</td></tr>
+        </table>
+
+        <p style="margin-top:0.75rem">Score Victory turn limits: Fast = 150 turns, Normal = 300, Slow = 450, Endless = 600. In a Score game with no other victories toggled, the early-game Approval multiplier on Dust and Science is especially critical — every turn of Ecstatic bonus translates directly into more colonized systems, higher system levels, and more tech researched, all of which score points.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9d',this)">✓ MARK DONE</button>
         </div>
       </div>
     </div>
