@@ -42,10 +42,10 @@
     <div class="nav-item" onclick="scrollByID('t9')">💰 The Hero Market <span class="nav-check" id="nc9"></span></div>
     <div class="nav-item" onclick="scrollByID('t10')">🌟 The Galactic Academy <span class="nav-check" id="nc10"></span></div>
 
-  <div class="nav-section-label">// Test Yourself</div>
-  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+    <div class="nav-section-label">// Test Yourself</div>
+    <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
 
-    <div class="nav-section-label">// Volumes</div>
+    <div class="nav-section-label">// Next Volumes</div>
     <div class="vol-card right vol-prev" onclick="location.href='es2-vol4-combat.html'"><div class="vol-card-arrow">←</div> Vol.4: Ships &amp; Combat</div>
     <div class="vol-card left vol-next" onclick="location.href='es2-vol6-diplomacy.html'">Vol.6: Diplomacy &amp; Hacking <div class="vol-card-arrow">→</div></div>
 
@@ -56,9 +56,9 @@
   </nav>
 
   <!-- ════════════════════════════════════════ MAIN ════════════════════════════════════════ -->
-  <main class="main-content">
+  <main class="main">
     <div class="page-header">
-      <div class="breadcrumb">ES2 GUIDE / VOL.5</div>
+      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.5</span> // Heroes &amp; the Academy</div>
       <h1 class="page-title">Heroes &amp; the Academy</h1>
       <p class="page-subtitle">How to hire, grow, assign, and squeeze maximum value out of the game's most powerful asymmetric resource.</p>
     </div>
@@ -199,6 +199,16 @@
           <div class="callout callout-tip">
             <div class="callout-label">EARLY-GAME CURIOSITY WINDOW</div>
             Attach your starting hero to your scout fleet for the first 8–12 turns. Six XP per curiosity investigated adds up fast — a hero that resolves 6 curiosities reaches level 3 on curiosity XP alone, before governor XP becomes substantial. After the early exploration phase, transition to governor when population and project queues provide steady passive ticks.
+          </div>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">PROJECT XP: THE ~8% RULE <span style="font-size:var(--ts_sectionTitle);opacity:0.7;">[T3 — Reddit, u/Kashakunaki, 9y old — verify if patched]</span></div>
+            Community testing (Normal speed, no XP modifiers) found that project completion XP scales at roughly <strong>~8% of the Industry cost</strong> of the completed project — or about 1 XP per 12–12.5 Industry spent. Multiple completions in the same turn stack: finish a 280-Industry building and two 210-Industry ships in one turn, and the governor earns XP based on the combined 700 Industry total. This applies equally to buildings and ships. Buyout via Dust or Influence grants the same XP as building via production. Note: colonizing planets, terraforming, and industry-conversion projects (→Dust, →Science) do NOT generate project XP — only the base 1 XP/turn applies on those turns.
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">WONDER XP EXPLOIT <span style="font-size:var(--ts_sectionTitle);opacity:0.7;">[T3 — community-confirmed, same source]</span></div>
+            Wonders have extremely high Industry costs — completing one can level a hero multiple times in a single turn. If you have a low-level hero you want to accelerate, temporarily assign them as governor to a system that is about to complete a wonder, collect the massive XP burst, then reassign them. The assignment cooldown applies after the swap, but the XP spike is immediate on completion.
           </div>
 
           <div class="done-row">
@@ -793,10 +803,10 @@
           <div class="topic-subtitle">Hero decisions under real game conditions — one right answer, concrete reasoning required</div>
         </div>
       </div>
-    <div class="quiz-wrap">
-      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
-      <div id="quiz-container"></div>
-    </div>
+      <div class="quiz-wrap">
+        <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+        <div id="quiz-container"></div>
+      </div>
     </div>
 
   </main>
