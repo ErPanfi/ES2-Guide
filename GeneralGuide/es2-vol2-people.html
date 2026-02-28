@@ -40,6 +40,23 @@
     margin: 0.75rem 0;
     line-height: 1.7;
   }
+
+  /*.terraformingTables
+  {
+    display:flex;
+    justify-content: center;
+
+  }*/
+
+  .terraformingTables .ref-table
+  {
+    width: 49%;
+  }
+  .terraformingTables .ref-table .cell-key
+  {
+    text-align: right;
+  }
+
 </style>
 </head>
 <body>
@@ -58,7 +75,7 @@
   <div class="nav-item" onclick="scrollByID('t2')">🌿 Empire Dev Tech Tree <span class="nav-check" id="nc2"></span></div>
   <div class="nav-item" onclick="scrollByID('t3')">🚀 Expansion &amp; Outposts <span class="nav-check" id="nc3"></span></div>
   <div class="nav-item" onclick="scrollByID('t4')">🔭 Evaluating Systems <span class="nav-check" id="nc4"></span></div>
-  <div class="nav-item" onclick="scrollByID('t5')">🌋 Terraforming <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🌐 Terraforming <span class="nav-check" id="nc5"></span></div>
   <div class="nav-item" onclick="scrollByID('t6')">✨ Influence &amp; Zones <span class="nav-check" id="nc6"></span></div>
   <div class="nav-item" onclick="scrollByID('t7')">🏛️ Parties, Laws &amp; Senators <span class="nav-check" id="nc7"></span></div>
   <div class="nav-item" onclick="scrollByID('t8')">🗳️ Government &amp; Elections <span class="nav-check" id="nc8"></span></div>
@@ -454,7 +471,7 @@
 
     <div class="content-block open" id="cb5-terra-a">
       <div class="block-header" onclick="toggle('cb5-terra-a')">
-        <span class="block-icon">🔬</span>
+        <span class="block-icon">🌐</span>
         <span class="block-title">Tech Gates, Direction Graph &amp; Costs</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
@@ -464,7 +481,7 @@
 
         <p>Terraforming <strong>always moves upward on the fertility/climate ladder</strong> — you cannot degrade a planet. The direction graph for standard factions:</p>
 
-        <table class="ref-table">
+        <!--table class="ref-table">
           <tr><th>From (Sterile)</th><th>→ Primary Target</th><th>→ Advanced Target</th><th>Industry Cost (approx.)</th></tr>
           <tr><td class="cell-key">Arid</td><td>Steppes / Savannah</td><td>Jungle (Hot/Fertile)</td><td>~400 / ~800</td></tr>
           <tr><td class="cell-key">Lava</td><td>Steppes / Savannah</td><td>Jungle</td><td>~400 / ~800</td></tr>
@@ -473,14 +490,59 @@
           <tr><td class="cell-key">Arctic</td><td>Snow / Tundra</td><td>Boreal</td><td>~400 / ~800</td></tr>
           <tr><td class="cell-key">Ice</td><td>Snow / Tundra</td><td>Boreal</td><td>~400 / ~800</td></tr>
           <tr><td class="cell-key">Desert</td><td>Steppes / Savannah (or Arid path)</td><td>Jungle or Atoll (Temperate/Fertile)</td><td>~400 / ~800</td></tr>
+        </table-->
+
+        <div class="terraformingTables">
+        <table class="ref-table">
+          <tr><th colspan=4 class="tableTitle">Basic terraforming</th></tr>
+          <tr><th class="cell-key">From</th><th width="10px">→</th><th>To</th><th>Industry Cost</th><tr>
+          <tr><td class="cell-key">Barren</td><td>→</td><td> Arctic</td><td>1120 </td></tr>
+
+          <tr><td class="cell-key" rowspan=2>Toxic</td><td>→</td><td> Steppes</td><td>2000 </td></tr>
+          <tr><td>→</td><td>Savannah</td><td>2000 </td></tr>
+
+          <tr><td class="cell-key">Lava</td><td>→</td><td> Desert</td><td>1120 </td></tr>
+          <tr><td class="cell-key">Ice</td><td>→</td><td> Arctic</td><td>560 </td></tr>
+          <tr><td class="cell-key">Ash</td><td>→</td><td> Desert</td><td>560 </td></tr>
+
+          <tr><td class="cell-key" rowspan=2>Arctic</td><td>→</td><td> Snow</td><td>1000 </td></tr>
+          <tr><td>→</td><td>Steppes</td><td>2000 </td></tr>
+
+          <tr><td class="cell-key" rowspan=2>Desert</td><td>→</td><td> Arid</td><td>1000 </td></tr>
+          <tr><td>→</td><td>Savannah</td><td>2000 </td></tr>
+
         </table>
+
+        <table class="ref-table" style="--muted: rgba(var(--gold), 0.97); border-left: 1px solid var(--border);">
+          <tr><th colspan=4 class="tableTitle">Advanced terraforming</th></tr>
+          <tr><th class="cell-key">From</th><th width="10px">→</th><th>To</th><th>Industry Cost</th><tr>
+<tr><td class="cell-key" rowspan=2>Snow</td><td>→</td><td> Steppes</td><td>2000 </td></tr>
+<tr><td>→</td><td>Boreal</td><td>2000 </td></tr>
+
+<tr><td class="cell-key" rowspan=2>Arid</td><td>→</td><td> Savannah</td><td>2000 </td></tr>
+<tr><td>→</td><td>Jungle</td><td>2000 </td></tr>
+<tr><td class="cell-key">Steppes</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
+<tr><td class="cell-key">Savannah</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
+<tr><td class="cell-key" rowspan=2>Tundra</td><td>→</td><td> Boreal</td><td>2000 </td></tr>
+<tr><td>→</td><td>Forest</td><td>2000 </td></tr>
+<tr><td class="cell-key" rowspan=2>Mediterranean</td><td>→</td><td> Jungle</td><td>2000 </td></tr>
+<tr><td>→</td><td>Terran</td><td>2000 </td></tr>
+<tr><td class="cell-key" rowspan=2>Boreal</td><td>→</td><td> Tundra</td><td>2000 </td></tr>
+<tr><td>→</td><td>Ocean</td><td>2000 </td></tr>
+<tr><td class="cell-key" rowspan=2>Monsoon</td><td>→</td><td> Forest</td><td>2000 </td></tr>
+<tr><td>→</td><td>Terran</td><td>2000 </td></tr>
+<tr><td class="cell-key" rowspan=2>Jungle</td><td>→</td><td> Terran</td><td>2000 </td></tr>
+<tr><td>→</td><td>Atoll</td><td>2000 </td></tr>
+
+        </table>
+        </div>
 
         <div class="callout callout-tip">
           <div class="callout-label">PRIMARY TERRAFORMING CEILING</div>
           Primary Terraforming alone (no Climate Engineering) can only reach Steppes, Savannah, Snow, or Tundra — all Neutral fertility. It cannot reach Fertile planets. Advanced Terraforming (Climate Engineering) is required to push a planet to Jungle, Boreal, Terran, Ocean, Atoll, or Monsoon. If you only have Primary unlocked, the planet improves but remains Neutral.
         </div>
 
-        <p><strong>Riftborn exception:</strong> The Riftborn have inverted planet preferences — Sterile planets are their best performers and Fertile planets generate severe Approval penalties. For Riftborn, the direction of terraforming is reversed: they terraform from Fertile toward Sterile planets...Doing the opposite would be actively harmful to a Riftborn empire, after all.</p>
+        <p><strong>Riftborn exception:</strong> The Riftborn have inverted planet preferences — Sterile planets are their best performers and Fertile planets generate severe Approval penalties. Therefore, for Riftborn, the direction of terraforming is reversed: they terraform from Fertile toward Sterile planets...Doing the opposite would be actively harmful to a Riftborn empire, after all.</p>
 
         <p><strong>Unfallen shortcut:</strong> Certain choices in the Unfallen faction quest (Head and Heart chapter options) can unlock Forest-type planets directly, bypassing the standard terraforming tech requirement for some planetary routes. This is niche but worth noting if playing Unfallen.</p>
 

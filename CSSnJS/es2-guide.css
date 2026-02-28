@@ -637,9 +637,16 @@
     text-transform: uppercase;
   }
 
+
+  .ref-table th.tableTitle
+  {
+    text-align:center;
+  }
+
+
   .ref-table td {
     padding: 8px 12px;
-    border-bottom: 1px solid rgba(22,37,64,0.6);
+    border-bottom: 1px solid var(--border);
     color: var(--text);
     vertical-align: center;
   }
