@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ES2 Guide — Vol.5: Heroes & the Academy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+  <style>
+    :root {
+      --accent:     var(--vol5-accent);
+      --accent-dim: rgba(var(--vol5-accent), 0.11);
+    }
+    .vol-next { --card-accent: var(--vol6-accent); }
+    .vol-prev { --card-accent: var(--vol4-accent); }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- ════════════════════════════════════════ SIDEBAR ════════════════════════════════════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+      <div class="game-name">VOLUME 5</div>
+      <div class="guide-name">Heroes &amp;<br>the Academy</div>
+    </div>
+
+    <div class="nav-section-label">// Hero Fundamentals</div>
+    <div class="nav-item active" onclick="scrollByID('t1')">🎓 Hero Classes Overview <span class="nav-check" id="nc1"></span></div>
+    <div class="nav-item" onclick="scrollByID('t2')">📈 XP &amp; Leveling <span class="nav-check" id="nc2"></span></div>
+
+    <div class="nav-section-label">// Class Deep Dives</div>
+    <div class="nav-item" onclick="scrollByID('t3')">🔭 Seeker Class <span class="nav-check" id="nc3"></span></div>
+    <div class="nav-item" onclick="scrollByID('t4')">⚔️ Guardian Class <span class="nav-check" id="nc4"></span></div>
+    <div class="nav-item" onclick="scrollByID('t5')">🏭 Overseer Class <span class="nav-check" id="nc5"></span></div>
+    <div class="nav-item" onclick="scrollByID('t6')">🌐 Counselor Class <span class="nav-check" id="nc6"></span></div>
+
+    <div class="nav-section-label">// Advanced Strategy</div>
+    <div class="nav-item" onclick="scrollByID('t7')">♻️ Assignment Strategy <span class="nav-check" id="nc7"></span></div>
+    <div class="nav-item" onclick="scrollByID('t8')">🏛️ Political Affiliations <span class="nav-check" id="nc8"></span></div>
+    <div class="nav-item" onclick="scrollByID('t9')">💰 The Hero Market <span class="nav-check" id="nc9"></span></div>
+    <div class="nav-item" onclick="scrollByID('t10')">🌟 The Galactic Academy <span class="nav-check" id="nc10"></span></div>
+
+    <div class="nav-section-label">// Volumes</div>
+    <div class="vol-card right vol-prev" onclick="location.href='es2-vol4-combat.html'"><div class="vol-card-arrow">←</div> Vol.4: Ships &amp; Combat</div>
+    <div class="vol-card left vol-next" onclick="location.href='es2-vol6-diplomacy.html'">Vol.6: Diplomacy &amp; Hacking <div class="vol-card-arrow">→</div></div>
+
+    <div class="progress-mini">
+      <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+      <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+    </div>
+  </nav>
+
+  <!-- ════════════════════════════════════════ MAIN ════════════════════════════════════════ -->
+  <main class="main-content">
+    <div class="page-header">
+      <div class="breadcrumb">ES2 GUIDE / VOL.5</div>
+      <h1 class="page-title">Heroes &amp; the Academy</h1>
+      <p class="page-subtitle">How to hire, grow, assign, and squeeze maximum value out of the game's most powerful asymmetric resource.</p>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T1: HERO CLASSES OVERVIEW
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t1">
+      <div class="topic-header">
+        <div class="topic-num">01</div>
+        <div>
+          <h2 class="topic-title">Hero Classes: What Each Type Does</h2>
+          <div class="topic-subtitle">Four archetypes, each with a distinct skill tree and hero ship — your assignment matches their tree or you waste both</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb1a">
+        <div class="block-header" onclick="toggle('cb1a')">
+          <span class="block-icon">🎓</span>
+          <span class="block-title">The Four Classes at a Glance</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Every hero in ES2 belongs to one of four classes: <strong>Seeker, Guardian, Overseer, or Counselor</strong>. The class determines their class-specific skill tree and the hull of their personal hero ship. In addition to class skills, all heroes share access to universal skills and have two unique innate skills (non-upgradeable) that define their individual identity. Finally, heroes also get a set of faction skills tied to their origin faction.</p>
+
+          <table class="ref-table">
+            <tr><th>Class</th><th>Best as</th><th>Primary output</th><th>Senator bonus</th></tr>
+            <tr><td class="cell-key">Seeker</td><td>Fleet commander</td><td>Movement, vision, probes, some Science</td><td>+1 Movement all fleets, +1 probe stock on hero ship</td></tr>
+            <tr><td class="cell-key">Guardian</td><td>Fleet commander</td><td>Damage, hull, shield, health</td><td>Reduce influence cost of treaties</td></tr>
+            <tr><td class="cell-key">Overseer</td><td>Governor</td><td>Food, Industry, Dust, resource generation</td><td>Boost strategic/luxury resource generation</td></tr>
+            <tr><td class="cell-key">Counselor</td><td>Governor</td><td>Influence, Dust, Science, Approval</td><td>+Influence empire-wide</td></tr>
+          </table>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">CROSS-ASSIGNMENT WARNING</div>
+            A Guardian assigned as governor will level up and spend skill points on fleet combat bonuses that do nothing for system output. The inverse is equally wasteful. Match class to role before the hero accumulates more than 2–3 skill points — wasted tiers are permanent for that hero's current game.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb1b">
+        <div class="block-header" onclick="toggle('cb1b')">
+          <span class="block-icon">🚀</span>
+          <span class="block-title">Hero Ships: Class Hulls &amp; Module Slots</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Each hero pilots a personal ship when commanding a fleet. All hero ships are Small class with 8 module slots and critically, <strong>do not consume Command Points</strong> in the fleet. This makes them a free combat and utility platform on top of whatever fleet they lead.</p>
+
+          <table class="ref-table">
+            <tr><th>Class</th><th>Hull name</th><th>Base HP</th><th>Weapon</th><th>Defense</th><th>Support</th><th>Unique slots</th></tr>
+            <tr><td class="cell-key">Guardian</td><td>Flag/Tamad-class</td><td>1290</td><td>2</td><td>4</td><td>2</td><td>2</td></tr>
+            <tr><td class="cell-key">Counselor</td><td>Limo/Gatas-class</td><td>1155</td><td>2</td><td>2</td><td>2</td><td>4</td></tr>
+            <tr><td class="cell-key">Overseer</td><td>Ops/Muvel-class</td><td>1245</td><td>2</td><td>2</td><td>3</td><td>3</td></tr>
+            <tr><td class="cell-key">Seeker</td><td>Drop/Fedez-class</td><td>1200</td><td>3</td><td>3</td><td>2</td><td>3</td></tr>
+          </table>
+
+          <p>Hero ships spawn with only basic starting modules and several empty slots. <strong>Refit immediately upon recruitment</strong>, and again whenever you unlock better module tiers. Hero ships are also the only ships besides Exploration vessels that can equip Probe modules — though they lack the +100% probe recharge rate that dedicated exploration ships have.</p>
+
+          <p>There are also support modules exclusive to hero ships — notably Fleet Accelerator modules that increase movement speed for the entire fleet they command. These are worth prioritizing on fleet-leader heroes once unlocked.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T2: XP & LEVELING
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t2">
+      <div class="topic-header">
+        <div class="topic-num">02</div>
+        <div>
+          <h2 class="topic-title">XP &amp; Leveling: How Heroes Grow</h2>
+          <div class="topic-subtitle">XP thresholds, sources per role, and the early-game curiosity window</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb2a">
+        <div class="block-header" onclick="toggle('cb2a')">
+          <span class="block-icon">📈</span>
+          <span class="block-title">XP Thresholds &amp; Skill Tree Structure</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Heroes start at level 1 and need <strong>25 XP to reach level 2</strong>, then 50 XP total for level 3, increasing by 25 XP per additional level. Leveling up grants one skill point to spend in the hero's skill tree.</p>
+
+          <p>The skill tree has four tiers. <strong>Tier 2 requires 4 total skill points invested</strong> before unlocking; Tier 3 requires 8; Tier 4 requires 12. This means T4 skills are not accessible until a hero has invested 12 points, regardless of how many levels they have. Many skills can receive a second point investment, often doubling the bonus — and sometimes adding an entirely new effect.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">SKILL POINT ECONOMY</div>
+            Because T4 requires 12 invested points, you need to spend points through tiers 1–3 you may not fully want. Plan your T4 target skill first and work backward to choose the least-wasteful path through the lower tiers.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb2b">
+        <div class="block-header" onclick="toggle('cb2b')">
+          <span class="block-icon">⚡</span>
+          <span class="block-title">XP Sources by Role</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>XP accrual depends heavily on the hero's assignment and what that assignment is doing. The confirmed rates from the wiki are:</p>
+
+          <table class="ref-table">
+            <tr><th>Source</th><th>XP</th><th>Condition</th></tr>
+            <tr><td class="cell-key">Assigned (either role)</td><td>1 / turn</td><td>Simply being assigned</td></tr>
+            <tr><td class="cell-key">Population on System (Governor)</td><td>0.5 / pop / turn</td><td>Each population unit in the system adds 0.5 XP/turn</td></tr>
+            <tr><td class="cell-key">Command Points on Fleet (Commander)</td><td>1 / CP / turn</td><td>Each CP in the hero's fleet; hero ship counts as 1 CP</td></tr>
+            <tr><td class="cell-key">Curiosity Discovered (Commander)</td><td>6 / curiosity</td><td>Hero must be the fleet commander when curiosity is resolved</td></tr>
+            <tr><td class="cell-key">Star System Discovered (Commander)</td><td>4 / system</td><td>First discovery of a system while commanding</td></tr>
+            <tr><td class="cell-key">Battle Won (Commander)</td><td>Variable</td><td>Scales with relative fleet sizes — exact formula unconfirmed</td></tr>
+            <tr><td class="cell-key">Project Completed (Governor)</td><td>Variable</td><td>Scales with Industry cost — exact formula unconfirmed</td></tr>
+          </table>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">EARLY-GAME CURIOSITY WINDOW</div>
+            Attach your starting hero to your scout fleet for the first 8–12 turns. Six XP per curiosity investigated adds up fast — a hero that resolves 6 curiosities reaches level 3 on curiosity XP alone, before governor XP becomes substantial. After the early exploration phase, transition to governor when population and project queues provide steady passive ticks.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb2c">
+        <div class="block-header" onclick="toggle('cb2c')">
+          <span class="block-icon">🏥</span>
+          <span class="block-title">Hero Injury &amp; Recovery</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Heroes become injured and unavailable for assignment in specific scenarios: their fleet is completely destroyed; the system they govern is captured or razed during invasion; an Obliterator fires on a system they govern; or a hacking operation targets and injures them. If at least one non-hero ship survives when the hero ship is destroyed, the hero is spared and their ship is restored at minimal HP.</p>
+
+          <p>Injured heroes cannot be assigned for <strong>20 turns at Normal speed</strong>. This can be skipped by spending a large quantity of Dust. A few modifiers accelerate recovery rate (which halves the wait time at +100%):</p>
+
+          <ul class="step-list">
+            <li><span class="step-n">HORATIO</span><span>Perfect Genes II: +100% hero recovery rate</span></li>
+            <li><span class="step-n">VODYANI</span><span>50-population collection bonus: +100% hero recovery rate</span></li>
+            <li><span class="step-n">MINOR FAC</span><span>Sisters of Mercy assimilation: +50% hero recovery rate</span></li>
+            <li><span class="step-n">EMPIRE DEV</span><span>Tier 5 Dust-9 Production "Uplift Institute": +100% hero recovery rate</span></li>
+          </ul>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">GOVERNOR RISK DURING WAR</div>
+            Unassigning a governor before enemy invasion reaches the system is free. If you raze a system with a hero still inside, the hero is injured. Keep this in mind when razing occupied systems with your own governor present — the injury cost may outweigh the tactical gain.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t2','cb2c',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T3: SEEKER CLASS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t3">
+      <div class="topic-header">
+        <div class="topic-num">03</div>
+        <div>
+          <h2 class="topic-title">Seeker Class: Philosophy and Skills</h2>
+          <div class="topic-subtitle">The exploration and movement specialist — excellent early, transitions to combat fleet commander</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb3a">
+        <div class="block-header" onclick="toggle('cb3a')">
+          <span class="block-icon">🔭</span>
+          <span class="block-title">Seeker Role Summary</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Seekers are primarily built for fleet command. Their skill tree focuses on movement speed, vision range, probe generation, and damage amplification. As governors they provide Science and Influence bonuses, making them usable in systems early in the game before better governors arrive. As senators, a Seeker in power grants +1 Movement to all empire fleets — a strong empire-wide passive.</p>
+
+          <table class="ref-table">
+            <tr><th>Context</th><th>Key bonuses</th></tr>
+            <tr><td class="cell-key">Fleet Commander</td><td>+Movement, +Damage, +Shield absorption, +Vision, +Probes on hero ship</td></tr>
+            <tr><td class="cell-key">Governor</td><td>+Science (T1), +Influence, +Defending troop health</td></tr>
+            <tr><td class="cell-key">Senator</td><td>+1 Movement on all fleets, +1 max probe stock on hero ships</td></tr>
+          </table>
+
+          <p>The early game use case for a Seeker hero is clear: attach them to your scout fleet. Their Enhanced Astronavigation skill (T1) gives free Warp movement multipliers of x1.5 (x2 at 2 points), letting their fleet cover vastly more ground than a solo exploration ship. The same hero can then remain as fleet commander for combat duty once the exploration phase ends.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb3b">
+        <div class="block-header" onclick="toggle('cb3b')">
+          <span class="block-icon">🗺️</span>
+          <span class="block-title">Key Seeker Skills Reference</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <table class="ref-table">
+            <tr><th>Tier</th><th>Skill</th><th>Context</th><th>Effect</th></tr>
+            <tr><td class="cell-key">T1</td><td>Enhanced Astronavigation</td><td>Fleet</td><td>+1(+2) Vision; ×1.5(×2) free Warp movement</td></tr>
+            <tr><td class="cell-key">T1</td><td>Blue Sky Speculator</td><td>System</td><td>+15(+30) Science on system</td></tr>
+            <tr><td class="cell-key">T2</td><td>Post-Relativistic Targeting</td><td>Fleet</td><td>+10%(+20%) Damage on fleet</td></tr>
+            <tr><td class="cell-key">T2</td><td>Startrekking Instruction</td><td>Senate/Fleet</td><td>Senate: +1 Movement all fleets, +1 probe stock; Fleet: +2(+4) Movement, +1(+2) probe stock</td></tr>
+            <tr><td class="cell-key">T2</td><td>Personal Militia</td><td>System</td><td>+1(+2) defending troop health per population</td></tr>
+          </table>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">THE EARLY SCIENCE BRIDGE</div>
+            If you recruit a Seeker as your first hero and need to park them on your home system before combat is needed, Blue Sky Speculator (+15 Science) is a solid T1 investment. It generates real early value as governor while you wait for your exploration fleet to return. Once combat fleet command is needed, the Science bonus remains active as a governor even if you transition them later.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T4: GUARDIAN CLASS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t4">
+      <div class="topic-header">
+        <div class="topic-num">04</div>
+        <div>
+          <h2 class="topic-title">Guardian Class: Philosophy and Skills</h2>
+          <div class="topic-subtitle">The pure combat specialist — unmatched fleet survivability and damage, but zero movement bonuses</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb4a">
+        <div class="block-header" onclick="toggle('cb4a')">
+          <span class="block-icon">⚔️</span>
+          <span class="block-title">Guardian Role Summary</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Guardians are the strongest fleet commanders in the game for raw combat. Their skill tree concentrates on fleet health, hull plating absorption, shield capacity, damage, and manpower refill rate. They also get access to a special battle strategy unavailable to other classes. As governors they boost Industry — a useful but secondary niche. As senators, they reduce the Influence cost of treaties.</p>
+
+          <table class="ref-table">
+            <tr><th>Context</th><th>Key bonuses</th></tr>
+            <tr><td class="cell-key">Fleet Commander</td><td>+Health, +Manpower refill, +Damage, +Hull plating, +Shield capacity, special battle strategy</td></tr>
+            <tr><td class="cell-key">Governor</td><td>+Industry</td></tr>
+            <tr><td class="cell-key">Senator</td><td>Reduce Influence cost of treaties</td></tr>
+          </table>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">THE MOVEMENT TRADEOFF</div>
+            Guardians grant no movement bonuses. A Guardian-led fleet will hit harder and survive longer than any other, but it moves slower relative to a Seeker-led fleet of equivalent size. For defensive postures and siege operations this is acceptable; for hit-and-run or reactive defense across a wide empire, the lack of movement can be a strategic liability. Plan garrison positions accordingly.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb4b">
+        <div class="block-header" onclick="toggle('cb4b')">
+          <span class="block-icon">🛡️</span>
+          <span class="block-title">Key Guardian Skills Reference</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <table class="ref-table">
+            <tr><th>Tier</th><th>Skill</th><th>Context</th><th>Effect</th></tr>
+            <tr><td class="cell-key">T2</td><td>Scrapyard Economics</td><td>Senate/System</td><td>Senate: −5% ship Industry cost; System: −10% ship Industry cost</td></tr>
+            <tr><td class="cell-key">T2</td><td>Patchwork Defenses</td><td>Fleet</td><td>+40(+80) Hull Plating absorption; +10%(+20%) fleet health</td></tr>
+            <tr><td class="cell-key">T4</td><td>Renegade Master</td><td>System</td><td>+5 Approval per foreign population; +2 FIDS per foreign population</td></tr>
+          </table>
+
+          <p>The T2 skill Scrapyard Economics is notable as a senate bonus — if a Guardian reaches the senate, cheaper ship construction is a significant mid-game economy advantage, especially for factions that produce many ships. The Patchwork Defenses skill is the bread-and-butter survivability investment most Guardian fleet commanders should take early.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">GOVERNOR NICHE: HOT SYSTEMS</div>
+            Guardian governors are worth considering in hot, high-Industry systems in the late game to accelerate expensive fleet production. The Industry boost is not as transformative as an Overseer's full resource tree, but it's a valid secondary assignment if you have a surplus of Guardians or need to park one temporarily.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T5: OVERSEER CLASS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t5">
+      <div class="topic-header">
+        <div class="topic-num">05</div>
+        <div>
+          <h2 class="topic-title">Overseer Class: Philosophy and Skills</h2>
+          <div class="topic-subtitle">The resource governor — at their best on Fertile or Hot systems with rare resource deposits</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb5a">
+        <div class="block-header" onclick="toggle('cb5a')">
+          <span class="block-icon">🏭</span>
+          <span class="block-title">Overseer Role Summary</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Overseers are the dominant governor class. Their skill tree covers Food (especially on Fertile planets), Industry (especially on Hot planets), Dust, strategic and luxury resource generation, and reductions to overpopulation/overcolonization happiness penalties. As fleet commanders they are adequate but suboptimal, offering Manpower refill, Movement, and Shield capacity. As senators they boost resource generation empire-wide.</p>
+
+          <table class="ref-table">
+            <tr><th>Context</th><th>Key bonuses</th></tr>
+            <tr><td class="cell-key">Governor</td><td>+Food (Fertile bonus), +Industry (Hot bonus), +Dust, +Strategic/Luxury resource gen, −overcolonization penalty</td></tr>
+            <tr><td class="cell-key">Fleet Commander</td><td>+Manpower refill, +Movement, +Shield capacity</td></tr>
+            <tr><td class="cell-key">Senator</td><td>+Strategic and luxury resource generation empire-wide</td></tr>
+          </table>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">PLACEMENT PRIORITY: RARE RESOURCE SYSTEMS</div>
+            The single highest-value Overseer placement is a governor assignment in a system that generates rare strategic resources — Quadrinix, Orchalcix, or any single system with many individual resource deposits. The T2 resource generation skill multiplies every deposit independently, making a system with 5 different resources dramatically more productive than one with 5 of the same resource.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb5b">
+        <div class="block-header" onclick="toggle('cb5b')">
+          <span class="block-icon">⭐</span>
+          <span class="block-title">The Senator Case for Overseers</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>An Overseer senator provides empire-wide resource generation bonuses when their party is in power. For resource-dependent strategies — and especially for factions that rely on rare strategics for ship modules — getting an Overseer into the senate is a high-priority political goal. This synergizes with factions like Cravers or anyone running high military throughput that burns through Titanium or Hyperium.</p>
+
+          <p>To maximize the senator bonus, ensure the Overseer has invested points in skills that carry the "On Senate" tag. The political leader of a party (who provides the senate skill bonuses) is the hero with the most "On Senate" skills, with ties broken by level.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T6: COUNSELOR CLASS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t6">
+      <div class="topic-header">
+        <div class="topic-num">06</div>
+        <div>
+          <h2 class="topic-title">Counselor Class: Philosophy and Skills</h2>
+          <div class="topic-subtitle">The Influence and Approval governor — and the secret weapon for occupied system recovery</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb6a">
+        <div class="block-header" onclick="toggle('cb6a')">
+          <span class="block-icon">🌐</span>
+          <span class="block-title">Counselor Role Summary</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Counselors excel as governors, particularly on Sterile systems where their Dust bonus shines, and in any situation where Influence or Approval management is the bottleneck. Their fleet commander role is acceptable but Seekers and Guardians will outperform them in combat. As senators, Counselors grant empire-wide Influence bonuses.</p>
+
+          <table class="ref-table">
+            <tr><th>Context</th><th>Key bonuses</th></tr>
+            <tr><td class="cell-key">Governor</td><td>+Dust (Sterile bonus), +Influence, +Science, +Approval, −system upkeep</td></tr>
+            <tr><td class="cell-key">Fleet Commander</td><td>+Damage, +Hull plating, +Health, +Vision, −fleet upkeep</td></tr>
+            <tr><td class="cell-key">Senator</td><td>+Influence empire-wide</td></tr>
+          </table>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb6b">
+        <div class="block-header" onclick="toggle('cb6b')">
+          <span class="block-icon">🏳️</span>
+          <span class="block-title">The Occupation Recovery Use Case</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The Counselor's T4 skill sets system Approval to Ecstatic regardless of all other factors. This is an extremely powerful ability when conquering systems: freshly captured systems suffer massive Approval penalties from the ownership change, which collapses Food and Influence production. Moving a high-level Counselor into the newly captured system as governor immediately negates those penalties, allowing Food to recover and preventing population starvation.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">OCCUPATION MANAGEMENT ROTATION</div>
+            If you're running a conquest campaign and regularly capturing systems, keep a Counselor hero dedicated to "occupation cleanup." Move them into each newly captured system for 5–10 turns until Approval stabilizes, then rotate them to the next capture. This prevents the food crashes that can lose population in newly acquired systems and turns the Counselor into a force multiplier for an aggressive expansion playstyle.
+          </div>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">VISION BONUS: COUNSELOR FLEET COMMANDER NICHE</div>
+            The Counselor's T3 fleet skill provides a massive vision range bonus. This can be valuable for recon and exploration even in the mid-game — a Counselor leading a small fast fleet acts as an early warning system and long-range scout at lower opportunity cost than pulling a dedicated Seeker off their primary fleet.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T7: ASSIGNMENT STRATEGY
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t7">
+      <div class="topic-header">
+        <div class="topic-num">07</div>
+        <div>
+          <h2 class="topic-title">Assignment Strategy: The Lifecycle of a Hero</h2>
+          <div class="topic-subtitle">Phase-based thinking — hero value is not static, and the best assignment changes as the game evolves</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb7a">
+        <div class="block-header" onclick="toggle('cb7a')">
+          <span class="block-icon">♻️</span>
+          <span class="block-title">The Three Assignment Phases</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The optimal assignment for most heroes evolves through three broad phases during a game. Treating hero assignment as a lifecycle — rather than a permanent decision — yields significantly better output than set-and-forget.</p>
+
+          <ul class="step-list">
+            <li><span class="step-n">EARLY GAME</span><span><strong>Exploration Phase:</strong> Most heroes benefit from being attached to a scout fleet to harvest curiosity XP (6 XP each), discover systems (+4 XP each), and accumulate level-ups quickly. Even a governor-type hero (Overseer, Counselor) often earns more XP in the first 10–15 turns by exploring than sitting on an underpopulated home system.</span></li>
+            <li><span class="step-n">MID GAME</span><span><strong>Governor Phase:</strong> Once your home system has 4+ population and a reasonable build queue, governor XP (0.5 per pop per turn + 1 base + project ticks) rivals or exceeds explorer XP. Transition Overseer and Counselor heroes to their priority systems. Keep Seekers and Guardians in fleet command as the combat environment heats up.</span></li>
+            <li><span class="step-n">LATE GAME</span><span><strong>Senate Optimization:</strong> As heroes reach higher levels and accumulate "On Senate" skills, deliberately plan which political parties you want them to lead. A high-level Overseer senator generating empire-wide resource bonuses is worth more than any individual governor placement at this stage. Begin shaping hero investments toward senate skills if you have heroes who are not in active combat roles.</span></li>
+          </ul>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb7b">
+        <div class="block-header" onclick="toggle('cb7b')">
+          <span class="block-icon">🔧</span>
+          <span class="block-title">Universal Skills Worth Prioritizing</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Alongside class-specific skills, every hero can access the universal skill tree. Several universal skills are generically valuable enough to consider regardless of class:</p>
+
+          <table class="ref-table">
+            <tr><th>Skill</th><th>Context</th><th>Effect</th><th>Priority</th></tr>
+            <tr><td class="cell-key">Optimal Operations Expert (T1)</td><td>System</td><td>+1(+2) Industry and +1(+2) Food per population on planets</td><td class="cell-good">High — population-scaled, compounds with growth</td></tr>
+            <tr><td class="cell-key">Cosmic Castaway (T1)</td><td>Fleet</td><td>+4(+8) XP per turn on fleet; +1(+2) vision</td><td class="cell-good">High — accelerates hero leveling for fleet heroes</td></tr>
+            <tr><td class="cell-key">Transformational Leadership (T2)</td><td>System</td><td>+10(+20) Approval</td><td>Medium — useful for Approval-stressed systems</td></tr>
+            <tr><td class="cell-key">Conscription Genius (T2)</td><td>Senate/System</td><td>+25% Manpower empire (senate); +100 Manpower Capacity on system</td><td>Medium — strong for military strategies</td></tr>
+            <tr><td class="cell-key">Dust Catalyzation (T3)</td><td>Hero/System</td><td>−25%(−50%) assignment duration; −25%(−50%) hero upkeep</td><td>Medium — reduces assignment switch cooldown</td></tr>
+            <tr><td class="cell-key">Transcendental Outlook (T4)</td><td>Hero/Fleet</td><td>−10% hero upkeep; fleet: zero hero upkeep</td><td class="cell-bad">Low — late investment; upkeep is rarely the bottleneck</td></tr>
+          </table>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T8: POLITICAL AFFILIATIONS
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t8">
+      <div class="topic-header">
+        <div class="topic-num">08</div>
+        <div>
+          <h2 class="topic-title">Heroes' Political Affiliations</h2>
+          <div class="topic-subtitle">How hero parties interact with the senate — and why it matters which hero leads which party</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb8a">
+        <div class="block-header" onclick="toggle('cb8a')">
+          <span class="block-icon">🏛️</span>
+          <span class="block-title">Hero Senator Mechanics</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Every hero belongs to a political party. When that party is in power in the senate, the hero with the most "On Senate" skills becomes the political leader for their party — their senator skill bonuses activate empire-wide. Ties between heroes with equal senate skill counts are broken by hero level.</p>
+
+          <p>The number of heroes that can simultaneously serve as senators depends on government type: <strong>Democracy allows 3 parties (and thus 3 hero senators)</strong>; Republic and Federation allow 2; Dictatorship and Autocracy allow only 1 (but with a 1.5× senator skill bonus to compensate).</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">SENATE SKILL PLANNING</div>
+            If you want a specific hero to become the senator for their party, they must have more "On Senate" skill investments than any other hero of the same party. Review this proactively — if two Militarist heroes are both leveling up, the one with more senate skills leads. Deliberate skill investment, not just leveling, determines who controls the senate bonus.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb8b">
+        <div class="block-header" onclick="toggle('cb8b')">
+          <span class="block-icon">⚙️</span>
+          <span class="block-title">Practical Senate Strategy by Class</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Matching hero classes to senator roles creates synergistic empire bonuses:</p>
+
+          <table class="ref-table">
+            <tr><th>Senator class</th><th>Senate bonus</th><th>Best for</th></tr>
+            <tr><td class="cell-key">Seeker</td><td>+1 Movement all fleets; +1 probe stock on hero ships</td><td>Wide empires, exploration-heavy, mobile defense</td></tr>
+            <tr><td class="cell-key">Guardian</td><td>Reduce Influence cost of treaties</td><td>Diplomatic-military balance; frequent treaty negotiation</td></tr>
+            <tr><td class="cell-key">Overseer</td><td>+Resource generation empire-wide</td><td>Resource-dependent strategies; rare strategic supply chains</td></tr>
+            <tr><td class="cell-key">Counselor</td><td>+Influence empire-wide</td><td>Influence-hungry strategies; law passing, assimilation</td></tr>
+          </table>
+
+          <p>The Seeker's senate bonus (+1 Movement to all fleets) is exceptionally strong in the mid-to-late game when you have 3–5 fleets operating simultaneously. The Overseer's resource generation bonus scales with the number of deposits across your empire and becomes more valuable the larger your territory. Plan your political composition to reflect your strategy, not just your available heroes' factions.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T9: THE HERO MARKET
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t9">
+      <div class="topic-header">
+        <div class="topic-num">09</div>
+        <div>
+          <h2 class="topic-title">The Hero Market</h2>
+          <div class="topic-subtitle">Buying heroes directly with Dust — cheap, first-come-only, and strategically significant</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb9a">
+        <div class="block-header" onclick="toggle('cb9a')">
+          <span class="block-icon">💰</span>
+          <span class="block-title">Market Mechanics</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The marketplace is unlocked by the tier-3 technology <strong>Impactless Sites</strong>. It shares a UI panel with the resource trade market (unlocked by the tier-2 Galactic Commodities Exchange). The hero marketplace allows you to directly hire heroes for Dust — often just a few thousand Dust, making them significantly cheaper than buyout-rushing even early-game buildings.</p>
+
+          <p>The available pool is shared across all players in the session. Heroes purchased by one player are no longer available to others. The AI purchases market heroes very rarely, so the risk of losing a good hero to an AI purchase is low but not zero. The pool is entirely random in class and faction, refreshing over time.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">MARKET VIGILANCE</div>
+            Check the marketplace every few turns in the mid-game. A high-quality hero of the class you need (Overseer for a resource system, Guardian for a combat fleet) can appear and disappear. The cost is usually trivial relative to Dust income — there is almost never a reason not to buy a useful hero from the market when one appears. Heroes in ES2 have negligible upkeep relative to their value.
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">DON'T SELL HEROES</div>
+            Selling heroes on the market is technically possible but never advisable. Hero upkeep in ES2 is tuned to be essentially free relative to Dust income, and the sell value will not recoup meaningful resources. Keep all heroes — park underused ones in secondary governor roles where their passive XP ticks still accumulate value.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         T10: THE GALACTIC ACADEMY
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="t10">
+      <div class="topic-header">
+        <div class="topic-num">10</div>
+        <div>
+          <h2 class="topic-title">The Galactic Academy</h2>
+          <div class="topic-subtitle">The passive hero generation engine — and how to make it work faster for you</div>
+        </div>
+      </div>
+
+      <div class="content-block open" id="cb10a">
+        <div class="block-header" onclick="toggle('cb10a')">
+          <span class="block-icon">🌟</span>
+          <span class="block-title">How the Academy Works</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The Galactic Academy is a special system that appears somewhere in the galaxy. Once any player discovers it (or you build an Academy Embassy), the Academy becomes active for all players. From that point, all empires passively accumulate "Hero Unlock Points" toward receiving a free hero.</p>
+
+          <p>The required points scale linearly: <strong>100 + (400 × number of heroes already owned)</strong>. Every new hero you acquire — whether from the Academy, the market, or a quest — raises the threshold for the next one. Building the <strong>Academy Embassy</strong> improvement (requires the Xenology technology) reduces required points by 20% permanently, and is worth building even if the Academy system was already discovered.</p>
+
+          <p>When you reach the required point threshold, at the start of the next turn you are presented with a choice of three heroes. You may pick only one — the others remain in the shared pool for other players to potentially acquire.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb10b">
+        <div class="block-header" onclick="toggle('cb10b')">
+          <span class="block-icon">⚡</span>
+          <span class="block-title">Hero Unlock Points: Sources &amp; Class Weights</span>
+          <span class="block-tag tag-mech">MECHANIC</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>Unlock points accumulate passively from general empire activity. Actions that give noticeable surges:</p>
+
+          <table class="ref-table">
+            <tr><th>Action</th><th>Points (approx)</th><th>Class bias</th></tr>
+            <tr><td class="cell-key">Hero as Admiral (fleet commander)</td><td>5 / turn</td><td>Seeker, Guardian</td></tr>
+            <tr><td class="cell-key">Hero as Governor</td><td>5 / turn</td><td>Overseer, Counselor</td></tr>
+            <tr><td class="cell-key">Enemy fleets intercepted</td><td>4</td><td>Seeker, Guardian</td></tr>
+            <tr><td class="cell-key">Enemy fleets attacked</td><td>8</td><td>Guardian</td></tr>
+            <tr><td class="cell-key">Ships scrapped</td><td>5</td><td>Guardian</td></tr>
+          </table>
+
+          <p>The class of the hero you are likely to receive is weighted by the proportion of points accumulated per class. Doing primarily military activities biases the pool toward Seekers and Guardians. Governor-heavy play biases toward Overseers and Counselors. The Academy screen shows current point progress and the class probability breakdown.</p>
+
+          <p>Hero class selection is also weighted by your current political affiliations — heroes whose political party matches your dominant parties appear more frequently. The Academy Power (the level new Academy heroes start at) equals the average level of all heroes currently in the game.</p>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t10','cb10b',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-block" id="cb10c">
+        <div class="block-header" onclick="toggle('cb10c')">
+          <span class="block-icon">🎮</span>
+          <span class="block-title">Hacking the Academy: The Fastest Unlock Method</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <p>The most efficient way to accelerate Academy unlocks is hacking the Academy's systems. Each successful hack on an Academy system <strong>additively adds 5% of your progress</strong> toward the next hero. This percentage is fixed — it does not slow down as the absolute point requirement scales up with each new hero. Multiple simultaneous hack operations further multiply the speed.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">HACKING PRIORITY FOR NON-PENUMBRA FACTIONS</div>
+            Even factions without a Hacking-focused playstyle should consider hacking the Academy once Penumbra tech is available. Twenty consecutive successful hacks provide 100% progress — essentially a free hero regardless of point threshold. Owning systems adjacent to the Academy also reduces hacking range requirements. This does not interact with the 20% Academy Embassy reduction; it is a separate and additive acceleration.
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">ACADEMY POWER SIDE EFFECT</div>
+            Rapidly accumulating many heroes through market purchases and hacking also raises Academy Power (average hero level in the game). This means future Academy-granted heroes start at a higher level — but it also means your competitors' Academy-granted heroes start higher too if they are recruiting heroes. The system is global, not player-specific.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t10','cb10c',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="topic-divider">
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         QUIZ
+    ══════════════════════════════════════════════════════════════════ -->
+    <div class="topic" id="quiz">
+      <div class="topic-header">
+        <div class="topic-num">Q</div>
+        <div>
+          <h2 class="topic-title">Scenario Quiz</h2>
+          <div class="topic-subtitle">Hero decisions under real game conditions — one right answer, concrete reasoning required</div>
+        </div>
+      </div>
+      <div id="quiz-mount"></div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════ INLINE SCRIPT ═══════════════════ -->
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol5';
+const TOTAL = 10;
+let qIdx = 0;
+let answered = false;
+
+const quizzes = [
+  {
+    scenario: "Turn 6. Your starting hero is a Seeker, currently riding your scout fleet. You've resolved 4 curiosities (+24 XP) and discovered 2 systems (+8 XP). Your home system has 3 population. The scout fleet is about to reach a 3-curiosity system one lane away. Your home system has a 12-turn colony ship in queue.",
+    q: "Should you keep the hero with the scout fleet this turn, or reassign them as home system governor?",
+    opts: [
+      "Reassign immediately — governor XP (1 + 1.5 from 3 pop) per turn compounds and should start ASAP",
+      "Keep exploring — the 3 curiosities ahead are worth 18 XP, outweighing ~9 turns of governor ticks",
+      "Reassign only if the scout fleet has already mapped the adjacent lanes",
+      "Keep exploring until the hero hits level 3, then reassign regardless of exploration progress"
+    ],
+    correct: 1,
+    explain: "At 3 population, governor XP is 1 (base) + 1.5 (pop) = 2.5 per turn. Three curiosities = 18 XP — equivalent to 7.2 turns of governor income. Since the fleet is already at the doorstep of those curiosities, staying one more turn captures more XP faster. The reassignment argument fails at low-population systems because the governor rate is still too slow. The correct inflection point for reassignment is when governor XP per turn (including build queue project ticks) consistently exceeds expected explorer XP per turn — usually when population exceeds 5–6 and curiosities become sparse."
+  },
+  {
+    scenario: "Mid-game. You have 4 heroes: a level 7 Guardian (fleet commander), a level 5 Overseer (governor on your mineral-rich home system), a level 4 Counselor (parked as governor on a secondary system), and a freshly recruited level 1 Seeker. Your dominant parties are Industrialists and Militarists. You need to improve fleet speed — your main fleet keeps arriving one turn late to intercept enemy movements.",
+    q: "What is the highest-leverage change you can make to address fleet speed?",
+    opts: [
+      "Assign the new Seeker as fleet commander and invest in Enhanced Astronavigation immediately",
+      "Make the Guardian senator by investing in Senate skills — Guardian senators reduce treaty costs which frees Influence for fleet upkeep",
+      "If the Guardian is the Militarist political leader with senate skills, ensure Seeker skills are invested in Startrekking Instruction for the Senate +1 Movement bonus",
+      "Move the Counselor to fleet commander for the vision boost to detect threats earlier"
+    ],
+    correct: 2,
+    explain: "The Seeker's Startrekking Instruction at T2 grants +1 Movement to ALL fleets empire-wide when the Seeker is the political leader for their party in senate. This is a passive empire-wide bonus that costs no assignment. The new level 1 Seeker would need to reach T2 (4 skill points = level 5 minimum) before providing that bonus — far too slow. The existing Guardian has no movement-relevant senate skills. The correct answer leverages the existing political structure: if a Seeker hero is already in a party in power, investing their skill points toward Startrekking Instruction activates the senate bonus without any fleet reassignment. Option D is wrong — vision helps you see threats but doesn't increase response speed."
+  },
+  {
+    scenario: "You just captured an enemy system with 6 population. Approval on the system is at 18 (deeply unhappy bracket). Food production is running at 25% of nominal. You have a level 9 Counselor currently governing your highest-Influence system, and a level 3 Overseer assigned to a mid-tier resource system. No other heroes are unassigned.",
+    q: "Which hero do you move to the captured system, and why?",
+    opts: [
+      "Move the level 3 Overseer — they have Food bonuses that help recover the starvation state",
+      "Move the level 9 Counselor — their T4 skill sets Approval to Ecstatic regardless of penalties, immediately restoring full Food production",
+      "Don't move either — the Approval penalty will naturally decay over a few turns without spending hero turns",
+      "Move the level 9 Counselor only if your Influence production can absorb the loss from their current system"
+    ],
+    correct: 1,
+    explain: "The level 9 Counselor's T4 skill overrides all Approval modifiers and sets the captured system to Ecstatic. Since Approval acts as a multiplier on Food and Influence, jumping from 18 Approval (25% production) to Ecstatic (100%+) immediately restores full food output and prevents population loss. An Overseer's Food bonus is additive on top of a multiplier near zero — nearly useless at this Approval level. Option C is wrong because the natural decay is slow enough that you will likely lose population to starvation. Option D introduces a secondary consideration (Influence production on the current system) that is real but secondary to the immediate risk of losing multiple population units from starvation in the captured system. The Counselor move is the right call."
+  },
+  {
+    scenario: "Turn 35. You have contact with the Galactic Academy. You own the Academy Embassy (−20% point requirement). You currently have 3 heroes. The Academy screen shows you need 1500 more points for the next hero. Your hacking tech allows 1 simultaneous operation. The Academy system is within hacking range.",
+    q: "What is the fastest path to the next Academy hero?",
+    opts: [
+      "Continue natural accumulation — 1500 points at normal empire activity pace is only a few turns away",
+      "Hack the Academy system repeatedly — each success adds 5% additive progress, bypassing the point threshold scaling",
+      "Buy from the market instead — it's faster than waiting for Academy points",
+      "Prioritize military actions — enemy fleet interceptions give 4–8 points each and will close the gap fastest"
+    ],
+    correct: 1,
+    explain: "Hacking the Academy adds 5% of total progress per successful operation, regardless of the absolute point threshold. At 1500 points remaining, 20 successful hacks provide 100% of the required progress — delivering the hero far faster than passive accumulation, and faster than military actions (which grant 4–8 points each in a game where 1500 are needed). Buying from the market is also valid, but the question asks specifically about the Academy path. The key insight is that the 5% hack bonus is percentage-based and does not degrade as the absolute requirement scales, making it the dominant Academy unlock strategy once hacking is available."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
