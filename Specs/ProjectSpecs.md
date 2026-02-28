@@ -35,7 +35,7 @@ Naming conventions:
 |------|-------|--------|--------|
 | `GeneralGuide/es2-vol0-gamestart.html` | Game Start Essentials | 8 | Pending rebuild |
 | `GeneralGuide/es2-vol1-economy.html` | Inside your Empire: Material & Money | 9 | Pending rebuild |
-| `GeneralGuide/es2-vol2-politics.html` | Inside your Empire: People & Ideas | 7 | Pending rebuild |
+| `GeneralGuide/es2-vol2-people.html` | Inside your Empire: People & Ideas | 7 | Pending rebuild |
 | `GeneralGuide/es2-vol3-exploration.html` | Outside your Empire | 10 | Pending rebuild |
 | `GeneralGuide/es2-vol4-combat.html` | Ships, Combat & Military | 10 | Pending rebuild |
 | `GeneralGuide/es2-vol5-heroes.html` | Heroes & the Academy | 10 | Pending rebuild |
