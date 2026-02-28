@@ -136,11 +136,11 @@
         <p>Approval is not a sixth FIDSI — it is a multiplier that sits on top of the production chain. It operates in two separate scopes: <strong>System Approval</strong> affects Food and Influence output for that individual system; <strong>Empire Approval</strong> (a population-weighted average across all your systems) affects Dust and Science empire-wide. Industry is immune at every tier.</p>
 
         <div class="approval-bar">
-          <div class="apv-seg" style="background:rgba(var(--red-rgb),0.85);color:rgb(var(--text-bright));">MUTINOUS<br><span>0</span></div>
-          <div class="apv-seg" style="background:rgba(var(--red-rgb),0.55);color:rgb(var(--text-bright));">UNHAPPY<br><span>10</span></div>
-          <div class="apv-seg" style="background:rgba(var(--gold-rgb),0.5);color:rgb(var(--text-bright));">CONTENT<br><span>30</span></div>
-          <div class="apv-seg" style="background:rgba(var(--green-rgb),0.6);color:rgb(var(--text-bright));">HAPPY<br><span>70</span></div>
-          <div class="apv-seg" style="background:rgba(var(--green-rgb),0.9);color:rgb(var(--text-bright));">ECSTATIC<br><span>85</span></div>
+          <div class="apv-seg" style="background:rgba(var(--red),0.85);color:rgb(var(--text-bright));">MUTINOUS<br><span>0</span></div>
+          <div class="apv-seg" style="background:rgba(var(--red),0.55);color:rgb(var(--text-bright));">UNHAPPY<br><span>10</span></div>
+          <div class="apv-seg" style="background:rgba(var(--gold),0.5);color:rgb(var(--text-bright));">CONTENT<br><span>30</span></div>
+          <div class="apv-seg" style="background:rgba(var(--green),0.6);color:rgb(var(--text-bright));">HAPPY<br><span>70</span></div>
+          <div class="apv-seg" style="background:rgba(var(--green),0.9);color:rgb(var(--text-bright));">ECSTATIC<br><span>85</span></div>
         </div>
 
         <table class="ref-table">
@@ -199,7 +199,7 @@
       <div class="block-body">
         <p><strong>Dust Inflation</strong> is a global multiplier applied to all Dust-denominated costs — Marketplace prices, Buyouts, and Upkeep. The formula:</p>
 
-        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent-rgb),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
+        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
           Dust Inflation = Global Dust Production × 0.000175
         </p>
 
@@ -212,7 +212,7 @@
 
         <p><strong>Buyout costs</strong> scale nonlinearly with the Industry cost of the item, then multiply by inflation:</p>
 
-        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent-rgb),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
+        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
           Buyout Cost = (Industry Cost<sup>1.2125</sup> + 50) × Inflation
         </p>
 
@@ -228,7 +228,7 @@
 
         <p><strong>Science cost scaling:</strong> Every tech you research increases the base cost of every future tech, regardless of quadrant or tier:</p>
 
-        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent-rgb),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
+        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
           Base Cost = (((1 + total_techs × 3)<sup>1.05</sup> − total_techs + 15) × 2)<sup>1.25</sup>
           &nbsp;&nbsp;×&nbsp;&nbsp;Stage Multiplier
         </p>
