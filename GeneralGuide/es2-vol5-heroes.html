@@ -190,11 +190,13 @@
             <tr><td class="cell-key">Assigned (either role)</td><td>1 / turn</td><td>Simply being assigned</td></tr>
             <tr><td class="cell-key">Population on System (Governor)</td><td>0.5 / pop / turn</td><td>Each population unit in the system adds 0.5 XP/turn</td></tr>
             <tr><td class="cell-key">Command Points on Fleet (Commander)</td><td>1 / CP / turn</td><td>Each CP in the hero's fleet; hero ship counts as 1 CP</td></tr>
-            <tr><td class="cell-key">Curiosity Discovered (Commander)</td><td>6 / curiosity</td><td>Hero must be the fleet commander when curiosity is resolved</td></tr>
+            <tr><td class="cell-key">Curiosity Discovered (Commander)</td><td>6 / curiosity</td><td>Hero must be fleet commander when curiosity is resolved. Any bonus ship XP attached to the curiosity reward is also added to the hero.</td></tr>
             <tr><td class="cell-key">Star System Discovered (Commander)</td><td>4 / system</td><td>First discovery of a system while commanding</td></tr>
-            <tr><td class="cell-key">Battle Won (Commander)</td><td>Variable</td><td>Scales with relative fleet sizes — exact formula unconfirmed</td></tr>
-            <tr><td class="cell-key">Project Completed (Governor)</td><td>Variable</td><td>Scales with Industry cost — exact formula unconfirmed</td></tr>
+            <tr><td class="cell-key">Battle Won (Commander)</td><td>Variable</td><td>Likely scales with enemy CP destroyed — retreating ships and battles with no enemy kills appear to grant nothing. Exact formula unconfirmed. <span style="font-size:var(--ts_sectionTitle);opacity:0.7;">[T3 — community observation]</span></td></tr>
+            <tr><td class="cell-key">Project Completed (Governor)</td><td>~8% of Industry cost</td><td>Stacks across all completions that turn. See callout below for zero-XP project types. <span style="font-size:var(--ts_sectionTitle);opacity:0.7;">[T3]</span></td></tr>
           </table>
+
+          <p style="font-size:var(--ts_sectionLabel);opacity:0.8;margin-top:8px;"><span style="font-size:var(--ts_sectionTitle);opacity:0.6;">[T3 — Riftborn note]</span> Riftborn population production appears to grant disproportionately high project XP compared to the standard ~8% formula — community testing found a 550-Industry Riftborn pop gave ~8 more XP than a 560-Industry building of equivalent cost. The mechanism is unclear and may be Riftborn-specific; the standard formula applies for all other factions.</p>
 
           <div class="callout callout-tip">
             <div class="callout-label">EARLY-GAME CURIOSITY WINDOW</div>
@@ -203,7 +205,19 @@
 
           <div class="callout callout-tip">
             <div class="callout-label">PROJECT XP: THE ~8% RULE <span style="font-size:var(--ts_sectionTitle);opacity:0.7;">[T3 — Reddit, u/Kashakunaki, 9y old — verify if patched]</span></div>
-            Community testing (Normal speed, no XP modifiers) found that project completion XP scales at roughly <strong>~8% of the Industry cost</strong> of the completed project — or about 1 XP per 12–12.5 Industry spent. Multiple completions in the same turn stack: finish a 280-Industry building and two 210-Industry ships in one turn, and the governor earns XP based on the combined 700 Industry total. This applies equally to buildings and ships. Buyout via Dust or Influence grants the same XP as building via production. Note: colonizing planets, terraforming, and industry-conversion projects (→Dust, →Science) do NOT generate project XP — only the base 1 XP/turn applies on those turns.
+            Community testing (Normal speed, no XP modifiers) found that project completion XP scales at roughly <strong>~8% of the Industry cost</strong> of the completed project — or about 1 XP per 12–12.5 Industry spent. Multiple completions in the same turn stack: finish a 280-Industry building and two 210-Industry ships in one turn, and the governor earns XP based on the combined 700 Industry total. This applies equally to buildings and ships, and strategic resource requirements on a project do not affect the XP calculation — only raw Industry cost counts. Buyout via Dust or Influence grants the same XP as building via production.
+            <br><br>
+            <strong>Zero-XP project types</strong> — these complete but grant no project XP, only the base 1 XP/turn: colonizing planets (despite having an associated Industry cost), building singularities, terraforming (despite its very large Industry cost), and industry-conversion projects (→Dust, →Science).
+          </div>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">SHIP-SPAM XP FARMING <span style="font-size:var(--ts_sectionTitle);opacity:0.7;">[T3 — community tip, same source]</span></div>
+            When a governor system runs out of useful things to build, constructing cheap no-resource ships and immediately scrapping them still triggers project XP based on their Industry cost. This is a valid way to keep a governor hero leveling between meaningful build queue items — though the opportunity cost (Industry spent on ships that produce nothing) means it is most useful when your build queue is genuinely empty rather than as a routine strategy.
+          </div>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">FLEET HEROES LEVEL STRUCTURALLY SLOWER</div>
+            A fleet commander in a quiet sector earns only 1 XP/turn (base) plus 1 XP per CP in their fleet. A governor in an active system earns 1 (base) + 0.5 per population + project XP bursts. In the mid-to-late game, a busy governor system can generate 20–40+ XP on a single turn where multiple projects complete. Fleet heroes cannot match this rate through passive play alone — combat, curiosity farming, and the Cosmic Castaway universal skill (+4 XP/turn to the fleet) are their primary levers.
           </div>
 
           <div class="callout callout-warn">
