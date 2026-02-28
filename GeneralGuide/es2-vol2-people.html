@@ -46,16 +46,30 @@
     display:flex;
     justify-content: center;
 
-  }*/
+  }
 
   .terraformingTables .ref-table
   {
     width: 49%;
+
+  }*/
+
+  .terraformingTables .ref-table .gold
+  {
+    --muted: rgba(var(--gold), 0.97);
   }
   .terraformingTables .ref-table .cell-key
   {
     text-align: right;
+    border-left: 1px solid var(--border);
+
   }
+
+  .terraformingTables .ref-table .empty
+  {
+    border: none;
+  }
+
 
 </style>
 </head>
@@ -494,45 +508,28 @@
 
         <div class="terraformingTables">
         <table class="ref-table">
-          <tr><th colspan=4 class="tableTitle">Basic terraforming</th></tr>
-          <tr><th class="cell-key">From</th><th width="10px">→</th><th>To</th><th>Industry Cost</th><tr>
-          <tr><td class="cell-key">Barren</td><td>→</td><td> Arctic</td><td>1120 </td></tr>
+          <tr><th colspan=4 class="tableTitle">Basic terraforming</th><th colspan=4 class="tableTitle gold">Advanced terraforming</th><tr>
+          <tr><th class="cell-key">From</th><th width="10px">→</th><th>To</th><th>Industry Cost</th><th class="cell-key gold">From</th><th class="gold" width="10px">→</th><th class="gold" >To</th><th class="gold" >Industry Cost</th><tr>
+          <tr><td class="cell-key">Barren</td><td>→</td><td> Arctic</td><td>1120 </td><td class="cell-key" rowspan=2>Snow</td><td>→</td><td> Steppes</td><td>2000 </td></tr>
 
-          <tr><td class="cell-key" rowspan=2>Toxic</td><td>→</td><td> Steppes</td><td>2000 </td></tr>
-          <tr><td>→</td><td>Savannah</td><td>2000 </td></tr>
+          <tr><td class="cell-key" rowspan=2>Toxic</td><td>→</td><td> Steppes</td><td>2000 </td><td>→</td><td>Boreal</td><td>2000 </td>
+          <tr><td>→</td><td>Savannah</td><td>2000 </td><td class="cell-key" rowspan=2>Arid</td><td>→</td><td> Savannah</td><td>2000 </td></tr>
 
-          <tr><td class="cell-key">Lava</td><td>→</td><td> Desert</td><td>1120 </td></tr>
-          <tr><td class="cell-key">Ice</td><td>→</td><td> Arctic</td><td>560 </td></tr>
-          <tr><td class="cell-key">Ash</td><td>→</td><td> Desert</td><td>560 </td></tr>
+          <tr><td class="cell-key">Lava</td><td>→</td><td> Desert</td><td>1120 </td><td>→</td><td>Jungle</td><td>2000 </td></tr>
+          <tr><td class="cell-key">Ice</td><td>→</td><td> Arctic</td><td>560 </td><td class="cell-key">Steppes</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
+          <tr><td class="cell-key">Ash</td><td>→</td><td> Desert</td><td>560 </td><td class="cell-key">Savannah</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
 
-          <tr><td class="cell-key" rowspan=2>Arctic</td><td>→</td><td> Snow</td><td>1000 </td></tr>
-          <tr><td>→</td><td>Steppes</td><td>2000 </td></tr>
+          <tr><td class="cell-key" rowspan=2>Arctic</td><td>→</td><td> Snow</td><td>1000 </td><td class="cell-key" rowspan=2>Tundra</td><td>→</td><td> Boreal</td><td>2000 </td></tr>
+          <tr><td>→</td><td>Steppes</td><td>2000 </td><td>→</td><td>Forest</td><td>2000 </td></tr>
 
-          <tr><td class="cell-key" rowspan=2>Desert</td><td>→</td><td> Arid</td><td>1000 </td></tr>
-          <tr><td>→</td><td>Savannah</td><td>2000 </td></tr>
-
-        </table>
-
-        <table class="ref-table" style="--muted: rgba(var(--gold), 0.97); border-left: 1px solid var(--border);">
-          <tr><th colspan=4 class="tableTitle">Advanced terraforming</th></tr>
-          <tr><th class="cell-key">From</th><th width="10px">→</th><th>To</th><th>Industry Cost</th><tr>
-<tr><td class="cell-key" rowspan=2>Snow</td><td>→</td><td> Steppes</td><td>2000 </td></tr>
-<tr><td>→</td><td>Boreal</td><td>2000 </td></tr>
-
-<tr><td class="cell-key" rowspan=2>Arid</td><td>→</td><td> Savannah</td><td>2000 </td></tr>
-<tr><td>→</td><td>Jungle</td><td>2000 </td></tr>
-<tr><td class="cell-key">Steppes</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
-<tr><td class="cell-key">Savannah</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
-<tr><td class="cell-key" rowspan=2>Tundra</td><td>→</td><td> Boreal</td><td>2000 </td></tr>
-<tr><td>→</td><td>Forest</td><td>2000 </td></tr>
-<tr><td class="cell-key" rowspan=2>Mediterranean</td><td>→</td><td> Jungle</td><td>2000 </td></tr>
-<tr><td>→</td><td>Terran</td><td>2000 </td></tr>
-<tr><td class="cell-key" rowspan=2>Boreal</td><td>→</td><td> Tundra</td><td>2000 </td></tr>
-<tr><td>→</td><td>Ocean</td><td>2000 </td></tr>
-<tr><td class="cell-key" rowspan=2>Monsoon</td><td>→</td><td> Forest</td><td>2000 </td></tr>
-<tr><td>→</td><td>Terran</td><td>2000 </td></tr>
-<tr><td class="cell-key" rowspan=2>Jungle</td><td>→</td><td> Terran</td><td>2000 </td></tr>
-<tr><td>→</td><td>Atoll</td><td>2000 </td></tr>
+          <tr><td class="cell-key" rowspan=2>Desert</td><td>→</td><td> Arid</td><td>1000 </td><td class="cell-key" rowspan=2>Mediterranean</td><td>→</td><td> Jungle</td><td>2000 </td></tr>
+          <tr><td>→</td><td>Savannah</td><td>2000 </td><td>→</td><td>Terran</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td class="cell-key" rowspan=2>Boreal</td><td>→</td><td> Tundra</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td>→</td><td>Ocean</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td class="cell-key" rowspan=2>Monsoon</td><td>→</td><td> Forest</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td>→</td><td>Terran</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td class="cell-key" rowspan=2>Jungle</td><td>→</td><td> Terran</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td>→</td><td>Atoll</td><td>2000 </td></tr>
 
         </table>
         </div>

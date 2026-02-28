@@ -623,6 +623,7 @@
     border-collapse: collapse;
     font-size: var(--ts_table);
     margin: 14px 0;
+    border: 1px solid var(--border);
   }
 
   .ref-table th {
