@@ -283,6 +283,8 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
     🔧 Topic Name <span class="nav-check" id="nc1"></span>
   </div>
   <!-- vol navigation links -->
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   <div class="nav-section-label">// Next Volumes</div>
   <div class="vol-card right vol-prev" onclick="location.href='es2-volN-prev.html'"><div class="vol-card-arrow">←</div> Vol.N-1: Name</div>
   <div class="vol-card left vol-next" onclick="location.href='es2-volN-next.html'">Vol.N+1: Name <div class="vol-card-arrow">→</div></div>
@@ -295,6 +297,26 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 ```
 
 Factions deep dive should not have the two `vol-link` elements in the sidebar, because deep dives are meant to be standalone volumes, and do not have a logical order
+
+### Quiz structure
+```html
+
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Quiz subtitle</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+```
+Replace the "Quiz subtitle" text with something appropriate for the volume.
+For example: Vol.5 explain heroes, so its subtitle is: `Hero decisions under real game conditions — one right answer, concrete reasoning required`
 
 ### Common content components
 

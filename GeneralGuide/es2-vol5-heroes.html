@@ -42,6 +42,9 @@
     <div class="nav-item" onclick="scrollByID('t9')">💰 The Hero Market <span class="nav-check" id="nc9"></span></div>
     <div class="nav-item" onclick="scrollByID('t10')">🌟 The Galactic Academy <span class="nav-check" id="nc10"></span></div>
 
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
     <div class="nav-section-label">// Volumes</div>
     <div class="vol-card right vol-prev" onclick="location.href='es2-vol4-combat.html'"><div class="vol-card-arrow">←</div> Vol.4: Ships &amp; Combat</div>
     <div class="vol-card left vol-next" onclick="location.href='es2-vol6-diplomacy.html'">Vol.6: Diplomacy &amp; Hacking <div class="vol-card-arrow">→</div></div>
@@ -784,13 +787,16 @@
     ══════════════════════════════════════════════════════════════════ -->
     <div class="topic" id="quiz">
       <div class="topic-header">
-        <div class="topic-num">Q</div>
+        <div class="topic-num">🧠</div>
         <div>
           <h2 class="topic-title">Scenario Quiz</h2>
           <div class="topic-subtitle">Hero decisions under real game conditions — one right answer, concrete reasoning required</div>
         </div>
       </div>
-      <div id="quiz-mount"></div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
     </div>
 
   </main>
