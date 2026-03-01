@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Vodyani: Ark-Born Predators Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<style>
+  /* ── Fac04 — Vodyani: predatory orange ───────────────────────────────── */
+  :root {
+    --accent:            var(--vodyani-color);
+    --card-accent:       var(--accent);
+    --accent-dim:        rgba(var(--vodyani-color), 0.10);
+    --accent-bright-rgb: 255,180,80;
+  }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--vodyani-color), 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--vodyani-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--vodyani-color), 0.4),
+      0 0 80px rgba(var(--vodyani-color), 0.15);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  /* ── Essence income bar ─────────────────────────────────────────────── */
+  .ess-bar-wrap { margin: 14px 0; }
+  .ess-bar-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: rgb(var(--accent));
+    margin-bottom: 4px;
+    text-transform: uppercase;
+  }
+  .ess-bar {
+    display: flex;
+    height: 26px;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .ess-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 0 8px;
+    white-space: nowrap;
+  }
+  .ess-seg-leech  { background: rgba(var(--vodyani-color), 0.5); color: rgb(var(--text-bright)); flex: 5; }
+  .ess-seg-module { background: rgba(var(--vodyani-color), 0.25); color: rgb(var(--text-bright)); flex: 2; }
+  .ess-seg-law    { background: rgba(var(--vodyani-color), 0.12); color: rgb(var(--text-bright)); flex: 1.5; }
+
+  /* ── Power curve chart ──────────────────────────────────────────────── */
+  .curve-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 80px;
+    margin: 16px 0 8px;
+    padding: 0 4px;
+  }
+  .curve-bar {
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    background: rgba(var(--vodyani-color), 0.2);
+    border: 1px solid rgba(var(--vodyani-color), 0.3);
+    transition: background 0.2s;
+    position: relative;
+  }
+  .curve-bar.peak {
+    background: rgba(var(--vodyani-color), 0.7);
+    border-color: rgb(var(--vodyani-color));
+  }
+  .curve-bar.mid {
+    background: rgba(var(--vodyani-color), 0.4);
+  }
+  .curve-bar.low { background: rgba(var(--red), 0.25); border-color: rgba(var(--red), 0.3); }
+  .curve-labels {
+    display: flex;
+    gap: 4px;
+    padding: 0 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: calc(var(--ts_sectionTitle) * 0.9);
+    color: var(--text-dim);
+  }
+  .curve-labels span { flex: 1; text-align: center; }
+
+  /* ── Ark config cards ───────────────────────────────────────────────── */
+  .ark-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 14px 0;
+  }
+  .ark-card {
+    background: var(--card2);
+    border: 1px solid rgba(var(--vodyani-color), 0.3);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .ark-card-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--ts_sectionLabel);
+    font-weight: 700;
+    color: rgb(var(--vodyani-color));
+    margin-bottom: 4px;
+  }
+  .ark-card-role {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .ark-card-body {
+    font-size: var(--ts_sectionLabel);
+    color: var(--text);
+    line-height: 1.65;
+  }
+
+  /* ── Module slot display ────────────────────────────────────────────── */
+  .slot-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 8px 0;
+  }
+  .slot-chip {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+  }
+  .slot-w  { background: rgba(var(--red), 0.15); color: rgb(var(--red)); border: 1px solid rgba(var(--red), 0.3); }
+  .slot-d  { background: rgba(var(--cyan), 0.12); color: rgb(var(--cyan)); border: 1px solid rgba(var(--cyan), 0.3); }
+  .slot-s  { background: rgba(var(--green), 0.12); color: rgb(var(--green)); border: 1px solid rgba(var(--green), 0.3); }
+  .slot-m  { background: rgba(var(--vodyani-color), 0.12); color: rgb(var(--vodyani-color)); border: 1px solid rgba(var(--vodyani-color), 0.3); }
+  .slot-lux{ background: rgba(var(--gold), 0.12); color: rgb(var(--gold)); border: 1px solid rgba(var(--gold), 0.3); }
+
+  /* ── Trait block (reused from Horatio pattern) ──────────────────────── */
+  .trait-block {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-left: 3px solid rgb(var(--accent));
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 10px 0;
+    font-size: var(--ts_sectionLabel);
+    line-height: 1.7;
+    color: var(--text);
+  }
+  .trait-block.warn {
+    border-left-color: rgb(var(--red));
+  }
+  .trait-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: rgb(var(--accent));
+    margin-bottom: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .trait-label.warn { color: rgb(var(--red)); }
+
+  /* ── Source pills ───────────────────────────────────────────────────── */
+  .source-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+  }
+  .src-pill {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 1px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: var(--accent-dim);
+    color: rgb(var(--accent));
+    border: 1px solid rgba(var(--vodyani-color), 0.25);
+  }
+
+  /* ── Timeline ───────────────────────────────────────────────────────── */
+  .timeline { margin: 14px 0; }
+  .tl-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .tl-turn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: rgb(var(--accent));
+    background: var(--accent-dim);
+    border: 1px solid rgba(var(--vodyani-color), 0.3);
+    border-radius: 4px;
+    padding: 3px 9px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .tl-body {
+    font-size: var(--ts_sectionLabel);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ── vol-card-badge ─────────────────────────────────────────────────── */
+  .vol-card-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionLabel);
+    letter-spacing: 3px;
+    color: rgb(var(--accent));
+    background: var(--accent-dim);
+    border: 1px solid rgba(var(--vodyani-color), 0.3);
+    border-radius: 6px;
+    padding: 8px 16px;
+    margin-bottom: 16px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* ── Ship grid (reused from Horatio) ────────────────────────────────── */
+  .ship-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 14px 0;
+  }
+  .ship-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+  }
+  .ship-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--ts_sectionLabel);
+    font-weight: 700;
+    color: rgb(var(--text-bright));
+    margin-bottom: 2px;
+  }
+  .ship-role {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: rgb(var(--accent));
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .ship-body {
+    font-size: var(--ts_sectionLabel);
+    color: var(--text);
+    line-height: 1.65;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.04</div>
+    <div class="guide-name">The<br>Vodyani</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🦋 Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Essence Engine</div>
+  <div class="nav-item" onclick="scrollByID('t1')">⚗️ Essence: The Resource Loop <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">👥 Population: The Virtualization Engine <span class="nav-check" id="nc2"></span></div>
+
+  <div class="nav-section-label">// The Ark</div>
+  <div class="nav-item" onclick="scrollByID('t3')">🚀 Ark Configurations &amp; Ship Design <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🛸 Fleet Philosophy &amp; Non-Ark Ships <span class="nav-check" id="nc4"></span></div>
+
+  <div class="nav-section-label">// Aggression</div>
+  <div class="nav-item" onclick="scrollByID('t5')">⚡ Righteous Fury: War Without War <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">⚔️ Invasion Doctrine <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Strategy</div>
+  <div class="nav-item" onclick="scrollByID('t7')">🔬 Tech Routing <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">📖 Questline &amp; Government <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-item" onclick="scrollByID('t9')">🗓️ First 40 Turns Playbook <span class="nav-check" id="nc9"></span></div>
+  <div class="nav-item" onclick="scrollByID('t10')">🏆 Victory Path Compatibility <span class="nav-check" id="nc10"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MOBILE NAV ═══════ -->
+<div class="mobile-bar">
+  <div class="mobile-bar-vol" onclick="scrollByID('t0')">🦋 FAC.04 — VODYANI</div>
+  <div class="mobile-bar-menu" id="mobile-menu-btn" onclick="toggleDrawer()">☰</div>
+</div>
+<div class="drawer-backdrop" id="drawer-backdrop" onclick="toggleDrawer()"></div>
+<div class="mobile-drawer" id="mobile-drawer">
+  <div class="drawer-handle"></div>
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item" onclick="scrollByID('t0');toggleDrawer()">🦋 Faction Identity</div>
+  <div class="nav-section-label">// Essence Engine</div>
+  <div class="nav-item" onclick="scrollByID('t1');toggleDrawer()">⚗️ Essence: The Resource Loop</div>
+  <div class="nav-item" onclick="scrollByID('t2');toggleDrawer()">👥 Population: Virtualization Engine</div>
+  <div class="nav-section-label">// The Ark</div>
+  <div class="nav-item" onclick="scrollByID('t3');toggleDrawer()">🚀 Ark Configurations &amp; Ship Design</div>
+  <div class="nav-item" onclick="scrollByID('t4');toggleDrawer()">🛸 Fleet Philosophy &amp; Non-Ark Ships</div>
+  <div class="nav-section-label">// Aggression</div>
+  <div class="nav-item" onclick="scrollByID('t5');toggleDrawer()">⚡ Righteous Fury: War Without War</div>
+  <div class="nav-item" onclick="scrollByID('t6');toggleDrawer()">⚔️ Invasion Doctrine</div>
+  <div class="nav-section-label">// Strategy</div>
+  <div class="nav-item" onclick="scrollByID('t7');toggleDrawer()">🔬 Tech Routing</div>
+  <div class="nav-item" onclick="scrollByID('t8');toggleDrawer()">📖 Questline &amp; Government</div>
+  <div class="nav-item" onclick="scrollByID('t9');toggleDrawer()">🗓️ First 40 Turns Playbook</div>
+  <div class="nav-item" onclick="scrollByID('t10');toggleDrawer()">🏆 Victory Path Compatibility</div>
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz');toggleDrawer()">🧠 Scenario Quiz</div>
+</div>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.04</span> // The Vodyani</div>
+    <h1 class="page-title"><img src="../images/Races/VodyaniIcon.webp" style="height:2em;vertical-align:middle;margin-right:12px;" alt=""> The<br>Vodyani</h1>
+    <p class="page-subtitle">Parasites in silk robes. The Vodyani are a faction defined by a single, radical design premise: your empire is not a territory, it is a fleet of arks that happens to land occasionally. Everything — production, population, improvements, manpower — lives aboard those ships. This creates the most volatile power curve in the game: a Vodyani starting in a rich neighborhood with minor factions to leech is borderline broken; a Vodyani stranded in an empty corner of the galaxy is fighting for relevance until turn 30. Once the essence economy ignites, though, the snowball is nearly unstoppable: instant colonies, instant armies, instant aggression — no war declaration required.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Feast/Famine Curve</h2>
+        <div class="topic-subtitle">No other faction's power swings this hard based on map position. Understanding why is the first skill.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">🦋</span>
+        <span class="block-title">Core Identity, Traits, and the Variance Problem</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge">◈ VODYANI — PARASITES OF THE VIRTUAL ENDLESS ◈</div>
+
+        <p>The Vodyani were saved from extinction by the Virtual Endless, converted into digitized consciousnesses inside synthetic "Cloth" bodies. They now sail the galaxy aboard city-ships called Arks, draining the life-force — Essence — from every living thing they encounter. Their political structure is a theocratic hierarchy that worships the Virtual Endless as gods. This lore is not decorative: it directly explains why their mechanics are built the way they are.</p>
+
+        <p>Expert community guides describe Vodyani as the single faction with the most bimodal power distribution in the game. Where most factions' strength follows a bell curve — averaging out to a moderate level with some variance — Vodyani follow a <em>U-curve</em>: they are frequently either overwhelming or struggling, with very few average games.</p>
+
+        <div class="ess-bar-wrap">
+          <div class="ess-bar-label">Illustrative Power Distribution vs. Turn Count (Good Start)</div>
+          <div class="curve-wrap">
+            <div class="curve-bar low"    style="height:25%"></div>
+            <div class="curve-bar low"    style="height:35%"></div>
+            <div class="curve-bar mid"    style="height:50%"></div>
+            <div class="curve-bar mid"    style="height:65%"></div>
+            <div class="curve-bar peak"   style="height:85%"></div>
+            <div class="curve-bar peak"   style="height:95%"></div>
+            <div class="curve-bar peak"   style="height:100%"></div>
+            <div class="curve-bar peak"   style="height:100%"></div>
+          </div>
+          <div class="curve-labels">
+            <span>T1</span><span>T5</span><span>T10</span><span>T15</span><span>T20</span><span>T30</span><span>T40</span><span>T50</span>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">WHY TURN 1 IS ALREADY DECIDED</div>
+          The Vodyani start with <strong>1 population</strong> on their home Ark, but that single population is immediately applied to every colonizable planet in the starting system. A system with 3 colonizable planets at turn 1 generates roughly double the FIDSI of a system with 1. No other faction has this much variance from start position alone. A good Vodyani start is worth 2–3 extra turns of full Science and Industry production. A poor one means crawling until turn 15–20 when leeching compensates.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">FACTION TRAITS SUMMARY</div>
+          <table class="ref-table">
+            <tr><th>Trait</th><th>Effect</th><th>Impact</th></tr>
+            <tr><td class="cell-key">Fast Travelers I</td><td>+1 Movement to all ships</td><td class="cell-good">Enables leeching range and early aggression timing</td></tr>
+            <tr><td class="cell-key">Fearless Warriors II</td><td>+20% Infantry on Empire</td><td class="cell-good">Infantry is already strong; this makes ground invasions reliable</td></tr>
+            <tr><td class="cell-key">Legendary Heroes II</td><td>−50% Hero cost, +2 XP/turn</td><td class="cell-good">Enables hero spam; faster hero leveling compounds over time</td></tr>
+            <tr><td class="cell-key">Utopian Infrastructure</td><td>Ark system upgrades grant Approval</td><td class="cell-good">Partially offsets the severe early Approval deficit</td></tr>
+            <tr><td class="cell-key">Ship Bound</td><td>Pop lives on Arks; instant planet exploit; no terraforming</td><td>The defining mechanic — double-edged</td></tr>
+            <tr><td class="cell-key">Gargantuan Pop</td><td>+4 FIDS per pop, −50% Food</td><td class="cell-bad">Extreme food penalty — manpower and natural growth are crippled</td></tr>
+            <tr><td class="cell-key">Mono-Species Empire</td><td>Cannot have non-Vodyani population</td><td class="cell-bad">No minor faction FIDSI bonuses; no collection thresholds; no assimilation</td></tr>
+          </table>
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE MONO-SPECIES CONSTRAINT — WHAT IT ACTUALLY MEANS</div>
+          The Vodyani cannot — by any mechanic — accumulate non-Vodyani population. Minor faction populations won't migrate to Arks. Exiles are locked out. When you assimilate a minor faction's system, the population is simply wiped. The developers systematically closed every path to mixed populations. Lore-justification: Vodyani believe their digital transcendence is a religious obligation to impose on all life, so they're "converting" populations into Essence, not coexisting with them. The practical consequence: every minor faction law bonus and collection threshold mechanic is permanently unavailable to you.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">VODYANI IN ONE SENTENCE</div>
+          Build an Ark that leeches Essence from a neighbor's system as fast as possible, use that Essence to build more Arks, and roll across the map before the late game gives opponents time to out-tech and outlast you.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01-4XALCH</span><span class="src-pill">STEAM-ZLORFIK</span><span class="src-pill">WIKI-FACTIONS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T1: ESSENCE -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Essence: The Resource Loop</h2>
+        <div class="topic-subtitle">Three income streams, one exponential curve. Understanding the math changes how you build.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">⚗️</span>
+        <span class="block-title">Income Sources, Storage, and Costs</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Essence is the Vodyani's singular strategic resource. It funds everything: new Arks, new population, and Manpower conversion. Getting your Essence economy to critical mass is the central challenge of every Vodyani game.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE THREE INCOME STREAMS</div>
+          <table class="ref-table">
+            <tr><th>Source</th><th>Base Rate</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Leech Modules</td><td>12.5 Essence/module/turn</td><td>Requires parking over an inhabited system (minor or major faction). Best early income. Upgradeable at S&amp;E Ring 3.</td></tr>
+            <tr><td class="cell-key">All Must Provide modules (Ark passive)</td><td>10 Essence/module/turn</td><td>Passive — no positioning needed. Scales with Ark module count. Upgraded version (S&amp;E Ring 3) roughly doubles this.</td></tr>
+            <tr><td class="cell-key">Species Stability Law</td><td>15 + 2×(pop count)/turn</td><td>Religious law, available from turn 1. First thing you should enable. Cost: 1 Influence per pop.</td></tr>
+          </table>
+          <br>
+          Your two starting Leecher ships have 4 leech modules each → 50 Essence/turn combined. Your starting Ark can fit 4 "All Must Provide" modules → 40 Essence/turn passive. Species Stability at 1 pop → ~17 Essence/turn. Total early maximum: roughly 107 Essence/turn if all three streams are active and positioned correctly.
+        </div>
+
+        <div class="ess-bar-wrap">
+          <div class="ess-bar-label">Early Essence Income Split (when all streams are active)</div>
+          <div class="ess-bar">
+            <div class="ess-seg ess-seg-leech">LEECHING ~47%</div>
+            <div class="ess-seg ess-seg-module">PASSIVE ~37%</div>
+            <div class="ess-seg ess-seg-law">LAW ~16%</div>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">STORAGE AND COSTS</div>
+          Essence has a hard storage cap. Every Ark in your empire adds 800 storage. With 1 Ark you cap at 800; with 2 Arks, at 1600; and so on.
+          <br><br>
+          <strong>Cost to build a new Ark:</strong> (storage_cap − 200) Essence. First Ark costs 600, second costs 1400, third costs 2200. The cost escalates sharply — which is exactly why the BARK strategy (building an Ark that pays for itself by leeching faster) is so powerful.
+          <br><br>
+          <strong>Cost to create a new pop via Holy Proliferation:</strong> 250 × (current pop count). First pop: 250. Second: 500. Third: 750. This scales per-Ark, not empire-wide — each Ark has its own population counter and its own proliferation cost curve.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE "ALMS FOR ESSENCE" TRAP</div>
+          There is an action called "Alms for Essence" that converts 25% of your current Dust and Industry production into Essence. The actual yield is negligible — roughly 20 Essence/turn at the cost of your entire Industry and Dust output for that turn. It is almost never worth using. The one exception: if your Leecher was just destroyed and you are literally one turn away from an Ark that will pay for itself, you might use it as a bridge. Otherwise, treat it as if it doesn't exist.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01-4XALCH</span><span class="src-pill">STEAM-ZLORFIK</span><span class="src-pill">WIKI-FACTIONS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">📐</span>
+        <span class="block-title">The BARK Math: Why Battle Arks Beat Leecher Ships</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The single most important strategic insight for Vodyani: Arks are a dramatically superior delivery vehicle for leech modules compared to Leecher ships.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE ×4 MODULE MULTIPLIER</div>
+          Every module fitted to an Ark receives a <strong>×4 multiplier</strong> on its per-module output. A leech module on a Leecher ship produces 12.5 Essence/turn. The same module on an Ark produces 50 Essence/turn. An early Battle Ark (BARK) fitted with 3 leech modules and 1 engine produces <strong>150 Essence/turn</strong> from those three leech slots — equivalent to 12 Leecher-ship modules, or three full Leecher ships.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE BREAKEVEN CALCULATION (Zlorfik)</div>
+          First BARK costs 600 Essence. Running 3 leech modules + 1 engine:
+          <br><br>
+          → 150 Essence/turn income<br>
+          → Paid off in <strong>4 turns</strong><br>
+          → After 10 turns total: net +900 Essence profit<br>
+          → After 14 turns: enough to fund the <em>second</em> Ark at 1,400 cost<br><br>
+          By contrast, a Leecher ship (50 Essence/turn, 4 modules) costs enormous Industry — roughly 14 turns of Industry at a 3-planet start — and cannot defend itself. The BARK costs only Essence, builds in <strong>one turn regardless of Industry cost</strong>, and can fight back if attacked.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE EARLY POP INVESTMENT DEBATE</div>
+          There is a genuine strategic disagreement in the community here. Zlorfik argues strongly for BARK-first: "You are not investing in a resource feedback loop that provides you with more Essence." The 4X Alchemist implicitly favors some early population investment alongside Ark building. <strong>Our recommendation is BARK-first</strong>, with this nuance: if researching a colonization tech grants you a free effective population by unlocking a currently-unworked planet in your home system, always do that first — it costs no Essence and the FIDSI gain is immediate and free.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE SNOWBALL TRIGGER — S&amp;E RING 3</div>
+          The Science &amp; Exploration tech tree Ring 3 contains a Vodyani-specific tech that upgrades both your leech modules and your passive "All Must Provide" modules. This effectively doubles the output of every leech slot on every BARK in your empire simultaneously. The moment you hit this tech while running 3+ BARKs, your Essence income can jump by 300–500 per turn in a single turn. This is when the Vodyani snowball truly becomes irreversible. Prioritize reaching this tech.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">STEAM-ZLORFIK</span><span class="src-pill">YT01-4XALCH</span><span class="src-pill">YT02-ESACADEMY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T2: POPULATION -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Population: The Virtualization Engine</h2>
+        <div class="topic-subtitle">One pop, every planet. The formula that makes Vodyani FIDSI output unlike anything else in the game.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">👥</span>
+        <span class="block-title">Virtualization, Pop Cap, and the Planet Count Multiplier</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Vodyani population mechanic is unlike any other faction's. Understanding it precisely is not optional — it determines where you should settle, what tech to prioritize, and how laws interact with your economy in ways that are completely invisible to players who haven't read the mechanic carefully.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE VIRTUALIZATION FORMULA</div>
+          When an Ark docks in a system, each population unit aboard is simultaneously "virtualized" onto every colonizable planet in that system. The system's effective working population is:
+          <br><br>
+          <strong>Effective workforce = Ark pop × colonizable planet count</strong>
+          <br><br>
+          An Ark with 3 pop docked in a 5-planet system operates as if it has 15 workers. The same Ark in a 2-planet system operates as if it has 6. This is why high-planet-count systems are disproportionately valuable for Vodyani — they are a direct FIDSI multiplier, not just an additive bonus.
+          <br><br>
+          Vodyani do not use planet population capacity limits. A gas giant that other factions can fit 1–2 pops on can be fully exploited by your entire Ark population. A tiny barren rock with 1 capacity slot works the same way. Your only capacity limit is the Ark's population cap.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ARK POPULATION CAP — SYSTEM DEVELOPMENT GATING</div>
+          The maximum population an Ark can hold is determined by its <strong>system development level</strong> — the upgrades unlocked by researching Economic tech tiers and spending luxury resources:
+          <table class="ref-table">
+            <tr><th>Dev Level</th><th>Max Pop Cap</th><th>Luxury Required</th></tr>
+            <tr><td class="cell-key">0 (base)</td><td>3</td><td>—</td></tr>
+            <tr><td class="cell-key">1</td><td>5</td><td>1 luxury</td></tr>
+            <tr><td class="cell-key">2</td><td>7</td><td>2 luxuries</td></tr>
+            <tr><td class="cell-key">3</td><td>9</td><td>3 luxuries</td></tr>
+          </table>
+          This makes securing a reliable early luxury resource one of the highest-priority strategic goals of turns 1–20. Food, Science, and Industry luxuries are all valuable; Dust is less critical since the law asymmetry (see below) provides passive Influence income that tends to self-sustain.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">COLONIZATION IS AUTOMATIC AND CANNOT BE AVOIDED</div>
+          The moment you research a colonization tech (e.g., Colonize Arid), every Arid planet in every system where your Arks are docked is immediately worked — you don't choose. This is both a strength and a constraint:
+          <br><br>
+          <strong>Strength:</strong> Free instant colonization with no Industry cost, no colony ship build time, no 1-turn delay.<br>
+          <strong>Constraint:</strong> You cannot opt out of bad planets. A system with one excellent Fertile world and two Barren wastelands with negative anomalies will apply those anomaly Approval maluses to your empire automatically the moment Colonize Barren is researched. Choose your docking systems with this in mind — or don't research that colonization tech until you're ready to accept the maluses.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">NO TERRAFORMING. NO ANOMALY REDUCTION. EVER.</div>
+          The Vodyani have zero access to terraforming technology or anomaly reduction mechanics. Their tech tree simply does not contain these paths. The consequence: system selection is permanent and irreversible. A system you dock in at turn 10 with three bad anomalies will have those anomalies forever. Scout aggressively before committing an Ark.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">YT01-4XALCH</span><span class="src-pill">STEAM-ZLORFIK</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">The Law Asymmetry: Upkeep vs. Effect</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>This is the single most underexplained Vodyani mechanic in community content. No YouTube source covers it. The wiki documents it precisely, and it has significant strategic implications.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE ASYMMETRY RULE</div>
+          For Vodyani, law calculations work differently from every other faction:
+          <br><br>
+          <strong>Law upkeep cost</strong> is calculated on <em>actual Ark population</em> (the real number of pop units aboard).<br>
+          <strong>Law effect</strong> is calculated on <em>virtual population copies</em> (actual pop × planet count).
+          <br><br>
+          Example: An Ark with 3 pop docked in a 4-planet system has 12 virtual copies. The law "Cram Exam Act" gives +3 Science and −2 Approval per pop. For this Ark:
+          <ul style="margin:8px 0 8px 20px;font-size:var(--ts_sectionLabel);color:var(--text);line-height:1.8;">
+            <li>Effect: +3 Science × 12 copies = <strong>+36 Science</strong> on this system</li>
+            <li>Upkeep: −2 Approval × 3 real pop = <strong>−6 Approval</strong> (not −24)</li>
+          </ul>
+          You receive 4× the Science benefit for only 1/4 of the Approval cost compared to what the numbers suggest. This is massive.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">INFLUENCE UPKEEP — THE SURPLUS DRIVER</div>
+          The same asymmetry applies to Influence-cost laws. A law with "2 Influence per population" upkeep costs only 2 × actual_pop — while its benefit applies to 2 × actual_pop × planet_count virtual copies. Vodyani typically run large Influence surpluses relative to their actual population counts, which is why they can sustain refusing forced truces and maintaining aggressive religious laws even with a small empire. The apparent Influence drain is far lower than the tooltip implies.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">APPROVAL MANAGEMENT — THE EARLY-GAME CEILING</div>
+          Early Vodyani starts at 40% Approval, which is below the "Happy" threshold. The −50% Food penalty means natural population growth is near-zero. The "Toys for Boys" law that improves Approval requires you to already be Happy — a catch-22. The "Super Tax Act" is the correct early law: it generates Dust at a minor Approval cost but you're already unhappy, so the marginal penalty is irrelevant. Use Utopian Infrastructure system upgrades (which grant Approval per level) and look for any early luxury resource that provides Approval. The Ecstatic threshold multipliers are out of reach early; focus on reaching Happy (70% Approval) before turn 20.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">YT01-4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2c">
+      <div class="block-header" onclick="toggle('cb2c')">
+        <span class="block-icon">🍞</span>
+        <span class="block-title">The −50% Food Penalty and Its Cascading Consequences</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">FOOD DOESN'T DIRECTLY HURT FIDSI — BUT MANPOWER DOES</div>
+          The −50% Food penalty's primary impact is <strong>not</strong> on FIDSI output — it's on Manpower and natural population growth. Vodyani generate almost no Manpower through the normal Food-to-population pipeline. This means:
+          <ul style="margin:8px 0 8px 20px;font-size:var(--ts_sectionLabel);color:var(--text);line-height:1.8;">
+            <li>Early invasion capacity is minimal unless you use Essence → Manpower conversion (Military Penance)</li>
+            <li>Population-rich defender systems can draft defenders faster than you can replenish infantry</li>
+            <li>Natural population growth takes 50+ turns even with Food bonuses — Holy Proliferation (Essence-bought growth) is your primary population source</li>
+          </ul>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">HOLY PROLIFERATION — WHEN TO USE IT</div>
+          Holy Proliferation converts Essence into a new pop unit on the selected Ark. Cost: 250 × current_ark_pop_count. The pop is immediately born — no growth turn. However: if your Food balance cannot sustain the new pop's consumption, the pop will die next turn (the Vodyani still require Food despite being digital). Always verify Food balance before proliferating.
+          <br><br>
+          Preferred use: proliferate when a) you have Food surplus, b) you're about to dock at a high-planet-count system where the new pop will multiply your FIDSI significantly, or c) you're near a system development threshold that will increase your Ark's pop cap.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MILITARY PENANCE — ESSENCE → MANPOWER</div>
+          The second Essence sink for military operations. Converts Essence directly into Manpower on demand. Used when: invading a well-defended system and you've already depleted the defender's population via leeching. The opportunity cost is real — every Essence spent on Manpower is Essence not going toward a new Ark — but the alternative (failing an invasion because you ran out of troops) is worse. Plan invasion timing around this cost.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">LEECHING AS PRE-INVASION ATTRITION</div>
+          The "Radioactive Essence" tech (S&amp;E Ring 5, Vodyani-specific) upgrades leech modules to drain multiple population per turn from heavily leeched systems. Running several BARKs on a target system for 5–10 turns before invading will reduce their population to near-zero, cutting their defensive Manpower to a fraction of its normal value. This is the correct Vodyani invasion sequence — drain first, invade when they are defenseless.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">YT02-ESACADEMY</span><span class="src-pill">YT01-4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T3: ARK CONFIGS -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Ark Configurations &amp; Ship Design</h2>
+        <div class="topic-subtitle">The Ark is simultaneously a colony, a battleship, a leeching platform, and an invasion carrier. Design deliberately.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Ark Fundamentals: Stats, States, and the Module Multiplier</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">BASE STATS AND SCALING</div>
+          The Ark is a 4-Command-Point hull with stats that scale directly with system development level:
+          <table class="ref-table">
+            <tr><th>Dev Level</th><th>HP</th><th>Base Defense</th><th>Module Multiplier</th></tr>
+            <tr><td class="cell-key">0 (base)</td><td>5,000</td><td>166</td><td>×4 (constant)</td></tr>
+            <tr><td class="cell-key">1</td><td>10,000</td><td>333</td><td>×4 (constant)</td></tr>
+            <tr><td class="cell-key">2</td><td>15,000</td><td>500</td><td>×4 (constant)</td></tr>
+            <tr><td class="cell-key">3</td><td>20,000</td><td>666</td><td>×4 (constant)</td></tr>
+            <tr><td class="cell-key">4</td><td>25,000</td><td>833</td><td>×4 (constant)</td></tr>
+          </table>
+          The module multiplier of ×4 is always active regardless of development level. A fully developed Ark at dev 4 with 25,000 HP and 833 base defense is, as Zlorfik notes, "almost on par with a fully upgraded Military Behemoth." Only the Juggernaut Behemoth configuration exceeds it.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">DOCKED vs. UNDOCKED STATES</div>
+          <strong>Docked:</strong> The Ark functions as a colony. All improvements, population, and FIDSI output are active. Costs 1 action point to dock; once docked you cannot dock again the same turn.
+          <br><br>
+          <strong>Undocked:</strong> The Ark is a ship. It generates <em>zero</em> FIDSI — population and improvements are "frozen" but not lost. The Ark retains all its improvements and population in memory and they reactivate instantly upon docking at any new system with no cooldown.
+          <br><br>
+          This creates the Vodyani's mobility advantage: you can physically relocate your entire economy in 3–5 turns to wherever it is most strategically needed. No other faction can do anything like this.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MODULE SLOTS BY TECH PROGRESSION</div>
+          Base Ark slots and unlocks from tech:
+          <div class="slot-row">
+            <div class="slot-chip slot-w">1× ATTACK</div>
+            <div class="slot-chip slot-d">2–3× DEFENSE</div>
+            <div class="slot-chip slot-s">3–4× SUPPORT</div>
+            <div class="slot-chip slot-m">7× MODULE</div>
+          </div>
+          Unlocked via Military Ring 1 ("Holy Defense Doctrine" tech):
+          <div class="slot-row">
+            <div class="slot-chip slot-w">+1 SQUADRON</div>
+            <div class="slot-chip slot-d">+0–1 DEFENSE</div>
+            <div class="slot-chip slot-m">+2 MODULE</div>
+          </div>
+          Additional slots unlock through Ark-specific "Sanctified Arks," "Blessed Vessels," "Consecrated Battle Arks" techs. Total at max unlock: up to 2 heavy, 1 attack, 2 squadron, 4–7 defense, 6–9 support, plus 18 general module slots (used for leech, essence-passive, or industry/science modules depending on Ark role).
+          <br><br>
+          <strong>The key insight:</strong> research at least one Military Ring 1 tech early — it unlocks the first additional Ark module slots, making BARKs significantly more capable at minimal tech cost.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">STEAM-ZLORFIK</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🗂️</span>
+        <span class="block-title">Three Ark Configurations: Colony, BARK, and Invasion</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every Ark serves one of three primary roles. In the early game, distinctions blur — a single Ark may serve as colony and BARK simultaneously. In the mid-game, specialization becomes important and you'll want dedicated BARKs separate from your colony Arks.</p>
+
+        <div class="ark-grid">
+          <div class="ark-card">
+            <div class="ark-card-name">COLONY ARK</div>
+            <div class="ark-card-role">Home Base — Economic Core</div>
+            <div class="ark-card-body">
+              Modules focused on <strong>All Must Provide</strong> (passive Essence), <strong>All Must Study</strong> (Science), and <strong>All Must Work</strong> (Industry) rather than leech or combat. This Ark stays docked in your best multi-planet system. It grows population via Holy Proliferation and houses your system improvements. In the late game it can carry invasion modules too — building them in-system at zero Industry cost means you can add massive invasion capacity instantly when needed.
+              <br><br>
+              <strong>When to build:</strong> After your first BARK. Priority system: 4+ planets, good planet types, minimal bad anomalies.
+            </div>
+          </div>
+          <div class="ark-card">
+            <div class="ark-card-name">BATTLE ARK (BARK)</div>
+            <div class="ark-card-role">Leech Platform + Combat Ship</div>
+            <div class="ark-card-body">
+              The core engine of the Vodyani economy. Early BARK loadout: 3 leech modules + 1 engine (150 Essence/turn, mobile, self-defending). Once essence is abundant, replace 1 leech with a combat module. Weapons: kinetic slugs + missiles for a mixed loadout that adapts to most opponent armor configurations.
+              <br><br>
+              <strong>Key advantage over Leecher ships:</strong> Builds in 1 turn regardless of Industry cost, can defend itself, generates 4× the Essence per module slot.
+              <br><br>
+              <strong>The "Meditation Module" upgrade</strong> (Unstable Isotope tech, Military Ring 2) prevents enemy ships from targeting an anchored Ark during space battles, forcing opponents to ground invade rather than shoot it from orbit. Equip this on BARKs that will be parked in contested systems.
+            </div>
+          </div>
+          <div class="ark-card">
+            <div class="ark-card-name">INVASION ARK</div>
+            <div class="ark-card-role">Manpower Delivery + Siege Platform</div>
+            <div class="ark-card-body">
+              Loaded with Manpower modules (each adds 220–520 Manpower capacity depending on dev level) and combat weapons for the initial space battle. Built instantly at the target system once you've anchored there, meaning you can add enormous invasion capacity to a campaign with no advance notice — a key part of what makes Vodyani aggression so hard to respond to.
+              <br><br>
+              The 4X Alchemist describes this as the "termite" strategy: one or two invasion Arks loaded with Manpower drain target system's troops, take the planet, then move immediately to the next.
+              <br><br>
+              <strong>When to build:</strong> On-site, just before invasion. Build the invasion modules at your target, not at home.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE REFITTING ADVANTAGE — OUT-ADAPTING THE DEFENDER</div>
+          Because BARKs build in one turn, you can refit a combat BARK to counter the specific ship loadout your opponent is using. Approach with a leeching BARK, observe their fleet composition from an adjacent unclaimed system, refit weapons to counter their armor type (kinetics vs. shields; beams vs. plating), then engage. The defender cannot do this against you without an Ark of their own parked in contested space. This is an asymmetric tactical advantage that no other faction can replicate at this tempo.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">STEAM-ZLORFIK</span><span class="src-pill">YT01-4XALCH</span><span class="src-pill">YT02-ESACADEMY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T4: NON-ARK SHIPS -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Fleet Philosophy &amp; Non-Ark Ships</h2>
+        <div class="topic-subtitle">Support ships protect the Arks. The Ark does the fighting. Design your fleet around that reality.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🛸</span>
+        <span class="block-title">Vodyani Non-Ark Hull Roster</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="ship-grid">
+          <div class="ship-card">
+            <div class="ship-name">WHEEL-CLASS</div>
+            <div class="ship-role">SCOUT / LIGHT LEECHER</div>
+            <div class="ship-body">
+              Starts with 1 leech module and 1 probe slot. Movement 5 base — nearly as fast as Sophon scouts. Produces 12.5 Essence/turn from its single leech slot. The correct early use: deploy as a fast probe-carrying scout that also leeches any minor faction it passes. Can be refitted to carry 4 modules total (add a probe, another leech, and a weapon module). Despite being weak in combat, the 4X Alchemist shows it can function as a meaningful early combat ship if fitted with missiles. Cost to add a leech module: 180 Industry — expensive. The Wheel is not replaceable early; protect it.
+            </div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">LEECHER-CLASS</div>
+            <div class="ship-role">LEECH PLATFORM (FRAGILE)</div>
+            <div class="ship-body">
+              4 leech module slots → 50 Essence/turn. The most Essence per turn of any non-Ark ship, but with one critical flaw: it has no weapons and minimal health. It cannot defend itself at all. Costs ~14 turns of Industry production at a good 3-planet start to replace — treated as effectively irreplaceable early. Community consensus and our recommendation: <strong>transition away from relying on Leecher ships as soon as your first BARK is operational</strong>. BARKs produce 3× the Essence with the ability to fight back, and cost only Essence. Keep your starting Leecher alive, but don't build more.
+            </div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">COORDINATOR-CLASS</div>
+            <div class="ship-role">SUPPORT / CARRIER (MID-GAME)</div>
+            <div class="ship-body">
+              The standout non-Ark combat ship for Vodyani mid-game. 3 squadron slots allow fitting 2 bombers + 1 fighter — a combination the ES Academy guide calls "crazy good" for destroying enemy Tier 2 ships. Bombers target Hunters and Protectors first, which is exactly what you want when opponents go for high-DPS builds. Multiple Coordinators backed by a BARK form the core of a strong mid-game combat fleet.
+            </div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">HUNTER-CLASS</div>
+            <div class="ship-role">ATTACKER (MID-GAME)</div>
+            <div class="ship-body">
+              Standard medium attacker hull. For Vodyani, secondary to the BARK in terms of combat priority. Useful for forming a fleet escort around BARKs — the BARKs absorb damage (their massive HP pool means attackers have to shoot through them), while Hunters deal DPS from range. One valid fleet composition: 2–3 BARKs + 4–6 Hunters + 2 Coordinators with bombers.
+            </div>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MOVEMENT SPEED — THE VODYANI STRATEGIC ADVANTAGE</div>
+          Vodyani have access to up to +5 bonus Movement Points across faction traits, unique techs, and pop bonuses. Hero admirals can add another +6. All their ships have at least 2 support module slots for engines. This speed advantage eliminates the "defender's distance" advantage — a Vodyani fleet can cross the map in the time it takes opponents to organize a response. An undocked Ark moves at 5+ speed and can re-dock anywhere within range in a single turn. This is why the defender typically <em>cannot</em> prepare for a Vodyani assault in time.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE ARK TARGET PRIORITY PROBLEM</div>
+          By default, enemy ships will target your Ark in combat — it is the largest, most valuable target and takes priority. This is both a strength (massive HP pool absorbs damage that would destroy smaller ships) and a vulnerability (losing an Ark mid-campaign is catastrophic). The Meditation Module (anchored Arks cannot be targeted) is the structural fix. Until you have it, keep BARKs escorted and avoid committing them to space battles they might not survive.
+          <br><br>
+          <em>Note: The 4X Alchemist flagged that fixing the target priority (making the Ark last to be targeted) would significantly balance the faction in PvP. This has not been addressed as of community knowledge at time of writing.</em>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01-4XALCH</span><span class="src-pill">YT02-ESACADEMY</span><span class="src-pill">WIKI-FACTIONS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T5: RIGHTEOUS FURY -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Righteous Fury: War Without War</h2>
+        <div class="topic-subtitle">The diplomatic inversion that makes Vodyani aggression so difficult to counter.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">The Religious Law That Rewrites the Rules of Engagement</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT RIGHTEOUS FURY DOES</div>
+          "Righteous Fury" is the base Religious law, available from turn 1. Its effects in practice:
+          <ul style="margin:8px 0 8px 20px;font-size:var(--ts_sectionLabel);color:var(--text);line-height:1.8;">
+            <li>You can operate your fleets inside opponent-controlled influence zones <strong>without declaring war</strong></li>
+            <li>You can attack enemy ships and invade enemy systems <strong>without declaring war</strong></li>
+            <li>You can cross <strong>closed borders</strong> as if they don't exist</li>
+            <li>Opponents cannot force a truce unless they first declare war on you — which costs <em>them</em> Influence</li>
+          </ul>
+          The practical result: you are always the technical aggressor in terms of action, but always the technical neutral party in terms of diplomatic status. Opponents who want to stop you must formally declare war, spending their Influence to do so.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE DIPLOMATIC INVERSION — WHY DEFENDERS LOSE</div>
+          In a normal ES2 aggression scenario: the attacker pays Influence to declare war, is subject to forced truces, and faces the Diplomatic penalty of being the aggressor. All three costs fall on the attacker.<br><br>
+          With Righteous Fury: the <em>defender</em> pays Influence to declare war (in order to gain the right to force a truce). The defender is now the declared aggressor. The Vodyani accumulate Influence faster than the apparent upkeep cost (law asymmetry) and can refuse forced truces essentially for free. The defender who closes their borders has also reciprocally locked themselves out of Vodyani space — which they may need to access for trade or diplomacy. The entire cost structure of ES2 aggression is reversed.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">BRAINWASHING MINOR FACTIONS — THE VASSAL SHORTCUT</div>
+          Once the Vodyani reach full Approval with a minor faction, they can "brainwash" it into a vassal state. This provides continuous FIDSI and Essence bonuses, grants the Vodyani access to that minor faction's trait (the only way they can obtain minor faction traits), and locks the minor faction from enemy assimilation via Influence or Dust — they can only be liberated by ground invasion. This is the sole mechanism for Vodyani to access minor faction traits and is worth prioritizing for the highest-value minor faction in your neighborhood.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">YT01-4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T6: INVASION -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Invasion Doctrine</h2>
+        <div class="topic-subtitle">The Vodyani don't conquer. They drain, occupy, and consume. The sequence matters.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Hunt, Penance, and the Drain-to-Invade Sequence</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">INVASION OUTCOME REPLACEMENTS</div>
+          Vodyani replace the standard Pillage and Raze outcomes with faction-specific versions:
+          <table class="ref-table">
+            <tr><th>Action</th><th>Equivalent</th><th>Bonus Effect</th><th>Approval Penalty</th></tr>
+            <tr><td class="cell-key">Hunt</td><td>Pillage</td><td>Also steals Essence from the system</td><td class="cell-good">None</td></tr>
+            <tr><td class="cell-key">Penance</td><td>Raze</td><td>Turns system into a Hunting Ground — ongoing Essence income while it degrades</td><td class="cell-good">None</td></tr>
+          </table>
+          Neither action has the Approval penalty that Pillage and Raze carry for other factions. This means Vodyani can be far more aggressive with post-invasion outcomes without political blowback.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE HUNTING GROUND MECHANIC</div>
+          When a system is converted to a Hunting Ground (via Penance or when the Vodyani destroy a system), it enters a degraded state: population and buildings are lost turn by turn until the system is fully empty. During this period, the Vodyani receive Essence bonuses. Crucially: you can immediately dock an Ark in the Hunting Ground — the Ark benefits from the Essence income without needing to fight through defenders.
+          <br><br>
+          An enemy can immediately re-colonize a Hunting Ground with a colony ship. This can race against your ability to get an Ark there. BARKs positioned nearby solve this problem — anchor one in advance.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE DRAIN-TO-INVADE SEQUENCE</div>
+          <ul class="step-list">
+            <li><span class="step-n">STEP 1</span><span><strong>Position BARKs on target system.</strong> Righteous Fury allows this without war declaration. Begin leeching immediately. Each turn reduces their Essence reserves and, with Radioactive Essence tech, reduces their population directly.</span></li>
+            <li><span class="step-n">STEP 2</span><span><strong>Monitor their population counter.</strong> When population drops below 50–100, they cannot draft meaningfully. Their ground defense becomes trivial.</span></li>
+            <li><span class="step-n">STEP 3</span><span><strong>Build an Invasion Ark on an adjacent unclaimed system.</strong> One turn to build, load with Manpower modules and invasion modules. Move into position.</span></li>
+            <li><span class="step-n">STEP 4</span><span><strong>Win the space battle</strong> (your BARK + support fleet vs. their defense fleet). If they have no fleet, skip directly to ground invasion.</span></li>
+            <li><span class="step-n">STEP 5</span><span><strong>Ground invade using Blitz doctrine</strong> (more Manpower deployed than preemptive bombing — correct when you have sufficient troops from Invasion Ark modules). Hunt or Penance based on whether you want the system or the Essence.</span></li>
+            <li><span class="step-n">STEP 6</span><span><strong>Immediately dock a Colony Ark</strong> if keeping the system. Improvements and population activate instantly. Move to the next target.</span></li>
+          </ul>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE MANPOWER CEILING — PLAN AHEAD</div>
+          Because of the −50% Food penalty, Vodyani produce minimal Manpower through normal means. Large, well-defended systems with high populations can draft quickly during the invasion turn, potentially replenishing their ground forces faster than you can deplete them. If you are invading a major faction capital with 200+ pop, do not engage without first draining the population or pre-funding a large Military Penance Essence reserve to buy additional Manpower mid-invasion.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">YT01-4XALCH</span><span class="src-pill">YT02-ESACADEMY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T7: TECH ROUTING -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Tech Routing</h2>
+        <div class="topic-subtitle">Vodyani have unique tech priorities driven entirely by the Ark and Essence systems. General advice does not apply.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">Research Priority Framework</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">SCIENCE &amp; EXPLORATION QUADRANT — HIGHEST PRIORITY</div>
+          <table class="ref-table">
+            <tr><th>Tech</th><th>Priority</th><th>Reason</th></tr>
+            <tr><td class="cell-key">Xenolinguistics (Ring 1)</td><td class="cell-good">Immediate</td><td>Unlocks strategic resource exploitation. Every luxury node you exploit is a Ark system development and pop growth accelerator.</td></tr>
+            <tr><td class="cell-key">Colonization techs (Ring 1–3)</td><td class="cell-good">High</td><td>Each new colonizable planet type is a free effective population for every docked Ark. No Essence cost. Prioritize the types present in your home system first.</td></tr>
+            <tr><td class="cell-key">S&amp;E Ring 3 Vodyani-specific tech</td><td class="cell-good">Critical</td><td>Upgrades All Must Provide and Leech modules. Roughly doubles Essence income from all sources simultaneously. This is your snowball trigger — rush it.</td></tr>
+            <tr><td class="cell-key">Radioactive Essence (S&amp;E Ring 5)</td><td>Mid-Late</td><td>Enables population-draining via leeching. Essential for the drain-to-invade sequence at scale.</td></tr>
+          </table>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ECONOMY &amp; TRADE QUADRANT — SYSTEM DEVELOPMENT GATING</div>
+          Each Economic tier unlock raises the maximum system development level, which raises Ark HP, pop cap, and defense. The upgrade itself requires both reaching the tech tier AND spending luxury resources. The tier upgrades are expensive Essence investments; plan luxury resource allocation before you need them — don't spend a luxury on one upgrade if you'll need it for a different Ark upgrade in 10 turns. <strong>Never use the same luxury for two different system development tiers</strong> — this starves future upgrades.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MILITARY QUADRANT — TARGETED, NOT BROAD</div>
+          <table class="ref-table">
+            <tr><th>Tech</th><th>Priority</th><th>Reason</th></tr>
+            <tr><td class="cell-key">Military Ring 1 (any tech)</td><td class="cell-good">Early</td><td>Unlocks additional Ark module slots. Even one Military Ring 1 tech meaningfully improves BARK capability. Also unlocks the Behemoth cooperative quest (if Supremacy DLC active), which benefits all factions simultaneously.</td></tr>
+            <tr><td class="cell-key">Unstable Isotope (Ring 2)</td><td class="cell-good">High</td><td>Unlocks Meditation Modules — prevents anchored Arks from being targeted in space combat. Critical for long-term survivability of BARKs operating in contested space.</td></tr>
+            <tr><td class="cell-key">Shipyard upgrade techs</td><td>Situational</td><td>Zlorfik recommends the shipyard upgrade path over Military Penance conversion — higher-level ships from the start are better value than Essence-to-Manpower conversion.</td></tr>
+          </table>
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">EMPIRE DEVELOPMENT — MOSTLY SKIP EARLY</div>
+          Empire Development techs are generally low priority for Vodyani until mid-game. The cost scaling rule (every tech researched increases all future tech costs) applies here: researching Empire Development techs you won't use for 20 turns makes your critical Essence-upgrade techs more expensive. The exceptions: Pev-Scale Accelerators (Vodyani version) unlocks the "All Must Serve II" Ark module providing +Industry — worth grabbing when Industry is your bottleneck.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">STEAM-ZLORFIK</span><span class="src-pill">YT01-4XALCH</span><span class="src-pill">YT02-ESACADEMY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T8: QUESTLINE & GOVERNMENT -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Questline &amp; Government</h2>
+        <div class="topic-subtitle">The questline is difficult and its rewards are modest. Government starting position is genuinely poor.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">📖</span>
+        <span class="block-title">Faction Questline Rewards and Government Realities</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">QUESTLINE — HARD BUT OPTIONAL</div>
+          The Vodyani questline is widely considered one of the harder faction quests in ES2. Community notes: a significant portion of players never complete it. The MagicmanScott guide (2025, all DLC) did not complete it during a full playthrough. One branch requires use of a Planet Cracker — an expensive, high-tier Military tech that is rarely economically justifiable outside of the quest context itself.
+          <br><br>
+          <strong>Quest rewards at step 4.2:</strong> Two choice-pairs with meaningful differences:
+          <table class="ref-table">
+            <tr><th>Choice A</th><th>Choice B</th><th>Recommendation</th></tr>
+            <tr><td>Systemic Oratory: +3 Influence/planet, +4/temperate</td><td>Sainted Speed: +70 HP, +3 Movement, +1 Vision range (support module)</td><td>Sainted Speed for aggressive players; Systemic Oratory for Influence-focused builds</td></tr>
+            <tr><td>River of Holy Vigor: +20% Manpower/turn</td><td>Endless Fountain: +300 Manpower capacity</td><td>River of Holy Vigor — rate matters more than cap for Vodyani</td></tr>
+            <tr><td>Cloth of Control: −10 Approval for Unhappy/Rebellion thresholds</td><td>Factory of Faith: −10 Approval for Happy/Ecstatic thresholds</td><td>Factory of Faith — easier to reach Ecstatic, which multiplies law effects</td></tr>
+          </table>
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">STARTING GOVERNMENT — FEDERATION IS NOT IDEAL</div>
+          Vodyani start as a Federation. Federation provides: no law effect bonus (unlike Republic), and only 1 active law slot (unlike Democracy's broader access). Starting political parties are Religious and Military — neither with particularly useful early laws compared to what Ecologist or Scientist factions offer their starting parties. The early law strategy for Vodyani is:
+          <ul style="margin:8px 0 8px 20px;font-size:var(--ts_sectionLabel);color:var(--text);line-height:1.8;">
+            <li><strong>Righteous Fury</strong> (Religious, base): Enable immediately. Enables the entire early aggression strategy.</li>
+            <li><strong>Species Stability</strong> (Religious, level 1): Enable as your second law as soon as possible. ~17+ Essence/turn at no real cost.</li>
+            <li><strong>Super Tax Act</strong> (Economic): If Approval allows, adds Dust — prioritize this over Toys for Boys when you're below Happy threshold (Toys for Boys requires you to already be Happy to benefit).</li>
+          </ul>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE FANATICAL TRAIT BUG</div>
+          Vodyani have the "Fanatical" political trait, which by its description should make Religious events support Militarist opinion. In practice, the implementation is reversed: Militarist events boost Religious opinion. This is a known bug documented in the wiki. It is not game-breaking, but be aware that the tooltip description is wrong — the actual in-game behavior is that Military events are doubly supportive of your Religious party, which is broadly fine given your starting parties.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-FACTIONS</span><span class="src-pill">YT03-MAGICMAN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T9: FIRST 40 TURNS -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">First 40 Turns: The Vodyani Playbook</h2>
+        <div class="topic-subtitle">The first 15 turns are about positioning. Turns 15–40 are about building the machine that cannot be stopped.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Turn-by-Turn Opening Framework</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TURN 0 — READ YOUR START BEFORE ANYTHING</div>
+          Count colonizable planets in your starting system. If 3+: you have a good start — proceed normally. If 1: you have a bad start — consider relocating your Ark to a better system within 4–6 turns (you'll lose Science/FIDSI for the transit turns, but a bad home system compounds into a permanently weak FIDSI base). Check for a minor faction within range of your Leecher ships. If no minor faction is within ~5 moves: your early Essence income will be purely passive until you find one.
+        </div>
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURN 1</div>
+            <div class="tl-body">
+              <strong>Laws first.</strong> Enable Righteous Fury immediately (Religious, base law). Enable Species Stability if you have a second law slot — if not, queue it as highest priority law. Research: Xenolinguistics (Ring 1 S&amp;E). Deploy both Leechers toward any visible minor faction in range. Deploy Wheel scout toward unexplored areas to map minor faction positions. Assign your starting hero to the fleet (not system governor) — the Infallible Authority skill at high levels is noted as potentially unbalanced; use the hero's movement and early combat bonuses for scouting and pirate defense instead.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 1–5</div>
+            <div class="tl-body">
+              <strong>Get the Leechers onto a system.</strong> Any inhabited system will do — minor or major faction. Your Leechers start generating 50 Essence/turn the moment they park. Simultaneously, your home Ark should be modded with as many "All Must Provide" modules as slots allow for passive income. Target first research: colonization tech for any planet type you don't yet have in your home system. Queue first improvement: Public/Private Partnerships (+40 Science) if Approval is not a crisis; otherwise Supermarkets (+Approval).
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 5–12</div>
+            <div class="tl-body">
+              <strong>Save for the first BARK.</strong> Target: 600 Essence. Do not spend Essence on a new pop unless you can simultaneously keep the pop alive via Food surplus — a pop that dies next turn wasted 250 Essence. Pirates typically spawn around turn 11; your home Ark should be capable of handling early pirate scouts (5,000 HP, 1 weapon module). If pirates are strong kinetics and you have missile modules available, refit the Ark's weapon slot before the fight.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURN 12 (approx)</div>
+            <div class="tl-body">
+              <strong>Build BARK 1.</strong> Default early BARK loadout: 3 leech modules + 1 engine. Design the Ark before building — the Ark is built in one turn at whatever spec you finalize now. Dock BARK 1 at the nearest rich system to your Leechers' current position. BARK 1 immediately generates 150 Essence/turn and can defend itself if attacked. This is the inflection point: your Essence income roughly triples.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 12–25</div>
+            <div class="tl-body">
+              <strong>Save for BARK 2 and system development.</strong> BARK 2 costs 1,400 Essence. With BARK 1 + Leechers + passive + law: roughly 200+ Essence/turn → 7 turns to BARK 2. While saving, research toward S&amp;E Ring 3 (the module upgrade tech) and unlock the first Economic tier for system development. Begin building improvements in your home system. Proliferate your first new pop when Food surplus is confirmed — this expands FIDSI via virtualization, especially if you're in a multi-planet system.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 25–40</div>
+            <div class="tl-body">
+              <strong>Hit S&amp;E Ring 3 and trigger the snowball.</strong> When the module upgrade tech fires, every BARK's leech income doubles. With 2 BARKs + upgraded modules: 600+ Essence/turn is achievable. Build BARK 3. Begin identifying your first invasion target. Position a BARK on their most valuable system and start the drain-to-invade sequence. By turn 40 on a good start, you should have: 3 Arks, 5+ virtual populations, S&amp;E Ring 3 researched, first invasion underway or completed.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE BAD-START VARIANT</div>
+          On a poor start (1 colonizable planet, no nearby minor faction), the timeline above is compressed and delayed. The 4X Alchemist demonstrates what this looks like: turn 13 before first Essence gathered, BARK not available until turn 20+. The correct response to a bad start is <strong>not</strong> to play differently — it's to accept that you'll be weak until turn 20–25 and prioritize survival (don't over-extend, don't pick fights) until the BARK engine is running. The same snowball still happens; it's just delayed by 10–15 turns.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01-4XALCH</span><span class="src-pill">STEAM-ZLORFIK</span><span class="src-pill">YT02-ESACADEMY</span><span class="src-pill">WIKI-FACTIONS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T10: VICTORY PATHS -->
+  <div class="topic" id="t10">
+    <div class="topic-header">
+      <div class="topic-num">10</div>
+      <div>
+        <h2 class="topic-title">Victory Path Compatibility</h2>
+        <div class="topic-subtitle">Essence mobility is a wildcard that enables more victory types than most players realize.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb10a">
+      <div class="block-header" onclick="toggle('cb10a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Assessing Each Victory Type for Vodyani</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <table class="ref-table">
+          <tr><th>Victory Type</th><th>Viability</th><th>Notes</th></tr>
+          <tr>
+            <td class="cell-key">Supremacy</td>
+            <td class="cell-good">Natural — S-tier</td>
+            <td>The default Vodyani path. BARKs move faster than opponents can regroup, Righteous Fury eliminates diplomatic barriers, and the drain-to-invade sequence neutralizes fortified systems. The 4X Alchemist describes the endgame Supremacy sequence as: BARK → drain → invade → dock Colony Ark → move to next system, repeated until the map is yours.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Science</td>
+            <td class="cell-good">Achievable — A-tier</td>
+            <td>The Gargantuan Pop trait (+4 FIDS per pop) combined with luxury-boosted pops (+8 FIDS) and the law asymmetry (tech laws apply to virtual pop count) creates Science output that scales extremely well in the mid-game. Zlorfik specifically notes Science Victory as a viable Vodyani path. Requires prioritizing S&amp;E techs over Military after the BARK engine is stable.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Economic</td>
+            <td class="cell-good">Achievable — A-tier</td>
+            <td>Ark mobility enables repositioning to maximize trade route efficiency — a unique advantage. The Essence income also produces Dust surplus when trade infrastructure is developed. Less natural than Supremacy but viable for players who want to avoid constant war.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Expansion</td>
+            <td>Difficult — C-tier</td>
+            <td>Expansion requires many systems with specific conditions. No terraforming and the inability to avoid bad planets on docking makes system selection extremely limited. The luxury shortage from using all luxuries for Ark upgrades creates conflicts. Survivable but not recommended as a primary path.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Diplomatic</td>
+            <td class="cell-bad">Not recommended</td>
+            <td>Righteous Fury and the leeching playstyle make diplomacy difficult. The Vodyani are widely described as "the bad guys" — the Academy was created specifically in response to them. Maintaining the relationships required for Diplomatic victory while also running an aggressive parasite economy is theoretically possible but practically contradictory.</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE PLANET CRACKER ENDGAME</div>
+          Zlorfik notes an additional late-game option: destroy planets in systems you don't intend to colonize. This prevents opponents from settling there and generating resources. A Behemoth with special modules parked in a system with destroyed planets generates passive Essence income from each ruined world. This is both strategically sound (denial + income) and thematically perfect for the faction.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">STEAM-ZLORFIK</span><span class="src-pill">YT01-4XALCH</span><span class="src-pill">YT03-MAGICMAN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Vodyani decisions under real game conditions — Essence economy, Ark design, invasion timing, and aggression without war</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac04';
+  const TOTAL = 11;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "Turn 8. You have 1 Ark (home system, 2 colonizable planets), 2 Leechers parked on a nearby minor faction (+50 Essence/turn combined), and 4 'All Must Provide' modules on your home Ark (+40 Essence/turn). Species Stability is active (+17 Essence/turn). Total: ~107 Essence/turn. You have 450 Essence saved toward your first BARK (target: 600). A player is offering a non-aggression pact. You also have enough Dust to buy a new pop via Holy Proliferation (cost: 250 Essence, which would reset your savings to 200).",
+      q: "Should you spend 250 Essence on a pop via Holy Proliferation before building your BARK?",
+      opts: [
+        "Yes — more population means more FIDSI output immediately, which will pay off faster than waiting for the BARK.",
+        "No — the BARK produces 150 Essence/turn from 3 leech modules. Spending 250 Essence on a pop delays the BARK by roughly 2.5 turns and does not increase your Essence income at all. The pop increases FIDSI (Science, Industry, Dust) but not Essence — and Essence is what lets you build everything else. Prioritize the BARK first, proliferate after.",
+        "Yes, but only if your home system has 3+ colonizable planets, because the pop would be virtualized onto all of them.",
+        "No — you should spend the Essence on a second Leecher ship instead of either a pop or a BARK."
+      ],
+      correct: 1,
+      explain: "The core BARK-first logic: Holy Proliferation improves FIDSI, but not Essence income. The BARK's 150 Essence/turn output is the resource that funds all future expansion — every turn you delay the BARK is a turn of compounding Essence income you don't receive. At 107 Essence/turn, you only need 1.5 more turns to reach 600 if you don't spend. Spending 250 resets you to 200, adding 3.8 turns of additional waiting. The FIDSI improvement from one pop is real but minor compared to the Essence snowball that the BARK enables. The option to proliferate after the BARK is always available — the reverse is not true while your Essence income is still weak."
+    },
+    {
+      scenario: "Turn 20. Your first BARK is operational, parked over a minor faction system generating 150 Essence/turn. You've just researched 'Colonize Arid' and notice that your home system contains one Arid planet you haven't been using. Additionally, a neighboring system 3 lanes away has 5 colonizable planets (2 Temperate, 2 Arid, 1 Tundra) but also contains a 'Barren Wasteland' anomaly on the Arid planets giving −10 Approval each. Your home system has 3 planets and no bad anomalies.",
+      q: "Should you relocate your home Ark to the 5-planet system?",
+      opts: [
+        "Yes — 5 planets × current pop count gives far more FIDSI than 3 planets. Always take the bigger system.",
+        "No — the 3 lanes of travel mean 3 turns of zero FIDSI production. On a 3-planet system that's a significant loss.",
+        "Evaluate carefully: the Arid anomaly gives −10 Approval each, and with two Arid planets that's −20 Approval applied per pop — virtualized across all 5 planets. At current pop count, the Approval hit could push you below Happy, eliminating production multipliers. Calculate the net Approval impact first. If your base Approval is above 95+, the move is likely worth it for the FIDSI gain. If you're sitting at 70–80, the Approval hit may drop you to Unhappy, negating the FIDSI benefit.",
+        "No — you cannot dock at a system that has Barren planets, and the anomaly makes the system permanently unworkable."
+      ],
+      correct: 2,
+      explain: "This is the core Vodyani system selection problem: no terraforming, no anomaly reduction, permanent commitment. The Barren Wasteland anomaly on 2 Arid planets means −20 Approval penalty applied to every virtual pop copy working those planets. With your current pop count virtualized across 5 planets, the total Approval drain could be significant. Before moving: check your current Approval, calculate what the new Approval would be with the maluses, and verify whether you'll stay above the Happy threshold (70%). Option A is wrong because it ignores the anomaly cost. Option D is wrong — Vodyani can dock at systems with bad planets; they just can't avoid working them."
+    },
+    {
+      scenario: "Turn 30. You have 2 BARKs, each loaded with 3 leech modules. S&E Ring 3 tech (which upgrades leech modules) is 4 turns away. A neighboring United Empire player has a 4-planet system adjacent to your territory that you want to eventually take. They currently have 180 population and a defensive fleet of 4 ships. You have enough Essence to build a 3rd BARK right now.",
+      q: "What is the correct sequence of actions?",
+      opts: [
+        "Build BARK 3 immediately, park all 3 BARKs over the United Empire system, and begin draining. With 450 Essence/turn combined, you can afford to invade within 10 turns.",
+        "Wait 4 turns for S&E Ring 3 first. Once the module upgrade fires, your 2 existing BARKs jump from 300 to ~600 Essence/turn combined. Then build BARK 3 with upgraded modules — it will generate ~300 Essence/turn by itself. Position all 3 BARKs over the target system after the upgrade. The pre-drain phase is more efficient with upgraded modules, and the additional 4 turns of saving will help fund the invasion's Military Penance Manpower costs.",
+        "Forget BARK 3 — build Leecher ships instead since they are cheaper and you already have 2 BARKs.",
+        "Invade immediately without pre-draining since 180 population isn't high enough to meaningfully resist."
+      ],
+      correct: 1,
+      explain: "The S&E Ring 3 module upgrade is the single highest-ROI tech the Vodyani have. Waiting 4 turns to double your existing BARK output before building BARK 3 means BARK 3 launches with upgraded modules — it immediately produces twice what it would have with base modules. The math: current 2 BARKs at 300/turn × 4 turns = 1,200 Essence additional. After upgrade: 600/turn from existing BARKs + 300/turn from BARK 3 = 900/turn vs. the 450/turn you'd get by building BARK 3 now. The 4-turn delay results in roughly 40% more Essence income per turn permanently. Meanwhile, 180 population means the United Empire can draft heavily — draining them below 80 pop before invading is strongly recommended regardless of BARK timing."
+    },
+    {
+      scenario: "Turn 45. You have 3 BARKs with upgraded leech modules, generating 900 Essence/turn combined. A United Empire neighbor with 3 systems has declared war on you after you parked BARKs over their territory (they had to declare war because of Righteous Fury — you didn't). They have a fleet of 8 ships approaching your second Ark's home system. Your second Ark is docked, generating FIDSI. It has the Meditation Module installed.",
+      q: "What should you do about the incoming fleet?",
+      opts: [
+        "Immediately undock the second Ark and flee — losing FIDSI production for 1 turn is better than risking the Ark in combat.",
+        "Leave the second Ark docked. With the Meditation Module installed, the attacking fleet cannot target it directly in the space battle — they must either destroy your escort ships first or attempt a ground invasion. Meanwhile, build an emergency combat BARK on an adjacent unclaimed system to intercept or reinforce. The Meditation Module is specifically designed for this scenario: it forces the opponent to commit to a ground invasion (which costs them Manpower and time) rather than simply destroying your Ark from orbit.",
+        "Undock the Ark and use it as your primary combat ship — its 20,000+ HP means it will absorb all their fire while your escort ships deal damage.",
+        "Spend 2,000 Essence on Military Penance to max out the Ark's Manpower before the attack arrives."
+      ],
+      correct: 1,
+      explain: "The Meditation Module's entire purpose is this scenario. It prevents an anchored Ark from being targeted in space combat, forcing enemies into a costly ground invasion rather than a simple orbital bombardment. Leaving the Ark docked means: (1) FIDSI production continues, (2) the enemy cannot destroy it from space, (3) they must choose between a ground invasion (expensive Manpower) or retreating. The emergency BARK build is available because Arks build in one turn for Essence cost — a combat BARK on an adjacent unclaimed system gives you both Essence income and a combat asset, potentially arriving to reinforce before or during the battle. Option A wastes the Meditation Module's protection entirely. Option C exposes the Ark unnecessarily when the Meditation Module makes this fight winnable while docked."
+    },
+    {
+      scenario: "Turn 55. The United Empire is nearly eliminated — their last system has 3 colonizable planets, 40 remaining population, and no fleet. You have 1,200 Essence/turn income and 4 Arks. A Lumeris player on the other side of the map is pulling ahead in Science victory points. Your Arks are currently generating strong FIDSI from 3 occupied systems.",
+      q: "Should you Hunt or Penance the last United Empire system?",
+      opts: [
+        "Penance — converting it to a Hunting Ground generates ongoing Essence income while it degrades, and you can dock a Colony Ark immediately to claim the territory.",
+        "Hunt — you pillage the system for resources and Essence, then dock a Colony Ark immediately. The system's population and buildings are preserved, giving you a functional third empire system faster.",
+        "Neither — with 40 population remaining, you should leech it empty first for maximum Essence income, then invade and decide.",
+        "Penance only if you don't have a spare Colony Ark — otherwise Hunt, because the system's intact buildings and population base represent more long-term FIDSI value than the Hunting Ground Essence income."
+      ],
+      correct: 3,
+      explain: "The Hunt vs. Penance decision hinges on whether you have a spare Colony Ark. Hunt (= Pillage equivalent) leaves the system with its buildings and remaining population partially intact, giving you a functional system that you can dock a Colony Ark in immediately for full FIDSI. Penance (= Raze equivalent) destroys the system progressively for ongoing Essence income but starts your occupation from scratch with no buildings. Given that you're racing against a Lumeris Science lead, preserving the United Empire system's existing infrastructure (buildings = FIDSI production, especially Science) is more valuable than the temporary Essence boost from Penance. With 1,200 Essence/turn already, more Essence is not your bottleneck — Science output is. Hunt, dock immediately, build Science-boosting improvements on the new system."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
