@@ -1,0 +1,45 @@
+<style>
+  /* ── Fac03 — Sophons: blue + cyan highlight ───────────────────────────── */
+  /* Residual rules after es2-factions-deepdive.css is linked.               */
+  /* Link order in <head>:                                                    */
+  /*   1. es2-guide.css                                                       */
+  /*   2. es2-factions-deepdive.css                                           */
+  /*   3. This <style> block                                                  */
+
+  :root {
+    --accent:            var(--sophon-color);
+    --accent-rgb:        var(--sophon-color-rgb);
+    --accent-dim:        rgba(var(--sophon-color-rgb), 0.11);
+    --accent-bright-rgb: var(--cyan-rgb);
+    --accent-bright:     var(--cyan);
+  }
+
+  /* Faction-specific starfield ambience */
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--sophon-color-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--cyan-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--sophon-color-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--sophon-color-rgb), 0.45),
+      0 0 80px rgba(var(--sophon-color-rgb), 0.15);
+  }
+
+  /* sidebar game-name tint */
+  .sidebar-logo .game-name { color: var(--accent); }
+
+  /* Sophons-only: .tag-strat — science/strategy action tag */
+  /* (tag-mech is already handled by the shared CSS)        */
+  .tag-strat {
+    background: rgba(var(--cyan-rgb), 0.09);
+    color: var(--cyan);
+    border-color: rgba(var(--cyan-rgb), 0.25);
+  }
+
+  /* Sophons-only: progress-mini two-tone (sophon→cyan instead of accent→bright) */
+  .progress-mini-fill {
+    background: linear-gradient(90deg, var(--sophon-color), var(--cyan));
+  }
+</style>

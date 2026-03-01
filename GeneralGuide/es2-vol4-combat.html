@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ES2 Guide — Vol.4: Ships, Combat & Military</title>
+  <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --vol4-accent: var(--vol4-accent, 220, 60, 60);
+    }
+    .page-title { color: rgb(var(--vol4-accent)); }
+    .topic-num { color: rgb(var(--vol4-accent)); border-color: rgb(var(--vol4-accent)); }
+    .nav-item.active { border-left-color: rgb(var(--vol4-accent)); }
+    .progress-mini-fill { background: rgb(var(--vol4-accent)); }
+    .block-tag.tag-mech { background: rgba(var(--vol4-accent), 0.15); border-color: rgba(var(--vol4-accent), 0.4); color: rgb(var(--vol4-accent)); }
+    .cell-tier { color: rgb(var(--vol4-accent)); font-weight: 600; font-family: 'Share Tech Mono', monospace; font-size: var(--ts_table); }
+
+	.vol-next{ --card-accent: var(--vol5-accent);}
+	.vol-prev{ --card-accent: var(--vol3-accent);}
+
+
+    /* weapon accuracy matrix */
+    .acc-good { color: rgb(var(--green)); font-weight: 700; }
+    .acc-mid  { color: rgb(var(--gold)); }
+    .acc-bad  { color: rgb(var(--red)); }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════════════ SIDEBAR ══════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">VOLUME 4</div>
+    <div class="guide-name">Ships,<br>Combat &amp; Military</div>
+  </div>
+
+  <div class="nav-section-label">// Tech &amp; Design</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">🔬 Military Tech Tree <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🛠️ Building a Ship <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">👥 Manpower <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🫥 Cloaking &amp; Detection <span class="nav-check" id="nc4"></span></div>
+
+  <div class="nav-section-label">// Combat</div>
+  <div class="nav-item" onclick="scrollByID('t5')">⚔️ 3-Phase Combat System <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🃏 Battle Cards <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🚀 Fleet Composition &amp; Experience <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Capital Assets</div>
+  <div class="nav-item" onclick="scrollByID('t8')">🌑 Combat Behemoths <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-item" onclick="scrollByID('t9')">🪖 Ground Invasion <span class="nav-check" id="nc9"></span></div>
+
+  <div class="nav-section-label">// Assessment</div>
+  <div class="nav-item" onclick="scrollByID('t10')">📊 Turn 30: Military Victory <span class="nav-check" id="nc10"></span></div>
+
+  <div class="nav-section-label">// Practice</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="nav-section-label">// Volumes</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol3-exploration.html'"><div class="vol-card-arrow">←</div> Vol.3: Exploration</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol5-heroes.html'">Vol.5: Heroes <div class="vol-card-arrow">→</div></div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<main class="main">
+
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2 Guide</a> // <span>Vol.4</span> // Ships, Combat &amp; Military</div>
+    <h1 class="page-title">Ships, Combat &amp; Military</h1>
+    <p class="page-subtitle">The military layer isn't just about who has the biggest fleet. It's about timing, weapon matching, hull size leverage, and knowing when to take the fight vs. when to siege. This volume covers every mechanical layer from ship design to ground invasion.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════ T1: MILITARY TECH TREE -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The Military Tech Tree</h2>
+        <div class="topic-subtitle">What it unlocks, what it doesn't, and the unlock dependency you must not miss</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">Structure and Role of the Military Tree</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Military tree is one of four research quadrants. Its primary deliverables are weapon modules, defense modules, Command Point increases, and battle tactic sets. It does <em>not</em> unlock ship hulls — those come from the Empire Development tree. This split is the most common early-game trap: players who invest in Military tech before unlocking the appropriate hull from Empire Development end up with strong modules sitting on weak, small hulls.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">CRITICAL DEPENDENCY</div>
+          Ship hull upgrades live in Empire Development, not Military. Researching Military Tier 2–3 modules before you have the corresponding Empire Development hull (Hunter, Coordinator, Carrier) means you're paying Science to improve small Attacker/Protector hulls that have 2–3× fewer effective module slots than their medium/large equivalents. Always check which hull you can currently equip before deciding where to invest Science.
+        </div>
+
+        <table class="ref-table">
+          <tr><th>Military Era</th><th>Command Points</th><th>Key Weapons Unlocked</th><th>Key Defense Unlocked</th><th>Tactics Set Unlocked</th></tr>
+          <tr>
+            <td class="cell-tier">Era 1</td>
+            <td>+1 CP (Basic C5AI → 5 total default)</td>
+            <td>Basic High-I Slugs, Basic Ion Torpedoes, Basic OPAL Laser, Basic Plasma Beam</td>
+            <td>—</td>
+            <td>Default set (Turtle, Power to Shields, Take Trophies, Gravity Distortion, Plasma Distortion)</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Era 2</td>
+            <td>+2 CP (Upgraded C5AI)</td>
+            <td>Ultradense Slugs, Sync Laser, Pinch Beam</td>
+            <td>Basic Inert Plating, Basic Transformative Shielding</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Era 3</td>
+            <td>+3 CP via Titanium Electroplating or Fleet Shielding</td>
+            <td>Decay Torpedoes, Phased Beam</td>
+            <td>Reactive Plating, Uniform Shielding</td>
+            <td>Titanium Electroplating: Get Lucky, The Fewer The Proud, Post-OP Analysis. Fleet Shielding: Unlucky Arms, Grim Recycling, Repair and Recover</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Era 4</td>
+            <td>+4 CP (Pervasive C5AI)</td>
+            <td>Unstable Slugs, HELL Array Laser, Anti-Gluon Beam, Shield Interference Beam (hero equip)</td>
+            <td>Advanced Plating, Advanced Shielding</td>
+            <td>Adamantian Electroplating: Needs of the Many, Barrage Fire, Full Reserves. Antimatter Channeling: Evasive Maneuvers, Prudent Positions, En Passant. Deniable Operations: Repair Protocol, Strafing Run, Fleet Escort</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Era 5</td>
+            <td>Depends on tech path</td>
+            <td>Entropy Torpedoes, Anti-Gluon Beam</td>
+            <td>Advanced Transformative Shielding, Anti Cloaker II</td>
+            <td>—</td>
+          </tr>
+        </table>
+
+        <p>The Military tree also unlocks Manpower buildings (Flash Camps: +2000 Manpower Capacity), and Zero-Lag Command / Pervasive C5AI improvements that expand your fleet CP ceiling empire-wide. These CP upgrades are passive and apply to all fleets — they are among the highest-value Military techs per Science-spent because they apply a multiplier to every fleet you own.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">WHAT MILITARY DOES NOT PROVIDE</div>
+          Strategic resource exploitation abilities for advanced modules are in the Economy &amp; Trade tree, not Military. If you need Titanium or Hyperium to equip upgraded modules, you're looking at the wrong tree. Similarly, Behemoth Blueprints (the base Behemoth unlock) is in Empire Development Era 2 — Military only provides Juggernaut and Obliterator blueprints (both Military Era 4).
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T2: BUILDING A SHIP -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Building a Ship: Slots, Modules &amp; Resources</h2>
+        <div class="topic-subtitle">Hull size is the multiplier. Modules are what you multiply.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🛠️</span>
+        <span class="block-title">Hull Sizes, CP Cost and the Module Multiplier</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every ship hull has a size class (Small, Medium, Large) which determines its CP cost, base HP, and — critically — a module multiplier that amplifies the effectiveness of every module installed on it.</p>
+
+        <table class="ref-table">
+          <tr><th>Hull Size</th><th>CP Cost</th><th>Module Multiplier</th><th>Typical Roles</th><th>Approx Base HP</th></tr>
+          <tr>
+            <td class="cell-tier">Small</td>
+            <td>1 CP</td>
+            <td>×1</td>
+            <td>Attacker, Protector, Explorer, Colonizer</td>
+            <td>1,500–4,000</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Medium</td>
+            <td>3 CP</td>
+            <td>×2</td>
+            <td>Hunter, Coordinator</td>
+            <td>6,000–8,500</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Large</td>
+            <td>6 CP</td>
+            <td>×4</td>
+            <td>Carrier</td>
+            <td>14,000</td>
+          </tr>
+        </table>
+
+        <p>The module multiplier is the most misunderstood mechanic in ship design. A single weapon module on a Large hull provides the same firepower as four of the same module on a Small hull — but costs 6 CP instead of 4 CP (four Small ships). The trade-off is efficiency vs. concentration: larger hulls deal more damage per module, but they're harder to replace and lose their full contribution when destroyed. The practical implication: <strong>always match your weapon tech tier to your current hull tier</strong>. Using Tier 2 modules on Tier 3 hulls (Hunter, Coordinator) is a significant upgrade that doesn't require any new research.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE EFFECTIVE MODULE COUNT RULE</div>
+          Count modules by multiplied value, not raw count. A Hunter (Medium, ×2) with 4 weapon slots has 8 effective weapon slots. A Carrier (Large, ×4) with 3 weapon slots has 12 effective weapon slots. When comparing ships, always apply the multiplier before drawing conclusions about which ship packs more punch.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Weapon Types: Accuracy, Penetration &amp; Counters</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>There are five main weapon types with distinct accuracy-by-range and penetration profiles. The match between your weapon type and the battle range (which is controlled by your battle card choice) is the primary lever for damage output.</p>
+
+        <table class="ref-table">
+          <tr><th>Weapon</th><th>Short Acc.</th><th>Medium Acc.</th><th>Long Acc.</th><th>Hull Pen.</th><th>Shield Pen.</th><th>Special</th></tr>
+          <tr>
+            <td class="cell-tier">Kinetic (Slugs)</td>
+            <td class="acc-good">85%</td>
+            <td class="acc-mid">50%</td>
+            <td class="acc-bad">10%</td>
+            <td>20%</td>
+            <td>50%</td>
+            <td>Generates Flak — destroys missiles, boarding pods, squadrons</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Missiles</td>
+            <td class="acc-bad">25%</td>
+            <td class="acc-mid">50%</td>
+            <td class="acc-good">100%</td>
+            <td>10%</td>
+            <td>60%</td>
+            <td>Destroyed by enemy Flak; high long-range ceiling</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Lasers</td>
+            <td class="acc-mid">50%</td>
+            <td class="acc-good">100%</td>
+            <td class="acc-mid">50%</td>
+            <td>80%</td>
+            <td>10%</td>
+            <td>Best DPS-to-cost ratio from Tier 1+; strong hull penetration</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Beams</td>
+            <td class="acc-good">100%</td>
+            <td class="acc-good">100%</td>
+            <td class="acc-good">100%</td>
+            <td>90%</td>
+            <td>10%</td>
+            <td>Range-independent — but lower raw DPS than Lasers at same tier</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Railguns*</td>
+            <td class="acc-good">100%</td>
+            <td class="acc-mid">50%</td>
+            <td class="acc-bad">10%</td>
+            <td>100%</td>
+            <td>100%</td>
+            <td>Ignores all absorption — DLC (Community Challenge Add-On) only</td>
+          </tr>
+        </table>
+
+        <p>*Railguns require the Community Challenge Add-On DLC.</p>
+
+        <p>The counter relationships matter in practice:</p>
+        <ul class="step-list">
+          <li><span class="step-n">KINETIC counters MISSILES</span><span>Flak generated by kinetic weapons destroys incoming missile salvos before they hit. If an enemy fleet uses missiles, having even one kinetic weapon module on your larger ships will significantly reduce their missile damage.</span></li>
+          <li><span class="step-n">KINETIC counters SQUADRONS</span><span>Fighters and bombers are also destroyed by Flak. Without any kinetic weapons in your fleet, enemy squadrons from Coordinator/Carrier hulls operate unopposed.</span></li>
+          <li><span class="step-n">KINETIC counters BOARDING PODS</span><span>Vaulters' boarding pods (Vaulters DLC) are also intercepted by Flak. A single kinetic slot on a ship protects against hull capture.</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PRACTICAL WEAPON PROGRESSION</div>
+          <strong>Early (Military Era 1–2):</strong> Kinetic Slugs are best. They match most combat scenarios (short-to-medium range engagements) and provide Flak protection against pirates and other early threats that commonly use missiles.<br><br>
+          <strong>Mid (Military Era 3+):</strong> Transition primary slots to Lasers. Lasers have nearly double the DPS of same-tier Beams, cost fewer strategic resources (Hyperium vs. nothing), and have 100% accuracy at medium range — the most common range for most battle tactic combinations. Keep <em>at least one</em> Kinetic slot per larger ship for Flak protection.<br><br>
+          <strong>Late (Military Era 4–5):</strong> Laser primary + Shield Interference Beam on combat heroes (disables shields for 6s on hit) + optional Railguns if you have the DLC. Swarm Missiles (also DLC) overwhelm Flak because each "shot" fires 10 projectiles.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2c">
+      <div class="block-header" onclick="toggle('cb2c')">
+        <span class="block-icon">🛡️</span>
+        <span class="block-title">Defense Modules: Absorption, Penetration &amp; the Half/Half Rule</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Ships have two defense types: Hull Plating (reduces damage to health) and Shields (reduces damage to the shield bar, which regenerates after battle). The damage calculation is multiplicative, not additive:</p>
+
+        <p><strong>Absorption = Defense / (Defense + Hull Weakness)</strong></p>
+        <p>Hull Weakness by size: Small = 100, Medium = 250, Large = 600. This means the first defense module on any hull provides the largest marginal absorption gain — subsequent modules of the same type have diminishing returns because Defense is always competing against a fixed Hull Weakness denominator.</p>
+
+        <p>Penetration reduces absorption as a percentage of absorption, not as a flat subtraction. If a ship has 80% Shield Absorption and is hit by kinetic weapons (50% Shield Penetration), the effective absorption is 40% — not 30%. Even a 20% absorption value retains 10% effective absorption against a 50% penetrating weapon.</p>
+
+        <p><strong>Damage done = Weapon damage × (1 − Damage Absorbed by Shield) × (1 − Damage Absorbed by Hull)</strong></p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE HALF/HALF DEFENSE RULE</div>
+          Split defense slots evenly between Hull Plating and Shields. Both types have diminishing returns when stacked — a second Plating module adds less marginal absorption than the first did. Mixing both types maximizes coverage against both projectile (hull-facing) and energy (shield-facing) weapons. If you have an odd number of defense slots, favor Hull Plating: ships have more base health than shield value, so the absorption multiplier on hull provides larger absolute damage reduction.
+        </div>
+
+        <p>Note: Shields absorb all incoming damage first, then health takes the remainder. Shields regenerate fully after every battle — they are your renewable combat buffer. Hull Plating absorption persists throughout the battle, providing ongoing reduction even when shields are down.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T3: MANPOWER -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Manpower: Generation, Consumption &amp; Troop Types</h2>
+        <div class="topic-subtitle">The sixth FIDSI resource — often starved, rarely understood</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">👥</span>
+        <span class="block-title">How Manpower Works</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Manpower is produced by converting a fraction of each system's Food output into empire-wide Manpower stock. The baseline conversion rate comes from the Colonial Base system improvement (10%). Additional Military techs and faction-specific buildings can raise this rate. Conversion stops automatically when the Manpower stock is full.</p>
+
+        <p>Manpower is then split two ways: it staffs your ship fleets (giving them a combat damage bonus), and it provides system defense troops (the troops that fight off invaders). Ships replenish their manpower at a fixed rate per turn while inside your influence zone — they do not need to be orbiting a specific system. Manpower replenishment stops while a system is under siege or active combat.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">MANPOWER DAMAGE BONUS</div>
+          A ship's current manpower level directly affects its combat damage output. The formula is: <strong>Damage Bonus = (Current Ship Manpower / Max Ship Manpower) × 20%</strong>. A ship at 0 manpower deals 20% less damage than the same ship at full manpower. This is why Umbral Choir (who cannot carry manpower) has a structural combat disadvantage. Never let fleets go into battle significantly under-manned.
+        </div>
+
+        <table class="ref-table">
+          <tr><th>Ship Role</th><th>Default Manpower Capacity</th><th>Upgraded Capacity</th></tr>
+          <tr><td class="cell-tier">Explorer (Small)</td><td>30</td><td>45 (Machine Bacteria)</td></tr>
+          <tr><td class="cell-tier">Attacker (Small)</td><td>80</td><td>120 (Extreme Composites)</td></tr>
+          <tr><td class="cell-tier">Protector (Small)</td><td>80</td><td>120 (Agri Drugs)</td></tr>
+          <tr><td class="cell-tier">Hunter (Medium)</td><td>200</td><td>300 (Low Temperature Construction)</td></tr>
+          <tr><td class="cell-tier">Coordinator (Medium)</td><td>200</td><td>300 (Dependency Algorithms)</td></tr>
+          <tr><td class="cell-tier">Carrier (Large)</td><td>400</td><td>600 (Far Halo Shipyard)</td></tr>
+        </table>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">⚙️</span>
+        <span class="block-title">Troop Types: Infantry, Armor &amp; Air</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Your empire's manpower converts to ground troops using a rock-paper-scissors system. The troop distribution is set empire-wide from the Military screen (Manage → Troops Breakdown). Changing the distribution costs a small amount of Manpower (25 per 10% shift).</p>
+
+        <table class="ref-table">
+          <tr><th>Troop Type</th><th>Manpower per Unit</th><th>Base Health</th><th>Base Damage</th><th>Bonus Damage vs.</th></tr>
+          <tr><td class="cell-tier">Infantry</td><td>5</td><td>65</td><td>15–25</td><td>+50% vs. Air</td></tr>
+          <tr><td class="cell-tier">Armor</td><td>15</td><td>240</td><td>25–60</td><td>+50% vs. Infantry</td></tr>
+          <tr><td class="cell-tier">Air</td><td>20</td><td>200</td><td>95–115</td><td>+50% vs. Armor</td></tr>
+        </table>
+
+        <p>The counters are: Infantry beats Air, Armor beats Infantry, Air beats Armor. Infantry is cheap per manpower cost but has low health — ideal for defensive depth where manpower is abundant. Armor has the most health per unit and counters the most common AI troop type (Infantry). Air deals the most raw damage but costs the most manpower per unit and destroys improvements at a higher rate.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">ARMOR IS THE DEFAULT META</div>
+          Most AI factions deploy a majority Infantry force. Armor counters Infantry and has the best health pool. The practical recommendation: set your distribution to 100% Armor once you've unlocked it (requires the Autonomous Construction tech). At the point where you're conducting major invasions, enemy Air units are rare enough that the 100% Armor risk is acceptable. Revisit only if you observe a specific faction running heavy Air.
+        </div>
+
+        <p>Troop upgrades cost Dust and strategic resources and unlock via tech milestones. Upgraded Infantry, Armor, and Air gain +20% Health and +20% Damage at Level 1, with further bonuses at Levels 2–4 requiring progressively rarer strategic resources (Titanium/Hyperium → Adamantian/Antimatter → Orichalcix/Quadrinix).</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T4: CLOAKING -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Ship Cloaking &amp; Detection</h2>
+        <div class="topic-subtitle">Detection is always one tier harder than cloaking. Plan accordingly.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🫥</span>
+        <span class="block-title">How Cloaking Works</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Cloaking modules (Penumbra DLC) are equipped on ships to conceal the entire fleet from enemy vision. A single cloaked ship in a fleet makes the whole fleet invisible. Cloaked fleets can move freely through star lanes, bypass blockades, and ignore defending fleets in orbit — the guarding fleet cannot stop them unless it has an anti-cloaking module or the cloaked fleet is detected.</p>
+
+        <p>While cloaked, a fleet cannot: use the Guard action, perform an invasion, or take most actions that would reveal its presence. Decloaking costs all remaining movement points for that turn.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">CLOAK AMBUSH IN COMBAT</div>
+          Certain cloaking modules (e.g. Cloak Ambush) allow your fleet to remain invisible during the opening phase of a battle, preventing the enemy from targeting you until you reach a desired range. Combined with the Turtle battle card (pushing to short range), this means your fleet arrives at optimal range without absorbing long-range fire in the process.
+        </div>
+
+        <p><strong>Detection asymmetry:</strong> Detecting a cloaked fleet at tech tier N requires anti-cloaking tech at tier N+1. A fleet cloaked with Era 4 modules can only be detected by Era 5 anti-cloaking. This means offensive cloaking is structurally easier than defensive detection — the cloaker is always one step ahead of the pursuer at equal tech levels.</p>
+
+        <p><strong>Detection methods:</strong></p>
+        <ul class="step-list">
+          <li><span class="step-n">Anti-Cloaker Modules</span><span>Equip on any ship in a fleet. When the fleet is at the same system as a cloaked enemy fleet, the cloaked fleet can be directly targeted and engaged. Without this module, the cloaked fleet can only be pulled into combat incidentally (by attacking a visible fleet in the same system that happens to share a system with the cloaked fleet).</span></li>
+          <li><span class="step-n">Detection Probes</span><span>Anti-cloaking probes (unlocked by Antimatter Channeling and Quadrinix Toroids) orbit a system and permanently reveal any cloaked ships entering that system. These are ideal for border defense — station one probe per critical system rather than maintaining a standing anti-cloaker fleet.</span></li>
+          <li><span class="step-n">Incidental Combat</span><span>If a cloaked fleet shares a system with a visible fleet, and you attack the visible fleet, the cloaked fleet is pulled into combat automatically. This does not require any anti-cloaking tech.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T5: COMBAT SYSTEM -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">The 3-Phase Combat System &amp; Weapon Ranges</h2>
+        <div class="topic-subtitle">Combat is deterministic. Learn the range resolution table and you know the outcome before the battle starts.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Phase Structure and Range Resolution</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every space battle has exactly three phases, each 40 seconds of in-game time. Combat begins with flotillas at the <em>farthest</em> range dictated by either side's battle tactics card. Each phase, if a flotilla's chosen tactic calls for a closer range than the current range, it closes by one increment (Long → Medium → Short).</p>
+
+        <p>The range resolution matrix (S = attacker's target range, opponent = defender's target range):</p>
+
+        <table class="ref-table">
+          <tr><th>Attacker\Defender</th><th>Long (L)</th><th>Medium (M)</th><th>Short (S)</th></tr>
+          <tr><td class="cell-tier">Long (L)</td><td>L / L / L</td><td>L / M / M</td><td>L / M / S</td></tr>
+          <tr><td class="cell-tier">Medium (M)</td><td>L / M / M</td><td>M / M / M</td><td>M / S / S</td></tr>
+          <tr><td class="cell-tier">Short (S)</td><td>L / M / S</td><td>M / S / S</td><td>S / S / S</td></tr>
+        </table>
+
+        <p>Read: if the attacker uses a Long-range tactic and the defender uses a Short-range tactic, the three phases play out at Long → Medium → Short (i.e., the attacker dictates Phase 1 range, and each fleet closes toward their preferred range). Both sides "converge" — combat always starts at the farthest of the two preferred ranges and moves toward the closer one.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">STRATEGIC IMPLICATION</div>
+          If you're running a laser-dominant fleet (optimal at Medium), and the enemy chooses a Short-range tactic while you choose Medium, the phases play out M/S/S — meaning two of three phases are at sub-optimal range for your lasers. To lock in Medium-range combat, both sides must choose a Medium-range tactic. If you can't control the enemy's tactic, design ships that are effective at multiple ranges (or accept the range variance and account for it with accuracy margins).
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">🗺️</span>
+        <span class="block-title">Flotillas, Lanes &amp; Morale</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Your fleet's ships are distributed across up to three lanes (Top, Center, Bottom). Each lane forms a flotilla. Lane access requirements:</p>
+        <ul class="step-list">
+          <li><span class="step-n">CENTER</span><span>Always available. Must have at least 1 CP of ships.</span></li>
+          <li><span class="step-n">TOP LANE</span><span>Requires at least 5 CP total in your fleet AND at least 2 ships.</span></li>
+          <li><span class="step-n">BOTTOM LANE</span><span>Requires at least 10 CP total in your fleet AND at least 3 ships.</span></li>
+        </ul>
+
+        <p>Ships fire at the opposing flotilla in the same lane. If there are no enemies in their lane, they fire cross-lane at an adjacent lane (Top ↔ Center, Bottom ↔ Center; Top and Bottom cannot fire at each other). <strong>Cross-lane fire is always treated as Long range, regardless of the tactic card.</strong></p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">MORALE BONUS</div>
+          Having more active flotillas (lanes with at least one surviving ship) than the enemy grants a morale advantage: <strong>+10% Damage and +5% Accuracy per extra lane</strong>, up to a maximum of +20% Damage and +10% Accuracy (two extra lanes). This means letting a flotilla be destroyed early — even a small one — can hand the enemy a significant damage multiplier for the rest of the battle. Protect all three lanes or go in with a deliberate single-lane concentration strategy.
+        </div>
+
+        <p>Ship distribution strategy options in the battle setup screen:</p>
+        <ul class="step-list">
+          <li><span class="step-n">OPTIMAL RANGE</span><span>Places each ship in the lane that matches its weapons' optimal range. Maximizes individual ship effectiveness but risks creating an uneven flotilla vulnerable to early destruction.</span></li>
+          <li><span class="step-n">BALANCED (DEFAULT)</span><span>Balances optimal range placement with even distribution. Generally the safest option — prevents a single flotilla from becoming too weak while still accounting for weapon ranges.</span></li>
+          <li><span class="step-n">EVEN DISTRIBUTION</span><span>Equalizes CP across all lanes. Maximizes morale advantage chance but may sacrifice individual ship optimization.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5c">
+      <div class="block-header" onclick="toggle('cb5c')">
+        <span class="block-icon">🏃</span>
+        <span class="block-title">Retreating, Guarding &amp; Refitting</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p><strong>Retreat:</strong> The defender may retreat before combat. If a valid starlane connecting to a non-hostile system exists, the fleet takes −60% maximum health damage (destroying any ship already below 60% HP) and begins moving along that lane. If no valid exit lane exists, retreating destroys the entire fleet — the game warns you before you confirm. Heroes whose fleet is destroyed in combat return to the Academy injured and unavailable for several turns.</p>
+
+        <p><strong>Guard:</strong> A fleet assigned to "Guard" a system stops any enemy fleet from passing through — the guarded fleet removes all movement points from any enemy entering the system for that turn. Cloaked fleets bypass a Guard unless detected. In Cold War, guarding a system adjacent to an enemy's system imposes −50% Dust, Science, and Influence on the guarded system and generates negative AI relations.</p>
+
+        <p><strong>Refit:</strong> Ships can be redesigned and retrofitted at any friendly system. Cost = 30 Dust base + 1 Dust per additional Industry cost of the new design vs. the current one (both adjusted for inflation). Damaged ships must be repaired before refitting, which typically adds significant Dust cost. This means it's often cheaper to maintain up-to-date designs from the start than to retrofit a large fleet mid-war.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T6: BATTLE CARDS -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Battle Cards</h2>
+        <div class="topic-subtitle">Three types of card, three categories of effect. The range cards define the combat — the bonus cards define the outcome.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🃏</span>
+        <span class="block-title">Card Slots, Categories &amp; Unlock Path</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every fleet has battle tactic slots. You begin with 3 slots and can expand to 5 by researching Universal Aerodynamics (Military 4) and Quantum Communications (also Military 4). Each slot holds one card, chosen before combat from your available card pool.</p>
+
+        <p>Battle tactics card do two things: set the range your flotillas will attempt to reach, and grant a combat bonus. Cards fall into three bonus categories:</p>
+
+        <table class="ref-table">
+          <tr><th>Category</th><th>Icon</th><th>Attacker/Defender Split</th><th>Effect Timing</th></tr>
+          <tr><td class="cell-tier">Offense</td><td>⚡ Lightning bolt</td><td>100% Attacker / 0% Defender</td><td>During combat</td></tr>
+          <tr><td class="cell-tier">Defense</td><td>🛡️ Shield</td><td>0% Attacker / 100% Defender</td><td>During combat</td></tr>
+          <tr><td class="cell-tier">Post-Battle</td><td>→| Arrow</td><td>50% / 50%</td><td>After combat ends</td></tr>
+        </table>
+
+        <p>The attacker/defender split is crucial: Offense cards only benefit the attacking fleet, Defense cards only benefit the defending fleet. Post-Battle cards benefit both regardless of role.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">📋</span>
+        <span class="block-title">Card Reference: Default &amp; Unlockable Sets</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every player starts with 5 default cards. Additional sets unlock via specific Military tech research. The range column shows each card's target range per lane: <strong>Top / Center / Bottom</strong>. This is the range each flotilla will <em>attempt to reach</em> — actual combat range is determined by the farther of the two fleets' targets (see T5).</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">TURTLE BOTTOM LANE: NOT SHORT</div>
+          Turtle's per-lane targets are Short / Short / <strong>Medium</strong> — the bottom flotilla aims for Medium, not Short. If you're running kinetic-heavy ships and stacking your bottom lane with them expecting Short range all three phases, you will fight Phase 1 and 2 at Long and Medium respectively if the enemy also chooses a Long-range card. Design bottom-lane loadouts to perform at Medium as well as Short.
+        </div>
+
+        <table class="ref-table">
+          <tr><th>Card</th><th>Type</th><th>Ranges (Top/Ctr/Bot)</th><th>Effect</th><th>Unlock</th></tr>
+          <tr><td class="cell-tier">Turtle</td><td>Defense</td><td>S / S / M</td><td>+20% Hull Plating Absorption</td><td>Default</td></tr>
+          <tr><td class="cell-tier">Power to Shields</td><td>Defense</td><td>M / L / L</td><td>+100% Shield Absorption, +10% Max Shield</td><td>Default</td></tr>
+          <tr><td class="cell-tier">Take Trophies</td><td>Post-Battle</td><td>S / L / S</td><td>+10 Dust &amp; +5 Science per opponent CP destroyed</td><td>Default</td></tr>
+          <tr><td class="cell-tier">Gravity Distortion</td><td>Offense</td><td>L / M / S</td><td>Both fleets: +10% Hull Plating Penetration. Your fleet: +10% additional Hull Pen on Weapon Modules</td><td>Default</td></tr>
+          <tr><td class="cell-tier">Gravity Distortion 2</td><td>Offense</td><td>L / M / S</td><td>Both fleets: +10% Hull Plating Penetration. Your fleet: +20% additional Hull Pen on Weapon Modules</td><td>Exploration loot / quest</td></tr>
+          <tr><td class="cell-tier">Plasma Distortion</td><td>Offense</td><td>S / M / L</td><td>Both fleets: +10% Shield Penetration. Your fleet: +10% additional Shield Pen on Weapon Modules</td><td>Default</td></tr>
+          <tr><td class="cell-tier">Plasma Distortion 2</td><td>Offense</td><td>S / M / L</td><td>Both fleets: +10% Shield Penetration. Your fleet: +20% additional Shield Pen on Weapon Modules</td><td>Exploration loot / quest</td></tr>
+          <tr><td class="cell-tier">Get Lucky</td><td>Offense</td><td>S / L / L</td><td>+50% Critical Hit Damage on weapons &amp; squadrons</td><td>Military 3: Titanium Electroplating</td></tr>
+          <tr><td class="cell-tier">The Fewer The Proud</td><td>Offense</td><td>S / L / S</td><td>+20% Damage (10s) when allied ship destroyed</td><td>Military 3: Titanium Electroplating</td></tr>
+          <tr><td class="cell-tier">Post-OP Analysis</td><td>Post-Battle</td><td>M / M / M</td><td>+50% Experience earned by fleet</td><td>Military 3: Titanium Electroplating</td></tr>
+          <tr><td class="cell-tier">Unlucky Arms</td><td>Defense</td><td>S / L / L</td><td>Both fleets: Critical Hit chance set to 0% on weapons &amp; squadrons</td><td>Military 3: Fleet Shielding</td></tr>
+          <tr><td class="cell-tier">Grim Recycling</td><td>Defense</td><td>L / S / L</td><td>+30% Hull &amp; Shield absorption (10s) when allied ship destroyed</td><td>Military 3: Fleet Shielding</td></tr>
+          <tr><td class="cell-tier">Repair and Recover</td><td>Post-Battle</td><td>M / M / L</td><td>+65% Health recovered at end of battle</td><td>Military 3: Fleet Shielding</td></tr>
+          <tr><td class="cell-tier">Needs of the Many</td><td>Offense</td><td>L / L / L</td><td>+30% Crew lost per phase; +25% Crew damage bonus</td><td>Military 4: Adamantian Electroplating</td></tr>
+          <tr><td class="cell-tier">Barrage Fire</td><td>Offense</td><td>L / L / L</td><td>+3% Damage at Long range per enemy ship</td><td>Military 4: Adamantian Electroplating</td></tr>
+          <tr><td class="cell-tier">Full Reserves</td><td>Post-Battle</td><td>L / M / S</td><td>+1 Action Point earned after battle</td><td>Military 4: Adamantian Electroplating</td></tr>
+          <tr><td class="cell-tier">Evasive Maneuvers</td><td>Defense</td><td>S / S / S</td><td>+40% Dodge at Long range, +20% at Medium range</td><td>Military 4: Antimatter Channeling</td></tr>
+          <tr><td class="cell-tier">Prudent Positions</td><td>Defense</td><td>L / L / L</td><td>Both fleets: −25% Damage on all weapons</td><td>Military 4: Antimatter Channeling</td></tr>
+          <tr><td class="cell-tier">En Passant</td><td>Post-Battle</td><td>M / S / S</td><td>+Movement Points earned after battle</td><td>Military 4: Antimatter Channeling</td></tr>
+          <tr><td class="cell-tier">Repair Protocol</td><td>Post-Battle</td><td>L / L / S</td><td>+60% Ship repair based on surviving Squadrons</td><td>Military 4: Deniable Operations</td></tr>
+          <tr><td class="cell-tier">Strafing Run</td><td>Offense</td><td>S / M / L</td><td>+33% Crit on Squadrons; all Fighters to 100% offense</td><td>Military 4: Deniable Operations</td></tr>
+          <tr><td class="cell-tier">Closed Airspace</td><td>Defense</td><td>L / M / M</td><td>+100% Damage on Fighters; all Fighters escort Ships; enemy −50% Squadron Speed</td><td>Military 4: Deniable Operations</td></tr>
+          <tr><td class="cell-tier">Temporal Drag</td><td>Offense</td><td>L / L / M</td><td>Both fleets: Flotilla Shields, Shield Reload, and Ship Repair battle effects disabled</td><td>Exploration loot / quest</td></tr>
+          <tr><td class="cell-tier">Lifepods Away</td><td>Post-Battle</td><td>M / L / L</td><td>+75% Lost Crew returned to Empire; Crew damage bonus set to 0%</td><td>Exploration loot / quest</td></tr>
+          <tr><td class="cell-tier">Endure</td><td>Defense</td><td>L / L / L</td><td>+50% Shield &amp; Plating Absorption when ship is alone in its flotilla</td><td>Hissho quest reward</td></tr>
+          <tr><td class="cell-tier">Berserker</td><td>Offense</td><td>S / S / S</td><td>×1.5 Damage when ship is alone in its flotilla</td><td>Hissho / Dark Matter quest reward</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">NOTABLE INTERACTIONS</div>
+          <strong>Gravity Distortion + Laser fleet:</strong> GD1 gives both fleets +10% Hull Pen and gives you an additional +10% on top via Weapon Modules. Since Lasers already have 80% base Hull Pen, this pushes penetration above 90% — Plating absorption is nearly nullified. At that point, enemy Hull Plating investment becomes largely wasted, which is relevant when facing heavy Horatio or United Empire fleets that invest heavily in Plating.<br><br>
+          <strong>Plasma Distortion + Kinetic fleet:</strong> Kinetics already have 50% Shield Pen. PD1 adds +10% global and +10% on your Weapon Modules — pushing your effective Shield Pen to ~60–70%. Kinetics become effective against even heavily shielded fleets at short range.<br><br>
+          <strong>Temporal Drag:</strong> Disables mid-battle shield regen and repair effects for <em>both</em> fleets. Useful as an attacker when the enemy relies on defensive cards like Grim Recycling or Repair and Recover — but don't use it if your own fleet depends on those effects.<br><br>
+          <strong>Evasive Maneuvers' range paradox:</strong> The card sets all three lanes to Short target range, yet its bonus (Dodge at Long and Medium) only activates at Long and Medium. This means you'll be at Short range by Phase 2–3 where the dodge bonus no longer applies. It works best in Phase 1 (while still at Long range from enemy long-range cards), then becomes a pure range-push card. Consider it a Phase 1 survival tool, not a sustained dodge build.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">POST-OP ANALYSIS — THE EXPERIENCE CARD</div>
+          If leveling ships quickly matters (see T7 on ship experience), Post-OP Analysis is the most effective way to accelerate it. The +50% XP bonus applies to the entire fleet. Running it on a dedicated raider fleet engaging minor threats is a fast path to Veteran-level ships.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T7: FLEET COMPOSITION -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Fleet Composition, Ship Roles &amp; Ship Experience</h2>
+        <div class="topic-subtitle">Your fleet is a system, not a collection of ships. Design the system first.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Ship Roles and Targeting Priorities</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Each ship hull has a role that determines which enemy ships it targets preferentially and what combat bonus it grants its flotilla. Understanding these targeting priorities lets you build fleets that operate predictably — and counter fleets that don't.</p>
+
+        <table class="ref-table">
+          <tr><th>Role</th><th>Size / CP</th><th>Combat Bonus</th><th>Primary Target</th><th>Secondary Target</th></tr>
+          <tr>
+            <td class="cell-tier">Attacker</td>
+            <td>Small / 1 CP</td>
+            <td>Focus fire + +10% Weapon Damage</td>
+            <td>Protector, Coordinator</td>
+            <td>Carrier</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Protector (Defender)</td>
+            <td>Small / 1 CP</td>
+            <td>Guardian (attracts fire) + +10% Plating &amp; Shield</td>
+            <td>Attacker, Hunter</td>
+            <td>Protector, Coordinator</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Hunter</td>
+            <td>Medium / 3 CP</td>
+            <td>Focus fire + +20% Weapon Damage</td>
+            <td>Protector, Coordinator</td>
+            <td>Carrier</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Coordinator</td>
+            <td>Medium / 3 CP</td>
+            <td>Guardian (attracts fire) + +10% Plating &amp; Shield</td>
+            <td>Attacker, Hunter</td>
+            <td>Protector, Coordinator</td>
+          </tr>
+          <tr>
+            <td class="cell-tier">Carrier</td>
+            <td>Large / 6 CP</td>
+            <td>+10% Squadron Health, +10% Squadron Damage</td>
+            <td>Carrier</td>
+            <td>Attacker, Hunter</td>
+          </tr>
+        </table>
+
+        <p>The Guardian bonus (Protector/Coordinator) causes these ships to absorb fire that would otherwise target your damage dealers. This is the defensive spine of a mixed fleet: Coordinators intercept damage while Hunters output it. An all-Hunter fleet deals more raw damage but is entirely composed of high-value targets that the enemy's focus fire will chew through quickly.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">COMPOSITION RULE OF THUMB</div>
+          The most cost-effective standard fleet for a mid-game military power: <strong>4–6 Hunter-class ships as primary damage dealers, supplemented by 1–2 Coordinators as damage sponges, filling remaining CP with smaller ships</strong>. This provides three-lane access (10+ CP total), Coordinator-sourced Guardian protection, and concentrated Hunter firepower. Add a Carrier once you've researched Liquid Composites and have Adamantian and Antimatter to afford it.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">⭐</span>
+        <span class="block-title">Ship Experience &amp; Level Progression</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Ships gain experience in combat and through Military tech investments. Each level adds a percentage bonus to the ship's base HP. The XP required scales with level — early levels come quickly, elite levels require sustained combat.</p>
+
+        <table class="ref-table">
+          <tr><th>Level</th><th>HP Bonus</th><th>XP per Level</th><th>Cumulative XP</th></tr>
+          <tr><td class="cell-tier">Rookie</td><td>+0%</td><td>20</td><td>0</td></tr>
+          <tr><td class="cell-tier">Rookie II</td><td>+5%</td><td>40</td><td>20</td></tr>
+          <tr><td class="cell-tier">Rookie III</td><td>+10%</td><td>60</td><td>60</td></tr>
+          <tr><td class="cell-tier">Veteran</td><td>+15%</td><td>80</td><td>120</td></tr>
+          <tr><td class="cell-tier">Veteran II</td><td>+20%</td><td>100</td><td>200</td></tr>
+          <tr><td class="cell-tier">Veteran III</td><td>+25%</td><td>120</td><td>300</td></tr>
+          <tr><td class="cell-tier">Elite</td><td>+30%</td><td>140</td><td>420</td></tr>
+          <tr><td class="cell-tier">Elite II</td><td>+35%</td><td>160</td><td>560</td></tr>
+          <tr><td class="cell-tier">Elite III</td><td>+40%</td><td>180</td><td>720</td></tr>
+          <tr><td class="cell-tier">Legendary</td><td>+45%</td><td>N/A (cap)</td><td>900</td></tr>
+        </table>
+
+        <p>Note: The HP bonus does not stack with faction trait HP modifiers (e.g., Horatio's +10% or Riftborn/Cravers' −10%). It does apply to modules added to the ship. A Legendary Hunter with a 14,000 HP baseline module gains 45% of that module's contribution — making experienced ships disproportionately durable when heavily upgraded.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PROTECTING EXPERIENCED SHIPS</div>
+          A Legendary Coordinator with 45% bonus HP is substantially more durable than a freshly built one. Once a ship reaches Veteran or above, protect it. Don't send it into hopeless engagements, and use Repair and Recover battle cards if your veteran fleet is taking losses. A lost Legendary ship takes hundreds of XP to replace.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7c">
+      <div class="block-header" onclick="toggle('cb7c')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Squadrons: When to Use Them</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Coordinator, Carrier, and Behemoth hulls can equip squadron modules (Fighters and Bombers). Squadrons have 100% accuracy at all ranges, are destroyed by enemy Flak or enemy Fighters, and disappear when the battle ends regardless of whether their launch ship is alive.</p>
+
+        <p><strong>Bombers</strong> deal high DPS with a multiplier against Large/Behemoth hulls (×1.5) and a penalty against Small hulls (×0.5). Against an enemy running Carriers or a Juggernaut, Bombers deal damage equivalent to top-tier Kinetic weapons — without requiring your fleet to close to short range.</p>
+
+        <p><strong>Fighters</strong> deal low damage to ships, but are the primary counter to enemy Bombers. Even one Fighter module in your fleet forces enemy Bombers to fight through attrition before reaching your ships.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE FLAK PROBLEM</div>
+          Squadrons are entirely negated by enemy Flak (generated by kinetic weapons). If the enemy fleet runs even one Kinetic slug module per large ship, your Bombers will take heavy losses before landing damage. Squadrons reward you when the enemy has no kinetics — which is increasingly rare past the early game. Default recommendation: treat squadrons as a counter-specific niche, not a default composition element, and ensure your own fleet always runs at least one Kinetic module to maintain Flak protection.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T8: COMBAT BEHEMOTHS -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Combat Behemoths</h2>
+        <div class="topic-subtitle">Juggernaut, Obliterator, Citadel — three specializations with fundamentally different strategic functions</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🌑</span>
+        <span class="block-title">Behemoth Basics &amp; the Words In Private Quest</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Behemoths (Supremacy DLC) are a separate ship class, unique in that they are faction-agnostic — every faction builds from the same base chassis. They are unlocked through a cooperative galaxy quest called <strong>Words In Private</strong>, which triggers around turn 10 and requires all players in the galaxy (combined) to research a threshold of Military technologies. As long as you research at least one Military tech, you contribute to the quest and will receive the Behemoth tech unlock when the quest resolves.</p>
+
+        <p>The base Behemoth hull technology (Behemoth Blueprints) lives in <strong>Empire Development Era 2</strong> — not Military. The combat specializations (Juggernaut and Obliterator Blueprints) are in <strong>Military Era 4</strong>. Citadel Blueprints are in Empire Development Era 3.</p>
+
+        <table class="ref-table">
+          <tr><th>Stat</th><th>Value</th></tr>
+          <tr><td class="cell-tier">CP Cost</td><td>10 CP</td></tr>
+          <tr><td class="cell-tier">Base HP</td><td>33,000 (+ ~42,000 from Empire Dev/Military tech upgrades)</td></tr>
+          <tr><td class="cell-tier">Base Movement</td><td>2 (+ 2 from Behemoth Generators)</td></tr>
+          <tr><td class="cell-tier">Base Upkeep</td><td>20 Dust/turn</td></tr>
+          <tr><td class="cell-tier">Default Quantity Limit</td><td>1 (+ 1 per 3 Behemoth techs researched; + 1 per Behemoth C3 Center improvement but ×1.5 upkeep multiplier)</td></tr>
+        </table>
+
+        <p>You can only build one Behemoth at a time (the production queue is empire-wide). The quantity limit is shared across all Behemoth types — a Citadel, a Juggernaut, and an Obliterator each count against the same cap.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">Juggernaut: Fleet Anchor &amp; Ion Wave</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Juggernaut (Military Era 4: Juggernaut Blueprints) is the combat Behemoth specialization designed for fleet engagement. Unlike the base Military Behemoth (which cannot join a regular fleet), the Juggernaut <em>can</em> be embedded inside an existing fleet and fights alongside your smaller ships. This is the critical difference: your Hunter and Coordinator ships protect the Juggernaut while it applies its full ×4 module multiplier firepower.</p>
+
+        <p>The Juggernaut can be upgraded further along two paths:</p>
+        <ul class="step-list">
+          <li><span class="step-n">DRAGONUT MODULE UPGRADE</span><span>Adds more battle modules — increases the Juggernaut's weapon slots further, making it an even more dominant DPS platform.</span></li>
+          <li><span class="step-n">ION WAVE</span><span>An ability that destroys all enemy ships in a system without conventional combat — triggered when enemy fleets are orbiting the same system. Activating Ion Wave damages only enemy fleets, not your own. This effectively negates the need for a conventional battle against prepared defensive fleets.</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">JUGGERNAUT vs STANDALONE MILITARY BEHEMOTH</div>
+          The standard Military Behemoth cannot join a fleet and therefore fights without support. Against an equal-value fleet of regular ships, the Behemoth takes concentrated fire and becomes expensive to repair (repairs cost significantly more than replacing smaller ships). The Juggernaut circumvents this by joining your regular fleet — your Coordinators absorb fire meant for it while it deals Behemoth-class damage. Prefer the Juggernaut over standalone Military Behemoths for direct fleet combat.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8c">
+      <div class="block-header" onclick="toggle('cb8c')">
+        <span class="block-icon">💥</span>
+        <span class="block-title">Obliterator &amp; Citadel: System Destruction &amp; Defense</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p><strong>Obliterator</strong> (Military Era 4): Fires a charged shot that destroys an entire star system — all improvements, population, and infrastructure. The shot has a multi-turn reload time and a cost in strategic resources (Quadrinics and Orichalcix) that decreases the longer the Obliterator waits between shots. When fired, every empire in the galaxy receives a notification that an Obliterator shot has been fired (though only the owner knows the target). The shot is visible as it travels, and its slow speed may allow targeted empires to move fleets away from the impact system. Moving your own fleets away from the target system before firing is mandatory — the Obliterator shot destroys friendly fleets in the impact zone too.</p>
+
+        <p><strong>Citadel</strong> (Empire Development Era 3: Citadel Blueprints): Unlike the other Behemoth specializations, a Citadel is not a ship — it is a permanent, stationary system improvement. Once converted, a Behemoth becomes a Citadel and can never be moved or reverted. The Citadel:</p>
+        <ul class="step-list">
+          <li><span class="step-n">BLOCKS OBLITERATOR SHOTS</span><span>A system with a Citadel deployed absorbs an incoming Obliterator shot completely. Without a Citadel, the only other defense is the System Shield improvement (halves Obliterator damage, but does not block it entirely).</span></li>
+          <li><span class="step-n">DEFENDS THE SYSTEM</span><span>Provides significant defensive combat bonuses and boosts system production (FIDSI other than Dust). Deploy at home systems or critical chokepoint systems.</span></li>
+          <li><span class="step-n">COUNTS AGAINST THE BEHEMOTH CAP</span><span>A Citadel permanently occupies one Behemoth slot. Because of this, do not build Citadels at every system — reserve them for systems that genuinely need Obliterator protection or extreme defensibility.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T9: GROUND INVASION -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">Ground Invasion: Troops, Manpower &amp; Post-Battle Choices</h2>
+        <div class="topic-subtitle">The siege is the setup. The invasion is the payoff. Know both.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🏰</span>
+        <span class="block-title">Sieging: Before the Invasion</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Orbiting an enemy system with a fleet (at least one ship with a weapon module) while no other enemy fleet is present initiates a siege. While sieged, the system cannot: replenish its defensive manpower, send or receive civilian ships, or produce strategic or luxury resources. Larger ships, more weapon modules, or siege support modules increase the manpower drain rate.</p>
+
+        <p>Sieging before invading is almost always correct. A full-manpower system defense can be 900–1200+ troops. A system drained by siege may have 200–400 when you actually invade. This is the difference between a fast win and a multi-turn war of attrition that bleeds your fleet's manpower reserves.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">SIEGE DURATION AS PLANNING TIME</div>
+          Use the siege turns to: check your troop composition (switch to 100% Armor if not already), position a second fleet to reinforce if the primary fleet is driven off, and monitor whether the enemy is sending a relief fleet. A siege broken by an incoming enemy fleet resets the system's manpower replenishment — plan for the threat before it arrives.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9b">
+      <div class="block-header" onclick="toggle('cb9b')">
+        <span class="block-icon">🪖</span>
+        <span class="block-title">Invasion Mechanics &amp; Ground Tactics</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Ground battles play out as a war of attrition across multiple turns. Each turn, both attacker and defender deploy a limited amount of their banked manpower (default: 500 Manpower Deployment Limit). Deployed manpower converts to troops according to the troop cost table. Both sides choose a tactic each turn that modifies Deployment Limit, troop health and damage, and collateral damage to population and improvements.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">INVASION DEPLETES YOUR FLEET'S MANPOWER — AND YOUR FLEET KNOWS IT</div>
+          When you launch an invasion, your fleet immediately deploys <em>all</em> of its manpower to the surface. This means your orbiting ships lose their 20% manpower damage bonus for the duration of the ground battle. A fleet that just unloaded 2,400 manpower is now fighting at −20% effective damage if an enemy relief fleet arrives. Plan accordingly: either have a second combat fleet ready to intercept incoming threats, or ensure your ground campaign resolves before the enemy can respond. You can refill fleet manpower at a friendly system and deliver additional troops mid-invasion — but leaving the siege temporarily allows the system to begin replenishing its defensive manpower.
+        </div>
+
+        <p><strong>Attacker tactics:</strong></p>
+        <ul class="step-list">
+          <li><span class="step-n">ORBITAL BOMBARDMENT</span><span>Guaranteed pre-battle damage. Useful when the defender's troop type counters yours. High collateral damage (kills population and destroys improvements) — generally avoid unless fighting Pirates (who have neither).</span></li>
+          <li><span class="step-n">GUERRILLA WARFARE</span><span>Reduces your deployment limit but also reduces casualty rate. Best when the defender has a manpower advantage and you need the battle to last longer without losing all your troops.</span></li>
+          <li><span class="step-n">BLITZ</span><span>Maximizes deployment limit with some collateral damage risk. As the attacker after a successful siege (which depleted defender manpower), Blitz ends battles fastest. The standard choice for most invasions.</span></li>
+        </ul>
+
+        <p><strong>Defender tactics:</strong></p>
+        <ul class="step-list">
+          <li><span class="step-n">DRAFT</span><span>Increases Deployment Limit AND converts population into additional defensive manpower — one of only two ways to replenish defenders mid-invasion (the other is sending a fleet with manpower to arrive during the siege). Expensive in population but may save the system.</span></li>
+          <li><span class="step-n">PROTECT SYSTEM</span><span>Reduces troop death and collateral damage. Best when your defensive force is still substantial — trades damage efficiency for endurance.</span></li>
+          <li><span class="step-n">TACTICAL SURRENDER</span><span>Concedes the planet immediately but halves the winner's system ownership growth rate (13 turns to integrate at normal speed vs. 26 turns). Use this when you have a counter-attacking fleet incoming — the attacker's extended integration window gives you time to retake the system before they can consolidate.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9c">
+      <div class="block-header" onclick="toggle('cb9c')">
+        <span class="block-icon">🏳️</span>
+        <span class="block-title">Post-Invasion: Occupy, Pillage, Raze &amp; Faction Variants</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Winning an invasion presents a choice of what to do with the captured system. The standard options and faction-specific variants:</p>
+
+        <table class="ref-table">
+          <tr><th>Action</th><th>Effect</th><th>Approval Penalty</th></tr>
+          <tr><td class="cell-tier">Occupy</td><td>Take control immediately. Assimilated minor factions permanently provide their trait.</td><td>None (occupation integration applies)</td></tr>
+          <tr><td class="cell-tier">Pillage</td><td>Steal a fixed % of Dust and strategic resources. Restore 50% of system manpower. Forfeit fleet's remaining movement points.</td><td>−10 Approval for 5 turns (unless Dictatorship/Autocracy)</td></tr>
+          <tr><td class="cell-tier">Raze</td><td>Destroy population and improvements each turn until the system is empty.</td><td>Significant</td></tr>
+          <tr><td class="cell-tier">Elevate (Horatio)</td><td>Occupy + steal population for gene-splicing.</td><td>−10 Approval (waived in Dictatorship/Autocracy)</td></tr>
+          <tr><td class="cell-tier">Consume (Cravers)</td><td>Occupy + gain resources while consuming population.</td><td>None</td></tr>
+          <tr><td class="cell-tier">Hunt (Vodyani)</td><td>Occupy + collect Essence.</td><td>None</td></tr>
+          <tr><td class="cell-tier">Subdue (Hissho)</td><td>Occupy + gain Keii (diminishing returns if the same system is subdued repeatedly too quickly).</td><td>None</td></tr>
+        </table>
+
+        <p>After occupation, the system enters an "Occupied" phase where Approval and system manpower are negated proportional to integration progress. Full integration takes approximately 13 turns at normal speed (or 26 turns if the defender used Tactical Surrender). During this window, the system contributes nothing to your empire's approval calculations and has reduced FIDSI output — plan your occupation timing around this cost.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T10: MILITARY VICTORY -->
+  <div class="topic" id="t10">
+    <div class="topic-header">
+      <div class="topic-num">10</div>
+      <div>
+        <h2 class="topic-title">Turn 30 Assessment: Military Victory Conditions</h2>
+        <div class="topic-subtitle">Two military win conditions — Conquest and Supremacy — require fundamentally different strategies</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb10a">
+      <div class="block-header" onclick="toggle('cb10a')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">Conquest vs. Supremacy: Requirements &amp; Strategies</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p><strong>Conquest:</strong> Control a fixed percentage of the galaxy's star systems. The threshold depends on galaxy size:</p>
+
+        <table class="ref-table">
+          <tr><th>Galaxy Size</th><th>First Warning</th><th>Second Warning</th><th>Victory</th></tr>
+          <tr><td class="cell-tier">Tiny</td><td>8</td><td>12</td><td>16</td></tr>
+          <tr><td class="cell-tier">Small</td><td>9</td><td>14</td><td>19</td></tr>
+          <tr><td class="cell-tier">Normal</td><td>11</td><td>17</td><td>22</td></tr>
+          <tr><td class="cell-tier">Large</td><td>14</td><td>21</td><td>28</td></tr>
+          <tr><td class="cell-tier">Huge</td><td>16</td><td>24</td><td>32</td></tr>
+        </table>
+
+        <p>Key rule: being in an alliance increases the system threshold because your allies' systems add to your combined total. Alliances are not neutral for Conquest — they raise the bar.</p>
+
+        <p><strong>Supremacy:</strong> Capture and hold <em>all</em> major factions' home systems simultaneously. This is the hardest military victory condition to achieve because it requires neutralizing every surviving empire's home. It does not require destroying their fleets or occupying all their systems — only their home system. A targeted strike strategy (hit home systems while leaving the rest of their empire intact) is generally faster than full conquest of each empire.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TURN 30 CHECKPOINT — MILITARY ASSESSMENT</div>
+          By turn 30 on Normal speed you should be able to answer:<br>
+          <strong>For Conquest:</strong> How many systems do I control vs. the target (22 for Normal)? Am I growing faster than rival factions? Which factions are within military striking distance?<br>
+          <strong>For Supremacy:</strong> Do I know the location of all home systems? Is my fleet strong enough to take and hold a home system while withstanding counter-attacks? Do I have enough Manpower to sustain an invasion without my own systems becoming vulnerable?<br><br>
+          If you're pursuing Conquest and a rival has already hit 11 systems (first warning), you have roughly 11 more systems to close. At normal expansion rates, that's 5–10 turns — immediately evaluate whether you can close the gap via colonization or must pivot to military blocking actions.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Combat decisions, fleet design, and invasion timing — specific situations with specific stakes</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'vol4';
+  const TOTAL = 10;
+  let qIdx = 0;
+  let answered = false;
+
+  const quizzes = [
+    {
+      scenario: "Turn 22, Normal galaxy. You've just unlocked Hunter hulls (Empire Development Era 3). Your current fleet is 8 Attacker ships (8 CP total) armed with Basic Sync Lasers (Military Era 2). Your military tech is at Era 2. You have 5 Titanium and 8 Hyperium stockpiled, and 420 Industry/turn.",
+      q: "What is the correct next step to maximize your military effectiveness?",
+      opts: [
+        "Immediately build 2–3 Hunters using your existing Titanium stock and equip them with Basic Sync Lasers. Deploy alongside your Attacker fleet.",
+        "Research Military Era 3 first for Decay Torpedoes before building any Hunters, so the new hulls launch with better weapons.",
+        "Sell the Titanium on the Marketplace — Hunter hulls are only useful with full equipment and you can't afford them yet.",
+        "Retrofit your existing Attacker fleet with Improved Sync Lasers (Hyperium) to maximize your current 8 CP fleet before upgrading hulls."
+      ],
+      correct: 0,
+      explain: "Hunter hulls (Medium, ×2 module multiplier, 3 CP each) provide dramatically more effective modules than Attackers (Small, ×1, 1 CP). A Hunter with Basic Sync Lasers outperforms three Attackers with the same module due to the multiplier. Building 2 Hunters immediately (6 CP) gives you 10 total CP with your Attacker ships — unlocking the Bottom Lane in combat. Option B wastes turns: the hull upgrade matters more than the weapon tier at this stage. Option D retrofitting Attackers is marginal improvement vs. transitioning to Hunters. The key mechanic is that hull size multiplies everything — always upgrade hulls before weapon tiers."
+    },
+    {
+      scenario: "Turn 35. You're planning an invasion. The target system's defensive manpower is currently at 850 out of 900. You have a single fleet of 5 Hunters and 2 Coordinators (21 CP total, ~2,400 fleet manpower) stationed adjacent. No enemy fleet is in the system.",
+      q: "What should you do before initiating the invasion?",
+      opts: [
+        "Invade immediately — 21 CP and 2,400 manpower should overwhelm 850 defenders easily.",
+        "Move your fleet into orbit and set it to Guard the system. Wait until siege reduces the defensive manpower to below 300 before invading.",
+        "Split your fleet — leave 2 Hunters to siege, move the rest to raid a nearby undefended enemy system while waiting.",
+        "Invade immediately but use Guerrilla Warfare to reduce your own casualty rate during the battle."
+      ],
+      correct: 1,
+      explain: "850 out of 900 defensive manpower is nearly full — the system has not been sieged at all. With a default 500 Manpower Deployment Limit, the defender can field massive troop numbers each turn. Even with a manpower advantage, fighting at full defensive strength will be costly in troops and multiple turns. The correct move is to siege: orbit with your full fleet (which automatically sieges since no enemy fleet is present) and drain the defenders' manpower before committing. At 850 starting defense, several turns of siege could reduce that to 200–300 — fundamentally changing the invasion calculus. Option C (splitting) breaks the siege and lets the system replenish. Option A/D ignores the free advantage of sieging."
+    },
+    {
+      scenario: "Turn 45. You're in a space battle. You chose Turtle (Short range for Center, Short for Top) and your enemy chose Power to Shields (Long range for Center). Your fleet runs 3 Kinetic Slug slots + 2 Laser slots on each Hunter. Your enemy runs 4 Missile slots per ship.",
+      q: "What is the phase-by-phase range sequence for the Center lane, and is this favorable for you?",
+      opts: [
+        "L/M/S. Unfavorable — your kinetics underperform at Long and Medium, and the enemy missiles dominate Phase 1.",
+        "L/M/S. Favorable — your Kinetics generate Flak that destroys the enemy missiles in all three phases, and by Phase 3 your Kinetics hit at 85% accuracy while enemy missiles land at only 25%.",
+        "S/S/S. Favorable — Turtle locks you at Short range in all three phases, which is optimal for your Kinetics.",
+        "L/L/L. Unfavorable — Power to Shields wins the range contest and locks combat at Long range, where your Kinetics only hit at 10%."
+      ],
+      correct: 1,
+      explain: "Per the range resolution matrix: Turtle wants Short (S), Power to Shields wants Long (L). Combat starts at the farthest of the two chosen ranges — Long. Each phase it closes by one increment toward the closer preferred range. So: Phase 1 = Long, Phase 2 = Medium, Phase 3 = Short (L/M/S). This IS favorable for you despite the long Phase 1, for two reasons: (1) Your Kinetics generate Flak in all three phases — enemy missiles are intercepted before landing, effectively neutralizing the enemy's primary damage. (2) By Phase 3, your Kinetics operate at 85% accuracy while the enemy's missiles fire at only 25%. The correct answer is B. Option C is wrong — Turtle doesn't lock range; it sets the destination, not the starting point."
+    },
+    {
+      scenario: "Turn 50. You have 3 Behemoth techs researched and currently own 1 Juggernaut embedded in your primary strike fleet. You've just captured a critical border system adjacent to your most powerful enemy's territory. Your enemy has an Obliterator and is known to use it. Your home system has no Citadel.",
+      q: "What is your highest priority Behemoth decision?",
+      opts: [
+        "Build a second Juggernaut — you now have 3 Behemoth techs researched, unlocking a second Behemoth slot. Double your fleet power.",
+        "Convert your existing Juggernaut into a Citadel on your home system — Obliterator protection outweighs fleet firepower.",
+        "Build a new Behemoth, convert it to a Citadel, and station it at your home system — protecting the home system without losing your Juggernaut.",
+        "Build an Obliterator to deter the enemy from using theirs — mutually assured destruction prevents the shot."
+      ],
+      correct: 2,
+      explain: "Option C is correct. You now have 3 Behemoth techs researched, which unlocks a second Behemoth slot. This means you can build a new Behemoth (separate from your Juggernaut) and convert it to a Citadel. This protects your home system from the Obliterator threat while preserving your Juggernaut for fleet combat. Option B destroys your Juggernaut — a severe military cost when the Citadel can be built fresh. Option A ignores the Obliterator threat entirely, which with a hostile Obliterator neighbor is a critical omission — a single shot destroys everything in your home system. Option D is slow and unproven as deterrence. The key insight: the second Behemoth slot from tech research is specifically what makes Option C viable."
+    },
+    {
+      scenario: "Turn 28. Your 9-CP fleet (3 Hunters, all Medium) just won a battle and is 3 turns from the nearest friendly system. Three ships are at 60% HP. You have the Repair and Recover battle card available (unlocked) and the Post-OP Analysis card. The next engagement is expected in 4 turns.",
+      q: "Which battle card choice and recovery strategy is optimal for the upcoming engagement?",
+      opts: [
+        "Use Repair and Recover in the next battle to heal 65% of HP at battle end — you'll be near full health before the battle after that.",
+        "Rush the fleet back to your friendly system (3 turns) for instant full repair at Dust cost, then advance to the next engagement (1 turn travel). Arrive at 100% HP.",
+        "Continue advancing with 60% HP ships. Use Turtle (defense card) in the next engagement to offset the HP deficit with +20% Hull Plating Absorption.",
+        "Use Post-OP Analysis in the next engagement to earn extra XP while your ships are already damaged — accept the HP cost since XP is the priority."
+      ],
+      correct: 1,
+      explain: "The fleet has 4 turns until engagement and only 3 turns to reach a friendly system for full repair. Option B works: 3 turns back → instant full repair (Dust cost) → 1 turn to re-advance = exactly 4 turns, arriving at 100% HP. Ships at 60% HP are meaningfully degraded — they deal 40% less damage than full health would imply (the manpower damage bonus scales with manpower, and damaged ships typically have reduced manpower), and they're more vulnerable to being destroyed in the next engagement. Option A (Repair and Recover) only restores HP after the battle ends, meaning you fight the engagement at 60% HP first. Option C accepting 60% HP with Turtle mitigates but doesn't eliminate the deficit. Option D is lowest priority — XP when you're at combat readiness risk is the wrong call. Always go to full health when time permits."
+    },
+    {
+      scenario: "Turn 40. You're on a Conquest path in a Normal galaxy (target: 22 systems). You currently hold 14 systems. A rival at 11 systems (first warning at 11) has a stronger military than you — 2 Carriers and a Juggernaut in their main fleet. You have 3 Hunters and 6 Attackers. Three of your systems are adjacent to uncolonized space.",
+      q: "What is the correct response to the rival hitting the first Conquest warning?",
+      opts: [
+        "Immediately declare war on the Conquest leader and strike their Juggernaut fleet — destroying their military stops their expansion.",
+        "Ignore the warning — 14 vs. 11 means you're still 3 systems ahead. Focus on colonizing your 3 adjacent uncolonized systems.",
+        "Colonize the 3 adjacent systems to push to 17, then evaluate: can you reach 22 via colonization alone before the rival hits 22? If not, plan military blocking actions at key star lane chokepoints.",
+        "Ally with the Conquest leader — this raises both your thresholds and slows their progress toward 22."
+      ],
+      correct: 2,
+      explain: "The first warning at 11 systems means the rival is exactly halfway to victory (22 systems on Normal). You hold 14 — ahead, but not safely so. Option C is correct: colonize the immediately available systems first (pushing you to 17, closer to the 22 target), then run the numbers. If colonization alone can get you to 22 before the rival gets there from 11, continue expanding. If not, identify the geographic bottlenecks — which star lanes connect the rival's territory to the remaining uncolonized space — and position fleets or outposts to block expansion. Option A (declaring war on the stronger military) is high risk given the rival's Juggernaut + Carriers vs. your 3 Hunters + 6 Attackers. Option B ignores a genuine threat at the midpoint warning. Option D raising the threshold by allying is potentially useful but also means you need even more systems to win — evaluate carefully."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

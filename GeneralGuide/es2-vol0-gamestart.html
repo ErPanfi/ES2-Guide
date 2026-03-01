@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.0 — Game Start Essentials</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<style>
+  :root {
+    --accent:     var(--vol0-accent);
+    --accent-dim: rgba(var(--vol0-accent), 0.11);
+  }
+  .vol-next{ --card-accent: var(--vol1-accent);}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">VOLUME 0</div>
+    <div class="guide-name">Game Start<br>Essentials</div>
+  </div>
+
+  <div class="nav-section-label">// Game Start</div>
+  <div class="nav-item active" onclick="scrollByID('t2')">📊 FIDSI at a Glance <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🔭 Scouting &amp; Probes <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🤝 Minor Factions <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🦸 Heroes: Early XP <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🏛️ Political System <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🔬 The 4 Tech Trees <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t1')">⚡ First 20 Turns <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🏆 Victory Conditions <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="nav-section-label">// Next Volumes</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol1-economy.html'">Vol.1: Material &amp; Money <div class="vol-card-arrow">→</div></div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.0</span> // Game Start Essentials</div>
+    <h1 class="page-title">Game Start<br>Essentials</h1>
+    <p class="page-subtitle">The choices you make in the first 20 turns compound into everything that follows. This volume is the on-ramp: how to read the FIDSI indicators, how scouting and probes actually work, how to engage with minor factions and heroes early, how the political system operates from turn one, how to navigate the four tech trees without wasting science, and how to recognise which victory condition you're actually building toward. Deep mechanical treatment of each system lives in later volumes — this is what you need to not fall behind irreversibly before you get there.</p>
+  </div>
+
+  <!-- TODO: Topic numbering has t1 between t7 and t8. This is still fine, but topics should be renumbered when the possibility arise. -->
+  <!-- ============================================================ -->
+  <!-- T2: FIDSI -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">FIDSI: What It Is and Why It Matters</h2>
+        <div class="topic-subtitle">Five production indicators. Two local, three global. All of them competing for your attention. → Full treatment in Vol.1</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">The Five Indicators Explained</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>FIDSI stands for <strong>Food, Industry, Dust, Science, Influence</strong>. These five outputs are what your empire produces each turn. They divide into two categories: Food and Industry are local — they are calculated per system and cannot be shared across systems. Dust, Science, and Influence are global — they are summed empire-wide and available to you regardless of where they were generated.</p>
+
+        <table class="ref-table">
+          <tr><th>Indicator</th><th>What It Does</th><th>Key Early Priority</th></tr>
+          <tr>
+            <td class="cell-key">🌾 Food</td>
+            <td>Grows population in its system. Each new population unit requires a threshold of Food accumulated. Some Food is also converted to Manpower (used in ground invasions).</td>
+            <td class="cell-good">Medium — enables pop growth which scales all other outputs</td>
+          </tr>
+          <tr>
+            <td class="cell-key">⚙️ Industry</td>
+            <td>Builds improvements and ships. All construction in a system is paid from that system's Industry output. Cannot be transferred between systems.</td>
+            <td class="cell-good">Highest — the foundation everything else requires</td>
+          </tr>
+          <tr>
+            <td class="cell-key">💰 Dust</td>
+            <td>Your currency. Pays upkeep for buildings, heroes, and fleets. Used in the Marketplace to buy strategic and luxury resources, ships, and heroes. Also used to buy out construction queues if you research the relevant technology.</td>
+            <td>Low-medium — needs to be positive; don't neglect upkeep</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🔬 Science</td>
+            <td>Funds research. Your science-per-turn determines how fast you move through the technology tree. Science output is empire-wide — all your systems contribute to one shared research pool.</td>
+            <td>Medium — Xenolinguistics is T1; after that, match research speed to your build capacity</td>
+          </tr>
+          <tr>
+            <td class="cell-key">✨ Influence</td>
+            <td>Spent on diplomacy: senate actions, interacting with minor factions (praise, bribe, assist quests), proposing agreements with major factions, declaring war or truces.</td>
+            <td class="cell-good">Medium — critical for minor faction diplomacy in turns 1–20</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">POPULATION MULTIPLIER</div>
+          Each population unit assigned to a planet produces the base FIDSI of that planet type. More population means more total output — which is why Food (which grows population) is indirectly one of the most important early indicators even though its direct output seems modest. A system with 5 pops producing 20 Industry each yields 100 Industry. The same system with 2 pops produces 40. Population <em>is</em> your production multiplier.
+        </div>
+
+        <p>The system management screen (click any colonized system) shows you base production per planet. Press Space in that screen to see each planet's output per population — an easy way to decide where to place population for maximum output in a given FIDSI. You can also press Space at the galaxy map level for an empire-wide summary.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">⚠️</span>
+        <span class="block-title">Approval: The Hidden Multiplier</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Approval is not a sixth FIDSI indicator — it is a multiplier, but it does <strong>not</strong> affect all five outputs equally. Industry is entirely exempt from Approval modifiers. The effect operates in two separate domains:</p>
+
+        <p><strong>System Approval</strong> affects Food and Influence output for that individual system. <strong>Empire Approval</strong> (a population-weighted average across all systems) affects Dust and Science empire-wide. The breakpoints and their multipliers are:</p>
+
+        <table class="ref-table">
+          <tr><th>Threshold</th><th>System (Food &amp; Influence)</th><th>Empire (Dust &amp; Science)</th></tr>
+          <tr><td class="cell-key">0 — Mutinous / Traitorous</td><td class="cell-bad">−75%</td><td class="cell-bad">−30%</td></tr>
+          <tr><td class="cell-key">10 — Unhappy / Defiant</td><td class="cell-bad">−30%</td><td class="cell-bad">−15%</td></tr>
+          <tr><td class="cell-key">30 — Content</td><td>No modifier</td><td>No modifier</td></tr>
+          <tr><td class="cell-key">70 — Happy / Loyal</td><td class="cell-good">+10%</td><td class="cell-good">+15%</td></tr>
+          <tr><td class="cell-key">85 — Ecstatic / Devoted</td><td class="cell-good">+25%</td><td class="cell-good">+30%</td></tr>
+        </table>
+
+        <p>There is no gradient between breakpoints — 31% and 69% approval produce identical output. This is why colonizing too aggressively can actively weaken your existing empire: each new system drags Empire Approval down, and if it crosses below 70% you lose the Loyal bonus on all Dust and Science empire-wide. Industry is unaffected throughout. Full mechanical detail is in Vol.2.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T3: SCOUTING & PROBES -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">The First Steps Out of Home: Scouting &amp; Probes</h2>
+        <div class="topic-subtitle">Information before commitment. → Full treatment in Vol.3</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🔭</span>
+        <span class="block-title">How Probes Work</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Exploration ships have a special module that launches probes. Probes are fired into space and travel for a limited number of turns (their "lifetime"), revealing systems and anything in their path within their detection range. Once used, probes have a cooldown before they regenerate — the cooldown depends on the probe type. You start with basic probes; improved probes (larger range, faster travel, longer lifetime) are unlocked via the Science &amp; Exploration tech tree.</p>
+
+        <p>Probes serve two functions: <strong>map revelation</strong> (fire into space to reveal star lanes and systems along a vector) and <strong>curiosity investigation</strong> (send a probe to a specific curiosity marker on a planet or system to collect its reward). The curiosity investigation function is the most high-value use early on — each investigated curiosity can yield resources, loot, Influence, or population, and also generates XP for any hero whose fleet contains the probe source.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">HERO + SCOUT SYNERGY</div>
+          Attaching a hero to your scout fleet means the hero gains XP for every curiosity their fleet investigates, even if the probe came from a scout ship in the same fleet rather than the hero's own ship. This is the fastest XP source in the early game — each curiosity gives a meaningful XP chunk. Keep your hero with scouts for the first 8 turns or so (Normal speed), then reassign to governor once the early curiosity pool is exhausted.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Scout Ship Design: Probes vs. Speed</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>There is a useful distinction between two scouting roles. <strong>Probe-heavy scouts</strong> (exploration chassis loaded with probe launchers) are ideal for investigating curiosities in and around your home cluster — they carry more probes per turn, can investigate multiple curiosities before running dry, and regenerate faster in place. <strong>Speed scouts</strong> (colonizer or other chassis loaded with engines, no probes) move across the galaxy extremely fast, revealing the map and locating opponents, minor factions, and chokepoints. They cannot investigate curiosities.</p>
+
+        <p>The optimal early game typically uses both: probe-heavy explorers covering your home cluster and newly claimed systems, fast-moving hulls racing out the star lanes to claim geographic information before opponents do. Once you've mapped your immediate neighborhood, the fast scouts are still useful in the late game for locating enemy home systems and providing early warning of incoming fleets.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">MOVEMENT TIMING</div>
+          When a ship moves to a destination that takes more than one turn, it completes the final leg at end-of-turn processing, not at the start of your next turn. This means if you want to arrive and act in the same turn (attack a pirate, investigate a curiosity), you must move <em>manually</em> rather than relying on the auto-path completion. If you let the path auto-complete, you arrive at end-of-turn and lose the action window for that turn.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T4: MINOR FACTIONS -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Minor Factions: First Contact &amp; Early Gains</h2>
+        <div class="topic-subtitle">Free resources, free pop, free strategic depth — if you engage before opponents do. → Full treatment in Vol.3</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🤝</span>
+        <span class="block-title">How Minor Faction Relations Work</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Minor factions are single-system civilizations scattered across the galaxy. They have a diplomatic relation bar that runs from 0 to 100. As you raise this bar using Influence (via Praise actions or Assist quests), they begin yielding passive bonuses — typically a mix of Manpower, Science, Dust, or Influence per turn based on the specific minor faction type. At 100 relation you gain the option to <strong>assimilate</strong> them, incorporating their system into your empire and their population type into your gene pool.</p>
+
+        <p>You can also assimilate them aggressively through military conquest — declare war, land troops, take the system. This is faster if you already have a military presence and the relation is low, but it costs the diplomatic approach's free bonuses and draws Approval and diplomatic penalties. Peaceful assimilation via Influence is almost always the better early-game path.</p>
+
+        <table class="ref-table">
+          <tr><th>Action</th><th>Cost</th><th>Effect</th></tr>
+          <tr><td class="cell-key">Praise</td><td>Influence (scales up each use)</td><td>+Relation points. Fast and repeatable but increasingly expensive.</td></tr>
+          <tr><td class="cell-key">Assist (Quest)</td><td>Complete a quest objective</td><td>Large relation jump on completion. Free if the quest objective aligns with what you're doing anyway.</td></tr>
+          <tr><td class="cell-key">Investigate Curiosities</td><td>Probes (free)</td><td>Large relation jump per curiosity investigated in their system. The cheapest and fastest lever in the early game.</td></tr>
+          <tr><td class="cell-key">Assimilate (Influence)</td><td>High Influence cost, requires 100 relation</td><td>Gains their system and population. Peaceful, no Approval penalty.</td></tr>
+          <tr><td class="cell-key">Assimilate (Military)</td><td>Manpower + fleet + Approval hit</td><td>Gains their system immediately. Bypasses relation requirement but costs military resources and triggers Approval penalties.</td></tr>
+        </table>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Early-Game Minor Faction Priorities</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Even without assimilation, an Allied minor faction (relation at or near 100) yields passive bonuses every turn, and their population will naturally migrate into your nearest systems over time. That migration is valuable: each minor faction pop type has different FIDSI affinities and political party alignment, which matters for both production optimization and Senate control.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">01</span><span><strong>Investigate their planet curiosities first</strong> — each gives a large, free relation jump. If you have an explorer in the area, this is the cheapest path to Friendly status available.</span></li>
+          <li><span class="step-n">02</span><span><strong>Check what they produce</strong> before investing Influence. Minor factions that provide Science, Dust, or Influence per turn are typically higher priority than pure Manpower providers in the early game unless you're planning an aggressive expansion.</span></li>
+          <li><span class="step-n">03</span><span><strong>Secure border-adjacent minor factions early</strong>, regardless of bonus quality. A minor faction at Allied status on your border prevents opponents from claiming that system through diplomacy — they'd have to use military force instead, which costs them resources and time, and gives you warning.</span></li>
+          <li><span class="step-n">04</span><span><strong>Note their political alignment</strong>. Minor faction pops that end up in your systems vote in your Senate elections according to their faction's party affinity. This can be used intentionally to reinforce the party you want in power.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">PIRATE INTERACTION</div>
+          If Pirates are enabled, they spawn from minor faction systems. The minor faction's location and your relation level affect how pirate activity spreads into your space. At high relation, you can sometimes leverage the minor faction's own defense ships. At low or zero relation, their system is a pirate spawn point that you have no leverage over.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T5: HEROES -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Heroes: Early Leveling &amp; Quick XP</h2>
+        <div class="topic-subtitle">Your starting hero's first 15 turns define their usefulness for the rest of the game. → Full treatment in Vol.5</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">XP Sources and the Early Leveling Window</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Heroes gain XP from three main sources: <strong>governing a system</strong> (XP trickles in each turn they are assigned as governor), <strong>fleet actions</strong> (battles, and crucially — investigating curiosities while assigned to a fleet), and <strong>exploring new nodes</strong> (your hero gains XP the first time their fleet enters a previously undiscovered system). Curiosity investigation XP is especially high-value in the early game because curiosities are abundant and the hero-to-scout attachment costs nothing to set up.</p>
+
+        <p>The practical opening decision is therefore: <strong>scout with your hero for the first several turns to stack curiosity XP, then transition to governor</strong>. A Sophons guide in the KB notes that exploring two curiosities at 6 XP each (with a 25% hero XP bonus) yields ~15 XP by turn 2 — enough for the first skill unlock almost immediately. Against that, a hero sitting idle on the home system waiting for improvements to complete earns less XP per turn until the build queue becomes active enough to provide meaningful governor ticks.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">SEQUENCING TIP (Normal Speed)</div>
+          A common recommendation from experienced players: attach your hero to the scout fleet for approximately the first 8 turns to capture curiosity XP, then reassign to the home system as governor. This gives you level 2–3 early enough to invest a meaningful skill before the midgame governor XP kicks in. Exact timing varies by faction and starting system.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">🎓</span>
+        <span class="block-title">Hero Classes and Your Starting Hero</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Heroes come in four broad archetypes that shape their skill tree specializations. Before you hire or reassign a hero, look at their class and their four starting skills to understand what role they're designed for:</p>
+
+        <table class="ref-table">
+          <tr><th>Class</th><th>Specialization</th><th>Best Assignment</th></tr>
+          <tr><td class="cell-key">Guardian</td><td>Fleet warfare and industrial production</td><td>Combat fleet or high-Industry system</td></tr>
+          <tr><td class="cell-key">Overseer</td><td>Systemwide resource bonuses and fleet development</td><td>Governor of a high-value system</td></tr>
+          <tr><td class="cell-key">Seeker</td><td>Exploration, movement, probe bonuses</td><td>Scout fleet — especially early game</td></tr>
+          <tr><td class="cell-key">Counselor</td><td>Trade, diplomacy, empire-wide influence bonuses</td><td>Governor or senate-influencing role</td></tr>
+        </table>
+
+        <p>Your starting hero's class should inform your opening assignment. An Overseer-class starting hero is typically best placed immediately as governor. A Seeker-class hero may be worth keeping in the scout fleet longer for exploration bonuses. The key principle: <strong>don't assign a hero to a role their skill tree doesn't support</strong> — a combat-specialized Guardian assigned as governor will level up but invest points in skills that do nothing for system output.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T6: POLITICAL SYSTEM -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">The Political System: The First Laws</h2>
+        <div class="topic-subtitle">The Senate screen is not optional. Your first law is worth reading carefully. → Full treatment in Vol.2</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Senate Mechanics Overview</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Senate screen (click the Senate icon in the top UI) is where political parties, laws, government types, and elections are managed. Each system in your empire sends representatives to the Senate based on its population composition. The party with the most representatives leads, and the leading party's default law activates automatically. You can also pass additional laws up to a limit determined by your government type — between 2 and 6 active laws depending on government.</p>
+
+        <p>Elections happen every 10–20 turns depending on game speed. Between elections, parties gain experience the longer they hold seats. That experience unlocks progressively stronger laws: Level 1 laws are cheap and available from turn 1; Level 2–4 laws require the party to have held Senate positions long enough to accumulate the required political experience. This means there is a compounding value to keeping a party in power consistently — their laws get better the longer they stay.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">POPULATION AND POLITICS</div>
+          Every population type has a natural affinity for certain political parties. The populations you grow, assimilate from minor factions, or acquire through conquest directly shape your Senate composition. Planning which minor faction populations you want in your systems is partly a political planning exercise, not just a FIDSI one.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">The First Laws: What's Worth Passing</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>At game start, the parties available depend on your faction's default population type and starting government. Most factions will have access to Industrialist and Scientist laws at minimum. The standout options for turn 1–10:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">INDUSTRIALIST</span><span><strong>Mineral Miseries Act (Level 2):</strong> Gives +1 research generation on strategic resource deposits and +15% Industry on strategic resource deposits. Strongly positive if you have strategic resources in your home system or nearby colonies. One of the best early laws if your starting systems have good strategic resource coverage.</span></li>
+          <li><span class="step-n">INDUSTRIALIST</span><span><strong>Pollution: Not Our Problem (Level 3):</strong> Gives a flat Industry bonus per population empire-wide. At 125 population this can be +1000 Industry across your empire — a massive number. Requires the Industrialist party to have reached Level 3 political experience, so it's not turn-1 but is a medium-term goal if Industrialists are your dominant party.</span></li>
+          <li><span class="step-n">SCIENTIST</span><span><strong>Cram Exam Act (Level 1):</strong> Increases Science but reduces Approval per population. If your Approval is comfortably above 85%, this is a free Science bonus. If you're struggling with Approval, avoid it.</span></li>
+          <li><span class="step-n">SCIENTIST</span><span><strong>Movement bonuses and reduced improvement costs</strong> are also available in the Scientist tree — worth reviewing if exploration or rapid construction are your current priorities.</span></li>
+          <li><span class="step-n">RELIGIOUS</span><span><strong>Pacifist Codex (locks Approval to Content):</strong> Forces empire-wide Approval to a fixed level — Content minimum (or Happy if you're a Republic). This is an extremely powerful tool for aggressive expanders who would otherwise suffer severe Approval penalties from rapid colonization. It frees you from Approval management entirely and lets you focus on growth. One of the strongest early laws in the game if you can access it.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">TOYS FOR BOYS</div>
+          The Industrialist default law (Toys for Boys) gives +Dust and +Science bonuses at the cost of an Industry penalty. If your Industry base is weak — which it almost certainly is in the first 10 turns — this law actively slows your construction rate. Many experienced players explicitly avoid it early. The Cram Exam Act (Scientist) is generally the better trade if you want an output boost in those turns.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T7: TECH TREES -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">The 4 Tech Trees: Navigation &amp; First Research Priorities</h2>
+        <div class="topic-subtitle">Every tech you research makes all future techs more expensive. Don't research what you can't use. → Per-tree deep dives in Vol.1–4</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🗺️</span>
+        <span class="block-title">How the Tech Tree Works</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The tech tree is a circular structure divided into four quadrants (Military, Economy &amp; Trade, Science &amp; Exploration, Empire Development) each broken into five rings. To access Ring 2 in a quadrant, you must research a set number of techs in Ring 1 of that same quadrant — progress in one quadrant does not unlock rings in another. Each quadrant has its own unlock progression.</p>
+
+        <p>When you unlock a new ring within a quadrant, you also receive a set of <strong>free technologies</strong> — unlocked automatically just for reaching that ring level. These free techs include things like ship modules, buildings, and combat upgrades that you receive without spending Science. They are a core part of the tree's value structure and worth checking before deciding which ring to unlock next.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE COST SCALING RULE</div>
+          Every technology you research increases the cost of all subsequent techs, across all quadrants. Researching a tech you won't use for 30 turns is not neutral — it makes every useful tech you want more expensive right now. Research only what you plan to use immediately or in the near term. This is the single most important efficiency principle in the tech system.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">First Research Priorities by Quadrant</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>This is a faction-agnostic baseline for what to target early in each quadrant. Your specific faction, starting system, and strategic resources will shift some of these priorities.</p>
+
+        <table class="ref-table">
+          <tr><th>Quadrant</th><th>Top Early Picks</th><th>Why</th></tr>
+          <tr>
+            <td class="cell-key">⚙️ Economy &amp; Trade</td>
+            <td><strong>Xenolinguistics</strong> (Ring 1) → <strong>Xeno-Industrial Infrastructure</strong></td>
+            <td>Unlocks the single best early Industry building. Near-universal first research regardless of faction. After this, match remaining Economy picks to your actual build plans — don't rush Trade Routes or Marketplace tech until you need them.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🔬 Science &amp; Exploration</td>
+            <td><strong>Machine Bacteria</strong> (Ring 1 — upgraded probes) and <strong>Baryonic Shielding</strong> (Ring 1) for better curiosity access</td>
+            <td>Upgraded probes see farther and unlock higher-tier curiosities. Sequence carefully: Machine Bacteria requires Titanium, Baryonic Shielding requires Hyperium — don't research these until you have the resource available. Also, colonization techs in this quadrant are important for expanding to non-standard planet types.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🏛️ Empire Development</td>
+            <td><strong>Public-Private Partnerships</strong> (Ring 1) for Science boost; colonization-enabling techs as needed</td>
+            <td>Public-Private Partnerships does for Science what Xeno-Industrial Infrastructure does for Industry — strong flat bonus per planet. High priority if you want a Science edge. Also contains Food and Approval techs — queue these only when you have an actual Food or Approval problem to solve.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">⚔️ Military</td>
+            <td>Ring 1 for the free Manpower module unlock and basic defense options; defer Ring 2+ unless under active military pressure</td>
+            <td>The free techs unlocked at Ring 2 (shields, weapons, command point upgrades) are valuable, but the Military tree is expensive to push and its returns are slow without an active military need. Research one tech to unlock Ring 2 for the free unlocks, then deprioritize unless war is imminent.</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">FACTION-SPECIFIC TECH ICONS</div>
+          When browsing the tech tree, some technologies have a faction symbol on them. This means the tech has modified properties or additional bonuses for your specific faction. These are usually your highest-priority picks within their tier — the game is already flagging them as especially relevant to your playstyle.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T1: THE FIRST 20 TURNS -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">The First 20 Turns: Priority Order</h2>
+        <div class="topic-subtitle">Industry is your foundation. Everything else depends on how fast you build it.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">The Core Opening Logic</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The single most important resource in the early game is Industry. Without it, you cannot build improvements, which means you cannot specialize your systems for Food, Science, Dust, or Influence — and you cannot build ships. Every turn spent at low Industry is a turn where every other FIDSI output is also suppressed. The player who establishes an Industry base early will rapidly outpace one who doesn't, even if the slower player did something "productive" in those turns instead.</p>
+
+        <p>The near-universal first research priority across factions is <strong>Xenolinguistics</strong>, because it unlocks the Xeno-Industrial Infrastructure improvement — a flat Industry bonus that on a Temperate or Fertile planet effectively doubles your home system's Industry output in one build. This is true regardless of your intended victory condition. Research you can't build is not progress. Build the Industry base first, then build toward your goals.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">COMMON MISTAKE</div>
+          Rushing Dust or Science improvements before establishing Industry. Dust and Science feel urgent because their numbers are visible and low — but Industry determines how fast you can build <em>anything</em>, including the buildings that generate Dust and Science. Fix Industry first.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">📋</span>
+        <span class="block-title">Turn-by-Turn Priority Framework</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>This is a faction-agnostic baseline. Specific factions will deviate — Vodyani, Riftborn, and Cravers have very different opening constraints — but most majors follow this skeleton closely.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">T1</span><span><strong>Start Xenolinguistics</strong> in the research queue. Queue Xeno-Industrial Infrastructure in your home system's construction queue. Send your starting explorer outward along the best star lane — you need system information before committing your colony ship.</span></li>
+          <li><span class="step-n">T1</span><span><strong>Assign your starting hero to the home system as governor</strong>, not into a fleet. Governors gain XP from every completed system improvement. Three to four builds in the first 15 turns can push a hero to level 4–5 before you need them elsewhere. The XP gains from governing an active system far exceed what an unexperienced explorer fleet provides in the same window.</span></li>
+          <li><span class="step-n">T1</span><span><strong>Check your starting approval and decide on your first law.</strong> Many factions start at Happy (70–84% approval), which means a moderate boost — but the Toys for Boys law (available from the Industrialist party at game start) has a specific consideration: it imposes an Industry penalty in exchange for a Science and Dust bonus. If your Industry base is already weak, do not take it. The Cram Exam Act (Scientist party) is generally the better early pick if you want a Science edge without the Industry tradeoff.</span></li>
+          <li><span class="step-n">T3–6</span><span><strong>Scout before colonizing.</strong> Your colony ship should move toward candidate systems but not commit until you know what's there. A 1-planet system one hop away is almost always worse than a 4–5 planet system 3 hops out, even accounting for the delay. Each colonization costs Approval empire-wide — make each one count.</span></li>
+          <li><span class="step-n">T6–10</span><span><strong>Get Xeno-Industrial Infrastructure built</strong>, then immediately queue Public-Private Partnerships (the Science tree equivalent) if Science is a priority, or start developing your colony ship and second explorer. You want two scouts mapping simultaneously as quickly as feasible.</span></li>
+          <li><span class="step-n">T10–15</span><span><strong>Spend Influence on minor factions near your borders</strong> as soon as you find them. The relationship grows passively once you start investing. Early Friendly status secures their system against opponents and begins yielding their tribute bonuses (manpower, Science, Dust, or other outputs depending on the minor faction type).</span></li>
+          <li><span class="step-n">T15–20</span><span><strong>Reassess your hero assignment.</strong> If your home system is well-developed and a second system needs a governor bonus, transition your hero. If a military or exploration role is needed, move them to a fleet — but only after the early governor XP gains are secured.</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">APPROVAL AWARENESS</div>
+          Approval is a FIDSI multiplier — but Industry is exempt. Food and Influence are affected at the system level; Dust and Science are affected at the empire level. Breakpoints are at 30, 70, and 85: being at 31% and 69% produces identical output. Dropping below 70% loses the +15% Dust/Science bonus; dropping below 30% applies a −15% malus on top. Design your early colonization and law choices to stay above 70% minimum, and above 85% if feasible. Full detail in Vol.2.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T8: VICTORY CONDITIONS -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Looking at the Horizon: Victory Conditions</h2>
+        <div class="topic-subtitle">Six ways to win. You need to decide which one you're building toward — some require mid-game commitment points that cannot be reversed.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">The Six Victory Conditions</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Victory conditions can be toggled on and off in the game setup but are fixed once the game begins. All active victory conditions run simultaneously — any faction (including you) can win by any active condition. The game immediately warns you when any faction or alliance reaches 50% and 75% of the threshold for any condition. Ignoring those warnings is fatal.</p>
+
+        <table class="ref-table">
+          <tr><th>Condition</th><th>Requirement</th><th>Key Constraint</th></tr>
+          <tr>
+            <td class="cell-key">⚔️ Conquest</td>
+            <td>Control a set number of star systems (varies by galaxy size — e.g. 22 on a Normal galaxy)</td>
+            <td>Being in an alliance increases the threshold — your ally's systems count toward the requirement. Suitable for expansionist factions (United Empire, Cravers, Nakalim). Hissho and Umbral Choir are typically discouraged from this path due to their tall-play affinities.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">👑 Supremacy</td>
+            <td>Control all major factions' home systems</td>
+            <td>Alliance members' home systems count as progress. Vaulters' "home system" is their first-colonized system, not a fixed location. Umbral Choir can achieve this by placing Sanctuaries at all home systems without military conquest.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🔬 Science</td>
+            <td>Research all four Endless Technologies: <em>Might of the Endless</em> (Military+Empire), <em>Wealth of the Endless</em> (Military+Economy), <em>Power of the Endless</em> (Science+Empire), <em>Genius of the Endless</em> (Science+Economy)</td>
+            <td>Each requires three Tier 5 techs from its two quadrants to unlock. Alliance membership increases the number required. Best for Sophons, Riftborn, Vaulters. Nakalim are especially penalized on this path.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">💰 Economic</td>
+            <td>Accumulate a set total Dust amount over the entire game (e.g. 450,000 Dust on Normal speed, Normal galaxy size)</td>
+            <td>This is cumulative Dust earned, not Dust in hand. Best for Lumeris. Industrialist and Militarist factions can also pursue it efficiently.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🏗️ Wonder</td>
+            <td>Build a set number of Obelisks of All Space-Time (2–5 depending on galaxy size)</td>
+            <td>Obelisks are unlocked only after reaching Empire Development Ring 5. The first Obelisk costs 20,000 Industry + 125 Titanium + 125 Hyperium + 80 Adamantian + 80 Antimatter + 40 Orichalcix + 40 Quadrinix — each subsequent Obelisk costs 50% more. Obelisks can be captured from other factions. Best for high-Industry factions (Riftborn, United Empire).</td>
+          </tr>
+          <tr>
+            <td class="cell-key">📊 Score</td>
+            <td>Have the highest score when the turn limit runs out (150/300/450/600 turns on Fast/Normal/Slow/Endless)</td>
+            <td>Score is calculated from population, systems, system levels, tech researched, hero levels, quests, laws, battles won, and wonders built. A fallback condition that rewards balanced play. All factions are equally positioned for it.</td>
+          </tr>
+        </table>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Commitment Windows and Early Signals</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Not all victories require the same level of early commitment. Understanding when you need to start actively building toward each condition determines how much flexibility you retain in the opening game.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">CONQUEST</span><span>Commitment starts at game start. Geographic position is established in turns 1–20. If you don't secure key star lane positions and system counts early, catching up requires military action later — which is far more expensive in Industry, Manpower, and Dust than colonization.</span></li>
+          <li><span class="step-n">SUPREMACY</span><span>Medium-early commitment. You need enough military strength to threaten or capture home systems, which typically requires mid-game fleet development. The strategic decision of which home systems to target should happen by turn 30–40.</span></li>
+          <li><span class="step-n">SCIENCE</span><span>Early investment in Science output and tech tree progression. The four Endless Technologies each require three Tier 5 techs from specific quadrant pairs — meaning you must reach Ring 5 in those quadrants before you can even begin researching the Endless techs. This is a long commitment chain. Start pushing Science immediately if this is your path.</span></li>
+          <li><span class="step-n">ECONOMIC</span><span>Moderate early commitment. Dust accumulates over the entire game — strong early Dust income compounds dramatically. Lumeris should essentially always default to this path; other factions need a dedicated Dust strategy (trade routes, marketplace, trade company tech) to reach the threshold at competitive speed.</span></li>
+          <li><span class="step-n">WONDER</span><span>Late commitment point but requires early setup. Empire Development Ring 5 is the gating unlock — you must push this quadrant deliberately. Strategic resource accumulation (Titanium, Hyperium, Adamantian, Antimatter, Orichalcix, Quadrinix) must begin early because each Obelisk requires large quantities of all six. Begin stockpiling by mid-game.</span></li>
+          <li><span class="step-n">SCORE</span><span>No specific commitment needed — Score rewards everything. The danger is being outpaced in any category. If you're not winning by turn 200 and Score is active, check which components you're losing: systems, tech rings, population, or quests.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">ALLIANCE TRAP</div>
+          Forming an alliance increases the requirements for Conquest, Supremacy, and Science victories simultaneously. Unless you're deliberately coordinating a joint win with your ally, or using a temporary alliance for protection and then breaking it, alliances tend to make victory conditions harder to achieve. The Supremacy victory specifically requires all remaining major faction home systems — your ally's home system counts, meaning you'd have to eventually betray them or coordinate a joint win.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- QUIZ -->
+  <!-- ============================================================ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Game start decisions — apply what you've learned</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol0';
+const TOTAL = 8;
+let qIdx = 0;
+let answered = false;
+const quizzes = [
+  {
+    scenario: "Turn 1. You have an Overseer-class hero, a starting explorer, and a home system with a Temperate and a Fertile planet. Your research queue is empty. Xenolinguistics costs 66 Science and you're producing 45/turn.",
+    q: "What is the correct set of Turn 1 decisions?",
+    opts: [
+      "Start researching Xenolinguistics, assign the hero to the scout fleet, and send both the hero and explorer outward to maximize early map coverage.",
+      "Start researching Xenolinguistics, assign the hero as home system governor, send the explorer outward along the best star lane, and queue Xeno-Industrial Infrastructure in the construction queue.",
+      "Rush the colony ship first before researching — securing a second system is the top priority before any tech investment.",
+      "Research Xenolinguistics but hold the hero in reserve until you identify a combat threat — don't commit them to governance yet."
+    ],
+    correct: 1,
+    explain: "Xenolinguistics into Xeno-Industrial Infrastructure is the near-universal first research because it nearly doubles early Industry output on Temperate/Fertile planets. The Overseer class is a governor specialist — assigning them immediately gives compounding XP from each completed improvement. The explorer goes out immediately because geographic information is your most time-sensitive resource on turn 1. The colony ship should wait until you know what you're colonizing. There's no combat threat yet, so 'hold in reserve' is wasted turns."
+  },
+  {
+    scenario: "Turn 8. Your empire approval is sitting at 78%. Your Industrialist party's default law (Toys for Boys) is active, giving +15% Dust and +15% Science at the cost of -10% Industry. You're producing 180 Industry/turn and have two improvements queued — one takes 6 turns, one takes 8 turns.",
+    q: "Should you keep Toys for Boys active right now?",
+    opts: [
+      "Yes — the +15% Science and Dust are worth more than the Industry penalty at this stage.",
+      "No — replace it with Cram Exam Act (Scientist party, +Science per pop, -Approval per pop) since your Approval has headroom.",
+      "No — the -10% Industry penalty is costing you real build time when your queue is already slow. At 180 Industry/turn, you're losing 18 Industry/turn. Switch to a neutral law or Cram Exam if Approval allows.",
+      "Keep it until turn 15 when your Industry base is stronger, then reassess."
+    ],
+    correct: 2,
+    explain: "At 180 Industry/turn, a 10% penalty costs 18 Industry/turn — roughly 1 extra turn on a 180-Industry improvement. Compounded over 8 turns that's nearly a full improvement turn lost. In the early game when every build turn matters, this is a significant cost. Your Approval is at 78%, safely between the 70% and 85% breakpoints, so switching to Cram Exam Act (which reduces Approval slightly) is viable if you want a Science boost. But the key insight is: Toys for Boys is a net negative when Industry is your bottleneck, which it almost always is in the first 15 turns."
+  },
+  {
+    scenario: "Turn 12. You've found a minor faction 3 hops away. They give +2 Science/pop — valuable since your Science output is low. Your explorer has 4 probes available. Their system has 3 planets, each with a curiosity marker. Your current Influence income is 15/turn with 45 Influence stored.",
+    q: "What is the fastest way to reach Friendly status with this minor faction?",
+    opts: [
+      "Spend your 45 stored Influence on Praise actions immediately — 3 Praise actions should get you most of the way to Friendly.",
+      "Investigate all three of their planet curiosities with your explorer's probes first (each gives a large free relation jump), then supplement with Praise actions if needed. Probe investigations cost no Influence.",
+      "Declare war, capture the system, and force-assimilate — it's faster and you get their population immediately.",
+      "Wait until you have 100 Influence stored, then do 4 Praise actions in one block for efficiency."
+    ],
+    correct: 1,
+    explain: "Curiosity investigation in a minor faction's system gives large relation jumps at zero Influence cost — it's purely probe expenditure. Three curiosities fully investigated can bring you to or near Friendly without spending a single point of Influence. Praise actions are more expensive per relation point than probe investigations and scale up in cost each use. Military conquest loses all the passive bonus turns you'd get from a peaceful diplomatic relationship, triggers Approval penalties, and costs Manpower. Hoarding Influence to batch-spend is inefficient when free probe investigations are available."
+  },
+  {
+    scenario: "Turn 20. The victory screen shows a Conquest warning: a neighboring faction controls 11 systems (50% of the 22 required for a Normal galaxy). You have 6 systems. Science Victory is also active. You're playing Sophons.",
+    q: "What is the correct strategic response?",
+    opts: [
+      "Immediately pivot to military expansion to block their Conquest path — Science Victory can wait.",
+      "Ignore the warning — 50% is still far from the win threshold. Focus on your Sophon Science Victory path and deal with Conquest if they hit the 75% warning.",
+      "Assess whether you can realistically close the system gap, or whether securing chokepoints (key star lanes that block their expansion) and racing your Science Victory is faster than a military response.",
+      "Form an alliance with the Conquest-leading faction to raise their threshold and slow their progress."
+    ],
+    correct: 2,
+    explain: "The 50% warning (11/22 systems) is a signal to evaluate, not a directive to pivot blindly. As Sophons, Science Victory is your natural win condition — and racing it may be faster than trying to match a faction that's already ahead on Conquest. The real question is geography: can you place outposts or fleets at the key star lanes that would let them reach 22 systems? If yes, you can slow them while continuing your Science path. If no, you need to decide whether a military pivot is viable or whether pushing harder on Science to win before they reach 22 is the better bet. The wrong answer is 'ignore it' — a 50% Conquest lead at turn 20 in a Normal galaxy is a real and fast-moving threat."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

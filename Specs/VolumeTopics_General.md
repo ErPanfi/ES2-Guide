@@ -92,7 +92,7 @@
 
 ---
 
-## Vol.6 — Diplomacy & Espionage
+## Vol.6 — Diplomacy & Hacking
 
 1. The Diplomatic Relation Score System
 2. Agreement Types & Strategic Uses

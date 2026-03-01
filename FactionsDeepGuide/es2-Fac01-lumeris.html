@@ -3,133 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ES2 Vol.6 — The Lumeris</title>
+<title>ES2 — The Lumeris: The Brokers Deep Dive</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
 <style>
-  /* Vol 6 — Lumeris: deep gold / amber. Money. */
+  /* ── Fac01 — Lumeris: deep gold / amber ───────────────────────────────── */
+  /* Residual rules after es2-factions-deepdive.css is linked.               */
+  /* Link order in <head>:                                                    */
+  /*   1. es2-guide.css                                                       */
+  /*   2. es2-faction-deepdive.css                                           */
+  /*   3. This <style> block                                                  */
+
   :root {
-    --accent:             var(--lumeris-color);
-    --accent-rgb:         var(--lumeris-color-rgb);
-    --accent-dim:         rgba(var(--lumeris-color-rgb), 0.11);
-    --accent-bright-rgb:  245,200,66;
-    --accent-bright:      rgb(var(--accent-bright-rgb));
+    --accent:            var(--lumeris-color);
+	--card-accent:		 var(--accent);
+    --accent-dim:        rgba(var(--lumeris-color), 0.11);
+    --accent-bright-rgb: 245,200,66;
   }
 
-  .progress-mini-fill { background: linear-gradient(90deg, var(--accent), var(--accent-bright)); }
-
+  /* Faction-specific starfield ambience */
   body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--lumeris-color-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--lumeris-color-rgb), 0.04) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%); }
-
-  h1.page-title { text-shadow: 0 0 40px rgba(var(--lumeris-color-rgb), 0.4), 0 0 80px rgba(var(--lumeris-color-rgb), 0.15); }
-
-  .topic-num { color: var(--accent); background: var(--accent-dim); border-color: rgba(var(--lumeris-color-rgb), 0.35); }
-  .tag-mech { background: var(--accent-dim); color: var(--accent); border-color: rgba(var(--lumeris-color-rgb), 0.3); }
-  .tag-source { background: rgba(var(--lumeris-color-rgb), 0.10); color: var(--lumeris-color); border-color: rgba(var(--lumeris-color-rgb), 0.25); font-size: var(--ts_sectionTitle); letter-spacing:1.5px; padding: 2px 8px; border-radius:4px; border:1px solid; font-family:'Share Tech Mono',monospace; }
-
-  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
-  .nav-item:hover { background: var(--accent-dim); }
-  .step-list li .step-n { color: var(--accent); background: var(--accent-dim); }
-  .callout-tip { border-left-color: var(--accent); background: var(--accent-dim); }
-  .callout-tip .callout-label { color: var(--accent); }
-
-  /* Lumeris identity badge */
-  .faction-badge {
-    background: rgba(var(--lumeris-color-rgb), 0.15); color: var(--accent-bright);
-    border: 1px solid rgba(var(--lumeris-color-rgb), 0.35);
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--lumeris-color), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--lumeris-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
   }
 
-  /* Faction trait blocks */
-  .trait-block {
-    background: var(--card2); border: 1px solid var(--border);
-    border-left: 3px solid var(--accent); border-radius: 6px;
-    padding: 13px 16px; margin: 10px 0; font-size: var(--ts_sectionLabel); line-height: 1.75;
-  }
-  .trait-block.warn { border-left-color: var(--red); }
-
-  .trait-label {
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px; margin-bottom: 5px; font-weight: 700;
-    color: var(--accent);
-  }
-  .trait-label.warn { color: var(--red); }
-
-  /* Source attribution pills */
-  .source-row {
-    display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px;
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-  }
-  .src-pill {
-    padding: 2px 9px; border-radius: 10px; letter-spacing: 1px;
-    background: rgba(var(--lumeris-color-rgb), 0.08); color: var(--lumeris-color);
-    border: 1px solid rgba(var(--lumeris-color-rgb), 0.2);
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--lumeris-color), 0.4),
+      0 0 80px rgba(var(--lumeris-color), 0.15);
   }
 
-  /* Turn-order timeline */
-  .timeline { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
-  .tl-row {
-    display: grid; grid-template-columns: 90px 1fr;
-    border-left: 2px solid rgba(var(--lumeris-color-rgb), 0.25); padding-left: 16px;
-    padding-bottom: 18px; position: relative;
-  }
-  .tl-row:last-child { padding-bottom: 0; }
-  .tl-row::before {
-    content: ''; position: absolute; left: -6px; top: 4px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); box-shadow: 0 0 8px rgba(var(--lumeris-color-rgb), 0.5);
-  }
-  .tl-turn {
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: var(--accent); letter-spacing: 1px; padding-top: 2px;
-    font-weight: 700;
-  }
-  .tl-body { font-size: var(--ts_sectionLabel); line-height: 1.7; color: var(--text); }
-  .tl-body strong { color: var(--accent-bright); }
-
-  /* Approval bar visual */
-  .approval-bar {
-    display: flex; border-radius: 6px; overflow: hidden; height: 28px;
-    margin: 12px 0; font-size: var(--ts_sectionTitle); font-family: 'Share Tech Mono',monospace;
-  }
-  .apv-seg {
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; letter-spacing: 1px; flex-shrink: 0;
-  }
-
-  /* Weapon comparison table highlight */
-  .cell-tier { background: rgba(var(--lumeris-color-rgb), 0.08); color: var(--accent-bright); font-weight:700; }
-
-  /* Ship card grid */
-  .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; margin: 16px 0; }
-  .ship-card {
-    background: var(--card2); border: 1px solid var(--border);
-    border-top: 2px solid var(--accent); border-radius: 8px; padding: 14px 16px;
-  }
-  .ship-card.red-top  { border-top-color: var(--red); }
-  .ship-name {
-    font-family: 'Orbitron', sans-serif; font-size: var(--ts_quizTitle); font-weight: 700;
-    color: var(--accent-bright); letter-spacing: 2px; margin-bottom: 4px;
-  }
-  .ship-role {
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: var(--lumeris-color); letter-spacing: 2px; margin-bottom: 10px;
-  }
-  .ship-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
-
-  /* TAKT concept callout */
-  .takt-box {
-    background: linear-gradient(135deg, rgba(var(--lumeris-color-rgb), 0.08), rgba(var(--accent-bright-rgb), 0.06));
-    border: 1px solid rgba(var(--lumeris-color-rgb), 0.3); border-radius: 8px;
-    padding: 18px 20px; margin: 16px 0;
-  }
-  .takt-title {
-    font-family: 'Orbitron', sans-serif; font-size: var(--ts_topicTitle); font-weight: 700;
-    color: var(--accent-bright); letter-spacing: 3px; margin-bottom: 10px;
-  }
-
+  /* sidebar game-name tint */
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
 </style>
+
 </head>
 <body>
 <div class="layout">
@@ -138,12 +47,12 @@
 <nav class="sidebar">
   <div class="sidebar-logo">
     <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
-    <div class="game-name">VOLUME 6</div>
+    <div class="game-name">Fac. 01</div>
     <div class="guide-name">The<br>Lumeris</div>
   </div>
 
   <div class="nav-section-label">// Overview</div>
-  <div class="nav-item active" onclick="scrollByID('t0')">💡 Faction Identity <span class="nav-check" id="nc0"></span></div>
+  <div class="nav-item active" onclick="scrollByID('t0')">💰 Faction Identity <span class="nav-check" id="nc0"></span></div>
 
   <div class="nav-section-label">// Economics</div>
   <div class="nav-item" onclick="scrollByID('t1')">💰 Dust Engine &amp; Market <span class="nav-check" id="nc1"></span></div>
@@ -179,8 +88,8 @@
 <!-- MAIN -->
 <main class="main">
   <div class="page-header">
-    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.6</span> // The Lumeris</div>
-    <h1 class="page-title">The<br>Lumeris</h1>
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.01</span> // The Lumeris</div>
+    <h1 class="page-title"><img src="../images/Races/LumerisIcon.webp"> The<br>Lumeris</h1>
     <p class="page-subtitle">The Venetians of space — merchants, brokers, and opportunists. The Lumeris generate more Dust than any faction in the game, convert that Dust directly into territory and ships, and turn Trade Company routes into Influence. They also have the most misunderstood identity in ES2: new players assume they are a peaceful economic faction. They are not. They are a snowball faction that wins by spending money faster than opponents can respond.</p>
   </div>
 
@@ -201,7 +110,7 @@
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge">◈ LUMERIS — THE BROKERS OF SPACE</div>
+        <div class="vol-card-badge">◈ LUMERIS — THE BROKERS OF SPACE ◈</div>
 
         <div class="trait-block">
           <div class="trait-label">PLANET BROKER — COLONIZE ANYWHERE FOR DUST, NO SHIP REQUIRED</div>
@@ -420,11 +329,11 @@
         <p>Approval is covered in Vol.1. The Lumeris-specific version has two differences: the +20 Optimistic head start, and the Dust-specific weighting of the Ecstatic bonus.</p>
 
         <div class="approval-bar">
-          <div class="apv-seg" style="width:30%;background:var(--red);color:var(--text-bright);">ANGRY<br><span style="font-size:var(--ts_quizSmall)">0–30</span></div>
-          <div class="apv-seg" style="width:20%;background:var(--gold);color:var(--text-bright);">UNHAPPY<br><span style="font-size:var(--ts_quizSmall)">31–55</span></div>
-          <div class="apv-seg" style="width:15%;background:rgba(var(--text),0.35);color:var(--text-bright);">CONTENT<br><span style="font-size:var(--ts_quizSmall)">56–69</span></div>
-          <div class="apv-seg" style="width:20%;background:var(--green);color:var(--text-bright);">HAPPY<br><span style="font-size:var(--ts_quizSmall)">70–84</span></div>
-          <div class="apv-seg" style="width:15%;background:var(--vol4-accent);color:var(--text-bright);">ECSTATIC<br><span style="font-size:var(--ts_quizSmall)">85–100</span></div>
+          <div class="apv-seg" style="width:30%;background:rgb(var(--red));color:rgb(var(--text-bright));">ANGRY<br><span style="font-size:var(--ts_quizSmall)">0–30</span></div>
+          <div class="apv-seg" style="width:20%;background:rgb(var(--gold));color:rgb(var(--text-bright));">UNHAPPY<br><span style="font-size:var(--ts_quizSmall)">31–55</span></div>
+          <div class="apv-seg" style="width:15%;background:rgba(var(--text),0.35);color:rgb(var(--text-bright));">CONTENT<br><span style="font-size:var(--ts_quizSmall)">56–69</span></div>
+          <div class="apv-seg" style="width:20%;background:rgb(var(--green));color:rgb(var(--text-bright));">HAPPY<br><span style="font-size:var(--ts_quizSmall)">70–84</span></div>
+          <div class="apv-seg" style="width:15%;background:rgb(var(--vol4-accent));color:rgb(var(--text-bright));">ECSTATIC<br><span style="font-size:var(--ts_quizSmall)">85–100</span></div>
         </div>
 
         <div class="trait-block">

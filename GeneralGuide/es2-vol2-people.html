@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.2 — Inside your Empire: People &amp; Ideas</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<style>
+  :root {
+    --accent:     var(--vol2-accent);
+    --accent-dim: rgba(var(--vol2-accent), 0.11);
+  }
+  .vol-prev { --card-accent: var(--vol1-accent); }
+  .vol-next { --card-accent: var(--vol3-accent); }
+
+  .approval-bar {
+    display: flex;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+    font-size: var(--ts_quizSmall);
+    font-family: 'Share Tech Mono', monospace;
+    text-align: center;
+  }
+  .apv-seg {
+    padding: 6px 4px;
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .influence-formula {
+    background: rgba(var(--accent), 0.07);
+    border: 1px solid rgba(var(--accent), 0.3);
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_quizSmall);
+    margin: 0.75rem 0;
+    line-height: 1.7;
+  }
+
+  /*.terraformingTables
+  {
+    display:flex;
+    justify-content: center;
+
+  }
+
+  .terraformingTables .ref-table
+  {
+    width: 49%;
+
+  }*/
+
+  .terraformingTables .ref-table .gold
+  {
+    --muted: rgba(var(--gold), 0.97);
+  }
+  .terraformingTables .ref-table .cell-key
+  {
+    text-align: right;
+    border-left: 1px solid var(--border);
+
+  }
+
+  .terraformingTables .ref-table .empty
+  {
+    border: none;
+  }
+
+
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">VOLUME 2</div>
+    <div class="guide-name">People<br>&amp; Ideas</div>
+  </div>
+
+  <div class="nav-section-label">// Politics Deep Dive</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">😊 Approval Mechanic <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🌿 Empire Dev Tech Tree <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🚀 Expansion &amp; Outposts <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🔭 Evaluating Systems <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🌐 Terraforming <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">✨ Influence &amp; Zones <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🏛️ Parties, Laws &amp; Senators <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🗳️ Government &amp; Elections <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="nav-section-label">// Volumes</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol1-economy.html'"><div class="vol-card-arrow">←</div> Vol.1: Material &amp; Money</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol3-exploration.html'">Vol.3: Outside your Empire <div class="vol-card-arrow">→</div></div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.2</span> // People &amp; Ideas</div>
+    <h1 class="page-title">Inside your Empire:<br>People &amp; Ideas</h1>
+    <p class="page-subtitle">Approval is the multiplier that governs your expansion rate. Every new colony reduces it; every tier drop costs you empire-wide Dust and Science. This volume covers the full Approval mechanics, the Empire Development tech tree, how outposts are founded and grown, how to evaluate a system before colonizing, how Influence generates and expands your territorial borders, and how the political system — parties, laws, elections, and government types — shapes your strategic options turn by turn.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- T1: APPROVAL MECHANIC -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Approval Mechanic: FIDSI Multiplier, Overcolonization &amp; Overpopulation</h2>
+        <div class="topic-subtitle">Approval is not a happiness meter. It is a multiplicative gate on your economy — and it reacts to every expansion decision you make.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">😊</span>
+        <span class="block-title">The Approval Tiers &amp; Their FIDSI Impact</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Approval operates in two independent scopes. <strong>System Approval</strong> modifies Food and Influence output for that individual system. <strong>Empire Approval</strong> — a population-weighted average of all system approvals — modifies Dust and Science for your entire empire simultaneously. Industry is immune to Approval at every tier, in every scope.</p>
+
+        <p>Approval is a <strong>discrete tier system</strong>, not a continuous gradient. Being at 31% and 69% is mechanically identical — both are Content, with zero modifier. The breakpoints that matter are 30, 70, and 85:</p>
+
+        <div class="approval-bar">
+          <div class="apv-seg" style="background:rgba(var(--red),0.85);color:rgb(var(--text-bright));">MUTINOUS<br><span>0</span></div>
+          <div class="apv-seg" style="background:rgba(var(--red),0.55);color:rgb(var(--text-bright));">UNHAPPY<br><span>10</span></div>
+          <div class="apv-seg" style="background:rgba(var(--gold),0.5);color:rgb(var(--text-bright));">CONTENT<br><span>30</span></div>
+          <div class="apv-seg" style="background:rgba(var(--green),0.6);color:rgb(var(--text-bright));">HAPPY<br><span>70</span></div>
+          <div class="apv-seg" style="background:rgba(var(--green),0.9);color:rgb(var(--text-bright));">ECSTATIC<br><span>85</span></div>
+        </div>
+
+        <table class="ref-table">
+          <tr><th>Tier</th><th>Threshold</th><th>System: Food &amp; Influence</th><th>Empire: Dust &amp; Science</th></tr>
+          <tr><td class="cell-key">Mutinous</td><td>0</td><td class="cell-bad">−75%</td><td class="cell-bad">−30%</td></tr>
+          <tr><td class="cell-key">Unhappy</td><td>10</td><td class="cell-bad">−30%</td><td class="cell-bad">−15%</td></tr>
+          <tr><td class="cell-key">Content</td><td>30</td><td>No modifier</td><td>No modifier</td></tr>
+          <tr><td class="cell-key">Happy</td><td>70</td><td class="cell-good">+10%</td><td class="cell-good">+15%</td></tr>
+          <tr><td class="cell-key">Ecstatic</td><td>85</td><td class="cell-good">+25%</td><td class="cell-good">+30%</td></tr>
+        </table>
+
+        <p>The practical target for most factions is maintaining Ecstatic (85+) as long as possible. The +30% to Dust and Science empire-wide is a substantial multiplier — at high production levels, the difference between Ecstatic and Content is worth more per turn than entire systems' output.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">⚠️</span>
+        <span class="block-title">Overcolonization: The Expansion Penalty</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every empire has a maximum number of systems it can support before incurring an overcolonization Approval penalty. When your system count exceeds this limit, each excess system applies a <strong>−10 Approval</strong> penalty empire-wide. This is a direct hit to Empire Approval, which means it immediately affects your Dust and Science multiplier.</p>
+
+        <p>The overcolonization limit is not fixed. All known sources that raise it:</p>
+
+        <table class="ref-table">
+          <tr><th>Source</th><th>Threshold Increase</th></tr>
+          <tr><td class="cell-key">Xeno Anthropology tech (ED St.3 — The Pooster Program)</td><td>+1 system</td></tr>
+          <tr><td class="cell-key">Cultural Invertics tech (ED St.4 — Culture Unshock)</td><td>+2 systems</td></tr>
+          <tr><td class="cell-key">Autonomous Administration improvement (requires Level 4 system)</td><td>+1 system</td></tr>
+          <tr><td class="cell-key">Federation government type</td><td>+1 per Hero representing leading parties on Empire</td></tr>
+          <tr><td class="cell-key">Easy difficulty</td><td>+1 system</td></tr>
+          <tr><td class="cell-key">Sandbox difficulty</td><td>+2 systems</td></tr>
+          <tr><td class="cell-key">Kal'Tik'Ma minor faction assimilation (Star Trekkers)</td><td>+1 system</td></tr>
+          <tr><td class="cell-key">Mavros minor faction law (Crack Squads)</td><td>−50% overcolonization penalty (not threshold raise — penalty halved)</td></tr>
+          <tr><td class="cell-key">Expansionist I / II faction traits</td><td>−25% / −50% overcolonization penalty</td></tr>
+        </table>
+
+        <p>The Federation government's threshold bonus is unique: it scales with the number of Heroes currently acting as political representatives for leading parties — meaning a hero-heavy Senate build can grant +3 or +4 threshold bonus systems simultaneously. This compounds with tech unlocks, making Federation the best government for wide play.</p>
+
+        <p>Additional Approval penalties that stack with overcolonization: <strong>razing systems</strong> applies −5 Approval per razed system permanently (a Republic government applies −15 per raze due to its law intensification). Mutinous populations after conquest also reduce system-level Approval temporarily.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE COMPOUND FAILURE STATE</div>
+          Overcolonization is dangerous not because the penalty is large per colony, but because it compounds with everything else. If you're at 72% Approval (Happy) and colonize one extra system dropping you to 62% (Content), you instantly lose +15% on all Dust and Science empire-wide. The new colony may take 10–20 turns to generate enough output to pay back that empire-wide loss. Expand just ahead of your limit, not into it.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1c">
+      <div class="block-header" onclick="toggle('cb1c')">
+        <span class="block-icon">🔧</span>
+        <span class="block-title">Overpopulation &amp; the Spaceport Relief Valve</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Overpopulation is a separate mechanic from overcolonization. A system becomes overpopulated when its population count exceeds 70% of maximum capacity — importantly, there is no penalty until you clear that 70% threshold. The formula:</p>
+
+        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
+          Overpopulation Penalty = (Current Pop − Max Pop × 0.7) × 3.75
+        </p>
+
+        <p>Below the 70% threshold the result is negative, which the game floors to 0 — no penalty. Once you cross it, the penalty scales linearly at 3.75 Approval per excess pop. On a system with 10 max pop, being at 8 pops (80% capacity) generates a −3.75 Approval penalty; at 9 pops (90%) it's −7.5. Overpopulation applies as a system-level Approval penalty, which cascades into Empire Approval.</p>
+
+        <p>The Spaceport (unlocked at Level 2 modernization) is the primary relief valve: you can transfer surplus population from a full system to an underdeveloped one. This has two benefits simultaneously — it relieves the Approval penalty on the full system and accelerates development of the receiving system by providing labor immediately rather than waiting for it to grow organically.</p>
+
+        <p>Population transfer is also a strategic optimization tool independent of overpopulation. A fully developed home system at max pops generates more FIDSI per pop by exporting surplus pops to new colonies than by sitting at overcapacity. The Spaceport essentially converts excess population growth on mature systems into colony-building acceleration on developing ones.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">APPROVAL RECOVERY TOOLKIT</div>
+          When Approval drops below a critical tier, options in order of speed:<br><br>
+          <strong>1. Enact a Happiness law</strong> — the Toys for Boys law (Scientist party) applies +25 Approval empire-wide. Caveat: it also costs −10% Industry on all systems. Only activate it when the Approval gain outweighs the Industry loss — typically from mid-game when your Industry base is large enough that 10% is trivial compared to +25% on Dust and Science.<br><br>
+          <strong>2. Luxury resource improvements</strong> — assigning a happiness luxury resource (Jadonyx, Dust Trees, etc.) to system slots gives permanent per-pop Approval bonuses. These are permanent and don't carry the Industry penalty.<br><br>
+          <strong>3. Population management</strong> — moving unhappy population types out of systems via Spaceport, or adding population types with high natural Approval, shifts the system-level average.<br><br>
+          <strong>4. Sell an outpost</strong> — the planet broker allows selling underperforming outposts. This removes the overcolonization penalty immediately, refunds Dust, and may be the correct choice for systems that will never generate enough FIDSI to justify the Approval cost.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T2: EMPIRE DEVELOPMENT TECH TREE -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">The Empire Development Tech Tree</h2>
+        <div class="topic-subtitle">Food, Approval, ship hulls, political development, and overcolonization thresholds. The expansion infrastructure tree.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🌿</span>
+        <span class="block-title">Tree Structure &amp; Priority Logic</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Empire Development quadrant governs the infrastructure for population growth, Approval management, expansion capacity, and ship hull access. It is the tree most directly tied to how fast and how wide your empire can grow without degrading.</p>
+
+        <p><strong>Stage 1 — Food and colony foundations:</strong> Early Stage 1 techs provide the basic colony ship hull and Food production improvements. The Sustainable Farms improvement (early Stage 1) is the core Food building for most factions, providing a flat Food bonus per system. Getting Food-producing improvements built in your main systems early accelerates population growth, which accelerates every other output.</p>
+
+        <p><strong>Stage 2 — Approval and hull upgrades:</strong> This stage contains most of the basic Approval improvements and the first meaningful ship hull upgrade (Hunter-class hulls, which are significantly stronger than starter hulls). The Ecologist party's "Hardship Ready" colonization law tech appears here, allowing colonization of non-standard planet types without separate tech prerequisites (for factions that can access it).</p>
+
+        <p><strong>Stage 3 — Overcolonization threshold and political development:</strong> Stage 3 is where the overcolonization limit extension technologies live. Xeno-Anthropology (the government change tech) also appears here — this is the tech that lets you switch government type mid-game, a significant strategic decision. Additional Food-to-population scaling improvements appear at this stage.</p>
+
+        <p><strong>Stage 4 — Advanced hulls and political entrenchment:</strong> Carrier-class hulls (the largest standard hulls) unlock in Stage 4. Advanced Approval management improvements appear here, as well as the System Shield improvement (protection against Obliterator shots).</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">HULL TIER MATCHING</div>
+          A critical principle from the community: ship hull size matters more for combat effectiveness than the tier of modules installed. Matching hull tier to module tier produces stronger ships than mixing. Stage 2 Military techs on Hunter hulls (Stage 3 Empire Development) outperform Stage 2 Military techs on starter hulls. Research hull upgrades in Empire Development alongside military module upgrades — don't let one outpace the other by too many stages.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T3: EXPANSION -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Expansion: Colony Ships &amp; Founding an Outpost</h2>
+        <div class="topic-subtitle">Colonization is an investment, not a reflex. Every outpost you plant pulls Food from an existing system and costs Approval empire-wide.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">The Outpost Mechanics</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>To colonize a system, you need a Colony Ship equipped with a colonization module. When the ship reaches a system containing a habitable planet (a planet whose type you have the technology to colonize), you plant an outpost. The Colony Ship disappears on use — it is consumed. The system now shows as an outpost, not a full colony.</p>
+
+        <p>Outposts require a Food supply to grow into full colonies. The Food supply comes from a connected system, not from the outpost itself. By default this is the nearest connected system, but you can manually reassign the supply source to a closer or more Food-productive system to accelerate growth. The growth timeline is visible in the outpost screen.</p>
+
+        <p>Ways to accelerate outpost growth:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">MANUAL SUPPLY SOURCE</span><span>Assign the closest high-Food system as the supply source. Food traveling fewer hops arrives faster. A system 1 hop away supplies faster than one 3 hops away.</span></li>
+          <li><span class="step-n">SPEND INFLUENCE</span><span>Investing Influence increases the Food supply rate to the outpost for several turns, shaving turns off the growth timer.</span></li>
+          <li><span class="step-n">SPEND DUST</span><span>Same effect — Dust can also accelerate outpost development.</span></li>
+          <li><span class="step-n">CONTESTED OUTPOST</span><span>If two factions plant outposts in the same system simultaneously, they race for control. You can spend Manpower to raid the enemy outpost's Food supply, slowing their growth and accelerating yours. Conversely, blockading the system with a fleet prevents any Food supply ships from reaching an enemy outpost.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🌾</span>
+        <span class="block-title">The Food Supply Draw</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>When an outpost is growing, it draws approximately 40% of the Food production from its supply source system. This is significant: one active outpost consumes nearly half the Food surplus of its donor system. Two simultaneous outposts drawing from the same system can consume most of its Food output — potentially causing population shrinkage in the donor system if it was already running lean.</p>
+
+        <p>Before planting a second outpost, check whether your primary Food-producing system can support two supply draws without going negative. If it cannot, either develop another high-Food system to act as the second supply source, or stagger your colonizations so the first outpost completes (becoming a self-sustaining colony) before the second Food draw begins.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">OUTPOSTS AS RESOURCE NODES</div>
+          An outpost does not need to become a productive colony to pay for itself. Even an undeveloped outpost produces the strategic and luxury resources on its planets — these can be sold on the Marketplace immediately for Dust. A system with a good Titanium deposit starts generating Marketplace income the turn you plant the outpost, before a single pop has grown there. This framing — outpost as a mining probe rather than a future colony — changes how you evaluate colonization targets.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T4: EVALUATING SYSTEMS BEFORE COLONIZING -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Evaluating Systems Before Colonizing</h2>
+        <div class="topic-subtitle">Population space and FIDSI potential vs. the Approval penalty. The question is never "is this system good?" — it's "does this system pay back its Approval cost?"</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🔭</span>
+        <span class="block-title">The Colonization Decision Framework</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every colonization triggers two costs: an Approval hit (overcolonization penalty if you're at or near your limit) and a Food draw from an existing system. Against these costs you're betting on the target system's future FIDSI output. The decision is a payback period calculation, not a binary "good system or bad system."</p>
+
+        <p>Factors that make a system worth colonizing despite an Approval hit:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">PLANET COUNT</span><span>More planets means more population slots, which means more total FIDSI at full development. A 4–5 planet system pays back its Approval cost faster than a 1–2 planet system because its production ceiling is much higher.</span></li>
+          <li><span class="step-n">PLANET TYPES</span><span>Match planet types to your empire's current needs. If Industry is your bottleneck, a system with multiple Hot planets is immediately valuable. A system with all Cold planets is only valuable if Science is a priority and you have Cold-production improvements built.</span></li>
+          <li><span class="step-n">STRATEGIC RESOURCES</span><span>Systems with Titanium or Hyperium start generating Marketplace income as an outpost. Adamantium and above require curiosity detection to find and exploitation tech to use — don't colonize for a resource you can't yet exploit.</span></li>
+          <li><span class="step-n">LUXURY RESOURCES</span><span>A system with Tier 2 or Tier 3 luxury resources you currently lack is valuable immediately as a supply source. Check whether you already have sufficient quantities of that luxury before prioritizing colonization for it.</span></li>
+          <li><span class="step-n">STRATEGIC POSITION</span><span>Sometimes the right reason to colonize a mediocre system is to deny it to a rival or to establish a forward presence near a contested border. This is a valid reason — just be honest that you're paying an economic cost for a strategic benefit.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">SYSTEMS TO AVOID</div>
+          Small systems (1–2 planets) with no strategic resources and no luxury resources rarely pay back their Approval cost within a game's timeline. They produce modest FIDSI at full development and consume a colonization tech slot, a Colony Ship (Industry cost), and an overcolonization point. Skip these unless they serve a specific strategic purpose. You can always colonize them later after your expansion limit is higher.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4c">
+      <div class="block-header" onclick="toggle('cb4c')">
+        <span class="block-icon">🪐</span>
+        <span class="block-title">Planet Traits: Class, Fertility, Climate &amp; Size</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every planet has four traits that together determine its FIDSI output, Approval impact, and population ceiling: <strong>Class</strong> (the specific type — Terran, Lava, Barren, etc.), <strong>Fertility</strong> (Fertile / Neutral / Sterile), <strong>Climate</strong> (Hot / Temperate / Cold), and <strong>Size</strong> (Tiny through Huge). Class is the most important single trait because it encodes specific base FIDSI values per pop. Fertility and Climate encode the <em>pattern</em> of those values and which tech/faction bonuses apply to the planet.</p>
+
+        <p><strong>Fertility — the population and Approval axis.</strong> This is the trait that most directly shapes expansion cost:</p>
+        <ul class="step-list">
+          <li><span class="step-n">FERTILE</span><span>Higher Food output, more even FIDSI spread, pop cap 5–10 per planet, <strong>0 Approval penalty</strong>. Techs and faction bonuses for Fertile planets are numerous. These are your growth engine planets — the ones that let you stack population without hurting Approval. Types: Atoll, Ocean, Forest, Terran (Temperate/Fertile); Jungle, Boreal (Hot/Cold Fertile); Monsoon (Temperate Fertile).</span></li>
+          <li><span class="step-n">NEUTRAL</span><span>Middling pop cap 3–9, <strong>−1 to −3 Approval penalty</strong>. Moderate FIDSI output — often a mix of Food and one other resource. Types: Savannah, Steppes, Monsoon (Temperate); Mediterranean, Tundra (Hot/Cold Neutral); Snow, Arid (Cold/Hot Neutral).</span></li>
+          <li><span class="step-n">STERILE</span><span>Extreme FIDSI peaks in one resource, but low or zero in others. Pop cap 1–6, <strong>−5 to −8 Approval penalty</strong>. Higher Dust focus overall. Tech and faction bonuses are concentrated in Industry/Dust. Types: Ash, Desert, Lava (Hot Sterile); Barren, Ice, Arctic (Cold Sterile); Toxic (Temperate Sterile).</span></li>
+        </ul>
+
+        <p><strong>Climate — which FIDSI stat the planet spikes.</strong></p>
+        <ul class="step-list">
+          <li><span class="step-n">HOT</span><span>Higher Industry per pop. Techs and faction bonuses that target Hot planets grant Industry bonuses. Examples: Lava (16 Industry/pop base), Ash (12 Industry), Desert (8 Industry, 1 Food). Hot planets are your forge worlds.</span></li>
+          <li><span class="step-n">COLD</span><span>Higher Science per pop. Techs and faction bonuses that target Cold planets grant Science bonuses. Examples: Barren (16 Science/pop base), Ice (12 Science), Arctic (8 Science, 1 Food). Cold planets are your research labs.</span></li>
+          <li><span class="step-n">TEMPERATE</span><span>Lower, more balanced Industry and Science — fewer tech/faction bonuses attach to the Temperate tag. The Temperate advantage is population density and Approval: Fertile Temperate planets (Atoll, Ocean, Forest, Terran) have zero Approval penalty and pop caps of 6–10, making them the best long-term growth platforms.</span></li>
+        </ul>
+
+        <p><strong>Size — the pop cap multiplier.</strong> All planet types can appear in Tiny, Small, Medium, Large, or Huge variants. Size, combined with the class's base pop range, sets the maximum population on that planet. A Huge Terran is significantly more valuable than a Tiny Terran — same FIDSI per pop, but far more pops. When scanning a system in the exploration view, the planet graphic's relative size is a quick proxy for this before you get detailed scout data.</p>
+
+        <p><strong>Gas Giants — a special case.</strong> Gas planets (G.Frozen, G.Cold, G.Temperate, G.Warm, G.Hot, G.Burning) require the <em>Extreme Atmospherics</em> tech and have unique mechanics. They are always a maximum pop cap of 1 (no growth, never scale with size), produce zero Food, and require the Stage 3 E&amp;T tech to colonize. In exchange they output extreme single-resource FIDSI per pop: G.Burning = 26 Industry/pop; G.Temperate = 26 Dust/pop; G.Frozen = 26 Science/pop; G.Cold = 14 Industry + 14 Science; G.Warm = 10 Industry + 18 Dust; G.Hot = 14 Industry + 14 Science. Their −5 Approval penalty and permanent pop cap of 1 mean they never grow — the entire value is that one pop's output. Place your highest-output pop type on a Gas Giant and it punches far above its system slot.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">READING A SYSTEM AT A GLANCE</div>
+          When you're deciding whether to colonize, the two questions to answer from the pre-scout view are: (1) How many planets? (2) What color/climate icons are dominant? A 4-planet system with two Hot icons and two Cold icons is a strong balanced system that produces Industry and Science at full development. A 3-planet system of all Sterile Hot types (Ash/Lava) is a production forge but carries a heavy Approval load and low pop potential — valuable in a mature empire, punishing early. A 5-planet Fertile Temperate system (Atoll/Ocean/Terran) is the expansion dream: zero Approval hit, high pop ceiling, fast payback.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">The Approval Cost–Benefit Calculation</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The calculation is not complex once framed correctly. When considering a colonization that will drop your Empire Approval by one tier:</p>
+
+        <p><strong>Step 1:</strong> Identify which Approval tier you're in now, and which tier you'd drop to. The difference in Dust + Science multiplier is the cost per turn (e.g., dropping from Ecstatic to Happy costs 15% on all Dust and Science).</p>
+
+        <p><strong>Step 2:</strong> Apply that percentage to your current empire-wide Dust and Science output. If you produce 500 Dust/turn and 300 Science/turn, a 15% loss costs 75 Dust and 45 Science per turn — every turn until you recover the Approval tier.</p>
+
+        <p><strong>Step 3:</strong> Estimate how many turns the new colony will take to reach useful output (typically 10–20 turns for a basic outpost to start contributing meaningfully). Multiply the per-turn loss by those turns to get the total cost window.</p>
+
+        <p><strong>Step 4:</strong> Ask whether the new colony will eventually produce more than that cost, and within what timeframe. A 5-planet system with good types will — a 1-planet barren rock probably won't, ever.</p>
+
+        <p>This framework applies to all factions. The specific numbers change depending on your current output scale and the tier you're crossing, but the logic is identical. Expansion is not unconditionally good — it is conditional on the payback period being acceptable.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T5: TERRAFORMING -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Terraforming: Mechanics, Direction &amp; Strategic Calculus</h2>
+        <div class="topic-subtitle">Terraforming trades per-pop FIDSI output for higher population capacity. It is a mid-to-late game tool — and not always the right answer.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5-terra-a">
+      <div class="block-header" onclick="toggle('cb5-terra-a')">
+        <span class="block-icon">🌐</span>
+        <span class="block-title">Tech Gates, Direction Graph &amp; Costs</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Terraforming is gated behind two techs in the <strong>Science &amp; Exploration</strong> tree. Primary Terraforming (Evaporation Inhibitors, S&amp;E Stage 3) unlocks the basic routes; Advanced Terraforming (Climate Engineering, S&amp;E Stage 4) unlocks the second tier. Gas Giants cannot be terraformed under any circumstance.</p>
+
+        <p>Terraforming <strong>always moves upward on the fertility/climate ladder</strong> — you cannot degrade a planet. The direction graph for standard factions:</p>
+
+        <!--table class="ref-table">
+          <tr><th>From (Sterile)</th><th>→ Primary Target</th><th>→ Advanced Target</th><th>Industry Cost (approx.)</th></tr>
+          <tr><td class="cell-key">Arid</td><td>Steppes / Savannah</td><td>Jungle (Hot/Fertile)</td><td>~400 / ~800</td></tr>
+          <tr><td class="cell-key">Lava</td><td>Steppes / Savannah</td><td>Jungle</td><td>~400 / ~800</td></tr>
+          <tr><td class="cell-key">Ash</td><td>Steppes / Savannah</td><td>Jungle</td><td>~400 / ~800</td></tr>
+          <tr><td class="cell-key">Barren</td><td>Snow / Tundra</td><td>Boreal (Cold/Fertile)</td><td>~400 / ~800</td></tr>
+          <tr><td class="cell-key">Arctic</td><td>Snow / Tundra</td><td>Boreal</td><td>~400 / ~800</td></tr>
+          <tr><td class="cell-key">Ice</td><td>Snow / Tundra</td><td>Boreal</td><td>~400 / ~800</td></tr>
+          <tr><td class="cell-key">Desert</td><td>Steppes / Savannah (or Arid path)</td><td>Jungle or Atoll (Temperate/Fertile)</td><td>~400 / ~800</td></tr>
+        </table-->
+
+        <div class="terraformingTables">
+        <table class="ref-table">
+          <tr><th colspan=4 class="tableTitle">Basic terraforming</th><th colspan=4 class="tableTitle gold">Advanced terraforming</th><tr>
+          <tr><th class="cell-key">From</th><th width="10px">→</th><th>To</th><th>Industry Cost</th><th class="cell-key gold">From</th><th class="gold" width="10px">→</th><th class="gold" >To</th><th class="gold" >Industry Cost</th><tr>
+          <tr><td class="cell-key">Barren</td><td>→</td><td> Arctic</td><td>1120 </td><td class="cell-key" rowspan=2>Snow</td><td>→</td><td> Steppes</td><td>2000 </td></tr>
+
+          <tr><td class="cell-key" rowspan=2>Toxic</td><td>→</td><td> Steppes</td><td>2000 </td><td>→</td><td>Boreal</td><td>2000 </td>
+          <tr><td>→</td><td>Savannah</td><td>2000 </td><td class="cell-key" rowspan=2>Arid</td><td>→</td><td> Savannah</td><td>2000 </td></tr>
+
+          <tr><td class="cell-key">Lava</td><td>→</td><td> Desert</td><td>1120 </td><td>→</td><td>Jungle</td><td>2000 </td></tr>
+          <tr><td class="cell-key">Ice</td><td>→</td><td> Arctic</td><td>560 </td><td class="cell-key">Steppes</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
+          <tr><td class="cell-key">Ash</td><td>→</td><td> Desert</td><td>560 </td><td class="cell-key">Savannah</td><td>→</td><td> Monsoon</td><td>2000 </td></tr>
+
+          <tr><td class="cell-key" rowspan=2>Arctic</td><td>→</td><td> Snow</td><td>1000 </td><td class="cell-key" rowspan=2>Tundra</td><td>→</td><td> Boreal</td><td>2000 </td></tr>
+          <tr><td>→</td><td>Steppes</td><td>2000 </td><td>→</td><td>Forest</td><td>2000 </td></tr>
+
+          <tr><td class="cell-key" rowspan=2>Desert</td><td>→</td><td> Arid</td><td>1000 </td><td class="cell-key" rowspan=2>Mediterranean</td><td>→</td><td> Jungle</td><td>2000 </td></tr>
+          <tr><td>→</td><td>Savannah</td><td>2000 </td><td>→</td><td>Terran</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td class="cell-key" rowspan=2>Boreal</td><td>→</td><td> Tundra</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td>→</td><td>Ocean</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td class="cell-key" rowspan=2>Monsoon</td><td>→</td><td> Forest</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td>→</td><td>Terran</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td class="cell-key" rowspan=2>Jungle</td><td>→</td><td> Terran</td><td>2000 </td></tr>
+          <tr><td class="empty" colspan=4></td><td>→</td><td>Atoll</td><td>2000 </td></tr>
+
+        </table>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PRIMARY TERRAFORMING CEILING</div>
+          Primary Terraforming alone (no Climate Engineering) can only reach Steppes, Savannah, Snow, or Tundra — all Neutral fertility. It cannot reach Fertile planets. Advanced Terraforming (Climate Engineering) is required to push a planet to Jungle, Boreal, Terran, Ocean, Atoll, or Monsoon. If you only have Primary unlocked, the planet improves but remains Neutral.
+        </div>
+
+        <p><strong>Riftborn exception:</strong> The Riftborn have inverted planet preferences — Sterile planets are their best performers and Fertile planets generate severe Approval penalties. Therefore, for Riftborn, the direction of terraforming is reversed: they terraform from Fertile toward Sterile planets...Doing the opposite would be actively harmful to a Riftborn empire, after all.</p>
+
+        <p><strong>Unfallen shortcut:</strong> Certain choices in the Unfallen faction quest (Head and Heart chapter options) can unlock Forest-type planets directly, bypassing the standard terraforming tech requirement for some planetary routes. This is niche but worth noting if playing Unfallen.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5-terra-a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5-terra-b">
+      <div class="block-header" onclick="toggle('cb5-terra-b')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">The Strategic Calculus: When to Terraform and When to Stop</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Terraforming trades current FIDSI output for future population capacity. A Sterile planet produces high Industry and Dust per pop but supports very few pops. After terraforming it to Fertile, it produces far less per pop but can hold many more pops. <strong>The net gain only materializes once those extra population slots are actually filled.</strong> Before that, you are paying the Industry cost of terraforming plus receiving reduced output on the planet — a double penalty. This is why terraforming is a mid-to-late game tool, not an early one.</p>
+
+        <p>The core question before terraforming: <em>Will I fill those extra pop slots before the game ends?</em> If the answer is no, the investment never pays back. If yes, how long will it take and what do you lose in the meantime?</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">SKIP IF NEGATIVE ANOMALIES ARE PRESENT</div>
+          Anomalies apply per-pop penalties. Terraforming a planet increases its max population — which means more pops exposed to the anomaly penalty. A planet with a −4 Food/pop anomaly that can hold 2 pops costs you 8 Food. After terraforming to 5 pop capacity, that same anomaly costs 20 Food. Terraforming a planet with severe negative anomalies compounds the damage. Anomaly removal (via the Science &amp; Exploration tree) should precede terraforming in most cases.
+        </div>
+
+        <p><strong>FIDSI implications by output type:</strong></p>
+
+        <ul class="step-list">
+          <li><span class="step-n">FOOD</span><span>Always improves from terraforming — Fertile planets produce more Food, support more pops, and grow faster. Food is the output most consistently helped by terraforming regardless of which route you take.</span></li>
+          <li><span class="step-n">INDUSTRY</span><span>Penalized early. Sterile planets produce the highest Industry per pop. Moving to Neutral or Fertile reduces per-pop Industry output immediately. The penalty is partially recovered late-game if you build the Chlorophyll Chemistry improvement (converts excess Food to Industry at max pop) or the Climate Engineering improvement itself (+4 Science/pop on Fertile planets). If you're in a war posture and need Industry now, delay terraforming your best Industry planets.</span></li>
+          <li><span class="step-n">DUST</span><span>Penalized early. Sterile planets also produce strong Dust per pop. The Optimized Logistics tech unlocks the Adaptive Taxation Systems improvement (+4 Dust/pop on Fertile and Temperate), which can recover the Dust loss late-game. Before that improvement is built, expect a Dust dip on any terraformed planet.</span></li>
+          <li><span class="step-n">SCIENCE</span><span>Most penalized by terraforming — Cold planets (Barren, Arctic, Ice) produce the highest Science per pop, and moving them toward Temperate or Fertile reduces that advantage. The exception is the Boreal branch (Cold/Fertile): Boreal keeps the Cold tag, preserving Science bonuses while also gaining Fertile's pop cap increase. The Climate Engineering improvement also adds +4 Science/pop on Fertile planets, partially compensating. If your strategy depends on Science output, either terraform exclusively to Boreal or hold Cold planets unchanged.</span></li>
+          <li><span class="step-n">INFLUENCE</span><span>Flat improvement — Fertile planets grant a modest Influence bonus per pop, and specialized improvements (Xenology, Supralight Aerodynamics, Nano Aquaculture) further amplify Influence on Fertile planets. Influence-focused empires benefit from terraforming more than most.</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">BOREAL AND JUNGLE AS TERMINAL TARGETS</div>
+          These two planet types are often the correct stopping point and should not be further terraformed to their respective Temperate upgrades. <strong>Boreal (Cold/Fertile)</strong> keeps the Cold Climate tag — your Cold-affinity populations and Cold-boosting improvements continue to apply, while you gain Fertile's population cap increase. Terraforming Boreal further to a Temperate planet removes the Cold tag and loses all those bonuses for a marginal additional pop slot. Similarly, <strong>Jungle (Hot/Fertile)</strong> keeps the Hot Climate tag. Unless you have a strong specific reason to push to Temperate, treat Boreal and Jungle as endpoints.
+        </div>
+
+        <p><strong>Wide vs. tall consideration:</strong> Wide empires that can move populations freely via Spaceport between many systems have less need to maximize per-system capacity. If you have 10 systems and some of them have underused fertile planets, transferring pops there may be more efficient than terraforming. Tall empires with fewer, more developed systems benefit more from terraforming as a capacity multiplier since they cannot easily source population elsewhere.</p>
+
+        <p><strong>Minimum viable terraforming target:</strong> Regardless of strategy, having at least one Fertile planet per system is beneficial for population growth rate — Food output is higher on Fertile planets, which speeds natural population growth for the entire system. Even if you do not intend to heavily terraform a system, leaving one planet on the Fertile track ensures the system grows faster without further investment.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5-terra-b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T6: INFLUENCE (was T5) -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Influence as a Resource &amp; System Influence Zones</h2>
+        <div class="topic-subtitle">Influence funds your diplomacy and expands your territorial borders. No default planet type produces it — every point must be built.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">✨</span>
+        <span class="block-title">How Influence Is Generated</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Influence has no default planet type — unlike Science (Cold planets), Industry (Hot planets), or Food (Fertile planets), Influence is not naturally produced by any planet tag. Every point of Influence must come from System Improvements, Hero bonuses, specific Population types, Unique Planets, or anomalies that specifically grant Influence output.</p>
+
+        <p>The primary source for most empires is population: having population units assigned to planets in a system generates Influence for that system. The United Empire has a +1 Influence per pop affinity on top of this baseline, making them a notably Influence-heavy faction. Some minor faction assimilation bonuses also provide flat Influence per system.</p>
+
+        <p>Influence is affected by System Approval (not Empire Approval). This means a system running low Approval produces less Influence — another reason to keep individual system approval high, beyond just the empire-wide multiplier chain.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">🗺️</span>
+        <span class="block-title">The Influence Zone: Territorial Borders</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Influence produced by a system is automatically invested in expanding that system's colored border on the map — its <strong>Influence area</strong>. This is not stockpiled separately; it feeds the zone expansion each turn.</p>
+
+        <p>The Influence zone radius formula is nonlinear:</p>
+
+        <div class="influence-formula">
+          Influence Radius = ((System Influence / Game Speed Multiplier) / π)^0.4 × (1.5 + (50 / System Influence))
+        </div>
+
+        <p>In practical terms: higher Influence production expands the zone faster, but returns diminish at very high values. A system producing very little Influence will have a tight border that barely covers adjacent space; a high-Influence system can extend its zone several systems away.</p>
+
+        <p>What the Influence zone provides:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">VISION</span><span>The zone reveals all non-cloaked ships within its borders. This is passive intelligence — no probe or fleet needed to see what's moving inside your zone.</span></li>
+          <li><span class="step-n">COLONIZATION EXCLUSION</span><span>Uncolonized systems within your Influence area cannot be colonized by other factions without declaring war first. This is your soft territorial claim — expand your Influence zone ahead of your colony ships to lock out rivals from desirable systems.</span></li>
+          <li><span class="step-n">SPECIAL NODE BONUSES</span><span>Non-planetary special systems (asteroid fields, nebulae) inside your Influence area grant their passive bonuses to the system covering them.</span></li>
+          <li><span class="step-n">PEACEFUL CONQUEST</span><span>If your Influence zone expands to envelop a foreign-owned system, you can potentially absorb it peacefully if you have researched the Pacific Conversion technology — without declaring war.</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">BORDER CONTENTION</div>
+          When two factions' Influence areas collide, a border forms between them. The side with higher Influence production pushes the border gradually backward — visible on the map as a faint pulsing toward the direction of growth. You can see borders being contested in real time. A high-Influence frontier system actively expands your territorial claims against neighbors; a low-Influence frontier system slowly loses ground to rivals without any military action.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5c">
+      <div class="block-header" onclick="toggle('cb5c')">
+        <span class="block-icon">💸</span>
+        <span class="block-title">Empire-Wide Influence Stockpile: Spending</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Separately from the zone-expansion function, Influence is also stockpiled empire-wide and spent on diplomatic and political actions. These are different pools in practice — think of per-system Influence as feeding the border, while empire-wide stockpiled Influence is the currency you spend in specific interactions.</p>
+
+        <p>Common Influence expenditures:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">LAWS</span><span>Passing a law has an initial cost: Max(20% of your Total Empire Points, 5). Ongoing laws cost Influence per turn (typically 1 Influence per pop in your empire for higher-tier laws). High-pop empires pay significantly more to sustain advanced laws.</span></li>
+          <li><span class="step-n">SENATE ACTIONS</span><span>Influencing elections, giving official support to a party, intimidating voters, or reinforcing a party all cost Influence.</span></li>
+          <li><span class="step-n">MINOR FACTIONS</span><span>Praising, bribing, and assisting minor faction quests all spend Influence. Building relationship with minor factions early is one of the most Influence-efficient investments in the game — the tribute bonuses compound over many turns.</span></li>
+          <li><span class="step-n">DIPLOMACY</span><span>Proposing agreements, requesting truces, and trading assets with major factions all cost Influence. When a weaker faction uses Influence to force a truce on you, you can spend Influence to refuse and continue the war.</span></li>
+          <li><span class="step-n">BATTLE CARD CHANGES</span><span>Switching battle tactics mid-combat costs Influence, with the cost scaling on remaining combat turns and fleet command points.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">INFLUENCE IS THE HARDEST FIDSI TO PRODUCE</div>
+          Influence is explicitly described as the hardest FIDSI to obtain in the game. No default planet type generates it, and most improvements that provide it are conditional on specific planet types or population compositions. Build Influence production actively and deliberately — don't assume it will accumulate on its own. Running low on Influence at a critical diplomatic moment (a forced truce you need to refuse, an election you need to control) is a common mid-game failure mode.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb5c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T6: POLITICAL SYSTEM -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">The Political System: Parties, Laws &amp; Senators</h2>
+        <div class="topic-subtitle">Laws are empire-wide buffs that can swing an output category by 30–50%. Getting the right laws active at the right time is one of the highest-leverage decisions in the game.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Senate Mechanics: How It Works</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Senate is populated by representatives allocated per system. The <strong>representative count formula differs by government</strong>: in Democracy, Republic, and Federation, each system sends one rep per population unit; in Dictatorship and Autocracy, each system sends <em>(1 + 3 × System Level)</em> representatives. This is a major strategic difference — Dictatorship Senate composition is shaped by which systems you've developed to higher levels, not by population headcount.</p>
+
+        <p>Elections occur every <strong>20 turns</strong> on Normal speed. Before results lock in, a pre-election survey shows projected vote distribution — use this window to decide whether to spend Influence or Dust on interference. Between elections, parties accumulate <strong>political experience</strong> while holding Senate seats, unlocking stronger law tiers: Level 1 (Functional) is immediately available; Level 2 (Established) through Level 4 (Potent) require increasing tenure. A party that loses an election does not reset its experience — it retains its level and can access those laws again immediately if re-elected.</p>
+
+        <p><strong>Vote redistribution after elections:</strong> losing parties' votes are redistributed to winning parties based on ideological proximity on the politics wheel — never to the opposite party. Example: if Pacifists lose but Scientists and Religious win, Pacifist votes go to Scientists (closer neighbor). This creates predictable drift — a Senate race between two parties often ends with the ideologically adjacent winner absorbing the loser's base, making runaway majorities easier to sustain than they appear.</p>
+
+        <p><strong>Law slot counts by government and tech stage:</strong></p>
+
+        <table class="ref-table">
+          <tr><th>Government</th><th>Base Slots</th><th>+ED Stage 3</th><th>+ED Stage 5</th><th>Total Max</th></tr>
+          <tr><td class="cell-key">Democracy</td><td>4</td><td>+1</td><td>+2</td><td>7</td></tr>
+          <tr><td class="cell-key">Autocracy</td><td>4</td><td>+1</td><td>+1</td><td>6</td></tr>
+          <tr><td class="cell-key">Republic</td><td>3</td><td>+1</td><td>+1</td><td>5</td></tr>
+          <tr><td class="cell-key">Federation</td><td>3</td><td>+1</td><td>+1</td><td>5</td></tr>
+          <tr><td class="cell-key">Dictatorship</td><td>3</td><td>+1</td><td>+1</td><td>5</td></tr>
+        </table>
+
+        <p>Laws cost Influence to maintain — upkeep is the law's level multiplied by total empire population. Forced/power laws and Independent laws have no upkeep. At high pop counts, sustaining multiple Level 3–4 laws becomes a meaningful Influence drain. Monitor this when scaling wide.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">The Major Parties &amp; Their Best Laws</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Six political parties are available across factions (not all factions have equal access to all parties — starting populations and faction traits determine initial Senate composition):</p>
+
+        <table class="ref-table">
+          <tr><th>Party</th><th>Standout Laws</th><th>Best For</th></tr>
+          <tr><td class="cell-key">Industrialists</td><td>Mineral Miseries Act (+15% Industry on strategic deposits, +1 research gen); Pollution: Not Our Problem (~+1000 Industry at 125 pop)</td><td>Industry-focused empires with good strategic resource coverage</td></tr>
+          <tr><td class="cell-key">Scientists</td><td>Cram Exam Act (−30% system improvement cost); +50% damage on weapon modules; +40% food output</td><td>The most versatile party — almost always worth having in Senate</td></tr>
+          <tr><td class="cell-key">Pacifists</td><td>Fair Trade Bill (+15% Approval and a bonus to all FIDSI types); Toys for Boys (+25 Approval empire-wide, −10% Industry)</td><td>Approval recovery; useful in Republic government for the ×1.5 law multiplier</td></tr>
+          <tr><td class="cell-key">Ecologists</td><td>Hardship Ready (colonize any planet type); colony growth laws</td><td>Wide expansionist empires; factions starting under Ecologist government</td></tr>
+          <tr><td class="cell-key">Religious</td><td>Sanctioned Miracles (forces Approval to Content minimum; Republic makes it Happy minimum)</td><td>Empires that want to ignore Approval management entirely and expand without constraint</td></tr>
+          <tr><td class="cell-key">Militarists</td><td>+40% damage on weapon modules; +40% troop damage</td><td>Military empires; mix with Scientists for 50%+40% weapon combinations</td></tr>
+        </table>
+
+        <p>The Religious party's Sanctioned Miracles law deserves special mention: it sets a floor on Approval regardless of overcolonization, razed systems, or mixed populations. An empire running this law effectively removes Approval management as a constraint, freeing colonization without the usual penalties. This is a legitimate strategy — build your empire around it rather than treating Approval as a limiting factor.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6c">
+      <div class="block-header" onclick="toggle('cb6c')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">Heroes as Senators</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Heroes have political affiliations that determine which party they belong to in the Senate. When a hero's party is the leading party, the hero's Senate-specific skills activate — these are distinct from their governor or fleet commander skills and only apply while the hero holds Senate influence.</p>
+
+        <p>This creates a deliberate tension in hero recruitment: a Counselor hero might have valuable trade skills for governing, but if their political affiliation is a party you're actively trying to suppress, hiring them may shift Senate votes away from your preferred alignment. When recruiting heroes, review their party affiliation alongside their skill set.</p>
+
+        <p>Example: a Pacifist hero assigned to a system with a large Pacifist population counts toward Pacifist Senate votes from that system. If you want to maintain Industrialist dominance, a high-pop system with Pacifist population and a Pacifist hero working against you may require actively moving different pop types into that system to dilute the vote. Full hero depth in Vol.5.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb6c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T7: GOVERNMENT TYPES, ELECTIONS, LONG-TERM CONTROL -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Government Types, Elections &amp; Long-term Political Control</h2>
+        <div class="topic-subtitle">Government type determines law slot count and election mechanics. Long-term control is built through population composition, not just election interference.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Government Types Compared</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Government type affects three things: the number of active law slots available, the number of parties represented in the Senate, and the type of election interference actions available. Most factions start with a default government and can change via the Xeno-Anthropology tech (Stage 3, Empire Development). Changing government incurs an inertia period of 2 turns and requires a minimum Approval rating.</p>
+
+        <table class="ref-table">
+          <tr><th>Government</th><th>Max Law Slots</th><th>Senate Parties</th><th>Key Mechanic</th></tr>
+          <tr><td class="cell-key">Democracy</td><td>7</td><td>3 parties</td><td>+1 Approval/pop on systems; 3 Hero Senators simultaneously; stable but inflexible — hard to force a minority party in</td></tr>
+          <tr><td class="cell-key">Republic</td><td>5</td><td>2 parties</td><td>All party law effects enhanced (~33–100% stronger); Dust used for election interference; highest raw law power</td></tr>
+          <tr><td class="cell-key">Federation</td><td>5</td><td>2 parties</td><td>+1 overcolonization threshold per Hero in leading party; −20% luxury development cost; best government for wide play</td></tr>
+          <tr><td class="cell-key">Dictatorship</td><td>5</td><td>1 party (chosen)</td><td>You pick the winning party directly each election; Hero Senator gets ×1.5 skill bonus; forced law gets Dictatorship bonus; rebels trigger at Unhappy (30%) not Mutinous (10%)</td></tr>
+          <tr><td class="cell-key">Autocracy</td><td>6</td><td>1 party (fixed)</td><td>Cravers only; cannot change government; no rebellion possible; same Dictatorship bonuses plus immunity to anarchy</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">DICTATORSHIP'S HIDDEN UPSIDE: REBEL AT UNHAPPY</div>
+          Under all other governments, the luxury-bribe action (spend a luxury to give a system +25 Approval) only unlocks when the system is Mutinous — bringing it to Unhappy. Under Dictatorship, it unlocks at Unhappy — bringing the system back to Content (full Food and Influence output). This is a meaningful emergency valve for systems teetering below the Content threshold. It costs a luxury resource and won't fix structural Approval problems, but it can prevent cascading starvation on a system that's momentarily in the red.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">REPUBLIC + HIGH-VALUE LAW COMBOS</div>
+          Republic law enhancement is strongest on laws with large base values. Pacifist's Toys for Boys (+25 Approval) becomes effectively +37 in Republic. Scientist's Need to Breed (+30% Food) becomes +40%. Militarist and Scientist weapon damage laws both hit harder. The rule: if you're building around 1–2 specific laws as your economic engine, Republic amplifies them more than any other government. If you need breadth across many law types, Democracy's 7 slots wins.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">🗳️</span>
+        <span class="block-title">Elections &amp; Interference</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Elections occur every 10–20 turns depending on game speed. The Senate vote reflects your entire empire's population composition — each system sends representatives proportional to its population makeup. Pre-election, a survey button shows you the projected vote distribution, giving you a window to intervene before results are locked in.</p>
+
+        <p>Election interference options (available depending on government type):</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">OFFICIAL SUPPORT</span><span>Free action — gives a small boost to a chosen party's vote share. Available to all governments.</span></li>
+          <li><span class="step-n">REINFORCE</span><span>Costs Influence — gives a strong boost to a chosen party. Most effective at swinging a close race.</span></li>
+          <li><span class="step-n">INTIMIDATE</span><span>Costs Influence — suppresses a party's vote share. Useful for keeping a dominant rival party from gaining a second Senate seat.</span></li>
+          <li><span class="step-n">PRIMARY ELECTION / STRONG ARM</span><span>Republic-specific — use Dust to influence election outcomes directly. Allows Dust to substitute for Influence in election manipulation.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7c">
+      <div class="block-header" onclick="toggle('cb7c')">
+        <span class="block-icon">📈</span>
+        <span class="block-title">Long-term Political Control via Population</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Election interference is a short-term lever. Long-term political control is built through <strong>population composition</strong>. Every population type has a natural affinity for specific parties — Imperials boost Industrialists and Scientists; Vaulters strongly back Scientists; Horatio pops tend toward Pacifists. The populations you grow, assimilate, and breed determine your Senate baseline over the course of the game.</p>
+
+        <p>Some population affinities also provide support to adjacent parties (parties closer on the political spectrum). This means that growing Militarists-aligned pops can also shift votes toward Scientists (their adjacent party), and Pacifists can gain votes from populations that primarily support Industrialists. Understanding these adjacencies lets you stack Senate compositions more deliberately.</p>
+
+        <p>The strategic implication: your decisions about which minor factions to assimilate and which alien populations to breed are not just FIDSI decisions — they are simultaneously political decisions. An empire that carefully selects for Industrialist-affiliated minor faction pops will maintain Industrialist dominance election after election without spending Influence on interference, while an empire that assimilates randomly may find itself unable to sustain the laws it wants.</p>
+
+        <p>This is one of the most underutilized strategic dimensions by intermediate players: treating political alignment as a colonization and population management criterion, not just as an outcome you react to.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb7c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- QUIZ -->
+  <!-- ============================================================ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Specific situations. Make the call.</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol2';
+const TOTAL = 8;
+let qIdx = 0;
+let answered = false;
+const quizzes = [
+  {
+    scenario: "Turn 20. You have 4 colonized systems. Empire Approval is 87% (Ecstatic). You produce 420 Dust/turn and 310 Science/turn across your empire. A 5th system is available — 4 planets (2 Hot, 1 Fertile, 1 Cold), no strategic resources, no luxury resources. Colonizing it will push you past your overcolonization limit, dropping Empire Approval to 77% (Happy).",
+    q: "What is the correct analysis of this colonization?",
+    opts: [
+      "Colonize immediately — 4 planets will eventually produce more than the penalty costs.",
+      "Reject it — overcolonization always makes expansion net-negative until the limit is raised.",
+      "Evaluate the payback period. Dropping from Ecstatic to Happy costs 15% on 420 Dust + 310 Science = −63 Dust/turn and −46.5 Science/turn. That's ~110 FIDSI/turn lost immediately, every turn until you recover Approval or the colony develops. The 4-planet system with no resources will take 15–25 turns to generate 110 FIDSI/turn. Before colonizing: can you raise the overcolonization limit first (through tech or law)? If not, is there a high-value system nearby instead? If this is the best available target, the payback is marginal but possible — accept with eyes open.",
+      "Colonize, but immediately enact Toys for Boys to recover the Approval loss."
+    ],
+    correct: 2,
+    explain: "Option C is the correct framing. This is a payback period problem. Dropping from Ecstatic (85+, +30%) to Happy (70–84, +15%) costs exactly 15% on all Dust and Science empire-wide — not just in the new system but everywhere simultaneously. At the numbers given, this is roughly 110 FIDSI/turn lost from turn 1. A 4-planet system with no resources starts contributing near zero and takes many turns to ramp up. The honest answer is: the math is marginal, and whether to proceed depends on whether you have any better option or any way to avoid the tier drop (via tech). Option A ignores the timing of the cost. Option B is too absolute — overcolonization is sometimes worth it if the system is strong enough. Option D works in theory, but Toys for Boys also costs −10% Industry on all systems, which may replace one cost with another."
+  },
+  {
+    scenario: "Turn 28. You are in a Republic government. The Pacifist party has been in your Senate for 20 turns and has reached Level 3. Their Sanctioned Miracles law would lock your Approval at Content (or Happy in a Republic) permanently regardless of how many systems you colonize. Your current Approval is 81% (Happy). You want to expand to 8 systems total over the next 20 turns.",
+    q: "Should you pass Sanctioned Miracles?",
+    opts: [
+      "No — your current Happy tier already provides +15% on Dust/Science; Sanctioned Miracles only guarantees Content, which is worse.",
+      "Yes — if you plan to colonize aggressively to 8 systems, the overcolonization penalties would likely drop you below Happy anyway. In a Republic, Sanctioned Miracles sets the floor at Happy (+15% on Dust/Science), not just Content. Locking in Happy permanently while expanding to 8 systems removes Approval management as a constraint and lets you colonize without calculating payback periods for each new system.",
+      "No — the Influence upkeep cost of Sanctioned Miracles is too high at 8 systems.",
+      "Yes, but only after you've reached 8 systems — activate it reactively when Approval drops."
+    ],
+    correct: 1,
+    explain: "Option B is correct. The key detail is Republic government, which intensifies law effects by ×1.5. Sanctioned Miracles in a Republic sets the Approval floor at Happy (70+), not just Content (30+) as in other governments. If you plan to colonize 4 more systems, the cumulative overcolonization penalties without this law would almost certainly drop you below Happy — likely to Content or worse — costing the +15% Dust/Science multiplier empire-wide. Locking in Happy via this law is therefore a net gain compared to the alternative trajectory. Option A makes an error: it assumes current Happy (81%) is the relevant comparison, but the trajectory matters. Option C's concern is valid but secondary — if the Influence cost is sustainable, the law pays back in FIDSI multiplier preservation. Option D — reactive activation — means you've already absorbed several turns of penalty you could have avoided."
+  },
+  {
+    scenario: "Turn 15. Your frontier system (Tau Ceti) produces 35 Influence per turn. The nearest rival (Sophons) has a frontier system 2 hops away producing 80 Influence per turn. There is a valuable unclaimed 4-planet system between your territories.",
+    q: "What does the Influence zone mechanic mean for this contested system?",
+    opts: [
+      "Influence zones don't affect colonization — whoever builds a colony ship first wins.",
+      "The Sophons' frontier system produces more than twice your Influence output. Their zone is expanding faster than yours and will envelop the contested system before yours does unless you intervene. Once a system falls inside their Influence zone, you cannot colonize it without declaring war. Your options: invest in Influence improvements at Tau Ceti to compete for the border, send a colony ship now before the zone closes, or accept that this system is theirs and identify the next target.",
+      "Build military ships at the contested system to hold it regardless of Influence.",
+      "Influence zones only matter after colonization, not for empty systems."
+    ],
+    correct: 1,
+    explain: "Option B is the correct mechanical understanding. The Influence zone actively locks out colonization by other factions. With 80 vs. 35 Influence output, the Sophons' border is expanding roughly 2× as fast as yours toward the contested space. If their zone reaches the target system first, you lose your right to colonize it without a war declaration — a potentially significant diplomatic and military cost. The decision tree is: how fast will their zone reach the target (calculable roughly from the distance and the Influence difference), versus how long it takes to build and send a colony ship. If a colony ship can arrive before their zone does, plant the outpost immediately. If not, either boost your Influence at Tau Ceti quickly or accept the loss and redirect. Option A is factually incorrect — Influence zones explicitly block colonization. Option C ignores that military presence doesn't override zone colonization mechanics. Option D is also incorrect — empty systems inside a zone cannot be colonized without war."
+  },
+  {
+    scenario: "Turn 35. You have been running Industrialists as your dominant party for 25 turns — they are at Level 4 (Potent). Your Pollution: Not Our Problem law gives +1000 Industry/turn across your 150 pops. An election is 3 turns away and the survey shows Scientists are likely to win it, which would end Industrialist dominance and reduce the party to Level 0.",
+    q: "What is the most effective way to protect your Industrialist law access long-term?",
+    opts: [
+      "Spend Influence to reinforce the Industrialists this election — they just need to win one more time.",
+      "Accept the election result and re-elect the Industrialists next election.",
+      "Reinforce the Industrialists this election to maintain their Senate seat, but also review your system population composition. Long-term Industrialist dominance requires that Industrialist-affiliated populations outnumber Scientist-affiliated ones across your empire. If you've assimilated Vaulter-aligned pops or have a large Hekim (Sophon) population, they push votes toward Scientists every election. The election intervention is a short-term fix; population composition management is the structural solution.",
+      "Switch to Republic government so law effects are intensified — this reduces the cost of losing party experience."
+    ],
+    correct: 2,
+    explain: "Option C is the complete answer. Election interference (Option A) wins the immediate election but doesn't address why Scientists are winning in the first place — your population composition is driving Scientists votes. If you fix the election but don't change who's in your systems, you'll face the same threat every 10–20 turns, spending Influence each time. The structural fix is identifying which systems are voting Scientist-heavy and either changing their population composition via Spaceport transfers, building Industrialist-aligned pops there, or assimilating Industrialist-aligned minor factions. Option B is passively accepting a long-term loss of your Level 4 law access — Industrialists reset to Level 0 if they lose the Senate, and rebuilding to Level 4 takes many more turns. Option D addresses a different problem — Republic helps intensify laws but doesn't preserve party experience or prevent the election outcome."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

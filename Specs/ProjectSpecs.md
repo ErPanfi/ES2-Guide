@@ -35,7 +35,7 @@ Naming conventions:
 |------|-------|--------|--------|
 | `GeneralGuide/es2-vol0-gamestart.html` | Game Start Essentials | 8 | Pending rebuild |
 | `GeneralGuide/es2-vol1-economy.html` | Inside your Empire: Material & Money | 9 | Pending rebuild |
-| `GeneralGuide/es2-vol2-politics.html` | Inside your Empire: People & Ideas | 7 | Pending rebuild |
+| `GeneralGuide/es2-vol2-people.html` | Inside your Empire: People & Ideas | 7 | Pending rebuild |
 | `GeneralGuide/es2-vol3-exploration.html` | Outside your Empire | 10 | Pending rebuild |
 | `GeneralGuide/es2-vol4-combat.html` | Ships, Combat & Military | 10 | Pending rebuild |
 | `GeneralGuide/es2-vol5-heroes.html` | Heroes & the Academy | 10 | Pending rebuild |
@@ -53,8 +53,8 @@ Naming conventions:
 | `GeneralGuide_OLD/es2-vol2-combat.html` | Content to be discarded — rebuild from sources |
 | `GeneralGuide_OLD/es2-vol3-heroes.html` | Content to be discarded — rebuild from sources |
 | `GeneralGuide_OLD/es2-vol4-diplomacy.html` | Content to be discarded — rebuild from sources |
-| `GeneralGuide_OLD/es2-vol5-factions.html` | Content to be discarded — rebuild from sources |
-| `GeneralGuide_OLD/es2-vol6-factions-special.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol5-factions.html` | Content can be used for inspiration - to be rebuilt  |
+| `GeneralGuide_OLD/es2-vol6-factions-special.html` | Content can be used for inspiration - to be rebuilt |
 
 **Faction Deep-Dive volumes:**
 
@@ -63,6 +63,8 @@ Naming conventions:
 | `FactionsDeepGuide/es2-Fac01-lumeris.html` | Complete, content awaiting user revision | 13 | |
 | `FactionsDeepGuide/es2-Fac02-horatio.html` | Complete, content awaiting user revision | 10 | |
 | `FactionsDeepGuide/es2-Fac03-sophons.html` | Complete, content awaiting user revision | 9 | |
+| `FactionsDeepGuide/es2-Fac04-cravers.html` | Built, looking for sources for extra topics | 7 | |
+| `FactionsDeepGuide/es2-Fac05-vodyani.html` | Complete, content awaiting user revision | 11 | |
 
 ---
 
@@ -88,68 +90,73 @@ Google Fonts link (also required in `<head>`):
 
 ## Color System
 
+
 ### Global palette (defined in `es2-guide.css` `:root`)
 
 **Semantic fixed colors** — use these by name, never by hex:
-| Var | Color | Use |
-|-----|-------|-----|
-| `--green` / `--green-rgb` | #1db96a | Positive, buffs |
-| `--red` / `--red-rgb` | #e84040 | Negative, warnings, danger |
-| `--gold` / `--gold-rgb` | #e8a020 | Economy, resources |
-| `--purple` / `--purple-rgb` | #8b5cf6 | Heroes, abilities |
-| `--cyan` / `--cyan-rgb` | #00d4ff | Tech, science |
+| Var        | Value (R,G,B) | Use |
+|------------|------------|-----|
+| `--green`  | 29,185,106 | Positive, buffs |
+| `--red`    | 232,64,64  | Negative, warnings, danger |
+| `--gold`   | 232,160,32 | Economy, resources |
+| `--purple` | 139,92,246 | Heroes, abilities |
+| `--cyan`   | 0,212,255  | Tech, science |
 
 **Per-volume accent colors:**
-| Volume | Accent var | RGB var | Color |
-|--------|-----------|---------|-------|
-| Vol.0 | `--vol0-accent` | `--vol0-accent-rgb` | Teal-green #00c9a7 |
-| Vol.1 | `--vol1-accent` | `--vol1-accent-rgb` | Light salmon #FFA07A |
-| Vol.2 | `--vol2-accent` | `--vol2-accent-rgb` | Gold #e8a020 |
-| Vol.3 | `--vol3-accent` | `--vol3-accent-rgb` | Blue #2d8fff |
-| Vol.4 | `--vol4-accent` | `--vol4-accent-rgb` | Red #e84040 |
-| Vol.5 | `--vol5-accent` | `--vol5-accent-rgb` | Mint #00d4a0 |
-| Vol.6 | `--vol6-accent` | `--vol6-accent-rgb` | Purple #8b5cf6 |
-| Vol.7 | `--vol7-accent` | `--vol7-accent-rgb` | Cold cyan #00e5ff |
-| Vol.8 | `--vol8-accent` | `--vol8-accent-rgb` | Pale Sacred Gold #e8d48b |
+| Volume | Accent var      | Value (R,G,B) |
+|--------|-----------------|-------|
+| Vol.0  | `--vol0-accent` | 0,201,167 |
+| Vol.1  | `--vol1-accent` | 255,160,122 |
+| Vol.2  | `--vol2-accent` | 28,219,12 |
+| Vol.3  | `--vol3-accent` | 45,143,255 |
+| Vol.4  | `--vol4-accent` | 232,64,64 |
+| Vol.5  | `--vol5-accent` | 232,160,32 |
+| Vol.6  | `--vol6-accent` | 139,92,246 |
+| Vol.7  | `--vol7-accent` | 0,229,255 |
+| Vol.8  | `--vol8-accent` | 232,212,139 |
 
-**Faction identity colors:**
-| Faction | Color var | RGB var | Color |
-|---------|-----------|---------|-------|
-| Lumeris | `--lumeris-color` | `--lumeris-color-rgb` | Gold #e8a020 |
-| United Empire | `--ue-color` | `--ue-color-rgb` | Imperial red #c0392b |
-| Vodyani | `--vodyani-color` | `--vodyani-color-rgb` | Predatory orange #ff6b1a |
-| Riftborn | `--riftborn-color` | `--riftborn-color-rgb` | Cold cyan #00e5ff |
-| Sophon | `--sophon-color` | `--sophon-color-rgb` | Blue #2d8fff |
-| Cravers | `--cravers-color` | `--cravers-color-rgb` | Dark green #1a6b2a |
-| Hissho | `--hissho-color` | `--hissho-color-rgb` | Red #e84040 |
-| Horatio | `--horatio-color` | `--horatio-color-rgb` | Narcissist pink #f0a8d0 |
-| Unfallen | `--unfallen-color` | `--unfallen-color-rgb` | Green #1db96a |
-| Umbral Choir | `--umbral-color` | `--umbral-color-rgb` | Purple #8b5cf6 |
-| Vaulters | `--vaulters-color` | `--vaulters-color-rgb` | Teal #00c9a7 |
-| Nakalim | `--nakalim-color` | `--nakalim-color-rgb` | Pale sacred gold #e8d48b |
+**Faction identity colors and emoji:**
+| Faction       | Emoji | Color var          | Value (R,G,B) | Notes |
+|---------------|-------|--------------------|-------------|-------|
+| Lumeris       | 💰     | `--lumeris-color`  | 232,160,32  | Gold |
+| United Empire | ⚔️    | `--ue-color`       | 192,57,43   | Imperial red |
+| Vodyani       | 🦋    | `--vodyani-color`  | 255,107,26  | Predatory orange |
+| Riftborn      | ❄️    | `--riftborn-color` | 0,229,255   | Cold cyan |
+| Sophon        | 🔬    | `--sophon-color`   | 45,143,255  | Blue |
+| Cravers       | 🪳     | `--cravers-color`  | 68, 108, 36 | Dark olive green |
+| Hissho        | 🪶     | `--hissho-color`   | 232,64,64   | Red |
+| Horatio       | 🧬    | `--horatio-color`  | 240,168,208 | Narcissist pink | 
+| Unfallen      | 🌿    | `--unfallen-color` | 29,185,106  | Green |
+| Umbral Choir  | 👁️    | `--umbral-color`   | 139,92,246  | Purple |
+| Vaulters      | 🌀     | `--vaulters-color` | 0,201,167   | Teal |
+| Nakalim       | 🏛️    | `--nakalim-color`  | 232,212,139 | Pale sacred gold |
 
-
-Faction deep-dives use the corresponding faction identity color as their base, and the badges defined in the shared CSS file. 
+Faction deep-dives use the corresponding faction identity color as their base, and the vol-card-badge elements defined in the shared CSS file.
+Wherever an emoji would be placed to picture a faction the default emoji should be always preferred
 
 ### Per-page `:root` override (required in every file's `<style>`)
 
-Minimal volumes (vol0–vol8):
+#### General volumes (vol0–vol8):
 ```css
 :root {
   --accent:     var(--volN-accent);
-  --accent-rgb: var(--volN-accent-rgb);
-  --accent-dim: rgba(var(--volN-accent-rgb), 0.11);
+  --accent-dim: rgba(var(--volN-accent), 0.11);
 }
-```
 
-Faction deep-dives (example — Lumeris):
+.vol-next { --card-accent: var(--vol(N+1)-accent); }
+.vol-prev { --card-accent: var(--vol(N-1)-accent); }
+```
+Use the --volN-accent relative to the next volumes in the guide while building the .vol-next class; use the one of the previous volume when building the .vol-prev class.
+For example: vol5 has this two lines:
+
+
+#### Faction deep dives volumes (example — Lumeris):
+
 ```css
 :root {
   --accent:             var(--lumeris-color);
-  --accent-rgb:         var(--lumeris-color-rgb);
-  --accent-dim:         rgba(var(--lumeris-color-rgb), 0.11);
-  --accent-bright-rgb:  245,200,66;
-  --accent-bright:      rgb(var(--accent-bright-rgb));
+  --accent-dim:         rgba(var(--accent), 0.11);
+  --accent-bright:  245,200,66;
 }
 ```
 
@@ -228,7 +235,7 @@ Sidebar nav items that correspond to tracked topics must have `<span class="nav-
   <nav class="sidebar"> ... </nav>
   <main class="main">
     <div class="page-header">
-      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.N</span> // Title</div>
+      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>{Vol.N | Fac.N}</span> // Title</div>
       <h1 class="page-title">Title</h1>
       <p class="page-subtitle">...</p>
     </div>
@@ -241,6 +248,10 @@ Sidebar nav items that correspond to tracked topics must have `<span class="nav-
 </div>
 <div class="toast" id="toast"></div>
 ```
+
+In the <span> tag use the 'Vol.{N}' snippet if you're writing a general guide volume, or a 'Fac.{N}' snippet if you're writing a Faction deep dive.
+
+If you're writing a Faction deep dive you should add the corresponding faction icon, found at the path `../images/Races/{FactionName}Icon.webp`, into the `page-title` element.
 
 ### Topic structure
 ```html
@@ -277,7 +288,7 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 ```html
 <nav class="sidebar">
   <div class="sidebar-logo">
-    <a href="../index.html" class="vol-card right linkToIndex" style="--card-accent: var(--text-bright); --card-accent-rgb: var(--text-bright);">ES2</a>
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
     <div class="game-name">VOLUME N</div>
     <div class="guide-name">Title<br>Subtitle</div>
   </div>
@@ -286,6 +297,8 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
     🔧 Topic Name <span class="nav-check" id="nc1"></span>
   </div>
   <!-- vol navigation links -->
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
   <div class="nav-section-label">// Next Volumes</div>
   <div class="vol-card right vol-prev" onclick="location.href='es2-volN-prev.html'"><div class="vol-card-arrow">←</div> Vol.N-1: Name</div>
   <div class="vol-card left vol-next" onclick="location.href='es2-volN-next.html'">Vol.N+1: Name <div class="vol-card-arrow">→</div></div>
@@ -297,7 +310,27 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 </nav>
 ```
 
-Factions deep dive should not have the two `vol-link` elements in the sidebar, because deep dives are meant to be standalone volumes, and do not have a logical order
+Factions deep dive should not have the two `vol-card` elements in the sidebar, because deep dives are meant to be standalone volumes, and do not have a logical order
+
+### Quiz structure
+```html
+
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Quiz subtitle</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+```
+Replace the "Quiz subtitle" text with something appropriate for the volume.
+For example: Vol.5 explain heroes, so its subtitle is: `Hero decisions under real game conditions — one right answer, concrete reasoning required`
 
 ### Common content components
 
@@ -334,11 +367,16 @@ Factions deep dive should not have the two `vol-link` elements in the sidebar, b
 
 ---
 
-## Faction Deep-Dive Format (additional conventions)
+## Faction Deep-Dive Format (additional conventions and content)
+
+Faction files always contains a faction description written in the `topic-subtitle` element, that reuse the elements of the deep dive to picture an evocative portrait of the faction. Example for the Lumeris:
+`<p class="page-subtitle">The Venetians of space — merchants, brokers, and opportunists. The Lumeris generate more Dust than any faction in the game, convert that Dust directly into territory and ships, and turn Trade Company routes into Influence. They also have the most misunderstood identity in ES2: new players assume they are a peaceful economic faction. They are not. They are a snowball faction that wins by spending money faster than opponents can respond.</p>`
+
+Faction files always have `{Faction emoji} Faction Identity` as their Topic 0; this topic should appear as the first topic in the sidebar, in a section named `//OVERVIEW`
 
 Faction files are more elaborate than the main volumes and introduce additional components:
 
-- **`.faction-badge`** — identity label at the top of the page
+- **`.vol-card-badge`** — identity label at the top of the page. This should already be defined in `es2-guide.css`, minus the faction color.
 - **`.trait-block`** — faction-specific trait/mechanic blocks (`.warn` modifiers when signalling a negative trait (for example: a weakness explanation))
 - **`.trait-label`** — label inside trait blocks
 - **`.source-row` / `.src-pill`** — source attribution inline with claims
@@ -350,8 +388,9 @@ COOKIE KEY for faction files: use a unique string like `'fac01'`, `'fac02'`, etc
 
 ---
 
-## Workflow for New Sessions
+## Workflow for New Build Sessions
 
-1. Claude reads `es2-guide.css` and `es2-guide.js` from project files to confirm the design system
-2. Claude works on the file, outputs the result to `/mnt/user-data/outputs/`
-3. User downloads the generated file and commit it into the git repository that is linked in the project Knowledge Base
+1. User uploads `ProjectSpecs.md` and `es2-guide.css`, in order to have them fully in context windows. If building a faction deep dive user should provide another faction deep dive (Usually Lumeris or Horatio) as an example. If user didn't provide all those files Claude should prompt the user at least once in order to receive them.
+2. Claude reads `es2-guide.js` from project files to confirm the available functions to call.
+3. Claude works on the file, outputs the result to `/mnt/user-data/outputs/`
+4. User downloads the generated file and commit it into the git repository that is linked in the project Knowledge Base

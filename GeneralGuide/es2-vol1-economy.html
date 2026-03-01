@@ -1,0 +1,1085 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 Vol.1 — Inside your Empire: Material &amp; Money</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<style>
+  :root {
+    --accent:     var(--vol1-accent);
+    --accent-dim: rgba(var(--vol1-accent), 0.11);
+  }
+  .vol-prev { --card-accent: var(--vol0-accent); }
+  .vol-next { --card-accent: var(--vol2-accent); }
+
+  .approval-bar {
+    display: flex;
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 1rem 0;
+    font-size: var(--ts_quizSmall);
+    font-family: 'Share Tech Mono', monospace;
+    text-align: center;
+  }
+  .apv-seg {
+    padding: 6px 4px;
+    flex: 1;
+    line-height: 1.3;
+  }
+
+  .science-cost-table td, .science-cost-table th {
+    font-size: var(--ts_table);
+    padding: 4px 10px;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">VOLUME 1</div>
+    <div class="guide-name">Material<br>&amp; Money</div>
+  </div>
+
+  <div class="nav-section-label">// Economy Deep Dive</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">📊 FIDSI Full Calculation <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">👥 Population Mechanics <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🔬 Science &amp; Research Queue <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">⚙️ Economy &amp; Trade Tech Tree <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">💎 Resources &amp; Marketplace <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🏙️ System Development <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🚢 Trade Companies &amp; Routes <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🌌 Economic Behemoths <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-item" onclick="scrollByID('t9')">🏆 Turn 30 Assessment <span class="nav-check" id="nc9"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="nav-section-label">// Volumes</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol0-gamestart.html'"><div class="vol-card-arrow">←</div> Vol.0: Game Start</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol2-people.html'">Vol.2: People &amp; Ideas <div class="vol-card-arrow">→</div></div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.1</span> // Material &amp; Money</div>
+    <h1 class="page-title">Inside your Empire:<br>Material &amp; Money</h1>
+    <p class="page-subtitle">FIDSI is not a dashboard — it's a system of levers with dependencies. This volume covers the full calculation stack, how population multiplies everything, how science costs scale, what the Economy &amp; Trade tree actually unlocks, how resources and the Marketplace interact, how system development levels work, what trade companies do and when they're worth building, how Economic Behemoths function, and what an honest empire assessment looks like at Turn 30. Approval depth is in Vol.2. Manpower depth is in Vol.4.</p>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- T1: FIDSI FULL CALCULATION -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">FIDSI: Full Calculation &amp; Multiplier Stack</h2>
+        <div class="topic-subtitle">Base × Pop × Approval × Hero × Law. Each layer multiplies the previous one.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">How the Output Number Is Built</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every FIDSI number you see in the system panel is the result of a multiplication chain, not a simple sum. Understanding each layer tells you where intervening makes the most difference.</p>
+
+        <p>The chain works like this: each planet has a <strong>base value per population unit</strong> for each FIDSI output — this depends on the planet type (Fertile planets produce the most Food; Hot planets produce the most Industry; Cold planets produce the most Science). That base value is then <strong>multiplied by the number of population units assigned to that planet</strong>. This is why population is your primary lever: doubling population on a planet doubles its output, before any other modifier applies.</p>
+
+        <p>On top of the base × pop product, several modifiers stack:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">IMPROVEMENTS</span><span>System Improvements add flat bonuses (e.g. "+10 Industry on Hot planets") or percentage bonuses on top of the base production. These apply per system and are additive with each other before multiplying with other layers.</span></li>
+          <li><span class="step-n">HERO BONUS</span><span>A governor hero assigned to a system applies their skill bonuses to that system's output. These are typically percentage multipliers on one or more FIDSI. The hero's bonus compounds with improvement bonuses.</span></li>
+          <li><span class="step-n">APPROVAL MULTIPLIER</span><span>Approval acts as a global multiplier on Dust and Science (empire-wide) and on Food and Influence (per-system). Industry is <strong>entirely exempt</strong> from Approval modifiers at every tier. See the Approval table below.</span></li>
+          <li><span class="step-n">LAW MODIFIERS</span><span>Active laws can add flat bonuses per population, percentage multipliers on specific outputs, or conditional bonuses tied to planet type or strategic resources. Laws apply empire-wide.</span></li>
+          <li><span class="step-n">LUXURY RESOURCE SLOTS</span><span>Once system development levels are unlocked, assigning a luxury resource to a system slot grants a permanent percentage bonus to a specific FIDSI type for that system. These compound with everything above.</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">READING THE TOOLTIP</div>
+          Hovering over any FIDSI output in the system panel shows the full breakdown: base planet production, pop multiplier, improvement contributions, and hero bonuses listed separately. Use this actively when deciding where to place population or which improvement to build next. The numbers are transparent — the game is not hiding the math.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">😊</span>
+        <span class="block-title">Approval: The Multiplier Stack</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Approval is not a sixth FIDSI — it is a multiplier that sits on top of the production chain. It operates in two separate scopes: <strong>System Approval</strong> affects Food and Influence output for that individual system; <strong>Empire Approval</strong> (a population-weighted average across all your systems) affects Dust and Science empire-wide. Industry is immune at every tier.</p>
+
+        <div class="approval-bar">
+          <div class="apv-seg" style="background:rgba(var(--red),0.85);color:rgb(var(--text-bright));">MUTINOUS<br><span>0</span></div>
+          <div class="apv-seg" style="background:rgba(var(--red),0.55);color:rgb(var(--text-bright));">UNHAPPY<br><span>10</span></div>
+          <div class="apv-seg" style="background:rgba(var(--gold),0.5);color:rgb(var(--text-bright));">CONTENT<br><span>30</span></div>
+          <div class="apv-seg" style="background:rgba(var(--green),0.6);color:rgb(var(--text-bright));">HAPPY<br><span>70</span></div>
+          <div class="apv-seg" style="background:rgba(var(--green),0.9);color:rgb(var(--text-bright));">ECSTATIC<br><span>85</span></div>
+        </div>
+
+        <table class="ref-table">
+          <tr><th>Tier</th><th>Threshold</th><th>System: Food &amp; Influence</th><th>Empire: Dust &amp; Science</th></tr>
+          <tr><td class="cell-key">Mutinous</td><td>0</td><td class="cell-bad">−75%</td><td class="cell-bad">−30%</td></tr>
+          <tr><td class="cell-key">Unhappy</td><td>10</td><td class="cell-bad">−30%</td><td class="cell-bad">−15%</td></tr>
+          <tr><td class="cell-key">Content</td><td>30</td><td>No modifier</td><td>No modifier</td></tr>
+          <tr><td class="cell-key">Happy</td><td>70</td><td class="cell-good">+10%</td><td class="cell-good">+15%</td></tr>
+          <tr><td class="cell-key">Ecstatic</td><td>85</td><td class="cell-good">+25%</td><td class="cell-good">+30%</td></tr>
+        </table>
+
+        <p>There is no gradient between tiers — 31% and 69% Approval produce identical output. This makes Approval a binary gate, not a continuous dial. Dropping from 85% to 84% costs you the full +30% Dust/Science bonus empire-wide in one turn. Rising from 69% to 70% unlocks +15% on the same outputs immediately.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE EXPANSION TRAP</div>
+          Every new colony system reduces Empire Approval. If colonizing a new system drops you from 85% to 84%, you lose +30% on all Dust and Science empire-wide — a penalty that may outweigh that colony's entire output for many turns. The question before every colonization is not "is this system good?" but "does this system produce more than what I lose from the Approval drop?" Full treatment in Vol.2.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1c">
+      <div class="block-header" onclick="toggle('cb1c')">
+        <span class="block-icon">⚙️</span>
+        <span class="block-title">Manpower &amp; the Food Conversion Chain</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Manpower is sometimes called the sixth FIDSI. It is generated by converting a portion of Food production. The base conversion rate starts at 10% (provided by the Colonial Base improvement), and additional Manpower buildings increase this rate. The conversion is automatic and stops when your Manpower stockpile is full.</p>
+
+        <p>Manpower is used to crew ships (consumed on build), to defend systems against ground invasion, and in some trade interactions. It is also consumed when you invade enemy systems — available troops depend on how much Manpower you have loaded onto your fleets. Full treatment in Vol.4.</p>
+
+        <p>Two late-game Food conversions are also worth knowing now: once a planet is fully populated and the <strong>Super Biofuel Factory</strong> improvement is built (requires Chlorophyll Chemistry, Stage 5), excess Food converts to Industry. This makes Food indirectly valuable as an Industry multiplier in developed systems.</p>
+
+        <p>Food consumption is <strong>nonlinear</strong> with population count. The scaling is approximately pop<sup>1.28</sup>, meaning each additional population unit costs more Food than the one before it. A system with 1 pop consumes ~5.4 Food/pop; at 9 pops this rises to ~10.1 Food/pop. High-population systems need disproportionately strong Food production just to stay solvent — you cannot assume the Food surplus from a 3-pop system will carry a 9-pop one.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1d">
+      <div class="block-header" onclick="toggle('cb1d')">
+        <span class="block-icon">📉</span>
+        <span class="block-title">Dust Inflation, Buyout Costs &amp; Science Scaling</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p><strong>Dust Inflation</strong> is a global multiplier applied to all Dust-denominated costs — Marketplace prices, Buyouts, and Upkeep. The formula:</p>
+
+        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
+          Dust Inflation = Global Dust Production × 0.000175
+        </p>
+
+        <p>Every 5,714 Dust/turn of production adds ~1.0 to the inflation multiplier. An empire producing 10,000 Dust/turn pays 1.75× on all those costs. This is the mechanic that prevents raw Dust production from being a free win — the more you produce, the more expensive everything becomes proportionally. Note that Dust <em>income</em> does not scale with inflation; only costs do.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">LUMERIS INFLATION TRAP</div>
+          Lumeris colonization costs 200 Dust × Inflation per outpost. At 15,000 Dust/turn (~2.6× inflation), each new colony costs ~520 Dust instead of 200. If Dust income does not outpace inflation, the expansion engine stalls. The Lumeris have a unique tech that temporarily deflates by 0.25 for 5 turns — time it to your expansion windows.
+        </div>
+
+        <p><strong>Buyout costs</strong> scale nonlinearly with the Industry cost of the item, then multiply by inflation:</p>
+
+        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
+          Buyout Cost = (Industry Cost<sup>1.2125</sup> + 50) × Inflation
+        </p>
+
+        <table class="ref-table">
+          <tr><th>Industry Cost</th><th>Dust Multiplier (flat 1.0 inflation)</th><th>Common Example</th></tr>
+          <tr><td class="cell-key">160</td><td>~3.0×</td><td>Stage 1–2 system improvement</td></tr>
+          <tr><td class="cell-key">560</td><td>~3.6×</td><td>Stage 3 improvement</td></tr>
+          <tr><td class="cell-key">1,120</td><td>~4.1×</td><td>Stage 4 (HQ, Predictive Logistics…)</td></tr>
+          <tr><td class="cell-key">2,240</td><td>~4.8×</td><td>Stage 5 improvement</td></tr>
+        </table>
+
+        <p>The exponent is sublinear, which means <strong>buying out many small projects is more Dust-efficient than buying out one large one</strong>. Seven 160-Industry buildings cost ~3,640 Dust total; one 1,120-Industry building costs ~4,600 Dust alone. Also: a project that is 95% complete and can finish in 1 turn cannot be bought out — but switching it out and buying out the replacement still saves the leftover Industry carry-over.</p>
+
+        <p><strong>Science cost scaling:</strong> Every tech you research increases the base cost of every future tech, regardless of quadrant or tier:</p>
+
+        <p style="text-align:center; font-family:monospace; background:rgba(var(--accent),0.08); padding:0.6rem 1rem; border-radius:4px; margin:0.75rem 0;">
+          Base Cost = (((1 + total_techs × 3)<sup>1.05</sup> − total_techs + 15) × 2)<sup>1.25</sup>
+          &nbsp;&nbsp;×&nbsp;&nbsp;Stage Multiplier
+        </p>
+
+        <p>Stage multipliers: 1.25 / 2 / 7.5 / 20 / 50 for Stages 1–5. Even cheap Stage 1 filler techs researched just to unlock the next stage compound the base cost for every subsequent tech. Stage 5 techs late in a game can cost several thousand Science apiece. Research with intent — every tech you unlock makes all future techs more expensive.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1d',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T2: POPULATION MECHANICS -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Population Mechanics &amp; Movement</h2>
+        <div class="topic-subtitle">Population is your production multiplier. Managing where it grows — and moves — is active gameplay.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">👥</span>
+        <span class="block-title">How Population Grows</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Food is stockpiled locally within each system. When the stockpile reaches 300 Food, a new population unit spawns. Each additional 300 Food produced in the same turn beyond that threshold spawns another unit of the same population type — meaning high Food production can generate multiple pops per turn in a single system.</p>
+
+        <p>The population type that grows next is determined by a <strong>growth score</strong>: each turn, every population type in the system receives +50 to its growth score. The type with the highest score is selected to grow next, and its score resets to 0 after spawning. This means if you have multiple population types, they will cycle through growth rounds in sequence unless you actively manage the Food supply or population composition.</p>
+
+        <p>Food consumption scales non-linearly with population count. A system with 1 pop consumes approximately 5.4 Food/turn; a system with 9 pops consumes approximately 90.5 Food/turn — roughly 10.1 Food per pop, nearly double the rate at low counts. This means high-population systems require significantly more Food investment to sustain growth than small ones.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">STARVATION</div>
+          If a system's net Food production goes negative, the stockpile drains first. When the stockpile reaches −300 Food, the population unit with the highest growth score dies. After conquest, newly acquired systems often run negative Food temporarily (mutinous penalty), which means pop loss is a real risk if you don't stabilize them quickly.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Population Movement via Spaceport</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Once you research the Spaceport technology (Economy &amp; Trade tree), you can manually transfer population between systems. Select the system you want to move pops <em>from</em>, open the population panel, and drag the pop units into the Spaceport slot. The transport ship then travels physically along star lanes to the destination system.</p>
+
+        <p>The transport is vulnerable in transit — an enemy fleet on the star lane can intercept and destroy it, killing the population aboard. Secure your lanes before moving valuable populations through contested space.</p>
+
+        <p>Population movement is an active optimization tool, not just an emergency measure. Common uses:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">SPECIALIZATION</span><span>Move population types to planets where their FIDSI affinity matches the planet's Climate tag. A pop with an Industry affinity bonus belongs on a <strong>Hot</strong> planet (Lava, Ash, Desert…); a pop with a Science affinity bonus belongs on a <strong>Cold</strong> planet (Barren, Ice, Arctic…). The compounding here is real: the pop's affinity bonus adds on top of the planet's base FIDSI output, both driven by the same Climate tag — so a Hot-affinity pop on a Hot planet gets the full base Industry output <em>plus</em> their bonus, whereas the same pop on a Cold planet contributes neither. Fertility works the same way: a Fertile-affinity pop on a Fertile planet (Terran, Ocean, Forest…) benefits from tag-matched Food output. Planet traits are covered in depth in Vol.2.</span></li>
+          <li><span class="step-n">COLONY SEEDING</span><span>Instead of waiting for an outpost to grow its own population through food, you can import pops from a full system to kickstart a new colony's labor force immediately.</span></li>
+          <li><span class="step-n">APPROVAL MANAGEMENT</span><span>Populations have political affiliations. Moving specific pop types can shift your system-level approval and your Senate composition simultaneously.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2c">
+      <div class="block-header" onclick="toggle('cb2c')">
+        <span class="block-icon">🧬</span>
+        <span class="block-title">Population Types &amp; Empire Bonuses</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Your empire accumulates population types through natural growth, minor faction assimilation, and conquest. Each type carries its own per-planet FIDSI bonuses — these are applied when that pop is working on a planet whose <strong>Climate</strong> or <strong>Fertility</strong> tag matches the pop's affinity condition. Check the pop tooltip in the system panel to see the exact tag requirement. The three Climate tags are Hot (Industry-oriented), Cold (Science-oriented), and Temperate (balanced, fewer bonus interactions). The three Fertility tags are Fertile (Food-oriented, 0 Approval penalty, high pop cap), Neutral (moderate, minor Approval penalty), and Sterile (extreme Industry/Dust peaks, heavy Approval penalty, low pop cap). A pop that gets a bonus "on Hot planets" will trigger on any Hot planet — Lava, Ash, Desert, Mediterranean, Jungle — regardless of that planet's Fertility status. The tag system is additive: place the right pop type on the right planet type and you get the planet's base output <em>plus</em> the pop's affinity bonus stacking on top.</p>
+
+        <p>Beyond per-planet bonuses, population types also grant <strong>empire-wide collection bonuses</strong> at specific thresholds (typically 10, 20, and 50 units of that type across your empire). These bonuses can be powerful: as an example, having 50 Lumeris pops empire-wide grants trade route blockade immunity and adds 25% of trade company income to Influence. Tracking these thresholds and deliberately breeding toward them is an intermediate-level optimization.</p>
+
+        <p>Each population type also has a political affiliation — this determines which Senate party they vote for, and therefore shapes your available laws. See Vol.2 for political system depth.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T3: SCIENCE PRODUCTION & RESEARCH QUEUE -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Science Production &amp; the Research Queue</h2>
+        <div class="topic-subtitle">Science costs scale with every tech you've already researched. Queue discipline matters more than raw output.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">How Science Output Is Generated</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Science is an empire-wide pool — all systems contribute to a single shared output that funds research. Unlike Industry (which is per-system), your total Science per turn is the sum across every colonized system, then modified by Empire Approval. Cold planets produce the most Science base output per population unit.</p>
+
+        <p>The main ways to increase Science output:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">PLANET TYPE</span><span>Cold planets carry the highest Science base value per pop. Prioritize placing population on Cold planets in systems you want to run as Science centers, and build Cold-boosting improvements there.</span></li>
+          <li><span class="step-n">SYSTEM IMPROVEMENTS</span><span>Science improvements like Public-Private Partnerships give conditional flat bonuses (e.g. "+10 Science on Fertile planets"). Stacking several in a system with multiple qualifying planets can produce dramatically high Science per turn in a single system.</span></li>
+          <li><span class="step-n">LAWS</span><span>Some laws trade one resource for Science. The Chronical Eczema Act (Scientist party) gives more Science per population at a happiness cost. If you're driving toward a Science victory and Approval is manageable, this is worth evaluating.</span></li>
+          <li><span class="step-n">EMPIRE APPROVAL</span><span>Science is affected by Empire Approval at the same rate as Dust. Being Ecstatic (+30%) versus Content (0%) is a 30% Science multiplier across your entire empire — a massive difference at high output levels.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">📈</span>
+        <span class="block-title">Technology Cost Scaling</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Technology costs are not fixed — they scale with the total number of technologies you have already researched. Every tech you unlock increases the base cost of every subsequent tech. This means the order in which you research matters: researching low-value techs early inflates the cost of everything you want later.</p>
+
+        <p>The scaling formula uses the total unlocked tech count as an exponent, and then multiplies by a Stage Multiplier based on which ring of the tech tree the technology sits in:</p>
+
+        <table class="ref-table science-cost-table">
+          <tr><th>Stage</th><th>Cost Multiplier</th><th>Notes</th></tr>
+          <tr><td class="cell-key">Stage 1</td><td>×1.25</td><td>Innermost ring — relatively cheap</td></tr>
+          <tr><td class="cell-key">Stage 2</td><td>×2</td><td>Second ring</td></tr>
+          <tr><td class="cell-key">Stage 3</td><td>×7.5</td><td>Sharp jump — mid-game techs</td></tr>
+          <tr><td class="cell-key">Stage 4</td><td>×20</td><td>Late-game techs, very expensive</td></tr>
+          <tr><td class="cell-key">Stage 5</td><td>×50</td><td>Near-endgame</td></tr>
+          <tr><td class="cell-key">Stage 6 (Wonder)</td><td>×50 (modified)</td><td>Victory condition techs</td></tr>
+        </table>
+
+        <p>The quadrant (Science &amp; Exploration, Economy &amp; Trade, Empire Development, Military) has no inherent cost multiplier — what matters is the Stage. However, faction-specific quadrant discounts can reduce costs within a specific tree.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">RESEARCH BLOAT</div>
+          Researching techs you don't immediately need raises the cost of everything you do need. The jump from Stage 2 (×2) to Stage 3 (×7.5) is particularly punishing — unnecessary Stage 2 techs make your Stage 3 priorities significantly more expensive. Be deliberate: every tech you unlock is a cost multiplier applied to your entire future research.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3c">
+      <div class="block-header" onclick="toggle('cb3c')">
+        <span class="block-icon">📋</span>
+        <span class="block-title">Queue Discipline</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The research queue accepts multiple techs at once — but queueing many techs in advance is a trap, especially in the first 30–40 turns. Conditions change faster than queues do. You may queue a tech that requires Titanium but find you're not producing Titanium yet; or queue an expansion tech while your Approval is deteriorating and expansion is the last thing you should be doing.</p>
+
+        <p>The recommended practice in the early game: research one tech at a time, and only queue the next when the current one is near completion. This forces deliberate evaluation of your empire state at each decision point.</p>
+
+        <p>Leftover Science does not disappear — it carries over to the next research for one turn. This means if a tech completes mid-turn, the overage contributes to whatever you queue next, provided you queue it promptly. Alt+clicking a tech in the queue moves it to the front, which is useful for reacting to sudden changes in priority.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T4: ECONOMY & TRADE TECH TREE -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">The Economy &amp; Trade Tech Tree: Industry &amp; Dust</h2>
+        <div class="topic-subtitle">The tree that builds your economic foundation. Industry comes first; Dust infrastructure follows.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">⚙️</span>
+        <span class="block-title">Tree Structure &amp; Priority Logic</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Economy &amp; Trade quadrant is the primary source of Industry and Dust improvements, system development upgrades, trade company access, and Marketplace unlocks. It is the most universally relevant tree in the first 30 turns for any faction not running a pure Science or Military strategy. You need 1 tech to unlock Stage 2, 2 to unlock Stage 3, 4 to unlock Stage 4, and 3 to unlock Stage 5.</p>
+
+        <p><strong>Stage 1 — Two techs, both worth taking.</strong> <em>Xenolinguistics</em> (Industry affinity — Industrialists) unlocks <strong>Xeno-Industrial Infrastructure</strong> (Industry improvement) and Titanium Refining. This is the near-universal first research priority: the Industry improvement effectively doubles early home system output on most planet types, and Titanium Refining lets you exploit any Titanium deposits you've already found. The second Stage 1 tech, <em>Plasma Metallurgy</em> (Industrialists), unlocks <strong>Interplanetary Transport Network</strong> (another Industry improvement) and Hyperium Capture. Both techs are cheap (131 Science base), both contribute to unlocking Stage 2, and both improve Industry — take them in sequence.</p>
+
+        <p><strong>Stage 2 — Five techs; two are mandatory, three are situational.</strong> <em>Galactic Commodities</em> (Pacifists) unlocks a Miners Union Industry improvement and — critically — the <strong>G-Goods Exchange</strong>, which activates the Marketplace empire-wide. This is a required pick: the Marketplace is a core economic tool from this point forward. <em>Multi-Thread Management</em> (Pacifists) unlocks the <strong>Intergalactic Supermarket</strong> Dust improvement and the <strong>Accelerated Production</strong> buyout improvement, which reduces buyout costs. The other Stage 2 techs are: <em>Astrofinance</em> (Pacifists) — Dust system improvement + Dust planetary improvement; <em>Atmospheric Filtration</em> (Pacifists) — Approval improvement + unlocks Ash planet colonization; and <em>Behemoth Exploitation 1</em> (Industrialists, Supremacy DLC) — Behemoth mining modules. The two Dust improvements are worth taking when your Dust income is thin; the Ash colonization is faction-dependent. You need any 2 of these 5 to open Stage 3.</p>
+
+        <p><strong>Stage 3 — The economic core unlocks here.</strong> The tier header unlocks <strong>Basic System Development (System Plan Level 2)</strong> automatically when you enter Stage 3 — this is the modernization upgrade that opens the second luxury resource slot and increases pop capacity. Among the Stage 3 techs: <em>Neural Robotics</em> (Industrialists) unlocks <strong>Predictive Logistics</strong> (Industry system improvement), Adamantian Refining, and Industrial Zones (Industry planetary improvement) — a high-priority pick for Industry-focused empires. <em>Commercial Frameworks</em> (Pacifists) unlocks the <strong>Trade Company HQ and Subsidiary</strong> buildings — the only way to build Trade Companies. <em>Impactless Sites</em> (Pacifists) unlocks a Dust improvement, the <strong>G-Services Exchange</strong> (a Marketplace upgrade that expands what's available for purchase), and — notably — the <strong>Vacate System</strong> decolonization action, which lets you sell an underperforming outpost back for Dust and remove its overcolonization penalty. <em>Extreme Atmospherics</em> (Industrialists) unlocks an Industry improvement, Antimatter Capture, and Gas-Giant colonization.</p>
+
+        <p><strong>Stage 4 — Industry and Dust scaling for established empires.</strong> Key picks: <em>Quantized Economics</em> (Pacifists) — Dust system and planetary improvements. <em>Crust Engineering</em> (Industrialists) — Industry planetary improvement and Orichalcix Refining. Stage 4 also contains the <strong>G-Services Exchange upgrade</strong> enabling hero and mercenary purchases on the Marketplace, and Quadrinix Refining access. You're building toward completion here — pick what your empire's current bottleneck is (Dust vs. Industry vs. resource access).</p>
+
+        <p><strong>Stage 5 — Late-game efficiency improvements.</strong> Stage 5 contains the Industry planetary improvement <em>Self-Mining NPO</em> (via Autonomous Mining) and the turn-reduction improvement <em>Urgent AI Research</em> (Science, via same tech). The <em>P.O.W.E.R. Armor</em> tech unlocks an Industry system improvement and a population-boosting empire improvement (Floating Superstructures). These are strong but expensive — only relevant when your Industry and Science foundations are already mature.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">WHAT THIS TREE DOES NOT CONTAIN</div>
+          The Economy &amp; Trade tree does not provide ship hulls (those are in Empire Development) or most military modules. It also does not contain any direct Industry-to-Science or Industry-to-Dust conversion improvements — that mechanic is governed by the conversion rates in the system panel and does not require a specific tech unlock. Do not research off-path techs expecting to find a conversion technology here; invest those tech slots elsewhere.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">💰</span>
+        <span class="block-title">Dust: What It Funds</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Dust is the general-purpose currency. Its two mandatory functions are upkeep (ships, buildings, heroes all cost Dust per turn) and the Marketplace. Running negative Dust causes upkeep failures — ships and improvements stop functioning. Beyond that, Dust can be spent to:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">BUYOUT</span><span>Accelerate construction by spending Dust to complete a queued building or ship immediately. The cost formula is nonlinear: <code>((Industry Cost)^1.1) + 100</code>. Buying out small, nearly-complete projects costs much less per Industry point than buying out large fresh ones. Rushing 7 cheap improvements costs roughly 25% less than rushing one expensive equivalent.</span></li>
+          <li><span class="step-n">RETROFIT</span><span>Upgrading ships to a new design costs Dust proportional to the difference between the old and new module set. Retrofitting often-used ship designs repeatedly is a significant ongoing Dust expense — sequence retrofits carefully.</span></li>
+          <li><span class="step-n">OUTPOST GROWTH</span><span>Spending Dust speeds up outpost-to-colony conversion, supplementing the Food supply route.</span></li>
+          <li><span class="step-n">SELL SHIPS</span><span>Ships can be sold for Dust. In the early game with short build times, building cheap ships and selling them can be an effective Dust generation method if Industry is abundant.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T5: STRATEGIC & LUXURY RESOURCES -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Strategic &amp; Luxury Resources. The Marketplace.</h2>
+        <div class="topic-subtitle">Strategic resources gate ship modules. Luxury resources multiply system output. The Marketplace connects supply to need.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">Strategic Resources: Gates for Military Power</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Strategic resources are the gating material for advanced ship modules. Without them, you cannot equip the relevant weapon, defense, or support modules — you can still build ships, but they're limited to basic loadouts. The six strategic resources in order of availability: <strong>Titanium, Hyperium</strong> (visible from the start with basic probes), then <strong>Adamantium, Antimatter</strong> (require mid-tier curiosity detection), then <strong>Orichalcix, Quadrinics</strong> (require advanced curiosity detection from the Science &amp; Exploration tree).</p>
+
+        <p>Beyond ship modules, each strategic resource provides a passive per-population FIDSI bonus on any planet where a deposit is present and the exploitation tech has been researched:</p>
+
+        <table class="ref-table">
+          <tr><th>Resource</th><th>Tier</th><th>Per-Pop Bonus</th><th>Exploitation Tech (E&amp;T stage)</th></tr>
+          <tr><td class="cell-key">Titanium</td><td>1</td><td>+1 Industry</td><td>Xenolinguistics (Stage 1)</td></tr>
+          <tr><td class="cell-key">Hyperium</td><td>1</td><td>+1 Science</td><td>Plasma Metallurgy (Stage 1)</td></tr>
+          <tr><td class="cell-key">Adamantian</td><td>2</td><td>+2 Industry</td><td>Neural Robotics (Stage 3)</td></tr>
+          <tr><td class="cell-key">Antimatter</td><td>2</td><td>+2 Science</td><td>Extreme Atmospherics (Stage 3)</td></tr>
+          <tr><td class="cell-key">Orichalcix</td><td>3</td><td>+2 Industry, +1 Science</td><td>Crust Engineering (Stage 4)</td></tr>
+          <tr><td class="cell-key">Quadrinix</td><td>3</td><td>+2 Science, +1 Industry</td><td>Gamma Absorption (Stage 4)</td></tr>
+        </table>
+
+        <p>Tier 1 deposits spawn frequently on Tier 1 planets (colonizable from the start) and can be spotted from the galaxy map from turn 1. Tier 2 deposits require Evaporation Inhibitors to access curiosities. Tier 3 deposits are rare and low-abundance — Orichalcix spawns on Sterile planets, Quadrinix on Gas planets. Their primary value remains military access; the per-pop bonuses are a secondary benefit worth noting when deciding which planets to prioritize for population placement.</p>
+
+        <p>Strategic resources are also tradeable on the Marketplace. Selling surplus Titanium or Hyperium for Dust is a valid early-game income strategy, especially if your military needs are low. The AI actively buys strategic resources — prices respond to supply and demand across the galaxy.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">💎</span>
+        <span class="block-title">Luxury Resources: FIDSI Multipliers &amp; Population Boosts</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Luxury resources have two distinct uses: system development slots and population mood boosts.</p>
+
+        <p><strong>System development slots:</strong> Each modernization level has one or more luxury slots. Assigning a luxury to a slot costs a quantity of that resource and grants the system a permanent bonus. The bonus type depends on which luxury you assign — there are eight FIDSI/support categories — and the bonus strength depends on the luxury's tier:</p>
+
+        <table class="ref-table">
+          <tr><th>Luxury Tier</th><th>Resources Consumed per Slot</th><th>Bonus Type</th><th>Representative Effect</th></tr>
+          <tr><td class="cell-key">Common (T1)</td><td>40 / 75 / 125 (Levels 1–3)</td><td>Flat system bonus</td><td>e.g. +60 Food, +60 Industry, +30 Influence on system</td></tr>
+          <tr><td class="cell-key">Uncommon (T2)</td><td>20 / 40 / 60 (Levels 1–3)</td><td>Per-population bonus</td><td>e.g. +4 Food/pop, +4 Industry/pop, +4 Science/pop</td></tr>
+          <tr><td class="cell-key">Rare (T3)</td><td>10 / 20 / 30 (Levels 1–3)</td><td>% per system level</td><td>e.g. +15% Food/Science/Dust per system level</td></tr>
+        </table>
+
+        <p>The implication of this structure is that Tier 1 luxuries are best used early on new systems (flat bonuses matter most when per-pop production is low), Tier 2 luxuries pay off on systems with high population, and Tier 3 luxuries are strongest on high-level systems — their % bonus multiplies against a larger base. Never waste a Tier 3 slot on a fresh colony.</p>
+
+        <p><strong>Population mood boosts:</strong> Each population type demands a specific luxury resource. Fulfilling that demand gives the population type an Approval bonus <em>and</em> doubles its growth weight (from 50 to 100 base chance per turn). This means satisfying a population's luxury demand simultaneously improves local Approval and accelerates the growth of that pop type — a meaningful feedback loop for system political alignment, since growing more of a pop type shifts Senate votes toward their affiliated party.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TIER 3 SLOT DISCIPLINE</div>
+          Tier 3 luxury resources are scarce and the bonus they provide is substantially larger than Tier 1 or 2. Never assign a Tier 3 luxury to a low-output system or an early slot. Reserve them for your highest-production systems and their highest modernization slots, where the percentage bonus multiplies against the largest base.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5c">
+      <div class="block-header" onclick="toggle('cb5c')">
+        <span class="block-icon">🏪</span>
+        <span class="block-title">The Marketplace: Supply, Demand &amp; Pricing</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Marketplace unlocks through the Economy &amp; Trade tree and allows buying and selling both strategic and luxury resources for Dust. An upgraded Marketplace (a further tech) also allows purchasing heroes and mercenary ships.</p>
+
+        <p>Prices are dynamic and respond to galaxy-wide supply and demand. Early in a game, rare resources command high prices; as more empires produce and sell them, prices fall. If you dump a large quantity of one resource onto the market simultaneously, you'll suppress its price for several turns. The AI actively uses the Marketplace — you can see which empire is buying or selling after researching the relevant tech.</p>
+
+        <p>Practical uses:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">SELL SURPLUS</span><span>If you produce more of a strategic resource than your ships require, sell the excess for Dust. Early Titanium surpluses can fund your first wave of improvements.</span></li>
+          <li><span class="step-n">BUY GAPS</span><span>If you need 2 Adamantium to complete a ship design but don't produce it, buy it rather than delaying or redesigning. At moderate quantities, the Marketplace is cheaper than the opportunity cost of a multi-turn delay.</span></li>
+          <li><span class="step-n">PRICE WATCHING</span><span>The Marketplace reflects what other empires are building. A sudden drop in Hyperium price means someone is selling — possibly because they upgraded away from Hyperium-dependent modules. Timing your purchases around price dips can save significant Dust over a long game.</span></li>
+        </ul>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T6: SYSTEM DEVELOPMENT & PLANET SPECIALIZATIONS -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">System Development &amp; Planet Specializations</h2>
+        <div class="topic-subtitle">Modernization levels unlock luxury slots and population capacity. Planetary specializations shape individual planet output.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🏙️</span>
+        <span class="block-title">System Modernization Levels</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Systems can be upgraded through modernization levels (1 through 5) by assigning luxury resources to their development slots. Each level requires researching the corresponding Economy &amp; Trade tech first, then assigning the required number of luxury resources, and then building the upgrade in the system's construction queue.</p>
+
+        <p>Modernization levels provide two compounding benefits: additional <strong>luxury resource slots</strong> (unlocking more FIDSI bonuses for that system) and increased <strong>maximum population capacity</strong> (allowing more pops, which multiplies base production further). Higher levels require more luxury resources — Levels 4 and 5 require Tier 2 and Tier 3 luxuries respectively.</p>
+
+        <p>Level 2 modernization additionally unlocks the <strong>Spaceport</strong>, enabling population transfer. This is the most direct reason to prioritize getting your most productive systems to Level 2 early — it opens the population optimization loop.</p>
+
+        <table class="ref-table">
+          <tr><th>Level</th><th>Luxury Slots</th><th>Pop Capacity Increase</th><th>Requirement</th></tr>
+          <tr><td class="cell-key">Level 1</td><td>1 slot</td><td>+1 capacity</td><td>Basic modernization tech</td></tr>
+          <tr><td class="cell-key">Level 2</td><td>+1 slot</td><td>+1 capacity + Spaceport</td><td>Stage 2 modernization tech</td></tr>
+          <tr><td class="cell-key">Level 3</td><td>+1 slot</td><td>+1 capacity</td><td>Stage 3 modernization tech, 2 luxuries</td></tr>
+          <tr><td class="cell-key">Level 4</td><td>+1 slot</td><td>+1 capacity</td><td>Stage 4 modernization tech, Tier 2 luxuries</td></tr>
+          <tr><td class="cell-key">Level 5</td><td>+1 slot</td><td>+1 capacity</td><td>Stage 5 modernization tech, Tier 3 luxuries</td></tr>
+        </table>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">🪐</span>
+        <span class="block-title">System Improvements vs. Planetary Specializations</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The game distinguishes four categories of buildable improvements, each with different scope:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">SYSTEM IMPROVEMENTS</span><span>Apply to the entire system (all planets). Can be built in any system you own. Examples: Xeno-Industrial Infrastructure, Public-Private Partnerships. These are your workhorses — build them everywhere applicable.</span></li>
+          <li><span class="step-n">UNIQUE IMPROVEMENTS</span><span>Apply to the entire empire but can only be built once total. A laurel wreath icon identifies them in the tech tree. Examples: Arc University. Build these in your highest-output system to maximize the benefit, but the effect is global.</span></li>
+          <li><span class="step-n">EMPIRE IMPROVEMENTS</span><span>Apply to the entire empire automatically when researched — no construction required. A full-wreath icon. These are passive bonuses that activate immediately on research. Examples: Supplied Happiness Program.</span></li>
+          <li><span class="step-n">PLANETARY SPECIALIZATIONS</span><span>Apply to a single planet within a system. They upgrade automatically (free) when you research the next tier — you build the first tier once, and it improves without further construction. Below is the full list by output type, with unlock stages and exact values:</span></li>
+        </ul>
+
+        <table class="ref-table">
+          <tr><th>Output</th><th>Tier 1 (Unlock)</th><th>Tier 2 (Unlock)</th><th>Tier 3 (Unlock)</th><th>Party Support</th></tr>
+          <tr><td class="cell-key">Food</td><td>+1/pop on Fertile + +1/pop (S&amp;E St.3)</td><td>+2/pop on Fertile + +2/pop (S&amp;E St.4)</td><td>+3/pop on Fertile + +3/pop (ED St.5)</td><td>Ecologists</td></tr>
+          <tr><td class="cell-key">Industry</td><td>+1/pop on Hot + +1/pop (E&amp;T St.3)</td><td>+2/pop on Hot + +2/pop (E&amp;T St.4)</td><td>— (no Tier 3)</td><td>Industrialists</td></tr>
+          <tr><td class="cell-key">Dust</td><td>+1/pop on Sterile + +1/pop (E&amp;T St.2)</td><td>+2/pop on Sterile + +2/pop (E&amp;T St.4)</td><td>— (no Tier 3)</td><td>Pacifists</td></tr>
+          <tr><td class="cell-key">Science</td><td>+1/pop on Cold + +1/pop (S&amp;E St.2)</td><td>+2/pop on Cold + +2/pop (S&amp;E St.5)</td><td>— (no Tier 3)</td><td>Scientists</td></tr>
+          <tr><td class="cell-key">Influence</td><td>+1/pop (ED St.2)</td><td>+2/pop (ED St.4)</td><td>+3/pop (ED St.5)</td><td>Religious</td></tr>
+          <tr><td class="cell-key">Resource Extraction</td><td>+1 Resource gen on deposits (E&amp;T St.3)</td><td>+2 Resource gen (E&amp;T St.5)</td><td>— (no Tier 3)</td><td>Industrialists</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">POLITICAL IMPACT OF SPECIALIZATIONS</div>
+          Each specialization you build adds Senate support for its affiliated party from that system. Building Industry specializations pushes systems toward Industrialists; Influence specializations push toward Religious. If you're deliberately engineering Senate composition (see Vol.2), your specialization choices are also political choices — not just output optimization.
+        </div>
+
+        <ul class="step-list" style="margin-top:0.5rem;">
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">AUTOMATION POLICY</div>
+          Systems have an automation policy that auto-queues improvements matching a chosen focus (Science, Industry, etc.). This is convenient for low-value conquered systems you don't want to micromanage. However, automation overrides manual improvement choices — if a system has a unique deposit or anomaly you want to exploit, disable automation and manage it manually to avoid losing those benefits.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T7: TRADE COMPANIES & TRADE ROUTES -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Trade Companies &amp; Trade Routes</h2>
+        <div class="topic-subtitle">A supplementary Dust income stream. Worth building in the right circumstances — not a priority for every faction or strategy.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🚢</span>
+        <span class="block-title">How Trade Companies Work</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Trade Companies are unlocked via Commercial Frameworks (Economy &amp; Trade tree, approximately Stage 3). You build a <strong>Trade Company HQ</strong> in one system and <strong>Subsidiaries</strong> in other systems. The network of routes between them generates Dust (and small amounts of Industry and strategic resources) each turn.</p>
+
+        <p>Income scales with route distance — longer routes between HQ and Subsidiaries generate more Dust. This means placement matters significantly: a Subsidiary on a system far from your HQ via peaceful trade agreement lanes earns more than a Subsidiary one hop away. The relationship requires a Trade Agreement with any faction whose territory the route passes through.</p>
+
+        <p>Each Trade Company can support multiple Subsidiary ships. Upgrading the company level (by building additional HQ improvements) increases the number of active routes and their income.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">HQ PLACEMENT RULE</div>
+          Place your Trade Company HQ in your highest-Industry system — not your highest-Dust system. HQ construction and leveling are paid in Industry; the income comes from the route network once built. Place Subsidiaries at the most distant reachable systems from the HQ to maximize route income.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">When to Build Trade Companies</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Trade companies are not universally worthwhile. The opportunity cost is real — the HQ and Subsidiaries consume Industry and Dust upkeep, and the Commercial Frameworks research occupies a tech slot. Evaluate before committing:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">BUILD WHEN</span><span>You have a Counselor hero with trade-related skills (the income multiplier can make routes substantially more valuable). You are playing a faction with trade bonuses (Lumeris convert trade income to Influence; Umbral Choir have enhanced trade mechanics). You have peaceful neighbors with distant systems reachable via Trade Agreement, maximizing route length.</span></li>
+          <li><span class="step-n">SKIP WHEN</span><span>Your Dust income from FIDSI is already healthy and you'd rather spend the Industry and tech slots on expansion or military. You're in an aggressive war posture where trade agreements are unstable. Your available systems are clustered closely, keeping routes short and income low.</span></li>
+        </ul>
+
+        <p>For most factions in a standard game, one well-placed Trade Company with 3–4 Subsidiaries is sufficient to justify the investment. Building multiple companies is primarily a Lumeris or Counselor-hero strategy.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T8: ECONOMIC BEHEMOTHS -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">The Economic Behemoths</h2>
+        <div class="topic-subtitle">A unique ship class unlocked mid-game. Economic Behemoths orbit systems to boost output or mine special nodes for resources.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🌌</span>
+        <span class="block-title">Unlocking &amp; Building Behemoths</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Behemoths are a ship class added by the Supremacy DLC. They are not available from the start — they unlock via a cooperative global quest called <strong>Words in Private</strong>, which requires all factions in the galaxy to collectively research a minimum number of Military technologies. Once the quest completes, every faction gains access to the Behemoth Blueprints tech, which must then be individually researched to start building Behemoths.</p>
+
+        <p>Exception: the <strong>Hissho faction</strong> starts with a Behemoth available from turn one.</p>
+
+        <p>Once blueprints are unlocked, three default Behemoth chassis designs are provided: <strong>Economic Behemoth, Scientific Behemoth, and Military Behemoth</strong>. These can be further customized in the ship design screen. Behemoths have a fleet limit — you cannot have more active Behemoths (including Citadels, which also count) than your faction's cap, which is determined by techs and certain hero skills.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')">
+        <span class="block-icon">📈</span>
+        <span class="block-title">Economic Behemoth Functions</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Economic Behemoth chassis accommodates mining and yield modules rather than weapons. Its primary functions:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">SYSTEM ORBIT BONUS</span><span>Modules that buff orbited systems provide +10 to FIDSI (Food, Industry, Dust, Science — not Influence by default) per turn to any system the Behemoth is docked at. This is a flat bonus, not a percentage — its relative value decreases as systems scale but remains significant in the early-mid game.</span></li>
+          <li><span class="step-n">PLANET MINING</span><span>Specific modules allow the Behemoth to mine planets for strategic or luxury resources that the planet cannot otherwise produce. This is the primary use of Economic Behemoths mid-game — parking one at a resource-rich system extracts additional strategic resources directly.</span></li>
+          <li><span class="step-n">SPECIAL NODE EXTRACTION</span><span>Parking a Behemoth at special nodes (asteroid fields, nebulae, and similar non-system map features) provides bonus strategic resources or Science per turn. Some nodes are only accessible via Behemoth, making them worthless without one.</span></li>
+        </ul>
+
+        <p>Behemoths cannot be embedded in regular fleets — they operate alone. However, if a fleet and a Behemoth are at the same system simultaneously, they can reinforce each other in combat. Military Behemoths are covered in Vol.4; Scientific Behemoths and Special Nodes are covered in Vol.3.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8c">
+      <div class="block-header" onclick="toggle('cb8c')">
+        <span class="block-icon">🏰</span>
+        <span class="block-title">Behemoth Specializations: Obliterator &amp; Citadel</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Behemoths can be converted into permanent specialized forms requiring additional tech research:</p>
+
+        <p><strong>Obliterator:</strong> A Military Behemoth variant that fires charged shots capable of destroying entire star systems. Reloads over multiple turns; firing costs Orichalcix and Quadrinics, with the cost decreasing the longer it has been since the last shot. When an obliterator fires, every empire in the galaxy receives a notification (but not the target location). Obliterator shots are slow enough to intercept visually on the map. This is a Vol.4 topic — mentioned here because the defense against it (the Citadel) is economy-relevant.</p>
+
+        <p><strong>Citadel:</strong> A Behemoth converted into a permanent stationary defense installation on a specific system. It cannot be moved or changed after placement. A Citadel blocks Obliterator shots targeting its host system — the primary reason to build one. Citadels count against your Behemoth cap, so placing too many reduces your mobile Behemoth capacity. Only deploy Citadels on your highest-value systems (home system, critical resource hubs) where permanent protection justifies permanently consuming a Behemoth slot.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- T9: TURN 30 ASSESSMENT -->
+  <!-- ============================================================ -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">Turn 30 Assessment: Economic &amp; Wonder Victory</h2>
+        <div class="topic-subtitle">What a healthy economic empire looks like at Turn 30 — and what the Economic &amp; Wonder victory paths require.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Turn 30 Economic Benchmarks</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>By Turn 30 on Normal speed, a well-played economic empire should have established the following baseline. These are not targets to hit simultaneously — they're diagnostics. If you're significantly below several of these, identify which is the primary bottleneck and address it first.</p>
+
+        <table class="ref-table">
+          <tr><th>Indicator</th><th>Healthy Range</th><th>Common Failure Mode</th></tr>
+          <tr><td class="cell-key">Systems</td><td>3–5 colonized</td><td>Over-expanded (Approval dropping) or under-expanded (low base FIDSI)</td></tr>
+          <tr><td class="cell-key">Industry/turn</td><td>300–600+</td><td>Skipped Xeno-Industrial; too few pops on Hot planets</td></tr>
+          <tr><td class="cell-key">Dust/turn</td><td>150–400+</td><td>Negative upkeep spiral; no Marketplace access yet</td></tr>
+          <tr><td class="cell-key">Science/turn</td><td>200–500+</td><td>No Cold planet improvements; Approval below 70%</td></tr>
+          <tr><td class="cell-key">Empire Approval</td><td>70%+ (Happy minimum)</td><td>Over-colonized without luxury resources to offset</td></tr>
+          <tr><td class="cell-key">Tech Stage</td><td>Entering Stage 3 in primary tree</td><td>Over-researched low-value Stage 1/2 techs</td></tr>
+        </table>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9b">
+      <div class="block-header" onclick="toggle('cb9b')">
+        <span class="block-icon">💰</span>
+        <span class="block-title">Economic Victory: The Dust Threshold</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Economic Victory is awarded to the first faction to accumulate a total Dust earnings threshold — this is <strong>cumulative Dust earned over the entire game</strong>, not a current balance. Spending Dust does not reduce your progress. The threshold is calculated as: <code>450,000 × Speed Modifier × Size Modifier</code>.</p>
+
+        <table class="ref-table">
+          <tr><th>Game Speed</th><th>Modifier</th><th>Normal Galaxy Target</th></tr>
+          <tr><td class="cell-key">Fast</td><td>×0.75</td><td>337,500 Dust</td></tr>
+          <tr><td class="cell-key">Normal</td><td>×1.0</td><td>450,000 Dust</td></tr>
+          <tr><td class="cell-key">Slow</td><td>×1.5</td><td>675,000 Dust</td></tr>
+          <tr><td class="cell-key">Endless</td><td>×4.0</td><td>1,800,000 Dust</td></tr>
+        </table>
+
+        <table class="ref-table" style="margin-top:0.75rem">
+          <tr><th>Galaxy Size</th><th>Modifier</th></tr>
+          <tr><td class="cell-key">Tiny</td><td>×0.75</td></tr>
+          <tr><td class="cell-key">Small</td><td>×0.85</td></tr>
+          <tr><td class="cell-key">Medium</td><td>×1.0</td></tr>
+          <tr><td class="cell-key">Large</td><td>×1.4</td></tr>
+          <tr><td class="cell-key">Huge</td><td>×1.8</td></tr>
+          <tr><td class="cell-key">Colossal</td><td>×2.0</td></tr>
+          <tr><td class="cell-key">Exceptional</td><td>×2.5</td></tr>
+        </table>
+
+        <p style="margin-top:0.75rem">On Normal speed, Normal galaxy, the target is <strong>450,000 Dust total earned</strong>. At 300 turns that requires an average of 1,500 Dust/turn across the full game — which means early-game Dust output matters significantly since the accumulation clock starts at turn 1. The Lumeris are the natural fit (multiple Dust income sources), but any faction with strong Industrialist or Militarist political alignment can compete through Trade Companies and Marketplace leverage.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">SPENDING DOESN'T HURT YOU</div>
+          Because it's cumulative earnings — not current balance — you should never hoard Dust to chase this victory. Spend freely on buyouts, retrofits, and hero hiring. Every Dust you earn counts the moment it's generated. The strategy is maximizing Dust <em>income per turn</em> across as many turns as possible, not saving up a pile.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9c">
+      <div class="block-header" onclick="toggle('cb9c')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Wonder Victory: Obelisks of All Space-Time</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Wonder Victory requires constructing a number of <strong>Obelisks of All Space-Time</strong> equal to the galaxy size requirement. Obelisks are unlocked only after reaching <strong>Stage 5 of the Empire Development tech tree</strong> — this is a hard gate that requires deep investment in that tree before you can even start building.</p>
+
+        <table class="ref-table">
+          <tr><th>Galaxy Size</th><th>Obelisks Required</th></tr>
+          <tr><td class="cell-key">Tiny / Small</td><td>2</td></tr>
+          <tr><td class="cell-key">Medium / Large</td><td>3</td></tr>
+          <tr><td class="cell-key">Huge / Colossal</td><td>4</td></tr>
+          <tr><td class="cell-key">Exceptional</td><td>5</td></tr>
+        </table>
+
+        <p style="margin-top:0.75rem">The first Obelisk costs <strong>20,000 Industry + 125 Titanium + 125 Hyperium + 80 Adamantian + 80 Antimatter + 40 Orichalcix + 40 Quadrinix</strong>. The second Obelisk costs 30,000 Industry and proportionally more of every resource. Each additional Obelisk scales upward in cost — this is a resource drain that demands you have <em>all six</em> strategic resources secured and stockpiled well before you start building.</p>
+
+        <p>An Obelisk under construction is visible to all empires on the map, making it a target for invasion or Umbral Choir conversion. The system hosting an Obelisk must be defended. Riftborn and United Empire are the natural fits — high Industry output and the ability to sustain the enormous resource cost.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE RESOURCE BOTTLENECK</div>
+          Obelisks consume all six strategic resources simultaneously. If you are pursuing Wonder Victory, you must treat resource acquisition as a strategic priority from mid-game. Do not sell strategic resources freely on the Marketplace after Turn 60–80 if Wonder is your path — you will need stockpiles of Orichalcix and Quadrinix (the hardest to accumulate) that take many turns to build up. Secure deposits early; hoard late.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9d">
+      <div class="block-header" onclick="toggle('cb9d')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">All Six Victory Conditions: What They Demand Economically</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>All six victory conditions are enabled by default and can be toggled at game setup. Even if you're not pursuing a specific condition, knowing what the other five demand helps you recognize when a rival is close — and when to apply pressure or pivot.</p>
+
+        <table class="ref-table">
+          <tr><th>Condition</th><th>Win Requirement</th><th>Economic Implication</th></tr>
+          <tr><td class="cell-key">Conquest</td><td>Control a fixed number of star systems by galaxy size: Tiny 16 · Small 19 · Normal 22 · Large 28 · Huge 32 · Colossal 36 · Exceptional 40. Warnings fire at 50% and 75% of the threshold. Galaxy density adds 33% more systems but does not raise the target. Alliance partners' systems count toward your total — but so does the requirement.</td><td>Demands wide expansion — Approval and Dust upkeep scale accordingly. Alliance membership inflates the requirement.</td></tr>
+          <tr><td class="cell-key">Supremacy</td><td>Control all major faction home systems</td><td>Military-driven, but the Industrial base to sustain fleet operations is essential. Vaulters' home system shifts to their first colony.</td></tr>
+          <tr><td class="cell-key">Science</td><td>Research all 4 Endless technologies</td><td>Requires 3 Tier 5 techs in specific tree pairs. Heavy Science investment; each Endless tech unlocked by crossing two trees simultaneously (e.g. Genius of the Endless = Science + Economy trees both at Tier 5 ×3).</td></tr>
+          <tr><td class="cell-key">Economic</td><td>Accumulate Dust earnings threshold</td><td>Maximize sustained Dust income from turn 1. Cumulative — spending doesn't set you back.</td></tr>
+          <tr><td class="cell-key">Wonder</td><td>Build N Obelisks (2–5 by galaxy size)</td><td>Requires Stage 5 Empire Dev tree + all 6 strategic resources in massive quantities. Industry-dominant late game.</td></tr>
+          <tr><td class="cell-key">Score</td><td>Highest score at game end (turn limit)</td><td>Broad — systems (+12), pops (+3), techs (+4 to +16), system levels (+6), wonders (+20), quests (+4), laws (+3). No single focus dominates; well-rounded empires win naturally.</td></tr>
+        </table>
+
+        <p style="margin-top:0.75rem">Score Victory turn limits: Fast = 150 turns, Normal = 300, Slow = 450, Endless = 600. In a Score game with no other victories toggled, the early-game Approval multiplier on Dust and Science is especially critical — every turn of Ecstatic bonus translates directly into more colonized systems, higher system levels, and more tech researched, all of which score points.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9d',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ============================================================ -->
+  <!-- QUIZ -->
+  <!-- ============================================================ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">❓</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Specific situations. Make the call.</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol1';
+const TOTAL = 9;
+let qIdx = 0;
+let answered = false;
+const quizzes = [
+  {
+    scenario: "Turn 18. Your home system produces 280 Industry and 180 Dust per turn. Your Empire Approval is 88% (Ecstatic). You have 3 systems colonized. A 4th system is available 2 hops away — 3 planets including one Hot, one Fertile, one Cold. Colonizing it will drop your Empire Approval from 88% to 72%.",
+    q: "Should you colonize the 4th system this turn?",
+    opts: [
+      "Yes — more systems always mean more total output, and 72% is still in the Happy tier.",
+      "Evaluate first. At 88% you are Ecstatic (+30% Dust/Science empire-wide). Dropping to 72% keeps you Happy (+15%), losing 15 percentage points of bonus on Dust and Science across all 3 existing systems. Calculate whether the 4th system will generate more than that 15% loss within a reasonable timeframe. A 3-planet system with those types has high long-term potential — but only after it develops. The answer depends on whether you can absorb 5–10 turns of net FIDSI loss while the colony matures.",
+      "Yes, but only if you can immediately enact a law to recover Approval.",
+      "No — never colonize while Ecstatic, to protect the bonus."
+    ],
+    correct: 1,
+    explain: "Option B is correct. The Ecstatic tier at 85+ gives +30% to Dust and Science empire-wide. Dropping to 72% means +15% — a 15-point reduction across your entire empire simultaneously. This is not trivially covered by a new colony's raw output until it develops. The correct process: calculate how much Dust and Science you're currently earning the Ecstatic bonus on (it's a lot at Turn 18), estimate whether the 4th system pays back that 15% within ~10–15 turns, and decide accordingly. Option A ignores the multiplier math. Option C confuses timing — laws can help, but the colonization triggers the Approval drop immediately. Option D is too conservative — colonizing under Ecstatic is fine if the math works."
+  },
+  {
+    scenario: "Turn 25. You have researched 14 technologies total. You want to reach Predictive Logistics (Stage 3, Economy & Trade) as your next priority. Looking at the tech tree, you could take a short detour through 2 additional Stage 2 techs to unlock a minor passive bonus.",
+    q: "Should you research the 2 extra Stage 2 techs on the way?",
+    opts: [
+      "Yes — Stage 2 techs are cheap and the bonuses compound over time.",
+      "No — every tech you research increases the base cost of all subsequent techs. Two extra Stage 2 techs raise the cost of every Stage 3+ tech you'll ever research, including Predictive Logistics itself. The minor passive bonus would need to pay back that compounding cost penalty over the remainder of the game to be worth it.",
+      "Yes, but only if the passive bonus affects Industry or Dust.",
+      "No — Stage 2 techs are always a waste."
+    ],
+    correct: 1,
+    explain: "Option B is correct. Technology costs scale with total unlocked tech count — every tech you research makes subsequent techs more expensive. Two 'cheap' Stage 2 techs don't just cost their own Science — they permanently inflate the cost of every Stage 3, 4, and 5 tech you research afterward. For a minor passive bonus, this is rarely worth it. The compounding nature of the cost formula means early off-path techs are far more expensive than they appear. Option A gets the direction of compounding wrong. Option C creates an arbitrary exception. Option D overcorrects — some Stage 2 techs absolutely justify themselves, but the decision must account for the cost multiplier effect."
+  },
+  {
+    scenario: "Turn 30. You have 480 Industry per turn across 4 systems. A new System Improvement worth 1120 Industry is available. You also have a Dust buyout reserve of 4,000 Dust. The improvement would take ~2.5 turns to build normally.",
+    q: "Should you use Dust to buy out the improvement immediately?",
+    opts: [
+      "Yes — 4,000 Dust covers it and immediate completion is always better.",
+      "No — check the actual buyout cost first. The formula is ((1120)^1.1) + 100, which costs substantially more than 4,000 Dust. At 1120 Industry, the buyout cost is approximately 5,000+ Dust. Buying it now would drain your reserve below safe operating levels. At 2.5 turns to complete, the opportunity cost of waiting is minimal.",
+      "Yes, but only if it's a Science or Dust improvement.",
+      "No — buyouts are never efficient."
+    ],
+    correct: 1,
+    explain: "Option B is correct. The buyout formula ((Industry Cost)^1.1) + 100 makes large projects significantly more expensive than small ones. A 1,120-Industry project costs roughly 5,000–5,500 Dust to buy out — more than your 4,000 reserve. Buying it would leave you dangerously low on Dust for upkeep and contingencies. With only 2.5 turns to natural completion, the time saved doesn't justify that risk. Buyouts shine for small, nearly-complete projects where the formula is favorable — rushing a 160-Industry improvement costs roughly 450 Dust, a much better rate. Option A doesn't check the actual cost. Option C is irrelevant to the buyout math. Option D is too absolute — buyouts are extremely efficient for small projects."
+  },
+  {
+    scenario: "Turn 22, playing a non-Lumeris faction. You have one Tier 3 luxury resource (Protossian Spheres — grants +45% Science to a system). You have two systems: System A produces 400 Science per turn at Level 3 modernization; System B produces 80 Science per turn at Level 1 modernization, but has an available Level 2 upgrade slot.",
+    q: "Where should you assign the Tier 3 luxury?",
+    opts: [
+      "System B — it needs the boost more and the upgrade slot is available.",
+      "System A — the +45% bonus on 400 Science per turn yields +180 Science. On System B with 80 Science per turn it yields only +36 Science. The absolute gain is five times larger in System A. Tier 3 luxuries must go where the percentage multiplies against the largest base.",
+      "Save it for a future system that might be better.",
+      "Split it — assign one unit to each system."
+    ],
+    correct: 1,
+    explain: "Option B is correct. Percentage bonuses compound against the base they're applied to. +45% of 400 is +180 Science; +45% of 80 is +36 Science. The gap is enormous and grows over time as System A develops further. The argument that 'System B needs it more' confuses absolute need with multiplicative efficiency. Luxury resources — especially Tier 3 — should always go to the highest-output systems precisely because the bonus is a percentage. Option A applies the 'needs it more' logic incorrectly. Option C is viable if a better system is imminent, but opportunity cost of delaying in this scenario is real. Option D is not how luxury assignment works — one resource fills one slot."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
