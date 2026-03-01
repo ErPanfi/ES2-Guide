@@ -17,7 +17,7 @@
 
   :root {
     --accent:            var(--sophon-color);
-    --accent-rgb:        var(--sophon-color);
+	--card-accent:		 var(--accent);
     --accent-dim:        rgba(var(--sophon-color), 0.11);
     --accent-bright-rgb: var(--cyan);
   }
@@ -60,10 +60,12 @@
 <nav class="sidebar">
   <div class="sidebar-logo">
     <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
-    <div class="game-name">FACTION DEEP DIVE</div>
+    <div class="game-name">FAC. 03</div>
     <div class="guide-name">The<br>Sophons</div>
   </div>
 
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🔬 Faction Identity <span class="nav-check" id="nc0"></span></div>
   <div class="nav-section-label">// Core Mechanics</div>
   <div class="nav-item active" onclick="scrollByID('t1')">🔭 Omniscience <span class="nav-check" id="nc1"></span></div>
   <div class="nav-item" onclick="scrollByID('t2')">🏭 The Industry Problem <span class="nav-check" id="nc2"></span></div>
@@ -93,7 +95,7 @@
 
   <div class="page-header">
     <div class="breadcrumb">
-      <a href="../index.html" class="linkToIndex">ES2 Guide</a> // <span>Faction Deep Dive</span> // The Sophons
+      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.03</span> // The Sophons
     </div>
     <h1 class="page-title"><img src="../images/Races/SophonsIcon.webp">  The<br>Sophons</h1>
     <p class="page-subtitle">Omniscience makes you the cheapest researcher in the galaxy — but only if you stay ahead of everyone else. This guide is about understanding the decay curve, fixing structural weaknesses before they stall the empire, and knowing when the "science faction" should skip Science Victory entirely.</p>

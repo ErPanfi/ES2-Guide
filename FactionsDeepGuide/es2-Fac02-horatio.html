@@ -17,7 +17,7 @@
 
   :root {
     --accent:            var(--horatio-color);
-    --accent-rgb:        var(--horatio-color);
+	--card-accent:		 var(--accent);
     --accent-dim:        rgba(var(--horatio-color), 0.10);
     --accent-bright-rgb: 255,200,220;
   }
@@ -39,149 +39,6 @@
   .sidebar-logo .game-name { color: rgb(var(--accent)); }
 </style>
 
-<!--style>
-  /* Horatio: narcissist pink / rose gold */
-  :root {
-    --accent:             var(--horatio-color);
-    --accent-rgb:         var(--horatio-color);
-    --accent-dim:         rgba(var(--horatio-color), 0.10);
-    --accent-bright-rgb:  255,200,220;
-  }
-
-  .progress-mini-fill { background: linear-gradient(90deg, rgb(var(--accent)), rgb(var(--accent-bright-rgb))); }
-
-  body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--horatio-color), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--horatio-color), 0.04) 0%, transparent 65%),
-    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%); }
-
-  h1.page-title { text-shadow: 0 0 40px rgba(var(--horatio-color), 0.4), 0 0 80px rgba(var(--horatio-color), 0.15); }
-
-  .topic-num { color: rgb(var(--accent)); background: var(--accent-dim); border-color: rgba(var(--horatio-color), 0.35); }
-  .tag-mech { background: var(--accent-dim); color: rgb(var(--accent)); border-color: rgba(var(--horatio-color), 0.3); }
-  .tag-source { background: rgba(var(--horatio-color), 0.10); color: rgb(var(--horatio-color)); border-color: rgba(var(--horatio-color), 0.25); font-size: var(--ts_sectionTitle); letter-spacing:1.5px; padding: 2px 8px; border-radius:4px; border:1px solid; font-family:'Share Tech Mono',monospace; }
-
-  .nav-item.active { color: rgb(var(--accent)); border-left-color: rgb(var(--accent)); background: var(--accent-dim); }
-  .nav-item:hover { background: var(--accent-dim); }
-  .step-list li .step-n { color: rgb(var(--accent)); background: var(--accent-dim); }
-  .callout-tip { border-left-color: rgb(var(--accent)); background: var(--accent-dim); }
-  .callout-tip .callout-label { color: rgb(var(--accent)); }
-
-  /* Horatio identity badge */
-  .faction-badge {
-    background: rgba(var(--horatio-color), 0.15); color: rgb(var(--accent-bright-rgb));
-    border: 1px solid rgba(var(--horatio-color), 0.35);
-  }
-
-  /* Faction trait blocks */
-  .trait-block {
-    background: var(--card2); border: 1px solid var(--border);
-    border-left: 3px solid rgb(var(--accent)); border-radius: 6px;
-    padding: 13px 16px; margin: 10px 0; font-size: var(--ts_sectionLabel); line-height: 1.75;
-  }
-  .trait-block.warn { border-left-color: rgb(var(--red)); }
-
-  .trait-label {
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px; margin-bottom: 5px; font-weight: 700;
-    color: rgb(var(--accent));
-  }
-  .trait-label.warn { color: rgb(var(--red)); }
-
-  /* Source attribution pills */
-  .source-row {
-    display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 4px;
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-  }
-  .src-pill {
-    padding: 2px 9px; border-radius: 10px; letter-spacing: 1px;
-    background: rgba(var(--horatio-color), 0.08); color: rgb(var(--horatio-color));
-    border: 1px solid rgba(var(--horatio-color), 0.2);
-  }
-
-  /* Turn-order timeline */
-  .timeline { display: flex; flex-direction: column; gap: 0; margin: 14px 0; }
-  .tl-row {
-    display: grid; grid-template-columns: 90px 1fr;
-    border-left: 2px solid rgba(var(--horatio-color), 0.25); padding-left: 16px;
-    padding-bottom: 18px; position: relative;
-  }
-  .tl-row:last-child { padding-bottom: 0; }
-  .tl-row::before {
-    content: ''; position: absolute; left: -6px; top: 4px;
-    width: 10px; height: 10px; border-radius: 50%;
-    background: rgb(var(--accent)); box-shadow: 0 0 8px rgba(var(--horatio-color), 0.5);
-  }
-  .tl-turn {
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: rgb(var(--accent)); letter-spacing: 1px; padding-top: 2px;
-    font-weight: 700;
-  }
-  .tl-body { font-size: var(--ts_sectionLabel); line-height: 1.7; color: var(--text); }
-  .tl-body strong { color: rgb(var(--accent-bright-rgb)); }
-
-  /* Ship card grid */
-  .ship-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 14px; margin: 16px 0; }
-  .ship-card {
-    background: var(--card2); border: 1px solid var(--border);
-    border-top: 2px solid rgb(var(--accent)); border-radius: 8px; padding: 14px 16px;
-  }
-  .ship-card.warn-top { border-top-color: rgb(var(--red)); }
-  .ship-name {
-    font-family: 'Orbitron', sans-serif; font-size: var(--ts_quizTitle); font-weight: 700;
-    color: rgb(var(--accent-bright-rgb)); letter-spacing: 2px; margin-bottom: 4px;
-  }
-  .ship-role {
-    font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    color: rgb(var(--horatio-color)); letter-spacing: 2px; margin-bottom: 10px;
-  }
-  .ship-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
-
-  /* GENE SEQUENCER concept callout */
-  .takt-box {
-    background: linear-gradient(135deg, rgba(var(--horatio-color), 0.08), rgba(var(--accent-bright-rgb), 0.06));
-    border: 1px solid rgba(var(--horatio-color), 0.3); border-radius: 8px;
-    padding: 18px 20px; margin: 16px 0;
-  }
-  .takt-title {
-    font-family: 'Orbitron', sans-serif; font-size: var(--ts_topicTitle); font-weight: 700;
-    color: rgb(var(--accent-bright-rgb)); letter-spacing: 3px; margin-bottom: 10px;
-  }
-
-  /* Priority tier table */
-  .splice-tier {
-    border: 1px solid var(--border); border-radius: 6px; overflow: hidden; margin: 14px 0;
-  }
-  .splice-tier-row {
-    display: grid; grid-template-columns: 100px 1fr;
-    border-bottom: 1px solid var(--border); font-size: var(--ts_sectionLabel);
-  }
-  .splice-tier-row:last-child { border-bottom: none; }
-  .splice-tier-label {
-    padding: 10px 12px; font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle);
-    font-weight: 700; letter-spacing: 1.5px; display: flex; align-items: center;
-  }
-  .splice-tier-label.s { background: rgba(var(--green), 0.12); color: rgb(var(--green)); }
-  .splice-tier-label.a { background: rgba(var(--horatio-color), 0.12); color: rgb(var(--horatio-color)); }
-  .splice-tier-label.b { background: rgba(var(--gold), 0.10); color: rgb(var(--gold)); }
-  .splice-tier-label.c { background: rgba(var(--red), 0.08); color: rgb(var(--red)); }
-  .splice-tier-body {
-    padding: 10px 14px; line-height: 1.7; color: var(--text);
-  }
-
-  /* Pop count visual */
-  .pop-cost-row {
-    display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0; align-items: center;
-  }
-  .pop-cost-chip {
-    padding: 4px 12px; border-radius: 4px; font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle); font-weight: 700; letter-spacing: 1px;
-    border: 1px solid;
-  }
-  .pop-cost-chip.cheap { background: rgba(var(--green),0.10); color: rgb(var(--green)); border-color: rgba(var(--green),0.3); }
-  .pop-cost-chip.mid   { background: rgba(var(--gold),0.10);  color: rgb(var(--gold));  border-color: rgba(var(--gold),0.3); }
-  .pop-cost-chip.hard  { background: rgba(var(--red),0.10);   color: rgb(var(--red));   border-color: rgba(var(--red),0.3); }
-</style-->
 </head>
 <body>
 <div class="layout">
@@ -195,7 +52,7 @@
   </div>
 
   <div class="nav-section-label">// Overview</div>
-  <div class="nav-item active" onclick="scrollByID('t0')">◈ Faction Identity <span class="nav-check" id="nc0"></span></div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🧬 Faction Identity <span class="nav-check" id="nc0"></span></div>
 
   <div class="nav-section-label">// Gene System</div>
   <div class="nav-item" onclick="scrollByID('t1')">🧬 Splicing Mechanics <span class="nav-check" id="nc1"></span></div>
@@ -243,13 +100,13 @@
     </div>
     <div class="content-block open" id="cb0a">
       <div class="block-header" onclick="toggle('cb0a')">
-        <span class="block-icon">◈</span>
+        <span class="block-icon">🧬</span>
         <span class="block-title">Core Traits and the True Horatio Identity</span>
         <span class="block-tag tag-mech">OVERVIEW</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge">◈ HORATIO — THE BEAUTIFUL</div>
+        <div class="vol-card-badge">◈ HORATIO — THE BEAUTIFUL ◈</div>
 
         <p>The wiki describes Horatio as "a relatively vanilla faction." This is technically true of turns 1–25, and entirely misleading as a strategic description. The expert guide author is more direct: <em>"I'm of the opinion that the Horatio are by far the weakest race simply because their early game is such crap."</em> This is not hyperbole — it reflects the compound problem of a +25% ship cost penalty, one fewer module slot on every hull compared to other factions, no access to Xeno-Industrial Infrastructure (they start on a Mediterranean), and genuinely weak early FIDSI output. Horatio is a late-blooming exponential faction: their first 30 turns are spent building the infrastructure (population diversity, nursery systems, minor faction assimilation) that will let them create a per-pop FIDSI output that no other faction can match.</p>
 

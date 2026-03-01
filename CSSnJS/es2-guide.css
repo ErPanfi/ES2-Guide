@@ -317,7 +317,7 @@
     color: var(--nav);
     transition: all 0.15s;
     border-left: 2px solid transparent;
-    user-select: none;
+    /*user-select: none;*/
   }
 
   .nav-item:hover { color: var(--text); background: var(--accent-dim); }
@@ -493,7 +493,7 @@
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    user-select: none;
+    /*user-select: none;*/
     transition: background 0.15s;
   }
 
