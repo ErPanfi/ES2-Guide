@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — Vol.6: Diplomacy & Hacking</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<style>
+  :root {
+    --accent:     var(--vol6-accent);
+    --accent-dim: rgba(var(--vol6-accent), 0.11);
+  }
+
+  body::before {
+    background:
+      radial-gradient(ellipse 70% 50% at 20% 40%, rgba(var(--vol6-accent), 0.05) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 40% at 80% 70%, rgba(var(--purple), 0.04) 0%, transparent 65%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--vol6-accent), 0.45),
+      0 0 80px rgba(var(--vol6-accent), 0.15);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  .progress-mini-fill {
+    background: linear-gradient(90deg, rgb(var(--vol6-accent)), rgb(var(--purple)));
+  }
+
+  /* ── Relation-status bar ───────────────────────────── */
+  .rel-bar {
+    display: flex;
+    border-radius: 4px;
+    overflow: hidden;
+    height: 28px;
+    margin: 12px 0;
+    font-size: var(--ts_sectionTitle);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+  .rel-seg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    color: rgba(255,255,255,0.85);
+    font-size: var(--ts_sectionTitle);
+  }
+  .rel-seg.cold  { background: rgba(var(--cyan), 0.18); border: 1px solid rgba(var(--cyan), 0.3); }
+  .rel-seg.peace { background: rgba(var(--green), 0.18); border: 1px solid rgba(var(--green), 0.3); }
+  .rel-seg.ally  { background: rgba(var(--vol6-accent), 0.22); border: 1px solid rgba(var(--vol6-accent), 0.4); }
+  .rel-seg.war   { background: rgba(var(--red), 0.22); border: 1px solid rgba(var(--red), 0.4); }
+
+  /* ── Pressure-factor table ─────────────────────────── */
+  .pressure-row {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: var(--ts_sectionLabel);
+  }
+  .pressure-factor { flex: 2; color: rgba(255,255,255,0.75); }
+  .pressure-range  { flex: 1; font-family: 'Share Tech Mono', monospace; font-size: var(--ts_sectionTitle); color: rgb(var(--gold)); }
+  .pressure-note   { flex: 3; font-size: var(--ts_sectionTitle); color: rgba(255,255,255,0.5); }
+
+  /* ── Hack-results grid ─────────────────────────────── */
+  .hack-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .hack-card {
+    background: rgba(var(--vol6-accent), 0.06);
+    border: 1px solid rgba(var(--vol6-accent), 0.2);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .hack-card.lvl2 {
+    background: rgba(var(--purple), 0.08);
+    border-color: rgba(var(--purple), 0.25);
+  }
+  .hack-card-label {
+    font-size: var(--ts_sectionTitle);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.05em;
+    color: rgb(var(--vol6-accent));
+    margin-bottom: 4px;
+  }
+  .hack-card.lvl2 .hack-card-label { color: rgb(var(--purple)); }
+  .hack-card-title {
+    font-size: var(--ts_sectionLabel);
+    font-weight: 600;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 3px;
+  }
+  .hack-card-desc {
+    font-size: var(--ts_sectionTitle);
+    color: rgba(255,255,255,0.55);
+    line-height: 1.45;
+  }
+
+  /* ── Program table ─────────────────────────────────── */
+  .prog-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: var(--ts_table); }
+  .prog-table th {
+    background: rgba(var(--vol6-accent), 0.12);
+    color: rgb(var(--vol6-accent));
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 0.05em;
+    padding: 6px 10px;
+    text-align: left;
+    border-bottom: 1px solid rgba(var(--vol6-accent), 0.25);
+  }
+  .prog-table td { padding: 7px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); color: rgba(255,255,255,0.75); vertical-align: top; }
+  .prog-table td.prog-name { font-weight: 600; color: rgba(255,255,255,0.92); }
+  .prog-table td.prog-bw { font-family: 'Share Tech Mono', monospace; color: rgb(var(--gold)); }
+  .prog-table td.prog-unlock { font-size: var(--ts_sectionTitle); color: rgba(255,255,255,0.45); }
+  .prog-table tr:hover td { background: rgba(255,255,255,0.025); }
+  .prog-table .def-row td { background: rgba(var(--green), 0.03); }
+  .prog-table .off-row td { background: rgba(var(--red), 0.03); }
+
+  /* ── Senate coalition layout ───────────────────────── */
+  .coalition-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .party-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: rgba(255,255,255,0.02);
+    font-size: var(--ts_sectionTitle);
+  }
+  .party-card .pname {
+    font-size: var(--ts_sectionLabel);
+    font-weight: 600;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 4px;
+  }
+  .party-card .pbonus { color: rgba(255,255,255,0.5); line-height: 1.45; }
+
+  /* tag for diplomatic topic */
+  .tag-dipl {
+    background: rgba(var(--vol6-accent), 0.1);
+    color: rgb(var(--vol6-accent));
+    border: 1px solid rgba(var(--vol6-accent), 0.3);
+    border-radius: 4px;
+    font-size: var(--ts_sectionTitle);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    margin-left: 6px;
+  }
+  .tag-hack {
+    background: rgba(var(--purple), 0.1);
+    color: rgb(var(--purple));
+    border: 1px solid rgba(var(--purple), 0.3);
+    border-radius: 4px;
+    font-size: var(--ts_sectionTitle);
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.06em;
+    padding: 2px 7px;
+    margin-left: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════════════ SIDEBAR ══════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">VOLUME 6</div>
+    <div class="guide-name">Diplomacy<br>&amp; Hacking</div>
+  </div>
+
+  <div class="nav-section-label">// Diplomacy</div>
+  <div class="nav-item active" onclick="scrollByID('t1')">📊 Relation Score System <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🤝 Agreements &amp; Uses <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">⚔️ War, Cold War &amp; Peace <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🏛️ Senate Coalitions <span class="nav-check" id="nc4"></span></div>
+
+  <div class="nav-section-label">// Penumbra: Hacking</div>
+  <div class="nav-item" onclick="scrollByID('t5')">💻 The Hacking System <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🎯 Results by Target <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🛡️ Programs: Off &amp; Def <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="nav-section-label">// Navigation</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol5-heroes.html'"><div class="vol-card-arrow">←</div> Vol.5: Heroes</div>
+  <div class="vol-card left vol-next" onclick="location.href='es2-vol7-factions.html'">Vol.7: Factions <div class="vol-card-arrow">→</div></div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.6</span> // Diplomacy &amp; Hacking</div>
+    <h1 class="page-title">Diplomacy &amp; Hacking</h1>
+    <p class="page-subtitle">How empires influence each other without firing a shot — and what happens when you decide to fire the metaphorical ones invisibly.</p>
+  </div>
+
+  <!-- ══ T1 — RELATION SCORE SYSTEM ══ -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The Diplomatic Relation Score System</h2>
+        <div class="topic-subtitle">Pressure, Mood, and the numbers behind your neighbour's attitude</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">Treaty Status vs. Relationship Status</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every pair of empires has two separate layers of diplomatic information: their <strong>treaty status</strong> and their <strong>relationship status</strong>. These are independent of each other and easy to confuse.</p>
+
+        <p><strong>Treaty status</strong> is the formal contract — it is either Cold War, War, Peace, or Alliance. It determines what military actions are legal and what agreements are available.</p>
+
+        <div class="rel-bar">
+          <div class="rel-seg cold">COLD WAR</div>
+          <div class="rel-seg peace">PEACE</div>
+          <div class="rel-seg ally">ALLIANCE</div>
+          <div class="rel-seg war">WAR</div>
+        </div>
+
+        <p><strong>Relationship status</strong> is the AI's subjective opinion of you — a qualitative label like Reserved, Welcoming, Friendly, Hostile, or Triumphant. It reflects how the AI feels and influences how likely they are to accept or refuse diplomatic offers. These labels are not a score you can directly manipulate, but they shift based on your history: sustained peace and trade agreements push toward Friendly, while unprovoked attacks and ignored tributes push toward Hostile.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">RELATIONSHIP LABELS — WIKI SOURCE</div>
+          The documented labels from the fandom wiki include: Reserved (first contact), Cautious, Welcoming (desires peace), Friendly (long peace + trade), Cordial, Wounded (failed to send military aid as ally), Sneaky (former friend who sees an opportunity while stronger), Hostile (tribute demanded but not received), Triumphant (won a war — seen during Truces), Recovering (lost a war — seen during Truces).
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">📈</span>
+        <span class="block-title">Diplomatic Pressure: How it Works</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>During Cold War and Peace, two empires generate <strong>Diplomatic Pressure</strong> against each other. This is represented on the Diplomacy screen as blue (positive) and orange (negative) bars. The key metric is the <strong>Pressure Trend</strong> — how many pressure points are added or subtracted each turn, ranging from −10 to +10.</p>
+
+        <p>Once one empire has accumulated enough pressure over the other, it can make <strong>Demands</strong>: forced transfers of Dust, resources, technology, or multi-turn tribute payments.</p>
+
+        <p>The factors contributing to Pressure Trend, with their point ranges:</p>
+
+        <div class="pressure-row"><span class="pressure-factor">Score Difference</span><span class="pressure-range">−5 to +5</span><span class="pressure-note">Higher game score = positive pressure on the opponent. Max ±5 points.</span></div>
+        <div class="pressure-row"><span class="pressure-factor">Borders Friction</span><span class="pressure-range">−5 to +5</span><span class="pressure-note">Net influence difference where zones overlap. Stronger border = positive pressure on the weaker neighbour.</span></div>
+        <div class="pressure-row"><span class="pressure-factor">Systems Covered by Influence</span><span class="pressure-range">±8</span><span class="pressure-note">Covering an opponent's system entirely: +8. Being covered: −8. This is the single highest-magnitude factor.</span></div>
+        <div class="pressure-row"><span class="pressure-factor">Diplomatic Choices</span><span class="pressure-range">±0.5</span><span class="pressure-note">Refusing a demand to stop attacking: +0.5 for 10 turns. Accepting: −0.5.</span></div>
+        <div class="pressure-row"><span class="pressure-factor">Diplomatic Treaties (Bureaucratic Imbroglio)</span><span class="pressure-range">±2.5</span><span class="pressure-note">Forcing this diplomatic choice on the opponent: +2.5 to you for 10 turns; −2.5 to them.</span></div>
+        <div class="pressure-row"><span class="pressure-factor">Hacking (Penumbra DLC)</span><span class="pressure-range">±0.5</span><span class="pressure-note">Back-tracing an enemy's hack: +0.5. Getting traced back: −0.5.</span></div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE INFLUENCE ZONE DOMINANCE EFFECT</div>
+          The "Systems Covered by Influence" factor (±8) completely dwarfs all other Pressure contributions. A late-game empire whose influence zone envelops a neighbour's systems can generate so much pressure that demands become a near-constant threat. Maintaining your own system's Influence output is therefore a defensive act, not just a colonisation tool.
+        </div>
+
+        <p>Certain empire-level modifiers also multiply all incoming or outgoing pressure. Notable examples from the wiki: the Z'vali "Spirit" trait adds +25% diplomatic pressure toward enemies; the Amoeba Law adds +50%; and the Citadel of Demography building adds +50%.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══ T2 — AGREEMENTS ══ -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Agreement Types &amp; Strategic Uses</h2>
+        <div class="topic-subtitle">What you can sign, when, and what it actually costs</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">The Deal Menu: What Each Agreement Does</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>All diplomatic deals are negotiated from the Diplomacy Screen (F6). Most deals have a flat Influence cost to enact, plus an <strong>Influence upkeep cost per turn</strong> to maintain. If either empire fails to sustain the upkeep, the agreement cancels automatically.</p>
+
+        <table class="ref-table">
+          <tr><th>Deal</th><th>Availability</th><th>Effect</th></tr>
+          <tr><td class="cell-key">Peace</td><td>Cold War only</td><td>Transitions both empires to Peace status. Unlocks further agreements.</td></tr>
+          <tr><td class="cell-key">Truce</td><td>War only</td><td>Ends active war. Standard truce vs. Force Truce when War Momentum hits 80%/20%.</td></tr>
+          <tr><td class="cell-key">Alliance</td><td>Peace only</td><td>Shared war declarations, shared vision, Joint Victory possible. Max size: half remaining factions.</td></tr>
+          <tr><td class="cell-key">Map Sharing</td><td>Peace</td><td>One-sided: receiver gets donor's entire explored map.</td></tr>
+          <tr><td class="cell-key">Close Borders</td><td>Peace</td><td>Reciprocal. Blocks movement into each other's territory without returning to Cold War.</td></tr>
+          <tr><td class="cell-key">Trade Agreement</td><td>Peace + Trading Companies</td><td>Both empires share HQ subsidiaries, enabling cross-empire trade routes (often with large distance bonuses).</td></tr>
+          <tr><td class="cell-key">Science Agreement</td><td>Peace</td><td>Shared science benefit per turn (upkeep applies).</td></tr>
+          <tr><td class="cell-key">Co-operative Agreement</td><td>Peace</td><td>Faction-specific buff is shared with the other faction.</td></tr>
+          <tr><td class="cell-key">Trade Dust / Resources</td><td>Cold War or Peace</td><td>One-time or ongoing resource exchanges. Costs Influence to initiate in Cold War.</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TRADE AGREEMENT MECHANICS — NOTE ON DISTANCE BONUSES</div>
+          A Trade Agreement lets both sides route trade through each other's subsidiaries. Because distance is a multiplier on Dust income from trade, routing a trade company HQ to a distant subsidiary in an ally's empire can generate substantially more Dust than intra-empire routes. The strategic case for a Trade Agreement often outweighs the Influence upkeep cost once both empires have Trade Companies.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">🧮</span>
+        <span class="block-title">Demands, Tribute &amp; Gifts</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Once you have accumulated enough pressure over an enemy, the Negotiation Screen unlocks a <strong>Demands</strong> bar showing available demand tiers. You can demand Dust, strategic or luxury resources, technologies, or an Economic Tribute (periodic Dust/Science donation over a set number of turns).</p>
+
+        <p>From the opposing side: if an AI empire has sufficient pressure over you, it will send <strong>Tribute or Gift demands</strong>. A tribute request requires a donation large enough to satisfy the AI within that turn. Complying gives a relationship boost; ignoring worsens relations. Paying tribute does not end a Hostile relationship on its own — making peace afterwards is advisable to reset the dynamic. There's a case for not paying at all against the Cravers, who cannot be brought to peace by design.</p>
+
+        <p><strong>Gifts</strong> (voluntary transfers) also reduce how quickly Pressure accumulates, delaying the AI's ability to file an official Demand. They can also be used during a Force Peace offer to sweeten the deal enough for acceptance.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2c">
+      <div class="block-header" onclick="toggle('cb2c')">
+        <span class="block-icon">🌐</span>
+        <span class="block-title">Influence Conversion: Bloodless Conquest</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p><strong>Influence Conversion</strong> (formerly called Pacifist Conversion) allows you to absorb another faction's systems without declaring war. Once you have researched <em>SLC Systems</em> in Stage 4 of the Empire Development tech tree and your influence zone envelops a foreign system, a turn countdown appears next to that system. When the timer expires, the system flips to your empire. The conversion speed is determined by how much your Influence output exceeds the defender's.</p>
+
+        <p>The United Empire has a unique ability to spend Influence to accelerate this process. This mechanic also applies in reverse — a neighbour with dominant Influence production can absorb your border systems without a single fleet movement. Countering it requires either matching their Influence output or eliminating the encircling systems militarily.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">PRECONDITION</div>
+          Influence Conversion requires researching SLC Systems in Stage 4 of the Empire Development tree. Before that research, influence zones are aesthetic and strategic but cannot physically capture foreign systems.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══ T3 — WAR, COLD WAR & PEACE ══ -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">War Declarations, Cold War &amp; Peace Treaties</h2>
+        <div class="topic-subtitle">The rules of engagement, War Momentum, and the Force Truce system</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">What Cold War, War, and Peace Actually Allow</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>All empires start the game in <strong>Cold War</strong>. In Cold War, fleet combat can occur in neutral territory or if you enter a colonised system belonging to another empire — but attacking first displeases that empire and affects the relationship status. Many empires tolerate exploration ships early on but become hostile to military fleets near their systems.</p>
+
+        <p><strong>War</strong> removes all geographic restrictions on fleet combat. Fleets can battle anywhere, and systems can be invaded with Manpower through Ground Battle. Winning a Ground Battle captures the system. War also opens unique Senate law tiers for Militarist parties (see T4).</p>
+
+        <p><strong>Peace</strong> unlocks the full agreement suite: Trade Agreements, Science Agreements, Map Sharing, Co-operative Agreements, Alliance, and Close Borders. Empires can return from Peace to Cold War — this is distinct from declaring War.</p>
+
+        <p>A <strong>Truce</strong> is available only during War. It ends the war temporarily. Truces have their own mechanics (Force Truce, see below) and leave relationship labels like Triumphant/Recovering visible during the truce period.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">War Momentum &amp; the Force Truce System</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Once war is declared, <strong>War Momentum</strong> replaces Pressure Trend. It ranges from −10 to +10 per turn and accumulates a score based on:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">FLEET BATTLES</span><span>Winning adds points; losing deducts points. Exact per-battle magnitude marked "Details Unknown" in the wiki.</span></li>
+          <li><span class="step-n">GROUND BATTLES</span><span>Same win/loss dynamic as fleet battles.</span></li>
+          <li><span class="step-n">BLOCKADES</span><span>Guarding (blockading) an enemy system: +0.1 per system. Enemy blockading your system: −0.1 per system.</span></li>
+        </ul>
+
+        <p>When War Momentum reaches <strong>80% or 20%</strong>, the dominant or losing side may send a <strong>Force Truce offer</strong>. This is described by the wiki as an anti-snowball mechanism allowing the losing side a chance to recover. Rejecting a Force Truce costs Influence — a significant constraint if your Influence pool is depleted from other costs. The Force Truce offer is only sent to one member of an Alliance, not all members.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">AI ALLIANCE BEHAVIOUR — COMMUNITY NOTE (WIKI)</div>
+          The wiki notes: "When you are in alliance with AIs, they have a large chance of accepting truces even when you have more than enough influence to refuse it." If you're in an alliance and winning decisively, don't rely on AI partners to hold the line against a Force Truce.
+        </div>
+
+        <p>Outside of Force Truce, a normal Truce offer can be made at any point via the Diplomacy screen. The AI's willingness to accept depends on War Momentum, current Mood/relationship status, and how lopsided the terms are.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3c">
+      <div class="block-header" onclick="toggle('cb3c')">
+        <span class="block-icon">💡</span>
+        <span class="block-title">Alliance Mechanics &amp; Joint Victory</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>An Alliance requires Peace status and is capped at no more than half the remaining factions in the game. Minimum 4 empires in the game to form one at all. Consequences of entering an Alliance:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">SHARED WAR</span><span>Any war declaration by one member applies to the whole Alliance. However, each member individually has the option to step out when a fellow Alliance member starts a war.</span></li>
+          <li><span class="step-n">FACTION PACT BONUS</span><span>Each Alliance member can sign a pact with one other Alliance member granting an effect linked to that ally's faction identity. The bonus improves over time up to a maximum.</span></li>
+          <li><span class="step-n">COORDINATION TOOL</span><span>A coordination icon on the End Turn button (galaxy view, bottom right) lets you mark intentions on the galaxy map for allies to see.</span></li>
+          <li><span class="step-n">SHARED VISION &amp; JOINT VICTORY</span><span>Allied empires share map visibility. Winning conditions that require a Joint Victory count for all members simultaneously. Note: some victory requirements scale upward proportional to Alliance size.</span></li>
+        </ul>
+
+        <p>The Pacifist party's forced law provides a Dust/FIDS bonus for each empire in Alliance, incentivising Pacifist-dominated empires to grow alliances rather than wage war.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══ T4 — SENATE COALITIONS & OFFENSIVE POLITICS ══ -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Senate Coalitions &amp; Offensive Politics</h2>
+        <div class="topic-subtitle">Weaponising your Senate against rival empires</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Senate Mechanics: Parties, Laws, and Influence Upkeep</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Senate's relevant mechanics for diplomacy revolve around which parties hold power and what laws their accumulated experience has unlocked. A brief recap of the system as it intersects with foreign policy:</p>
+
+        <p>Each election cycle determines which 1–3 parties hold seats (depending on government type). Parties gain political experience while in power; experience unlocks higher-tier laws. Law upkeep cost scales with empire population: the cost per turn for most party laws is <em>law level × empire population</em> in Influence. Independent laws and forced/power laws have zero upkeep but often carry penalties.</p>
+
+        <p>The government types determine available law slots (2–6 total) and starting slots:</p>
+
+        <table class="ref-table">
+          <tr><th>Government</th><th>Base Law Slots</th><th>+Stage 3</th><th>+Stage 5</th></tr>
+          <tr><td class="cell-key">Democracy</td><td>3</td><td>+1</td><td>+2 (+1 Democracy bonus)</td></tr>
+          <tr><td class="cell-key">Autocracy</td><td>3</td><td>+1</td><td>+1</td></tr>
+          <tr><td class="cell-key">Republic / Federation / Dictatorship</td><td>2</td><td>+1</td><td>+1</td></tr>
+        </table>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Offensively-Useful Laws by Party</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Several laws directly affect diplomatic or military outcomes against other empires. These are the most strategically relevant from an offensive standpoint:</p>
+
+        <div class="coalition-grid">
+          <div class="party-card">
+            <div class="pname">⚔️ Militarist — Power Law</div>
+            <div class="pbonus"><strong>Jingoist Joy:</strong> +15 Approval per System per active war with a Major Faction, +5 per war with a Minor Faction. Free war declarations (no Influence cost). Hissho affinity.</div>
+          </div>
+          <div class="party-card">
+            <div class="pname">⚔️ Militarist — Level 2</div>
+            <div class="pbonus"><strong>Spoils of War:</strong> +50–100 Science and +50–100 Dust per enemy Command Point destroyed. Strong in wars of attrition.</div>
+          </div>
+          <div class="party-card">
+            <div class="pname">⚔️ Militarist — Level 4</div>
+            <div class="pbonus"><strong>Deadly Intent Bill:</strong> +33% damage on weapon modules and +33% troops damage. Applies to all combat empires-wide.</div>
+          </div>
+          <div class="party-card">
+            <div class="pname">☮️ Pacifist — Power Law</div>
+            <div class="pbonus">Alliance Approval/FIDS bonus per allied empire. Penalty-free war declarations impossible — declaring war removes this law and shocks your politics.</div>
+          </div>
+          <div class="party-card">
+            <div class="pname">☮️ Pacifist — Mid Tiers</div>
+            <div class="pbonus">Various laws granting FIDS bonuses per empire at Peace and per empire in Alliance. Creates strong economic incentive to stay non-aggressive.</div>
+          </div>
+          <div class="party-card">
+            <div class="pname">🏭 Industrialist — Level 3</div>
+            <div class="pbonus"><strong>Pollution: Not Our Problem:</strong> Flat Industry/population bonus empire-wide. Indirectly accelerates ship production, feeding military capacity.</div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">OFFENSIVE POLITICS CORE INSIGHT</div>
+          The Militarist forced law grants free war declarations — eliminating the Influence cost that constrains most empires when initiating conflict. If your Militarists have held power long enough to reach higher levels, Spoils of War and Deadly Intent together can make sustained warfare self-financing in Science and Dust while dramatically amplifying combat damage. This is the senate foundation for aggressive mid-game strategies.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4c">
+      <div class="block-header" onclick="toggle('cb4c')">
+        <span class="block-icon">🗳️</span>
+        <span class="block-title">Election Manipulation &amp; Coalition Control</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Elections happen every 20 turns (Normal speed), at end of turn. Immediately before an election resolves, you can take an <strong>Election Action</strong> to manipulate the outcome. Available actions depend on government type; they include: giving official support (+small boost), spending Dust to boost a party, spending Influence for a strong boost, intimidating citizens away from a party, or reinforcing a target party. You can also simply request a Survey to preview the projected outcome before committing.</p>
+
+        <p>Population composition shapes Senate composition. Each system's representatives are drawn from its population's innate political affinities. Growing specific population types, assimilating minor faction pops, and capturing systems from enemies all shift your political balance. Planning which minor factions to assimilate is partly a long-term Senate engineering decision, not just a FIDSI calculation.</p>
+
+        <p>Coalition control strategy: if you need Militarist laws to fund a long war, you must ensure Militarists keep winning elections consistently enough to level their experience. A single election loss evicts their laws immediately. Conversely, if you want to block a party (say, Pacifists who are about to impose peace-preferring laws), you can spend resources at election to undermine them specifically.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══ T5 — HACKING SYSTEM ══ -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Hacking: The Penumbra Espionage System</h2>
+        <div class="topic-subtitle">Bandwidth, routing, traces, and the race between hack and counter-hack</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">💻</span>
+        <span class="block-title">The Fundamentals: Bandwidth, Operations, and Routing</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Hacking is a Penumbra DLC mechanic available to all factions from Turn 1. Every empire begins the game with one simultaneous hacking operation and can increase this cap by researching specific technologies (the first unlock is in <em>Autonomous Materials</em> in the Exploration/Science tree).</p>
+
+        <p><strong>Bandwidth</strong> is your hacking resource pool. It is not a per-turn currency — it is a fixed allocation. Running defensive or offensive programs consumes bandwidth. Cancelling an active hack also costs bandwidth. You cannot spend bandwidth you do not have, so managing the pool is essential before committing to a program-heavy strategy.</p>
+
+        <p>To initiate a hack: select a source system (any system you control), then click a path through the galaxy to your target. The hack travels along starlanes or through empty space at the following documented speeds (from the wiki):</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">STARLANE</span><span>2.9 distance units per turn.</span></li>
+          <li><span class="step-n">FREE MOVEMENT (empty space)</span><span>0.75 distance units per turn. Maximum hack distance over empty space: 23 units.</span></li>
+          <li><span class="step-n">NODE COST</span><span>Hacking through a node requires ~240 speed to complete. Exact value marked uncertain in the wiki (shown as "240(?)"), so treat as approximate.</span></li>
+        </ul>
+
+        <p>Your own controlled systems are <strong>bypassed instantly</strong> by your hacks — they do not cost time. This is a routing strategy tool: inserting your own colonies into a hack path gives the hack free passage while forcing an enemy trace to spend time hacking through those nodes on its way back.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">🔴</span>
+        <span class="block-title">Traces: The Race You're Always Running</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>When your hack passes through a system that has a <strong>Defensive Program installed</strong>, that system automatically launches a <strong>Trace</strong> — a counter-hack that travels back toward your hacking source. Traces are the primary risk of offensive hacking.</p>
+
+        <p>The core mechanic of the hack/trace contest (from the wiki):</p>
+        <ul class="step-list">
+          <li><span class="step-n">TRACE SPEED</span><span>Traces travel at 2× the speed of the hack over empty space.</span></li>
+          <li><span class="step-n">TRACE START</span><span>A trace only begins once your hack actually <em>arrives</em> at the target planet. The contest is therefore: can your hack finish its work at the target before the trace makes the round trip back to your source?</span></li>
+          <li><span class="step-n">BACKDOOR EXCEPTION</span><span>Hacks originating from a Backdoor do not trigger a trace at the Backdoor's host system. If traced back, the Backdoor is destroyed instead of applying a penalty to you directly.</span></li>
+          <li><span class="step-n">NO DEFENSIVE PROGRAM</span><span>If the target system has no Defensive Program installed, you can hack it with zero consequences — no trace is ever launched. This applies symmetrically: your unprotected systems are sitting ducks.</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">ROUTING STRATEGY TO BEAT TRACES</div>
+          From the wiki: traces travel at 2× hack speed but must fight through intermediate nodes. A single-hop hack usually gives the trace enough time to catch up. Routing through two or more nodes — especially through your own systems (which the trace must hack through while your hack bypasses) — typically generates enough distance to complete the hack before the trace returns. The community rule of thumb: one-hop hacks on defended targets are usually unsafe; two-node paths are usually sufficient.
+        </div>
+
+        <p>When a trace succeeds, the defender can choose from options including Blackmail (preventing you from denying their next hacking-stop request), Destroy Backdoor (if traced to one), or Shut Down (cancels your future operations temporarily). A completed hack always finishes even if the trace also completes on the same turn — so if you're one turn away from a successful hack, pressing End Turn is still worth it even if the trace is closing in.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5c">
+      <div class="block-header" onclick="toggle('cb5c')">
+        <span class="block-icon">😴</span>
+        <span class="block-title">Sleeper Agents: Persistent Espionage Presence</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Embedding a Sleeper (a Level 1 hack result) converts one population unit in the target system into a covert agent. Sleepers do two things once you set a threshold in your Hacking screen:</p>
+        <ul class="step-list">
+          <li><span class="step-n">VISION</span><span>Grants ongoing visibility of that system's activity.</span></li>
+          <li><span class="step-n">RESOURCE DRAIN</span><span>Siphons Dust from the enemy and redirects it to you. Multiple sleepers per system are possible (up to the system's population count) and the drain scales.</span></li>
+        </ul>
+
+        <p>The enemy receives no notification when a Sleeper is embedded — but the resource drain shows up as a small, oddly-named Dust deduction in their FIDSI panel (examples from the wiki: "Dubious Accounting Practices", "Charitable Donations", "Horatio Consultancy Charges"). An attentive opponent can infer they've been infiltrated from these entries.</p>
+
+        <p>To remove Sleepers from your own empire: run the <em>Domestic Surveillance</em> program on the affected system. This reverses approximately one Sleeper every few turns but imposes a significant Approval penalty on that system — a meaningful trade-off in early to mid-game when Approval is a FIDSI multiplier.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══ T6 — RESULTS BY TARGET ══ -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">What Hacking Actually Does: Results by Target Type</h2>
+        <div class="topic-subtitle">Level 1 vs. Level 2 outcomes, by what you're hacking</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Hacking Major Faction Systems (Player Colonies)</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Hacking a regular (non-Home) player system unlocks Level 1 outcomes. Hacking a player's Home System unlocks the more powerful Level 2 outcomes.</p>
+
+        <p><strong>Level 1 — Regular System:</strong></p>
+        <div class="hack-grid">
+          <div class="hack-card">
+            <div class="hack-card-label">LVL 1</div>
+            <div class="hack-card-title">Embed Sleeper</div>
+            <div class="hack-card-desc">One population becomes a sleeper. Grants vision and enables resource draining once threshold is set.</div>
+          </div>
+          <div class="hack-card">
+            <div class="hack-card-label">LVL 1</div>
+            <div class="hack-card-title">Create Backdoor</div>
+            <div class="hack-card-desc">Future hacks can originate from this node. Speeds up hacking on neighbouring nodes. Backdoor is destroyed if traced back instead of penalising your home system.</div>
+          </div>
+          <div class="hack-card">
+            <div class="hack-card-label">LVL 1</div>
+            <div class="hack-card-title">Jam Commands</div>
+            <div class="hack-card-desc">Forces the target to play a detrimental ground battle card on defence for 5 turns. Strong pre-invasion tool.</div>
+          </div>
+          <div class="hack-card">
+            <div class="hack-card-label">LVL 1</div>
+            <div class="hack-card-title">Influence Politics</div>
+            <div class="hack-card-desc">Forces the system's political representation to shift to a chosen party. Can destabilise an enemy's Senate coalition if applied at election time.</div>
+          </div>
+          <div class="hack-card">
+            <div class="hack-card-label">LVL 1</div>
+            <div class="hack-card-title">Injure Figurehead</div>
+            <div class="hack-card-desc">Wounds the hero assigned to that system. A wounded hero's stats are degraded and they cannot act until healed.</div>
+          </div>
+        </div>
+
+        <p><strong>Level 2 — Home System:</strong></p>
+        <div class="hack-grid">
+          <div class="hack-card lvl2">
+            <div class="hack-card-label">LVL 2</div>
+            <div class="hack-card-title">Infiltrate Scanners</div>
+            <div class="hack-card-desc">Grants vision on all enemy fleets for 10 turns AND embeds a Sleeper on the Home System.</div>
+          </div>
+          <div class="hack-card lvl2">
+            <div class="hack-card-label">LVL 2</div>
+            <div class="hack-card-title">Topple Government</div>
+            <div class="hack-card-desc">Causes Anarchy and forces a government change on the target empire. Also shifts politics to a chosen party. Devastating if an enemy is mid-war with Militarist laws active.</div>
+          </div>
+          <div class="hack-card lvl2">
+            <div class="hack-card-label">LVL 2</div>
+            <div class="hack-card-title">Scramble Navigation</div>
+            <div class="hack-card-desc">Immobilises all enemy fleets for 5 turns. Also wounds the system's hero. Extremely strong during an active offensive — stops a counter-attack cold.</div>
+          </div>
+          <div class="hack-card lvl2">
+            <div class="hack-card-label">LVL 2</div>
+            <div class="hack-card-title">Support Revolutionaries</div>
+            <div class="hack-card-desc">Spawns Pirate Revolutionary fleets using the system's population. Less reliable if the target has fleets nearby to clean up quickly.</div>
+          </div>
+          <div class="hack-card lvl2">
+            <div class="hack-card-label">LVL 2</div>
+            <div class="hack-card-title">Server ID Duplication</div>
+            <div class="hack-card-desc">Steals a technology. One of the highest-value outcomes if the enemy is ahead in research.</div>
+          </div>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">🌍</span>
+        <span class="block-title">Hacking Minor Factions, Pirates &amp; the Academy</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Hacking targets are not limited to major factions. Each target type offers different outcomes:</p>
+
+        <p><strong>Minor Factions:</strong> Hacking a minor faction system allows you to boost their Approval of you (strong early relationship boost), impersonate an ambassador to reduce their relationship with a rival empire by 5, steal their resources even when at war, or hack their economy to increase yields by 75% (normal resources) / 50% (strategic/luxury) while guaranteeing relation rewards regardless of war status.</p>
+
+        <p><strong>Pirates:</strong> Pirate systems can be hacked to steal resources or alter their relationships with players. The video transcript notes this is "not too useful" compared to simply destroying pirates, but pirates can also hack you — watch for unexpected resource drains if pirates are active in your region.</p>
+
+        <p><strong>The Galactic Academy:</strong> Treated like a player's home system for hacking purposes (Level 2 outcomes). The Academy has its own Hacking node and can be hacked for tech theft or political disruption effects that apply to the Academy's own governance, affecting galactic events.</p>
+
+        <p><strong>Umbral Choir–specific outcomes</strong> (not available to other factions): Install Transmigration Beacon, Create Sanctuary, Abduct Sleeper(s), Recover Lost Home System. These are Umbral Choir mechanics outside the scope of this general guide.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6c">
+      <div class="block-header" onclick="toggle('cb6c')">
+        <span class="block-icon">🏴‍☠️</span>
+        <span class="block-title">Minor Faction &amp; Pirate Hacking Against You</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Minor factions and pirates that have unlocked hacking capability can attack your systems with a limited but consistent set of options. All effects last 5 turns and apply to any of your systems including law cost increases:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">RESEARCH SLOW</span><span>−15% Science in one tech tree quadrant (their choice) for 5 turns.</span></li>
+          <li><span class="step-n">INDUSTRY COST</span><span>+10% Industry cost on all buildings for 5 turns.</span></li>
+          <li><span class="step-n">LAW UPKEEP</span><span>+50% law upkeep cost for 5 turns. Potentially severe if you run a dense law portfolio — this can drain your Influence reserve and auto-cancel laws.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">LEAVING SYSTEMS UNPROTECTED</div>
+          If you have no Defensive Programs on a system, it cannot generate a trace — meaning any hack on that system proceeds with zero counter-play from you. Defensively, the minimum viable strategy is to place at least one Encrypt program on your Home System and any system containing critical heroes or high-value production.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══ T7 — PROGRAMS ══ -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Hacking Programs: Offensive and Defensive</h2>
+        <div class="topic-subtitle">What you can install, what it costs in bandwidth, and when to use each</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">Offensive Programs</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Offensive programs improve the speed or efficiency of your active hacking operations. They are installed on your own systems and apply to outgoing hacks originating from those systems.</p>
+
+        <table class="prog-table">
+          <tr><th>Program</th><th>Bandwidth</th><th>Effect</th><th>Unlock Tech</th></tr>
+          <tr class="off-row">
+            <td class="prog-name">Accelerator</td>
+            <td class="prog-bw">15</td>
+            <td>Increases hacking speed (exact % not given in wiki)</td>
+            <td class="prog-unlock">Eukaryotic Sap</td>
+          </tr>
+          <tr class="off-row">
+            <td class="prog-name">Piggyback</td>
+            <td class="prog-bw">15</td>
+            <td>−30% bandwidth cost on all hacking programs</td>
+            <td class="prog-unlock">Baryonic Shielding</td>
+          </tr>
+          <tr class="off-row">
+            <td class="prog-name">Overload</td>
+            <td class="prog-bw">20</td>
+            <td>Effect not detailed in available sources — requires in-game verification</td>
+            <td class="prog-unlock">Wave Function Control</td>
+          </tr>
+          <tr class="off-row">
+            <td class="prog-name">Divert</td>
+            <td class="prog-bw">20</td>
+            <td>Allows changing the target or path of an ongoing hacking operation mid-flight</td>
+            <td class="prog-unlock">Graviton Research</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PIGGYBACK IS HIGH-PRIORITY</div>
+          Piggyback's −30% bandwidth cost on programs compounds across your entire program portfolio. If you intend to run a multi-program hacking strategy — both offensive and defensive — Piggyback pays for itself rapidly and should be researched early.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">🛡️</span>
+        <span class="block-title">Defensive Programs</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Defensive programs are installed on your systems. They trigger automatically when an enemy hack passes through or targets that system, launching a Trace. Each defensive program also removes detected Backdoors on installation.</p>
+
+        <p>Critically: a system with <strong>no defensive program</strong> generates no trace at all. Your system cannot protect itself passively — protection requires bandwidth investment.</p>
+
+        <table class="prog-table">
+          <tr><th>Program</th><th>Bandwidth</th><th>Effect</th><th>Unlock Tech</th></tr>
+          <tr class="def-row">
+            <td class="prog-name">Encrypt</td>
+            <td class="prog-bw">15</td>
+            <td>−50% enemy hacking speed through this node. Removes detected Backdoors.</td>
+            <td class="prog-unlock">Available by default</td>
+          </tr>
+          <tr class="def-row">
+            <td class="prog-name">Interrogate</td>
+            <td class="prog-bw">20</td>
+            <td>Effect not detailed in available sources — requires in-game verification</td>
+            <td class="prog-unlock">Wave Function Control</td>
+          </tr>
+          <tr class="def-row">
+            <td class="prog-name">Lockdown</td>
+            <td class="prog-bw">20</td>
+            <td>−25% enemy hacking speed. Blocks hostile hacks from creating Backdoors on this node. Removes detected Backdoors.</td>
+            <td class="prog-unlock">Graviton Research</td>
+          </tr>
+          <tr class="def-row">
+            <td class="prog-name">Firewall</td>
+            <td class="prog-bw">30</td>
+            <td>Blocks all Level 1 hacking outcomes on this node. Removes detected Backdoors.</td>
+            <td class="prog-unlock">Dimensional Folding</td>
+          </tr>
+          <tr class="def-row">
+            <td class="prog-name">Track</td>
+            <td class="prog-bw">30</td>
+            <td>Tracks the progress of hacking operations passing through this node. Removes detected Backdoors.</td>
+            <td class="prog-unlock">Dimensional Folding</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PRIORITISATION LOGIC</div>
+          Bandwidth is finite. You cannot protect everything. The priority order for defensive programs in most games: (1) Home System — always Encrypt at minimum, Firewall when available to block Level 1 outcomes at no cost to you; (2) Systems with assigned heroes or critical research infrastructure; (3) Border systems that would give the enemy a convenient Backdoor staging point. Undefended inner systems can often be left exposed early on — the enemy still has to route through defended outer nodes.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7c">
+      <div class="block-header" onclick="toggle('cb7c')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">Domestic Surveillance &amp; Anti-Sleeper Ops</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The <strong>Domestic Surveillance</strong> program is the specific counter to Sleeper agents. Running it on a system periodically removes embedded Sleepers — approximately one every few turns. The cost is a substantial Approval penalty on that system for the duration. Given that Approval is an empire-wide FIDSI multiplier, launching Domestic Surveillance on a high-population system during a critical economic phase can be counterproductive.</p>
+
+        <p>The detection heuristic from the video transcript: if you see small inexplicable Dust deductions in your FIDSI breakdown with nonsensical labels (examples: "Scandal Payoffs", "Ocean Moisturizing", "Budget Miniaturization"), you have at least one active Sleeper draining your economy. Use the Hacking screen's Sleeper tab to see which systems are affected and how many agents are present, then decide whether the drain is large enough to justify the Approval cost of Surveillance.</p>
+
+        <p>The transcript's practical advice: if the drain is small or you're on an unprotected low-value system, the Approval penalty of running Domestic Surveillance often costs more than the Sleeper steals. Reserve it for heavily infiltrated high-pop systems or when the Dust drain has become significant relative to your income.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══ QUIZ ══ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Diplomacy and hacking decisions under real game conditions — concrete situations, one right answer</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol6';
+const TOTAL = 7;
+let qIdx = 0;
+let answered = false;
+
+const quizzes = [
+  {
+    scenario: "Turn 42. You are at Peace with an empire to your northeast. Their influence zone now entirely covers two of your border systems (you can see the turn countdown ticking on both). You have no systems touching their influence zone in return. Your Influence output is 85 per turn; theirs is estimated at 190. You have 430 Influence banked.",
+    q: "What is the most accurate description of your diplomatic situation, and what is the first-order corrective action?",
+    opts: [
+      "You are under Diplomatic Pressure from the score-difference factor (±5 max). Bank more Influence to resist incoming demands.",
+      "You are under the 'Systems Covered by Influence' pressure factor (+8 per system covered), the highest-magnitude factor in the system. The immediate priority is either dramatically increasing your own Influence output to recontest coverage, or preparing militarily since Influence Conversion becomes possible once they research SLC Systems.",
+      "The countdown timer means war is imminent — you should pre-emptively declare war to deny them the bloodless capture.",
+      "Influence zone overlap only matters at equal-strength borders. Since they are stronger, the Borders Friction factor (±5) applies rather than the Systems Covered factor."
+    ],
+    correct: 1,
+    explain: "The 'Systems Covered by Influence' factor is +8 per system covered — the single largest pressure modifier in the game, dwarfing Score Difference (±5) and Borders Friction (±5). Two systems covered is +16 per turn in pressure, which rapidly unlocks their ability to make Demands. Additionally, once they research SLC Systems (Stage 4 Empire Development), those countdowns convert to actual annexation timers. The correct diagnosis is that you are facing both immediate Demand exposure and medium-term Influence Conversion risk. Option A misidentifies the operative factor. Option C is premature and would likely accelerate the problem by triggering war costs. Option D incorrectly conflates the two pressure factors."
+  },
+  {
+    scenario: "Turn 28. You are hacking a rival's colonised system. Your hack originated from your home system and routed through one neutral minor faction system before arriving. The target system has an Encrypt program installed. The trace launched and is now heading back along the path. The hack needs 2 more turns to complete. The trace will complete in 1 turn.",
+    q: "What is the correct assessment of this situation, and should you press End Turn?",
+    opts: [
+      "Cancel the hack immediately — you cannot let the trace complete, as it will apply a permanent penalty to your home system.",
+      "Press End Turn. The trace will complete this turn and apply its malus to your home system, but your hack will still finish on the following turn and you will still get to choose your hacking result.",
+      "Press End Turn. The hack needs 2 turns and the trace needs 1 turn, so the trace will complete first and cancel the hack entirely before it reaches its outcome.",
+      "The minor faction system your hack passed through will absorb the trace — traces cannot cross through minor faction territory."
+    ],
+    correct: 2,
+    explain: "The core mechanic: a trace cancels the hack only if it returns to the source before the hack finishes. Here the trace completes in 1 turn and the hack needs 2 more turns. When the trace resolves on Turn 29, the hack has 1 turn still remaining — the trace succeeds and cancels the hack. You do not get a result. Option B misremembers the rule — completing your hack first is what lets you choose a result despite a successful trace arriving on the same turn. Option A's concern about permanent penalties is overstated — trace consequences include temporary effects (Blackmail, Shut Down, etc.), not permanent penalties. Option D is incorrect; minor faction systems generate their own trace reactions independently."
+  },
+  {
+    scenario: "Turn 55. Your Militarist party has held power for 3 election cycles and has reached Level 3. You currently have Jingoist Joy (Power law, free war declarations) and Spoils of War (Level 2, +50 Science/Dust per enemy CP destroyed) active. An election is coming in 3 turns. Polling suggests the Pacifists might win a second Senate seat, which would drop the Militarists to minority status and remove both their laws.",
+    q: "What is the most strategically damaging consequence of this election outcome, and what single election action addresses it most directly?",
+    opts: [
+      "Losing Jingoist Joy means war declarations cost Influence again. Use Dust to boost Militarists to preserve the free war declaration law.",
+      "Losing Spoils of War matters most — it is the main Science source in your current war. Spend Influence for a Strong Boost on the Militarists to keep them as the leading party.",
+      "Both laws are lost if Militarists lose majority. The most valuable is Spoils of War (passive Science + Dust income during war) since Influence is renewable but Science snowballs compound. Spending Influence for a Strong Boost on Militarists prevents the law loss but uses banked Influence you might need to refuse a Force Truce.",
+      "You should switch strategy to Pacifist laws, which provide FIDS bonuses per allied empire — a stronger economy than wartime science bonuses."
+    ],
+    correct: 2,
+    explain: "Both laws are removed simultaneously when Militarists lose power, but the question asks what single action addresses the situation. Option C correctly identifies that both laws are at stake (Option A and B each undersell the full loss), correctly evaluates Spoils of War as the compounding value, and crucially raises the real cost of spending Influence on election manipulation — that same Influence pool may be needed to refuse a Force Truce if War Momentum tips against you. A Strong Boost for Militarists is the right action, but a complete answer acknowledges the trade-off. Option D is a valid long-term pivot but does not address the immediate election problem and ignores the sunk value of Militarist laws at Level 3."
+  },
+  {
+    scenario: "Turn 38, Penumbra DLC. You want to hack an enemy empire's Home System to execute Scramble Navigation before launching your fleet assault next turn. The enemy Home System is 4 starlane-hops away from your nearest colony. You have one simultaneous hacking operation. You check the enemy Home System: it has a Firewall installed (blocks Level 1 outcomes, removes Backdoors).",
+    q: "Which statement about this planned hack is correct?",
+    opts: [
+      "The Firewall blocks Scramble Navigation because Scramble Navigation is a Level 2 outcome. You cannot execute this hack.",
+      "Firewall only blocks Level 1 outcomes. Scramble Navigation is a Level 2 outcome (Home System only). The Firewall does not block it. The hack will proceed normally and the trace risk exists but is separate from the Firewall effect.",
+      "The Firewall also blocks traces, so you can hack the Home System freely with no trace launched — the Firewall is purely defensive.",
+      "You need a Backdoor adjacent to the enemy Home System before attempting a Home System hack; otherwise the game blocks the operation."
+    ],
+    correct: 1,
+    explain: "Firewall specifically blocks Level 1 hacking outcomes. Scramble Navigation is a Level 2 outcome — it is available only when hacking a Home System, which places it in the Level 2 category by definition. The wiki is explicit that Firewall blocks 'hacking outcomes of Level 1'. Level 2 outcomes are not blocked by Firewall. The trace risk is independent of the Firewall — a trace will still be launched if the Firewall triggers (which it will when your hack passes through), so routing strategy still matters. Option C incorrectly describes how Firewall functions — it does not suppress traces. Option D incorrectly describes a prerequisite that does not exist in the mechanics."
+  },
+  {
+    scenario: "Turn 60. You have 8 Sleeper agents spread across three enemy systems (3, 3, and 2 Sleepers respectively). Your Dust income is 420 per turn. You notice a Dust deduction of −18 per turn labelled 'Scandal Payoffs' in your rival's income breakdown — this is visible because they sent you their budget screen in a screenshot during a multiplayer session. The rival has no Defensive Programs on any of the three infiltrated systems.",
+    q: "Your rival now notices the deduction and wants to purge the Sleepers efficiently. What is the correct tactical assessment?",
+    opts: [
+      "They should immediately run Domestic Surveillance on all three systems simultaneously to clear all Sleepers in one sweep.",
+      "They have no recourse — without Defensive Programs, Domestic Surveillance cannot be launched and Sleepers cannot be removed.",
+      "They should prioritise Domestic Surveillance on the system with the most Sleepers (3 agents) first. Each Domestic Surveillance run removes one Sleeper every few turns at a significant Approval cost. Running it on all three simultaneously multiplies the Approval penalty, so sequential targeting starting from the heaviest-infiltrated system is more approval-efficient.",
+      "They should install Defensive Programs on all three systems, which will automatically detect and remove existing Sleepers upon installation."
+    ],
+    correct: 2,
+    explain: "Domestic Surveillance is the counter-Sleeper program, and it imposes a significant Approval penalty on the system where it runs. The Approval penalty applies per system, so running it on all three simultaneously stacks three separate Approval penalties at once — potentially a severe empire-wide FIDSI hit given that Approval is a multiplier. The optimal approach is sequential: clear the most-infiltrated system (3 Sleepers) first since it has the highest drain, then move to the next. Option A is correct that Domestic Surveillance is the tool but incorrect that simultaneous deployment is optimal. Option B is wrong — Defensive Programs are not a prerequisite for Domestic Surveillance. Option D is partially correct (installing Defensive Programs does remove detected Backdoors), but the wiki states programs remove 'detected Backdoors' not Sleepers; Sleepers are handled by Domestic Surveillance specifically."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
