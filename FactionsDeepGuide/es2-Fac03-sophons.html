@@ -17,6 +17,7 @@
 
   :root {
     --accent:            var(--sophon-color);
+	--card-accent:		 var(--accent);
     --accent-dim:        rgba(var(--sophon-color), 0.11);
     --accent-bright-rgb: var(--cyan);
   }
@@ -63,6 +64,8 @@
     <div class="guide-name">The<br>Sophons</div>
   </div>
 
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🔬 Faction Identity <span class="nav-check" id="nc0"></span></div>
   <div class="nav-section-label">// Core Mechanics</div>
   <div class="nav-item active" onclick="scrollByID('t1')">🔭 Omniscience <span class="nav-check" id="nc1"></span></div>
   <div class="nav-item" onclick="scrollByID('t2')">🏭 The Industry Problem <span class="nav-check" id="nc2"></span></div>

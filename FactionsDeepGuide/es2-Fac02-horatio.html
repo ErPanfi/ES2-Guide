@@ -17,6 +17,7 @@
 
   :root {
     --accent:            var(--horatio-color);
+	--card-accent:		 var(--accent);
     --accent-dim:        rgba(var(--horatio-color), 0.10);
     --accent-bright-rgb: 255,200,220;
   }
@@ -51,7 +52,7 @@
   </div>
 
   <div class="nav-section-label">// Overview</div>
-  <div class="nav-item active" onclick="scrollByID('t0')">◈ Faction Identity <span class="nav-check" id="nc0"></span></div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🧬 Faction Identity <span class="nav-check" id="nc0"></span></div>
 
   <div class="nav-section-label">// Gene System</div>
   <div class="nav-item" onclick="scrollByID('t1')">🧬 Splicing Mechanics <span class="nav-check" id="nc1"></span></div>
@@ -99,13 +100,13 @@
     </div>
     <div class="content-block open" id="cb0a">
       <div class="block-header" onclick="toggle('cb0a')">
-        <span class="block-icon">◈</span>
+        <span class="block-icon">🧬</span>
         <span class="block-title">Core Traits and the True Horatio Identity</span>
         <span class="block-tag tag-mech">OVERVIEW</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge">◈ HORATIO — THE BEAUTIFUL</div>
+        <div class="vol-card-badge">◈ HORATIO — THE BEAUTIFUL ◈</div>
 
         <p>The wiki describes Horatio as "a relatively vanilla faction." This is technically true of turns 1–25, and entirely misleading as a strategic description. The expert guide author is more direct: <em>"I'm of the opinion that the Horatio are by far the weakest race simply because their early game is such crap."</em> This is not hyperbole — it reflects the compound problem of a +25% ship cost penalty, one fewer module slot on every hull compared to other factions, no access to Xeno-Industrial Infrastructure (they start on a Mediterranean), and genuinely weak early FIDSI output. Horatio is a late-blooming exponential faction: their first 30 turns are spent building the infrastructure (population diversity, nursery systems, minor faction assimilation) that will let them create a per-pop FIDSI output that no other faction can match.</p>
 

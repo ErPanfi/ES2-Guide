@@ -14,7 +14,6 @@
   :root {
     
     --accent:             var(--cravers-color);
-    --accent-rgb:         var(--cravers-color);
     --accent-dim:         rgba(var(--cravers-color), 0.10);
     --accent-bright-rgb:  var(--green);
   }
@@ -265,16 +264,16 @@
     <div class="guide-name">The<br>Cravers</div>
   </div>
 
-  <div class="nav-section-label">// Identity</div>
-  <div class="nav-item active" onclick="scrollByID('t0')">◈ Faction Anatomy <span class="nav-check" id="nc0"></span></div>
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🪳 Faction Identity <span class="nav-check" id="nc0"></span></div>
 
   <div class="nav-section-label">// Core Systems</div>
-  <div class="nav-item" onclick="scrollByID('t1')">⚗ Population Math <span class="nav-check" id="nc1"></span></div>
-  <div class="nav-item" onclick="scrollByID('t2')">⚠ Approval Crisis Toolkit <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t1')">⚗️ Population Math <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">👹 Approval Crisis Toolkit <span class="nav-check" id="nc2"></span></div>
 
   <div class="nav-section-label">// Strategy</div>
   <div class="nav-item" onclick="scrollByID('t3')">🎯 The Three Strategies <span class="nav-check" id="nc3"></span></div>
-  <div class="nav-item" onclick="scrollByID('t4')">🗓 Early Game (Turns 1–30) <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🗓️ Early Game (Turns 1–30) <span class="nav-check" id="nc4"></span></div>
 
   <div class="nav-section-label">// Military</div>
   <div class="nav-item" onclick="scrollByID('t5')">🚀 Ships &amp; Fleet Doctrine <span class="nav-check" id="nc5"></span></div>
@@ -285,18 +284,18 @@
   <div class="nav-section-label">// Test Yourself</div>
   <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
 
-  <div class="progress-mini" id="progress-mini">
-    <div class="progress-mini-label">Progress</div>
-    <div class="progress-mini-track"><div class="progress-mini-fill" id="progress-mini-fill"></div></div>
-    <div class="progress-mini-pct" id="progress-mini-pct">0 / 7</div>
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
   </div>
+
 </nav>
 
 <!-- ═══════ MAIN ═══════ -->
-<main class="main-content">
-
-<div class="page-head">
-  <h1 class="page-title">THE CRAVERS</h1>
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.04</span> // The Cravers</div>
+    <h1 class="page-title"><img src="../images/Races/CraversIcon.webp"> The<br>Cravers</h1>
   <p class="page-subtitle">Consumption Engine — Depletion, Slavery, and the Infinite War</p>
 </div>
 
@@ -305,13 +304,13 @@
   <div class="topic-header">
     <div class="topic-num">00</div>
     <div>
-      <h2 class="topic-title">Faction Anatomy</h2>
+      <h2 class="topic-title">Faction Identity</h2>
       <div class="topic-subtitle">What makes them structurally different — and why every choice flows from these constraints.</div>
     </div>
   </div>
   <div class="content-block open" id="cb0a">
     <div class="block-header" onclick="toggle('cb0a')">
-      <span class="block-icon">◈</span>
+      <span class="block-icon">🪳</span>
       <span class="block-title">Traits, Starting Conditions, and the Government Asymmetry</span>
       <span class="block-tag tag-mech">MECHANIC</span>
       <span class="block-chevron">▾</span>
@@ -328,7 +327,7 @@
 
       <div class="trait-block green">
         <div class="trait-label green">SLAVE DRIVER — THE NON-CRAVER POP MECHANIC</div>
-        When at least one Craver unit occupies the same planet as non-Craver pops, every non-Craver pop on that planet produces <span class="stat-value positive">+100% FIDSI</span> (effectively doubling their output). This is a fixed, binary toggle — a second or third Craver on the same planet does not increase the bonus. One Craver is enough. The enslaved Craver will be subtly highlighted in the UI. The cost: <span class="stat-value negative">–10 Approval per enslaved population</span> in the system. This is the central management tension: slave-driving maximizes FIDSI but drains approval, which then throttles food production, influences law availability, and threatens the stability of the empire.
+        When at least one Craver unit occupies the same planet as non-Craver pops, every non-Craver pop on that planet produces <span class="stat-value positive">+100% FIDSI</span> (effectively doubling their output). This is a fixed, binary toggle — a second or third Craver on the same planet does not increase the bonus. One Craver is enough. The enslaver Craver will be subtly highlighted in the UI. The cost: <span class="stat-value negative">–10 Approval per enslaved population</span> in the system. This is the central management tension: slave-driving maximizes FIDSI but drains approval, which then throttles food production, influences law availability, and threatens the stability of the empire.
       </div>
 
       <div class="trait-block warn">
@@ -414,7 +413,7 @@
   </div>
   <div class="content-block open" id="cb1a">
     <div class="block-header" onclick="toggle('cb1a')">
-      <span class="block-icon">⚗</span>
+      <span class="block-icon">⚗️</span>
       <span class="block-title">The Numbers Behind Every Planet Decision</span>
       <span class="block-tag tag-mech">MECHANIC</span>
       <span class="block-chevron">▾</span>
@@ -498,7 +497,7 @@
   </div>
   <div class="content-block open" id="cb2a">
     <div class="block-header" onclick="toggle('cb2a')">
-      <span class="block-icon">⚠</span>
+      <span class="block-icon">👹</span>
       <span class="block-title">Laws, Buildings, and Emergency Measures — The Full Ledger</span>
       <span class="block-tag tag-mech">MECHANIC</span>
       <span class="block-chevron">▾</span>

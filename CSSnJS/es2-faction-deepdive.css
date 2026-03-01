@@ -82,7 +82,7 @@
    2. FACTION IDENTITY BADGE AND ICON
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.faction-badge {
+/*.faction-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -96,7 +96,7 @@
   border: 1px solid rgba(var(--accent-rgb), 0.35);
   text-transform: uppercase;
   margin-bottom: 12px;
-}
+}*/
 
 h1.page-title img
 {

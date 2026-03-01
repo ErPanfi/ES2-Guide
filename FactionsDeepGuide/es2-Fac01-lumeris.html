@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ES2 Vol.6 — The Lumeris</title>
+<title>ES2 — The Lumeris: The Brokers Deep Dive</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
 <link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
@@ -17,6 +17,7 @@
 
   :root {
     --accent:            var(--lumeris-color);
+	--card-accent:		 var(--accent);
     --accent-dim:        rgba(var(--lumeris-color), 0.11);
     --accent-bright-rgb: 245,200,66;
   }
@@ -51,7 +52,7 @@
   </div>
 
   <div class="nav-section-label">// Overview</div>
-  <div class="nav-item active" onclick="scrollByID('t0')">💡 Faction Identity <span class="nav-check" id="nc0"></span></div>
+  <div class="nav-item active" onclick="scrollByID('t0')">💰 Faction Identity <span class="nav-check" id="nc0"></span></div>
 
   <div class="nav-section-label">// Economics</div>
   <div class="nav-item" onclick="scrollByID('t1')">💰 Dust Engine &amp; Market <span class="nav-check" id="nc1"></span></div>
@@ -109,7 +110,7 @@
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <div class="faction-badge">◈ LUMERIS — THE BROKERS OF SPACE</div>
+        <div class="vol-card-badge">◈ LUMERIS — THE BROKERS OF SPACE ◈</div>
 
         <div class="trait-block">
           <div class="trait-label">PLANET BROKER — COLONIZE ANYWHERE FOR DUST, NO SHIP REQUIRED</div>
