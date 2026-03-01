@@ -247,7 +247,9 @@ Sidebar nav items that correspond to tracked topics must have `<span class="nav-
 <div class="toast" id="toast"></div>
 ```
 
-In the <span> tag use the 'Vol.{N}' snippet if you're writing a general guide volume, or a 'Fac.{N}' snippet if you're writing a Faction deep dive
+In the <span> tag use the 'Vol.{N}' snippet if you're writing a general guide volume, or a 'Fac.{N}' snippet if you're writing a Faction deep dive.
+
+If you're writing a Faction deep dive you should add the corresponding faction icon, found at the path `../images/Races/{FactionName}Icon.webp`, into the `page-title` element.
 
 ### Topic structure
 ```html
