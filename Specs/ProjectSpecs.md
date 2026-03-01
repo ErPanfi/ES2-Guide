@@ -133,7 +133,7 @@ Faction deep-dives use the corresponding faction identity color as their base, a
 
 ### Per-page `:root` override (required in every file's `<style>`)
 
-Minimal volumes (vol0–vol8):
+#### General volumes (vol0–vol8):
 ```css
 :root {
   --accent:     var(--volN-accent);
@@ -147,7 +147,8 @@ Use the --volN-accent relative to the next volumes in the guide while building t
 For example: vol5 has this two lines:
 
 
-Faction deep-dives (example — Lumeris):
+#### Faction deep dives volumes (example — Lumeris):
+
 ```css
 :root {
   --accent:             var(--lumeris-color);
@@ -231,7 +232,7 @@ Sidebar nav items that correspond to tracked topics must have `<span class="nav-
   <nav class="sidebar"> ... </nav>
   <main class="main">
     <div class="page-header">
-      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.N</span> // Title</div>
+      <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>{Vol.N | Fac.N}</span> // Title</div>
       <h1 class="page-title">Title</h1>
       <p class="page-subtitle">...</p>
     </div>
@@ -244,6 +245,8 @@ Sidebar nav items that correspond to tracked topics must have `<span class="nav-
 </div>
 <div class="toast" id="toast"></div>
 ```
+
+In the <span> tag use the 'Vol.{N}' snippet if you're writing a general guide volume, or a 'Fac.{N}' snippet if you're writing a Faction deep dive
 
 ### Topic structure
 ```html
@@ -302,7 +305,7 @@ The first `content-block` of a topic typically has class `open`. Subsequent bloc
 </nav>
 ```
 
-Factions deep dive should not have the two `vol-link` elements in the sidebar, because deep dives are meant to be standalone volumes, and do not have a logical order
+Factions deep dive should not have the two `vol-card` elements in the sidebar, because deep dives are meant to be standalone volumes, and do not have a logical order
 
 ### Quiz structure
 ```html
