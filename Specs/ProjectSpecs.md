@@ -53,8 +53,8 @@ Naming conventions:
 | `GeneralGuide_OLD/es2-vol2-combat.html` | Content to be discarded — rebuild from sources |
 | `GeneralGuide_OLD/es2-vol3-heroes.html` | Content to be discarded — rebuild from sources |
 | `GeneralGuide_OLD/es2-vol4-diplomacy.html` | Content to be discarded — rebuild from sources |
-| `GeneralGuide_OLD/es2-vol5-factions.html` | Content to be discarded — rebuild from sources |
-| `GeneralGuide_OLD/es2-vol6-factions-special.html` | Content to be discarded — rebuild from sources |
+| `GeneralGuide_OLD/es2-vol5-factions.html` | Content can be used for inspiration - to be rebuilt  |
+| `GeneralGuide_OLD/es2-vol6-factions-special.html` | Content can be used for inspiration - to be rebuilt |
 
 **Faction Deep-Dive volumes:**
 
@@ -139,7 +139,13 @@ Minimal volumes (vol0–vol8):
   --accent:     var(--volN-accent);
   --accent-dim: rgba(var(--volN-accent), 0.11);
 }
+
+.vol-next { --card-accent: var(--vol(N+1)-accent); }
+.vol-prev { --card-accent: var(--vol(N-1)-accent); }
 ```
+Use the --volN-accent relative to the next volumes in the guide while building the .vol-next class; use the one of the previous volume when building the .vol-prev class.
+For example: vol5 has this two lines:
+
 
 Faction deep-dives (example — Lumeris):
 ```css
