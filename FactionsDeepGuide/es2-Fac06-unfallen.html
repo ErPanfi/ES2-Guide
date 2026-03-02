@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Unfallen: Vine Network Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+<style>
+  /* ── Fac06 — Unfallen: deep forest green ──────────────────────────────────── */
+  :root {
+    --accent:            var(--unfallen-color);
+    --card-accent:       var(--accent);
+    --accent-dim:        rgba(var(--unfallen-color), 0.10);
+    --accent-rgb:        29,185,106;
+    --accent-bright-rgb: 120,230,160;
+  }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 10% 40%, rgba(var(--unfallen-color), 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 90% 70%, rgba(var(--unfallen-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 5%,  rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--unfallen-color), 0.4),
+      0 0 80px rgba(var(--unfallen-color), 0.15);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  /* Vine cost formula box */
+  .vine-cost-box {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-left: 3px solid rgb(var(--accent));
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionLabel);
+    line-height: 1.9;
+  }
+  .vine-cost-box .formula-label {
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: rgb(var(--accent));
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .formula-hi { color: rgb(var(--accent-bright-rgb)); font-weight: 700; }
+  .formula-warn { color: rgb(var(--red)); font-weight: 700; }
+
+  /* Vine speed table */
+  .vine-speed-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin: 14px 0;
+  }
+  .vine-speed-cell {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 10px;
+    text-align: center;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+  }
+  .vine-speed-cell.header {
+    background: rgba(var(--accent-rgb), 0.12);
+    color: rgb(var(--accent));
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .vine-speed-cell .ships-n { font-size: var(--ts_topicTitle); font-weight: 700; color: rgb(var(--accent-bright-rgb)); }
+  .vine-speed-cell .turns-n { font-size: var(--ts_sectionLabel); color: var(--text); }
+  .vine-speed-cell.milestone { border-color: rgba(var(--accent-rgb), 0.4); background: rgba(var(--accent-rgb), 0.07); }
+
+  /* Wormhole callout special styling */
+  .callout-wormhole {
+    background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.08), rgba(var(--cyan), 0.05));
+    border: 1px solid rgba(var(--accent-rgb), 0.35);
+    border-left: 4px solid rgb(var(--accent));
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin: 16px 0;
+  }
+  .callout-wormhole .wh-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--ts_topicTitle);
+    font-weight: 700;
+    color: rgb(var(--accent-bright-rgb));
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .callout-wormhole .wh-body {
+    font-size: var(--ts_sectionLabel);
+    line-height: 1.75;
+    color: var(--text);
+  }
+  .callout-wormhole .wh-body strong { color: rgb(var(--accent-bright-rgb)); }
+
+  /* Vine effect row */
+  .vine-effect-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  @media (max-width: 700px) { .vine-effect-row { grid-template-columns: 1fr; } }
+  .vine-effect-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: var(--ts_sectionLabel);
+    line-height: 1.7;
+  }
+  .vine-effect-card .vef-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .vef-green { color: rgb(var(--green)); border-top: 2px solid rgb(var(--green)); }
+  .vef-red   { color: rgb(var(--red));   border-top: 2px solid rgb(var(--red)); }
+  .vef-cyan  { color: rgb(var(--cyan));  border-top: 2px solid rgb(var(--cyan)); }
+  .vef-gold  { color: rgb(var(--gold));  border-top: 2px solid rgb(var(--gold)); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.06</div>
+    <div class="guide-name">The<br>Unfallen</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🌿 Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Vine Network</div>
+  <div class="nav-item" onclick="scrollByID('t1')">🌱 Vine Mechanics <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🚀 Colonization Engine <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">⚡ Vine Effects &amp; Exploitation <span class="nav-check" id="nc3"></span></div>
+
+  <div class="nav-section-label">// Population</div>
+  <div class="nav-item" onclick="scrollByID('t4')">🛡️ Guardians <span class="nav-check" id="nc4"></span></div>
+
+  <div class="nav-section-label">// Empire</div>
+  <div class="nav-item" onclick="scrollByID('t5')">📜 Traits, Senate &amp; FIDSI Engine <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🌿 Faction Quest <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Military</div>
+  <div class="nav-item" onclick="scrollByID('t7')">🚀 Ships, Heroes &amp; Military <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Opening</div>
+  <div class="nav-item" onclick="scrollByID('t8')">🗓️ First 30 Turns Playbook <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.06</span> // The Unfallen</div>
+    <h1 class="page-title"><img src="../images/Races/UnfallenIcon.webp"> The<br>Unfallen</h1>
+    <p class="page-subtitle">The galaxy's living root system. The Unfallen don't colonize — they vine. Their expansion is a slow, unstoppable organic network that doubles movement speed, locks out enemy territory, boosts allied economies, and enables instant colonization without ships or Industry. The faction looks peaceful and plays peacefully — until you realize the vine network is one of the most powerful strategic tools in the game, the Pacifist senate engine is printing FIDSI every turn you have friends, and the moment your vine frontier reaches someone, their planets are already half yours.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Network That Wins By Growing</h2>
+        <div class="topic-subtitle">Every mechanic rewards the same behavior — spread vines, make friends, keep the peace as long as profitable.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">🌿</span>
+        <span class="block-title">The Unfallen at a Glance</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge badge-unfallen">🌿 UNFALLEN — FAC.06</div>
+
+        <p>The Unfallen are a territorial network faction. Their vine system completely replaces standard colonization — instead of building colony ships and establishing outposts, they extend a web of celestial vines from their home system outward, and colonize vined systems instantly, for free, without consuming any ship. The vine network is not just an expansion mechanic: it defines their movement speeds, their territorial influence, their hacking efficiency, and the geographic boundaries of their military power.</p>
+
+        <p style="margin-top:10px;">Three separate systems all compound together around the same behavior — expanding the vine network and maintaining peaceful relations:</p>
+
+        <div class="trait-block">
+          <div class="trait-label">VINE NETWORK</div>
+          Expansion, movement, territory, and hacking all flow through the vine graph. Wider network = faster travel, stronger economy, more territory.
+        </div>
+        <div class="trait-block">
+          <div class="trait-label">GUARDIANS</div>
+          Unique population type scattered across the galaxy on fertile planet types. Each one gives +5 Approval to every system in your empire (not just the one they're on), plus substantial Influence. Discovering more is a passive approval and influence engine.
+        </div>
+        <div class="trait-block gold">
+          <div class="trait-label gold">PACIFIST FIDSI ENGINE</div>
+          The Pacifist senate passive law gives +20% FIDSI empire-wide when Pacifist leads the party <em>and</em> you have peace/alliance treaties active. Described by expert players as the most powerful senate passive law in the game. Every friend you make multiplies your economy.
+        </div>
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE VINE CAPTURE RULE — CRITICAL</div>
+          Any system you acquire — whether by siege, by minor faction quest, or by buyout — that is <strong>not connected to your vine network is instantly destroyed</strong>. You get nothing. This shapes every war decision you will ever make as the Unfallen. You can only profitably fight enemies whose systems touch your vine frontier.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">LP-PANCZASU</span><span class="src-pill">YT01-4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb0b">
+      <div class="block-header" onclick="toggle('cb0b')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">Starting Conditions &amp; Trait Summary</span>
+        <span class="block-tag tag-mech">REFERENCE</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Unfallen start with a meaningful set of pre-researched technologies and a government that immediately gives them two laws instead of one.</p>
+
+        <table class="ref-table" style="margin-top:12px;">
+          <tr><th>Trait</th><th>Effect</th></tr>
+          <tr><td class="cell-key">Home Planet</td><td>Koyasil — unique Forest planet: +8 Food, +4 Industry, +4 Dust, +3 Science per pop. Fertile type.</td></tr>
+          <tr><td class="cell-key">Starting Pops</td><td>2 Unfallen + 1 Guardian already present on Koyasil</td></tr>
+          <tr><td class="cell-key">Starting Resources</td><td>100 Dust, 300 Manpower</td></tr>
+          <tr><td class="cell-key">Government</td><td>Democracy — 2 laws, all laws available at final stage, hardest to control</td></tr>
+          <tr><td class="cell-key">Starting Senate</td><td>2 Pacifist representatives, 1 Ecologist representative</td></tr>
+          <tr><td class="cell-key">Pre-researched</td><td>Planetary Landscaping + Off-World Agribusiness (unlocks Stage 2 Empire Development immediately)</td></tr>
+          <tr><td class="cell-key">Starting Ships</td><td>1 Explorer (Questioner), 2 Vineships (Entwiners)</td></tr>
+          <tr><td class="cell-key">Starting Hero</td><td>Lunabarxes — Unfallen Seeker, Pacifist party. +5% Fleet health regen / +15 Dust to system as governor.</td></tr>
+          <tr><td class="cell-key">Starting Tactics</td><td>Turtle, Power to Shields, Plasma Distortion</td></tr>
+        </table>
+
+        <p style="margin-top:12px;">Core faction traits:</p>
+        <table class="ref-table" style="margin-top:8px;">
+          <tr><th>Trait</th><th>Effect</th></tr>
+          <tr><td class="cell-key">Celestial Vines</td><td>Replaces colonization. Vine network extends from home system. Vined systems can be colonized instantly for free.</td></tr>
+          <tr><td class="cell-key">Guardians</td><td>Discover Guardian pops via curiosity. +5 Approval per Guardian (global) + Influence to all friendly factions.</td></tr>
+          <tr><td class="cell-key">Harmonious II</td><td>+16 Approval per Alliance on systems, +8 Approval per Peace on systems.</td></tr>
+          <tr><td class="cell-key">Mutual Understanding I</td><td>+10% Ship Damage and +10% Troop Damage per Friendly Major Faction on Empire.</td></tr>
+          <tr><td class="cell-key">Resilient (Supremacy DLC)</td><td>Obliterator Defense Shield on home system — blocks planet-killer weapons.</td></tr>
+          <tr><td class="cell-key">Food Bonus</td><td>+2 Food flat, +5 Food on Fertile planets. (+7 total on fertile — the most common home planet type).</td></tr>
+        </table>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ═══════════════════════════════════════════════════════ T1: VINE MECHANICS -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The Vine Network: Core Mechanics</h2>
+        <div class="topic-subtitle">How vining works, vineship math, range rules, and the Vine Capture Rule.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🌱</span>
+        <span class="block-title">How Vining Works</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Vining is the Unfallen's core action. Move a vineship into any star node within range, press the vine action (similar to probe exploration), and keep the fleet there for the required number of turns. Once the turn counter completes, the system is <strong>permanently vined</strong> — it stays vined even if you later lose the vineships.</p>
+
+        <ul class="step-list" style="margin-top:12px;">
+          <li><span class="step-n">PROGRESS</span><span>Vining builds up from 0% to 100% over the required turns. If interrupted — fleet moves, retreats, or is destroyed — progress decays back to 0% at roughly <strong>twice the rate it built up</strong>. A half-vined system is not half-safe.</span></li>
+          <li><span class="step-n">PAUSE</span><span>You can pause mid-vine, add more vineships to the fleet, and resume immediately without losing any progress. This means an early slow vine can be accelerated mid-process by reinforcing the fleet.</span></li>
+          <li><span class="step-n">FREE COLONY</span><span>Once a system is vined, you can instantly colonize any planet in it that you have colonization tech for. No ship in orbit needed. No Industry cost. No outpost phase. Instant full colony.</span></li>
+          <li><span class="step-n">BLOCKED</span><span>You cannot colonize a vined system if any enemy outpost exists in it. Siege enemy outposts down first. Friendly outposts from allied factions also block you until diplomatically resolved.</span></li>
+        </ul>
+
+        <div class="callout callout-warn" style="margin-top:14px;">
+          <div class="callout-label">⚠️ THE VINE CAPTURE RULE</div>
+          Any system you acquire by <em>any method</em> — siege victory, minor faction assimilation quest, buyout, praising to threshold — that is <strong>not connected to your vine network is instantly destroyed and removed from the galaxy</strong>. You gain nothing. This is not obvious, not well-documented, and has destroyed many Unfallen campaigns. Before declaring war or completing any minor faction assimilation, confirm the target system has the blue vine-outline in the galaxy view. If it does not, you cannot safely take it.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">⚙️</span>
+        <span class="block-title">Vineship Math &amp; Speed Thresholds</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Vining speed scales linearly with the number of vineships in a single fleet. The base is 20 turns solo on Normal speed. Multiple vineships in the same fleet divide the time proportionally, but the result is always rounded <em>up</em> — you never get fractional turns.</p>
+
+        <div class="vine-speed-grid">
+          <div class="vine-speed-cell header">SHIPS</div>
+          <div class="vine-speed-cell header">TURNS</div>
+          <div class="vine-speed-cell header">SHIPS</div>
+          <div class="vine-speed-cell header">TURNS</div>
+          <div class="vine-speed-cell header">NOTE</div>
+
+          <div class="vine-speed-cell"><span class="ships-n">1</span></div>
+          <div class="vine-speed-cell"><span class="turns-n">20t</span></div>
+          <div class="vine-speed-cell"><span class="ships-n">5</span></div>
+          <div class="vine-speed-cell"><span class="turns-n">4t</span></div>
+          <div class="vine-speed-cell" style="font-size:var(--ts_sectionTitle);">base</div>
+
+          <div class="vine-speed-cell"><span class="ships-n">2</span></div>
+          <div class="vine-speed-cell"><span class="turns-n">10t</span></div>
+          <div class="vine-speed-cell"><span class="ships-n">8</span></div>
+          <div class="vine-speed-cell milestone"><span class="turns-n" style="color:rgb(var(--gold));">2t ★</span></div>
+          <div class="vine-speed-cell" style="font-size:var(--ts_sectionTitle); color:rgb(var(--gold));">practical target</div>
+
+          <div class="vine-speed-cell"><span class="ships-n">3</span></div>
+          <div class="vine-speed-cell"><span class="turns-n">7t</span></div>
+          <div class="vine-speed-cell"><span class="ships-n">15</span></div>
+          <div class="vine-speed-cell milestone"><span class="turns-n" style="color:rgb(var(--green));">1t ★</span></div>
+          <div class="vine-speed-cell" style="font-size:var(--ts_sectionTitle); color:rgb(var(--green));">minimum (can't go faster)</div>
+
+          <div class="vine-speed-cell"><span class="ships-n">4</span></div>
+          <div class="vine-speed-cell"><span class="turns-n">5t</span></div>
+          <div class="vine-speed-cell"></div>
+          <div class="vine-speed-cell"></div>
+          <div class="vine-speed-cell" style="font-size:var(--ts_sectionTitle); color:var(--text-dim);">1 turn is hard floor</div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">ROUNDING NOTE</div>
+          The actual divisor is fractional — 3 ships gives 20/3 = 6.67 turns, which rounds up to 7. The game always rounds up, never down. Plan accordingly: 7 ships gives 20/7 = 2.86, which rounds to 3 turns — not 2. You need 8 ships to reliably achieve 2-turn vining (20/8 = 2.5, rounds to 3... except the wiki confirms 8 ships = 2 turns based on the 7.5 real threshold rounding up). The practical targets are 8 ships for 2-turn vining and 15 ships for 1-turn vining.
+        </div>
+
+        <p>The <strong>pause-and-resume rule</strong> is strategically important: if you started vining with 3 ships and a fourth finishes construction mid-vine, merge the new ship into the fleet and the remaining turns immediately re-calculate at the new count. You do not lose progress. Conversely, if you split the fleet, vining stops entirely and progress decays.</p>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01-4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1c">
+      <div class="block-header" onclick="toggle('cb1c')">
+        <span class="block-icon">📐</span>
+        <span class="block-title">Vine Range &amp; Special Nodes</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Vining range is <strong>23 units</strong> from any already-vined node to the target system. Starlane connections are not required — any system within 23 units of your vine network is a valid target, including isolated systems not on any hyperlane. This range equals what a ship with speed 23 could travel in one turn.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">STARLANE EXCEPTION</div>
+          Systems directly connected to a vined system via starlane can always be vined regardless of the 23-unit distance rule. This matters for very long wormhole links where the visual distance may exceed 23 units.
+        </div>
+
+        <div class="trait-block cyan">
+          <div class="trait-label cyan">SPECIAL NODE VINING</div>
+          The Unfallen can vine non-planetary special nodes: Nebulae, Black Holes, and Asteroid Fields. When you do, the resource bonus from that node pipes to your <strong>home system only</strong> (not the nearest system). This effectively tags the node as owned territory and — critically — <strong>denies enemy factions access to that node</strong>. Vining a resource-rich Black Hole near a contested border is both an economic and a denial play.
+        </div>
+
+        <div class="trait-block gold">
+          <div class="trait-label gold">TERRITORY REPLACEMENT</div>
+          Vines replace the normal influence-radius circle that defines owned territory. A vined system is inside your territory boundary; an unvined system is outside it, regardless of proximity to your empire. This means Pacific Conversion eligibility is determined by vine coverage, not a circular radius. Systems you want to convert must first be vined.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1d">
+      <div class="block-header" onclick="toggle('cb1d')">
+        <span class="block-icon">🛡️</span>
+        <span class="block-title">Vineship Economics: The Cost Trap</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Vineships are the Unfallen's colony ship equivalent — but they're permanently reusable (never consumed) and dramatically more expensive. The base hull cost is 400 Industry, plus another 100 for the Vine Beacon module itself. But the critical detail is the military tech multiplier:</p>
+
+        <div class="vine-cost-box">
+          <div class="formula-label">VINESHIP COST FORMULA</div>
+          <div>Hull: <span class="formula-warn">((Military Stage − 1) × 200) + 400 Industry</span></div>
+          <div>Module: <span class="formula-warn">+100 Industry</span> (Vine Beacon)</div>
+          <div style="margin-top:6px;">Standard colony ship: <span class="formula-hi">((Military Stage − 1) × 25) + 50 Industry</span></div>
+          <div style="margin-top:10px; font-size:var(--ts_sectionTitle); color:var(--text-dim);">
+            Stage 1: Vineship = 500 Industry vs Colony Ship = 75 Industry<br>
+            Stage 2: Vineship = 700 Industry vs Colony Ship = 100 Industry<br>
+            Stage 3: Vineship = 900 Industry vs Colony Ship = 125 Industry
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">⚠️ DO NOT RUSH MILITARY TECH</div>
+          Every Military quadrant technology you research inflates vineship costs by 200 Industry. A Stage 3 military tech vineship costs nearly 1,000 Industry before the module. This is a permanent, non-negotiable tension in every Unfallen game: you need military tech to field competitive combat ships, but each advance makes replacing lost vineships more punishing. Delay military quadrant research until you have sufficient vine coverage or a genuine combat need.
+        </div>
+
+        <p style="margin-top:12px;"><strong>The empty hull strategy:</strong> Because vineships are so expensive in Industry but the Unfallen tend to run Dust surplus, the standard technique is to build bare hull designs (no modules, no engine, minimum cost), then use Dust to upgrade the hull to a design with an engine and Vine Beacon after construction. This converts Industry cost into Dust cost — exactly the Unfallen's surplus resource.</p>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01-4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1d',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ═══════════════════════════════════════════════ T2: COLONIZATION ENGINE -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Colonization Engine</h2>
+        <div class="topic-subtitle">Why the Unfallen expand faster and cheaper than almost any other faction — and its one limitation.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🌍</span>
+        <span class="block-title">Free Instant Colonization</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Once a system is vined, any planet in it that you have the appropriate colonization technology for can be colonized instantly. The comparison to standard colonization is stark:</p>
+
+        <table class="ref-table" style="margin-top:12px;">
+          <tr><th>Factor</th><th class="cell-bad">Standard Faction</th><th class="cell-good">Unfallen</th></tr>
+          <tr><td class="cell-key">Ship consumed?</td><td>Yes — colony ship is spent</td><td class="cell-good">No — vineships are reusable</td></tr>
+          <tr><td class="cell-key">Industry cost?</td><td>50–150+ Industry for ship</td><td class="cell-good">Zero</td></tr>
+          <tr><td class="cell-key">Ship in orbit required?</td><td>Yes</td><td class="cell-good">No</td></tr>
+          <tr><td class="cell-key">Outpost phase?</td><td>Yes — Food drain + turns to mature</td><td class="cell-good">No — instant full colony</td></tr>
+          <tr><td class="cell-key">Food drain?</td><td>Yes — supply colony during development</td><td class="cell-good">None</td></tr>
+          <tr><td class="cell-key">Typical time (new system)</td><td>10–20 turns total</td><td class="cell-good">Vining time only (2–20t)</td></tr>
+        </table>
+
+        <div class="callout callout-warn" style="margin-top:14px;">
+          <div class="callout-label">BLOCKING CONDITION</div>
+          You cannot colonize a vined system if any faction has an outpost on any planet in it — even a minor faction outpost, even a friendly one. Enemy outposts must be sieged down. Friendly outposts from allies must be diplomatically resolved or accepted as a permanent block. This is the same rule that applies to Vaulters' instant colonization.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">⏱️</span>
+        <span class="block-title">Intra-System Colonization: Fixed Turn Cost</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>When expanding within an already-vined system — colonizing a second or third planet where you already have population — the Unfallen use a fixed turn cost instead of Industry, similar to a luxury-resource development project. The turn cost by planet type:</p>
+
+        <table class="ref-table" style="margin-top:10px;">
+          <tr><th>Planet Type</th><th>Turns (Normal Speed)</th><th>Notes</th></tr>
+          <tr><td class="cell-key">Fertile</td><td class="cell-good">1 turn</td><td>Forest, Terran, Jungle, Savannah, etc.</td></tr>
+          <tr><td class="cell-key">Non-Fertile / Non-Sterile</td><td>2 turns</td><td>Arid, Tundra, Boreal, etc.</td></tr>
+          <tr><td class="cell-key">Sterile</td><td>3 turns</td><td>Ash, Lava, Desert, etc.</td></tr>
+          <tr><td class="cell-key">Gas Giant</td><td>4 turns</td><td>Requires Gas Giant colonization tech</td></tr>
+        </table>
+
+        <p style="margin-top:12px;">For brand-new systems, other factions typically spend 10–20 turns and 50–150+ Industry to colonize a second planet. The Unfallen spend 1–4 turns and zero Industry. The one downside: <strong>you cannot Dust-buyout planetary colonization</strong>. The turn cost is fixed and cannot be bypassed.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PRACTICAL IMPLICATION</div>
+          In systems with high Industry and many population slots, this fixed turn cost is occasionally slower than what a highly developed colony could achieve with Industry. In practice, this edge case costs "one turn more than usual" at worst — and saves many turns at best in most new colonies. The asymmetry strongly favors the Unfallen across an entire game.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2c">
+      <div class="block-header" onclick="toggle('cb2c')">
+        <span class="block-icon">👥</span>
+        <span class="block-title">Minor Faction Assimilation Gate</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Unfallen must vine a minor faction's system before assimilation can be completed. You can interact with them (spend Influence, praise them, receive bonuses) before vining, but the final assimilation step — whether via quest or Dust buyout — requires the vine network to cover their system.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">DESIGN INTENT</div>
+          This is an intentional check against the Unfallen's enormous Influence output. Without this gate, the Unfallen would absorb almost every minor faction encountered before any other empire had a chance to compete. In practice, it adds roughly 5–20 turns of lead time depending on how far the minor faction is from your vine frontier — but this is manageable with proper vine routing.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE VINE CAPTURE RULE (MINOR FACTIONS)</div>
+          Completing a minor faction assimilation quest when their system is NOT vined destroys the system. You do not get the minor faction. You do not get their buildings or population. The system ceases to exist. Verify vine coverage before completing any assimilation.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ═════════════════════════════════════════════════ T3: VINE EFFECTS -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Vine Effects &amp; Exploitation</h2>
+        <div class="topic-subtitle">Movement, economics, hacking, and the wormhole chain exploit.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">📦</span>
+        <span class="block-title">Buff &amp; Debuff Effects on Systems</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vine-effect-row">
+          <div class="vine-effect-card">
+            <div class="vef-label vef-green">FRIENDLY / ALLIED SYSTEMS</div>
+            <div>+10% Food production<br>+10 Approval</div>
+            <div style="margin-top:6px; font-size:var(--ts_sectionTitle); color:var(--text-dim);">Applies to vined systems belonging to you or any empire at Peace or Alliance with the Unfallen.</div>
+          </div>
+          <div class="vine-effect-card">
+            <div class="vef-label vef-red">ENEMY SYSTEMS (WAR / COLD WAR)</div>
+            <div>−10% Food production<br>−10 Approval</div>
+            <div style="margin-top:6px; font-size:var(--ts_sectionTitle); color:var(--text-dim);">Temporary — lasts only while the vine holds. Vines retract from enemy systems over time during war.</div>
+          </div>
+          <div class="vine-effect-card">
+            <div class="vef-label vef-cyan">MOVEMENT — FRIENDLY SHIPS</div>
+            <div>×2 movement speed</div>
+            <div style="margin-top:6px; font-size:var(--ts_sectionTitle); color:var(--text-dim);">Applies to all ships (yours and allied). Works on starlanes <em>and</em> off-lane warp movement, as long as the path traces along a vine.</div>
+          </div>
+          <div class="vine-effect-card">
+            <div class="vef-label vef-red">MOVEMENT — ENEMY SHIPS</div>
+            <div>×½ movement speed</div>
+            <div style="margin-top:6px; font-size:var(--ts_sectionTitle); color:var(--text-dim);">Enemy ships moving through vined nodes are slowed to half speed. Turns your vine network into a passive defensive barrier.</div>
+          </div>
+          <div class="vine-effect-card">
+            <div class="vef-label vef-cyan">HACKING — FRIENDLY</div>
+            <div>×2 Hacking Speed</div>
+            <div style="margin-top:6px; font-size:var(--ts_sectionTitle); color:var(--text-dim);">All friendly hacks passing through vined nodes complete twice as fast.</div>
+          </div>
+          <div class="vine-effect-card">
+            <div class="vef-label vef-red">HACKING — HOSTILE</div>
+            <div>×½ Hacking Speed</div>
+            <div style="margin-top:6px; font-size:var(--ts_sectionTitle); color:var(--text-dim);">Enemy hacks routed through your vine network are slowed to half speed.</div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🌀</span>
+        <span class="block-title">The Wormhole Chain Exploit</span>
+        <span class="block-tag tag-mech">ADVANCED MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="callout-wormhole">
+          <div class="wh-title">⚡ WORMHOLE CHAIN: INFINITE TRAVEL ACROSS VINED CORRIDORS</div>
+          <div class="wh-body">
+            <p>This is one of the most powerful and least-documented mechanics in the game. When a wormhole is vined, traversing it costs only <strong>half</strong> your remaining movement points instead of all of them. But there is a critical implementation detail:</p>
+            <p style="margin-top:10px;">Normally, wormhole travel sets your movement to exactly zero after transit. But for the Unfallen, wormholes subtract half your remaining movement rather than zeroing it out. <strong>Dividing any number by 2 never gives exactly zero.</strong> This means your fleet always retains a fractional movement value after a vined wormhole — even if the UI displays 0.</p>
+            <p style="margin-top:10px;">That fractional value (e.g., 0.45 moves) is enough to use <em>another</em> wormhole. And after that transit, dividing again still leaves a fraction. This cascades indefinitely along a chain of vined wormholes. The result: <strong>a fleet can traverse an entire chain of back-to-back vined wormholes regardless of starting movement speed</strong>, as long as every wormhole in the chain is vined.</p>
+            <p style="margin-top:10px;">Strategic implication: a vine network traced through wormhole corridors creates <strong>functionally unlimited travel range</strong> along that corridor. This acts as a long-range highway before wormhole technology is even researched, and remains one of the strongest mid-game mobility tools in the game.</p>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3c">
+      <div class="block-header" onclick="toggle('cb3c')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Strategic Use of Vine Effects</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Most players understand that vines help movement. Fewer exploit the full portfolio of effects:</p>
+
+        <div class="trait-block">
+          <div class="trait-label">MOVEMENT AS POWER PROJECTION</div>
+          Your vined starlane network effectively halves all transit times for your ships. During peacetime this means faster exploration and vineships reaching new systems in half the expected time. During war it means your response speed to threats is dramatically higher than the enemy's, even if their ships have the same base speed stats.
+        </div>
+        <div class="trait-block">
+          <div class="trait-label">SLOWING ENEMIES DEFENSIVELY</div>
+          Vining border systems in a defensive posture slows incoming enemy fleets. An attacker entering your space through vined starlanes moves at half speed — turning a 5-turn approach into a 10-turn approach and giving you time to intercept. This is passive, free, and invisible to players who don't know the rule.
+        </div>
+        <div class="trait-block">
+          <div class="trait-label">SPECIAL NODE DENIAL</div>
+          Vining Black Holes, Nebulae, and Asteroid Fields in contested regions denies their bonuses to all other factions permanently. Even if you'll never use a given node, vining it prevents the enemy from benefiting. The cost is just vineship travel time.
+        </div>
+        <div class="trait-block cyan">
+          <div class="trait-label cyan">SHARING WITH ALLIES</div>
+          The 2× movement bonus applies to allied ships on your vine network too. If you're in an alliance, your partner can use your vine highways to deploy forces rapidly — this is a meaningful diplomatic incentive to ally with the Unfallen and a strong argument for pursuing alliances aggressively.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ═══════════════════════════════════════════════════════ T4: GUARDIANS -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Guardians: The Second Engine</h2>
+        <div class="topic-subtitle">Unique population type that stacks Approval and Influence across your entire empire the more you find.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🛡️</span>
+        <span class="block-title">Guardian Mechanics</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Guardians are a unique population type available only to the Unfallen (and any faction that holds Unfallen systems). They appear as curiosities on specific planet types and are revealed by exploration ships. They do not grow naturally via Food and cannot be moved — they are permanently rooted to the planet they spawn on.</p>
+
+        <table class="ref-table" style="margin-top:12px;">
+          <tr><th>Property</th><th>Detail</th></tr>
+          <tr><td class="cell-key">Spawn Planets</td><td>Boreal, Forest, Jungle, Monsoon, Terran, Toxic (confirmed in-game)</td></tr>
+          <tr><td class="cell-key">Acquisition</td><td>Explore the Guardian curiosity with any explorer ship. Must colonize the planet to receive the pop.</td></tr>
+          <tr><td class="cell-key">Mobility</td><td>Immobile — cannot be moved between planets or systems, ever.</td></tr>
+          <tr><td class="cell-key">Population Slot</td><td>Creates its own dedicated extra slot. Does not compete with your standard population cap (up to the 14-slot maximum).</td></tr>
+          <tr><td class="cell-key">Food</td><td>Does not consume Food. Does not grow. Present at fixed count once created.</td></tr>
+        </table>
+
+        <p style="margin-top:14px;"><strong>Per-Guardian bonuses (base):</strong></p>
+        <table class="ref-table" style="margin-top:8px;">
+          <tr><th>Effect</th><th>Value</th><th>Scope</th></tr>
+          <tr><td class="cell-key">Ground Battle Damage</td><td class="cell-good">+200 to attackers</td><td>System with Guardian</td></tr>
+          <tr><td class="cell-key">Approval</td><td class="cell-good">+5 (but see collection bonus)</td><td>System with Guardian</td></tr>
+          <tr><td class="cell-key">Influence (if owner is friendly)</td><td class="cell-good">+20 Influence</td><td>System with Guardian</td></tr>
+          <tr><td class="cell-key">Influence (if owner is enemy)</td><td class="cell-bad">−20 Influence</td><td>System with Guardian</td></tr>
+        </table>
+
+        <div class="callout callout-tip" style="margin-top:14px;">
+          <div class="callout-label">THE EMPIRE-WIDE COLLECTION BONUS — THE REAL POWER</div>
+          The Guardian trait gives +5 Approval <em>per Guardian revealed across your empire</em> to <strong>all systems</strong>, not just the one the Guardian lives on. With 5 Guardians, every single system in your empire gets +25 Approval. With 9 Guardians, that's +45 empire-wide. This compounds with Harmonious II (+16/Alliance, +8/Peace) to produce near-permanent Ecstatic status across your empire with minimal other investment. This collection bonus is poorly documented and easily missed.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01-4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">Guardian Guide, Law &amp; Political Interactions</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p><strong>Guardian Guide</strong> — A special one-time variant obtainable via the Unfallen population collection quest. It cannot reproduce and has no collection bonus of its own (since you only ever get one). Its stats are enhanced:</p>
+
+        <table class="ref-table" style="margin-top:8px;">
+          <tr><th>Effect</th><th>Base Guardian</th><th>Guardian Guide</th></tr>
+          <tr><td class="cell-key">Ground Battle Damage</td><td>+200</td><td class="cell-good">+300</td></tr>
+          <tr><td class="cell-key">Approval (system)</td><td>+5</td><td class="cell-good">+10</td></tr>
+          <tr><td class="cell-key">Influence (friendly)</td><td>+20</td><td class="cell-good">+30</td></tr>
+          <tr><td class="cell-key">Influence (enemy)</td><td>−20</td><td class="cell-bad">−30</td></tr>
+        </table>
+
+        <p style="margin-top:14px;"><strong>Precept for Peace and Prosperity</strong> — A special law unlocked when you reach 20 Guardian population empire-wide. Effect: −50% Peaceful Treaty Cost (covers both diplomatic deals and minor faction special actions).</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">USE-IT-AND-TURN-IT-OFF PATTERN</div>
+          This law occupies a law slot, but the correct pattern is not to keep it permanently active. Enable it when you need to negotiate a major peace treaty or complete expensive minor faction actions, then cancel it to free the slot. The cost discount is enormous but the need is infrequent.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">POLITICAL ALIGNMENT</div>
+          Both Unfallen and Guardian pops are Pacifist-aligned. Anti-Industrialist tendency. Hedonistic (Ecologist events support Pacifist). This creates a near-permanent Pacifist majority that is very hard to displace — by design. Getting Ecologist as leading party (for their "colonize all worlds" passive) is effectively impossible as Unfallen unless you have substantial minor faction population diversity through assimilation.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">CURIOSITY TIMING NOTE</div>
+          The wiki notes inconsistent behavior with Guardian curiosities: sometimes exploring before colonizing works, sometimes the Guardian does not appear after colonization. To be safe, only count on receiving a Guardian after a planet is fully colonized. Do not make strategic decisions contingent on exploratory Guardians from uncolonized planets.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ═══════════════════════════════════════════════ T5: TRAITS, SENATE & FIDSI -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Traits, Senate &amp; The FIDSI Engine</h2>
+        <div class="topic-subtitle">The Pacifist passive law and Mutual Understanding together make larger friend networks exponentially more powerful.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">The Right Finger Rule: Core Economic Multiplier</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>When the Pacifist party leads the Senate, they activate a passive senate law — referred to by players as "The Right Finger Rule" or "Right Thing Rule" — that provides <strong>+20% FIDSI on all planets empire-wide</strong>, provided you have active peace or alliance treaties with other major empires.</p>
+
+        <div class="concept-box">
+          <div class="concept-title">THE PACIFIST FIDSI ENGINE</div>
+          <p>This is, according to expert Unfallen players, the single most powerful senate passive law in the game — stronger than the Ecologist colonize-all-worlds passive. A +20% FIDSI multiplier applied empire-wide compounds every industry improvement, every science bonus, every food production, and every Dust generator simultaneously. The larger your empire and the more developed your systems, the more absolute value this produces.</p>
+          <p style="margin-top:10px;">The Unfallen are uniquely positioned to exploit this: their population is almost entirely Pacifist-aligned, making Pacifist leadership near-permanent. And their diplomatic incentives (Harmonious II, Mutual Understanding I, Guardian Influence bonuses) all reward maintaining peace treaties. The pacifist gameplay loop and the FIDSI engine are designed to reinforce each other.</p>
+          <p style="margin-top:10px;">Expert play deliberately delays declarations of war to keep extracting this bonus as long as possible — even when war is intended. The FIDSI income from an extra 10–15 turns of peace can outweigh the economic gain from earlier conquest.</p>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">PACIFIST LEADERSHIP IS NEAR-PERMANENT — BUT NOT GUARANTEED</div>
+          The Unfallen start with 2 Pacifist reps and 1 Ecologist in Senate. Unfallen and Guardian pops both push Pacifist support heavily. Getting Industrialist or Ecologist as the leading party requires either minor faction population diversity from assimilation or deliberate event manipulation. Panczasu confirms: it is easier to get Industrialist to lead than Ecologist. The game strongly guides the Unfallen toward permanent Pacifist rule — work with it, not against it.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">Faction Traits: Scaling with Friends</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table" style="margin-top:8px;">
+          <tr><th>Trait</th><th>Effect</th><th>Scales With</th></tr>
+          <tr><td class="cell-key">Harmonious II</td><td>+16 Approval per Alliance / +8 Approval per Peace on all systems</td><td>Number of treaties</td></tr>
+          <tr><td class="cell-key">Mutual Understanding I</td><td>+10% Ship Damage and +10% Troop Damage per Friendly Major Faction</td><td>Number of friends</td></tr>
+          <tr><td class="cell-key">Vessels of the Heart</td><td>+15% Dust and +15% Science per Friendly Major Faction on Empire (requires Perfect Negotiations research)</td><td>Number of friends</td></tr>
+          <tr><td class="cell-key">Resilient (DLC)</td><td>Obliterator Defense Shield on home system — blocks planet-killer superweapons</td><td>Static</td></tr>
+        </table>
+
+        <div class="callout callout-tip" style="margin-top:14px;">
+          <div class="callout-label">MAP SIZE &amp; FRIEND COUNT SCALE STRENGTH</div>
+          Mutual Understanding I gives +10% Ship and Troop Damage per Friendly Major Faction. On a 4-player map with 3 friends: +30% damage bonus. On an 8-player map with 7 friends: +70% damage bonus. This is why the Unfallen are a "bigger map faction." With Vessels of the Heart also active, a 7-friend empire is getting +105% Science and +105% Dust — and that's on top of the FIDSI engine. The snowball potential on large maps is extreme.
+        </div>
+
+        <div class="trait-block cyan">
+          <div class="trait-label cyan">IMMUNE TO PACIFIC CONVERSION</div>
+          The Unfallen (along with Umbral Choir) cannot be peacefully converted by enemy factions using the Pacific Conversion technology. Their vine-based territory system does not interact with standard influence-radius conversion mechanics.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">DEMOCRACY: TWO-LAW ADVANTAGE</div>
+          The Unfallen start as a Democracy, the only government that allows two simultaneous laws from turn 1, and eventually unlocks all law tiers. This is a meaningful early advantage: while most factions pass one law on turn 1, the Unfallen can immediately enact Super Tax Act + a second law (typically Toys for Boys for the Ecstatic Approval threshold). At the final government tier, Democracy is the only type with access to every law in the game simultaneously.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">LP-PANCZASU</span><span class="src-pill">YT02-MAGICMAN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ═══════════════════════════════════════════════════ T6: FACTION QUEST -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Faction Quest</h2>
+        <div class="topic-subtitle">The Unfallen questline has no hero rewards — plan your hero acquisition strategy separately.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">Quest Structure &amp; Reward Choices</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Unfallen faction quest runs through several chapters. Early chapters present completion choices between quick, low-value rewards and longer, higher-value rewards. Expert advice consistently recommends preferring objectives that give technology or useful strategic bonuses over quick science gains from anomaly possession (the fast option typically grants a technology you may not want, which also inflates the cost of future research).</p>
+
+        <div class="quest-grid">
+          <div class="quest-card">
+            <strong>Chapter 1 — Choice Node</strong><br>
+            Fast path: Possess 2 anomalies → random tech reward (risky, may be useless).<br>
+            Slow path: "Grow" objective → Red Sang luxury resource. Red Sang gives +Food, which is largely redundant for Unfallen. Either way the choice is low-stakes.
+          </div>
+          <div class="quest-card">
+            <strong>Chapter 2 — Choice Node</strong><br>
+            "Light" path: relatively easy, weak reward (Renewal System module — rarely useful on Unfallen ships).<br>
+            "Fire" path: more demanding, rewards <strong>Coasa Kinetics</strong> — high-damage kinetics with critical hit chance. Panczasu rates this as clearly the correct choice.
+          </div>
+          <div class="quest-card">
+            <strong>Quest Completion Reward</strong><br>
+            Two module options: <strong>Heart's Shield</strong> (shield upgrade, redundant if you already have good shields) vs <strong>Heart's Hammer</strong> (short-range beam weapon, costs 2 Hyperium, does decent damage). Panczasu rates Heart's Hammer as marginally useful, Heart's Shield as redundant for most builds.
+          </div>
+          <div class="quest-card">
+            <strong>Post-completion: "Understand" path</strong><br>
+            After first quest completion a second quest opens. "Integrate" is described as near-impossible to fulfill. "Understand" completes near-automatically with normal play. Take Understand.
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">⚠️ THE UNFALLEN GET NO HEROES FROM THE FACTION QUEST</div>
+          This is unique among major factions. Every other faction receives at least one hero as a faction quest reward. The Unfallen do not. This creates a chronic hero scarcity problem throughout the game. Plan around it explicitly: research <strong>General Services Exchange</strong> to unlock the hero marketplace, or build an <strong>Academy Embassy</strong> to accelerate hero availability. Do not assume a hero will arrive from the questline — it will not.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">🌋</span>
+        <span class="block-title">Fireforming: The Terraforming Payoff</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Unfallen start with Planetary Landscaping pre-researched, giving them terraforming capability from the very first turn. The faction quest eventually unlocks <strong>Fireforming</strong> — an advanced terraforming capability that allows the Unfallen to convert planets into forest-type (fertile) planets, skipping intermediate terraforming steps.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">FIREFORMING</div>
+          Converts a snow or cold planet directly into a Forest planet — without requiring the standard multi-step terraforming chain. Described by players as the capability that makes Unfallen "the best terraforming faction in the game" in late-game. A barren system covered in snow planets can be transformed into a highly productive fertile system.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TERRAFORMING MECHANICS — CROSS-REFERENCE</div>
+          For a detailed breakdown of terraforming types, chains, resource costs, and timing across all factions, see <strong>Vol.2 — Topic 5</strong> of the General Guide.
+        </div>
+
+        <p style="margin-top:12px;">The combination of instant colonization (no Industry cost), fast intra-system expansion (1–4 turns per planet), and fireforming means a mid-to-late-game Unfallen empire can systematically upgrade entire constellations from marginal to productive. The planet type no longer limits what a system can become.</p>
+
+        <div class="source-row">
+          <span class="src-pill">LP-PANCZASU</span><span class="src-pill">YT02-MAGICMAN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════ T7: SHIPS, HEROES & MILITARY -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Ships, Heroes &amp; Military</h2>
+        <div class="topic-subtitle">Defensive by design, but with clear combat role logic and a hero scarcity problem to plan around.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Ship Hull Roster</span>
+        <span class="block-tag tag-mech">REFERENCE</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="ship-grid">
+          <div class="ship-card">
+            <div class="ship-name">ENTWINER</div>
+            <div class="ship-role">SEED CLASS · VINESHIP</div>
+            <div class="ship-body">
+              <strong>Slots:</strong> 2 Defense, 2 Support, 4 Module (1 dedicated to Vine Beacon)<br><br>
+              The vineship analog of a colony ship — but never consumed. One support slot must carry the engine; the vine beacon occupies a module slot. This leaves limited room for combat modules, making these ships extremely vulnerable in battle.<br><br>
+              <strong>Key risk:</strong> Military stage inflation hits vineships harder than any other ship type. Build bare hull designs and Dust-upgrade after construction to minimize Industry expenditure.
+            </div>
+            <div class="ship-stat"><span>BASE HULL COST (Stage 1)</span><span>500 IND</span></div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">QUESTIONER</div>
+            <div class="ship-role">HEART CLASS · EXPLORER</div>
+            <div class="ship-body">
+              <strong>Slots:</strong> 1 Attack, 2–3 Defense, 2–3 Support, 6 Module total<br><br>
+              Nearly identical to the United Empire scout but trades one attack slot for one defense slot — a minor defensive tilt. Excellent probe capacity makes it the go-to exploration ship. Equipping two probes allows broad territory scouting in the critical early turns.
+            </div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">THORN / NEEDLE</div>
+            <div class="ship-role">THORN CLASS · COMBAT</div>
+            <div class="ship-body">
+              <strong>Slots:</strong> 1–2 Attack, 2 Defense, 1–2 Support<br><br>
+              Standard combat ship. Mirrors the United Empire equivalent but with 1 offense slot traded for 1 defense slot. Nothing exceptional — the Unfallen's combat edge comes from hero buffs and kinetic module selection, not from a uniquely powerful hull.
+            </div>
+          </div>
+          <div class="ship-card cyan-top">
+            <div class="ship-name">LIGHT SHIP (T2)</div>
+            <div class="ship-role">COORDINATOR CLASS · PREFERRED</div>
+            <div class="ship-body">
+              <strong>Primary role:</strong> Targets Hunter-class ships. Coordinators destroy the enemy's highest-damage dealers first.<br><br>
+              Panczasu's default choice. With a <strong>Kinetic Enhancer</strong> module, Unfallen light ships deal damage comparable to fire ships while also neutralizing the enemy's DPS. Described as the highest-value ship for Unfallen naval doctrine in most matchups.
+            </div>
+          </div>
+          <div class="ship-card gold-top">
+            <div class="ship-name">FIRE SHIP (T2)</div>
+            <div class="ship-role">HUNTER CLASS · SITUATIONAL</div>
+            <div class="ship-body">
+              <strong>Primary role:</strong> Targets Sheriff and Brick-class enemy ships.<br><br>
+              Tanky by default (3 Attack, 4 Defense module slots). Critical limitation: fires broadside only — positioning matters. Switch to fire ships when the enemy fleet composition is predominantly Sheriffs and Bricks. Do not bring Protector/Well-class ships — Unfallen hulls are already among the tankiest in the game and the redundancy is wasteful.
+            </div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">Hero Management &amp; Scarcity</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Unfallen have a structural hero scarcity problem that no other major faction faces as severely. The faction quest awards zero heroes. Combined with natural hero unlock rates, this means the Unfallen can go a very long time with only their starting hero — Lunabarxes — available.</p>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">NO FACTION QUEST HEROES — PLAN AROUND THIS</div>
+          Research <strong>General Services Exchange</strong> (Economy &amp; Trade tree) to unlock the hero marketplace — this lets you purchase heroes from the market. Alternatively, build an <strong>Academy Embassy</strong> in one of your systems to accelerate the Academy's hero unlock cadence. Either path requires deliberate planning; neither is free.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">HERO CLASSES FOR UNFALLEN</div>
+          <strong>Admiral (Fleet assignment):</strong> Unfallen heroes have a unique faction ability granting fleet health regeneration. This means battles are cheaper to recover from — ships heal between engagements rather than limping to dock. Assign your primary hero as Admiral early and keep them there.<br><br>
+          <strong>Seeker class:</strong> Lunabarxes is a Seeker. Seekers give bonus movement and fleet-level XP. Useful as scout commander in the early game, especially since Unfallen ships run off-lane paths regularly. Seeker is the weakest class overall but has a niche for Unfallen's explorer-heavy early game.<br><br>
+          <strong>Overseer class:</strong> Panczasu's preferred mid-game target. Overseers boost strategic resource deposit values, which is valuable as Unfallen economy scales and Hyperium/Titanium demand increases for advanced ships.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">WONDER LEVELING TIP</div>
+          Always assign a hero to a system the turn you complete a Wonder. The Wonder completion XP is awarded to whatever hero is present as governor at that moment — the hero does not need to have contributed to its construction. Free, easy levels. Never complete a Wonder with an unassigned hero slot.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7c">
+      <div class="block-header" onclick="toggle('cb7c')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Ground Combat: The Tank Composition Rule</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Unfallen start with high Manpower (one of the stronger starting pools) and the Guardian ground battle damage bonus. Their systems are naturally more defensible. When invading, however, there is a critical troop composition rule that applies to all factions but matters more when you're the Unfallen planning aggressive vine-frontier wars:</p>
+
+        <div class="trait-block">
+          <div class="trait-label">TANK-ONLY INVADING FORCES</div>
+          Once you have access to tanks, populate your invading fleets with tanks only — remove all infantry. Why: when infantry die in ground combat, the game automatically converts some of your surviving tanks into infantry replacements. This degrades your armor-heavy force mid-campaign without you choosing it. A pure-tank composition cannot degrade this way. Infantry do get shut down by some specific counter units (planet-side defenses in certain configurations), so a hybrid is sometimes necessary — but the default should be all-tank for most invasions.
+        </div>
+
+        <p style="margin-top:12px;">The Unfallen's high starting Manpower (240) and Guardian +200 ground damage bonus mean they are genuinely difficult to invade early game. This defensive resilience buys time for vine network expansion during the critical first 15–20 turns.</p>
+
+        <div class="source-row">
+          <span class="src-pill">LP-PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════ T8: FIRST 30 TURNS PLAYBOOK -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">First 30 Turns Playbook</h2>
+        <div class="topic-subtitle">Build the vine foundation before turn 10. Everything after that is acceleration.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Opening Sequence</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURN 1</div>
+            <div class="tl-body">
+              <strong>Laws:</strong> Enact Super Tax Act (drops Approval slightly but gives Dust) + Toys for Boys (pushes to Ecstatic threshold). Democracy's 2-law start is the dividend here.<br>
+              <strong>Hero:</strong> Assign Lunabarxes as system governor to level up via system builds. Optionally refit her ship with 2 probes + engine for early exploration.<br>
+              <strong>Questioner:</strong> Refit with 2 probes if not already. Send toward nearest curiosities — Guardian curiosities are the highest priority.<br>
+              <strong>Vineships:</strong> Send each toward candidate systems for early vining. Scout the constellation before committing vine direction.<br>
+              <strong>Research:</strong> Xenolinguistics first (standard) — gives +30 Industry on fertile planets from Xeno Industrial Infrastructure improvement. Alternatively Xenobiology if you need Warp Drive access for a critical isolated system, or if Scientist party support is useful early for movement speed law.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T2–5</div>
+            <div class="tl-body">
+              <strong>Exploration:</strong> Send Questioner and hero ship toward Guardian curiosities. Do not skip Guardians even if they're on non-immediately-colonizable planets — explore the curiosity and colonize later when you have the tech.<br>
+              <strong>Vine routing:</strong> First vine target should be the richest adjacent system, but factor in connectivity — a central hub that enables vining in 3+ directions from one location is worth more than a marginal system. Avoid vining dead ends first.<br>
+              <strong>Production:</strong> Build Drone Networks → Interplanetary Transport Networks. Prioritize Industry improvements on home system to reduce vineship construction time.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T5–10</div>
+            <div class="tl-body">
+              <strong>First vine complete:</strong> Immediately colonize the best planet in the newly vined system. No Industry cost — do it the same turn the vine lands.<br>
+              <strong>Vineship fleet:</strong> Aim to have 2–3 vineships in service by turn 10. 2 vineships = 10-turn vining; 3 = 7-turn. Target: send one fleet per direction to vine in parallel.<br>
+              <strong>Research path:</strong> After Xenolinguistics, pivot to Xenobiology (+30 Science on fertile from Xeno Research Institute) → Public-Private Partnerships (unlocks efficient buyout chains).<br>
+              <strong>Contact:</strong> Once you meet a major faction, open diplomacy immediately. Even a non-binding Peace Treaty starts the Pacifist FIDSI engine and Harmonious II Approval — Panczasu estimates this as +20% FIDSI on all planets, which is substantial by turn 10.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T10–20</div>
+            <div class="tl-body">
+              <strong>Vine network:</strong> 3–5 systems vined with colonies placed. The vine snowball is beginning — each new vined system enables instant colonization of all planets within, accelerating population growth.<br>
+              <strong>Colonize every eligible planet:</strong> Unlike other factions, colonizing an extra planet in a vined system costs zero Industry and 1–4 turns. Do not leave colonizable planets unclaimed.<br>
+              <strong>Minor factions:</strong> Identify which minor factions are within vine range. Begin praising them (extends the praise modifier timer at each step). Do not complete assimilation until the vine covers their system — verify the blue outline.<br>
+              <strong>Guardian sweep:</strong> With 3+ Guardians, the empire-wide Approval collection bonus is already +15. If Harmonious II is active with 2 peace treaties, home system Approval is likely already Ecstatic. Do not over-invest in Approval buildings.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T20–30</div>
+            <div class="tl-body">
+              <strong>By turn 30 benchmark (4xalch):</strong> 5+ vined systems, 8+ population on strong systems, ~460 Dust/turn, ~800 Science/turn, +67 Influence/turn, point leader by ~36 points over Cravers.<br>
+              <strong>Vineship scale:</strong> Aim for 5 vineships by turn 25 for 4-turn vining. The cost in Industry can be offset by the empty-hull/Dust-upgrade strategy. Each additional vineship is a permanent asset — they are never consumed.<br>
+              <strong>Trade Companies:</strong> The Lumeris-style Trade Company Headquarters provides a significant Dust bump and can be timed for turn 28–32 with the standard research path.<br>
+              <strong>War timing:</strong> Delay any declaration of war as long as the FIDSI engine benefit exceeds the economic gain from conquest. Panczasu holds peace with Lumeris until he has sufficient fleet strength and vine coverage — every extra turn of peace is +20% FIDSI. When you do declare war, ensure the vine frontier covers every system you intend to take.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip" style="margin-top:14px;">
+          <div class="callout-label">THE UNFALLEN SNOWBALL</div>
+          The faction has a slow first 8 turns (expensive vineships, limited Industry, one direction of vine coverage) and then an explosive middle game. Turn 15–30 is when the combination of instant colonization, vine movement speed, Guardian Approval stack, and Pacifist FIDSI engine all come online simultaneously. If you feel behind at turn 10, you are likely on schedule.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01-4XALCH</span><span class="src-pill">LP-PANCZASU</span><span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')">
+        <span class="block-icon">📌</span>
+        <span class="block-title">Strategic Weaknesses &amp; Counter-Play</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Understanding the Unfallen's weaknesses is as important as exploiting their strengths — and knowing the counters helps when you face them.</p>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">VINESHIPS ARE THE SOFT UNDERBELLY</div>
+          Vineships are expensive (500–900 Industry depending on military stage), slow (limited module space for engines), and entirely undefended unless you escort them. They are the primary anti-Unfallen target. Attacking enemy vineships early — before their vine network is established — is the most effective way to contain an Unfallen player. As Unfallen, you must either escort vineships with a combat fleet or accept the risk of loss. Budget for replacement.
+        </div>
+        <div class="trait-block warn">
+          <div class="trait-label warn">MILITARY TECH TENSION</div>
+          Every Military quadrant advance inflates vineship costs by 200 Industry. You need military tech to build competitive ships; those same advances make your most important non-combat ship dramatically more expensive. This tension is permanent and unresolvable — it must be managed, not solved. Delay military tech until you have wide vine coverage and a stable construction industry.
+        </div>
+        <div class="trait-block warn">
+          <div class="trait-label warn">SPARSE MAP / SMALL GALAXY WEAKNESS</div>
+          Dense home constellation: strong start. Sparse galaxy: weak start. Isolated systems off the hyperlane network require off-lane vining, slowing spread. Small maps with few factions reduce Mutual Understanding bonus, reduce Right Finger Rule FIDSI impact, and reduce Guardian discovery opportunities. The Unfallen strongly prefer 8-player large maps.
+        </div>
+        <div class="trait-block warn">
+          <div class="trait-label warn">GEOGRAPHIC WARFARE CONSTRAINT</div>
+          The vine capture rule constrains all military operations to the vine frontier. You cannot rapidly respond to a distant threat, cannot exploit an enemy's exposed rear, and cannot meaningfully participate in wars far from your vine network. The Unfallen wage positional wars — slow, methodical, vine-first. Players expecting rapid decisive force projection will be frustrated.
+        </div>
+        <div class="trait-block">
+          <div class="trait-label">COMPETING COLONIZERS — BLOCK EARLY</div>
+          Factions with buyout colonization (Lumeris) or fast colony ships can plant outposts in systems you intend to vine before your vine arrives. Once an enemy outpost exists in a system, you cannot colonize it even after vining. Scout your intended expansion corridor and pre-vine contested systems before opponents can outpost them. Panczasu describes this as his primary early-game stress point against Lumeris specifically.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01-4XALCH</span><span class="src-pill">LP-PANCZASU</span><span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ═══════════════════════════════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Unfallen decisions under real game conditions — vine routing, war timing, minor faction management</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac06';
+  const TOTAL = 9;
+  let qIdx = 0;
+  let answered = false;
+
+  const quizzes = [
+    {
+      scenario: "Turn 8. You have 2 vineships. Your home system is vined. There are two reachable adjacent systems: System A is 3 starlanes away, has a Forest planet and a Savannah, and sits at a junction connecting to 4 further systems. System B is directly connected by one starlane, has a Lava and an Ash planet, and is a dead end with no further connections. Both are in range. You have enough Industry to build a third vineship in 4 turns.",
+      q: "Which system should your vineships prioritize, and should you split them?",
+      opts: [
+        "Split the vineships — send one to each system. You can vine both in 20 turns each and maximize territory.",
+        "Send both vineships to System A. The junction connectivity gives you multi-directional expansion options from one vine node. A dead-end Lava/Ash system with no onward connections can wait — vining it first locks your vineships in a location that yields no further expansion reach. After A is vined (10 turns with 2 ships), re-evaluate System B and the junction's four neighbors.",
+        "Send both vineships to System B because it's directly connected and will vine in fewer turns.",
+        "Wait for the third vineship before vining anything, so you can reach 7-turn vining speed."
+      ],
+      correct: 1,
+      explain: "Vine routing is a connectivity investment, not just a territory grab. System A is a junction — vining it expands your options in 4 directions, enabling you to vine 4 further systems from that single node. System B is a dead end: vining it gives you 2 barren planets and no future expansion paths from that location. Splitting the fleet halves your vining speed on each target (solo = 20 turns), which is dramatically worse. System B can be vined after A — it's not going anywhere. Waiting for a third ship before starting is wrong: 2 ships = 10 turns, which is already acceptable and the vineships need to be moving, not idle."
+    },
+    {
+      scenario: "Turn 15. You have just vined a system containing a minor faction (The Horis). They are currently Amicable with you (relationship tier 3 of 5). You have been praising them for 8 turns. The assimilation quest is now available — completing it would add their 3 pops (Horis have a strong Science bonus) and their 2 system improvements to your empire. However, completing the quest would cost 200 Influence, and you are currently spending 40 Influence/turn on two active peace treaties.",
+      q: "Should you complete the assimilation quest this turn?",
+      opts: [
+        "No — wait until the relationship reaches Friendly (tier 4) to reduce the Influence cost before assimilating.",
+        "Yes — the Science bonus pops are high value and the system is vined. Complete the quest immediately. Every turn you delay is a turn those pops aren't contributing.",
+        "Yes, but only if you first verify the system has the blue vine outline in the galaxy view. If confirmed, complete the assimilation. The vine is active, the relationship tier is sufficient for quest completion, and the Horis Science bonus is worth the Influence cost. The 200 Influence is a one-time cost against an ongoing Science multiplier.",
+        "No — you should never spend Influence on minor faction assimilation while you have active peace treaty maintenance costs."
+      ],
+      correct: 2,
+      explain: "The critical mechanical check is whether the system is vined. You already know it is (you just vined it), but the habit of verifying the blue outline before assimilation is important — the Vine Capture Rule means a non-vined assimilation destroys the system entirely. With the system confirmed vined, the assimilation is valid and the Horis Science pops are worth completing immediately. The 200 Influence cost is real but a one-time payment, while the Science bonus pops persist permanently. Waiting for a higher relationship tier to reduce cost is valid in principle but risks the minor faction being assimilated by a competing faction first, or your vine progress being interrupted. Option A would be correct if the cost difference between tiers was very large — in practice the Influence surplus typical of Unfallen at turn 15 makes the immediate completion correct."
+    },
+    {
+      scenario: "Turn 22. You are at war with a neighboring Sophon empire. Your vine network does not yet cover their home system — it covers 2 of their 4 systems. Your fleet has besieged and is about to capture one of their un-vined border systems (2 of their systems are vined, 2 are not). The un-vined system your fleet is attacking has good Science buildings.",
+      q: "What happens when you capture the un-vined Sophon border system?",
+      opts: [
+        "You capture it normally and it joins your empire, but without vine coverage the buildings produce at half efficiency until you vine it.",
+        "You capture it and it becomes an outpost that you must develop. It will be added to your empire once your vine network reaches it.",
+        "The system is destroyed — removed from the galaxy entirely. You gain nothing from the capture. The Vine Capture Rule applies to all system acquisitions, including war captures. You should siege the 2 already-vined Sophon systems first and route the vine network to cover the remaining 2 before capturing them.",
+        "The system is added to your empire immediately, but your population cannot migrate to it until it is vined."
+      ],
+      correct: 2,
+      explain: "The Vine Capture Rule is absolute and applies to war captures exactly as it does to colonization and assimilation. Any system that is not connected to your vine network when acquired is destroyed. The Science buildings, the planets, the population — all gone. This is why Unfallen warfare must be planned vine-first: identify which enemy systems are within vine range, vine them before or during the siege, and only capture them after vine coverage is confirmed. The two already-vined Sophon systems are valid targets. The two un-vined systems require vine extension before capture. Until then, attacking them is economically self-destructive."
+    },
+    {
+      scenario: "Turn 28. Your Pacifist senate passive law (Right Finger Rule) is active, giving +20% FIDSI because you are at peace with 3 factions. You have been preparing to declare war on your nearest neighbor (Lumeris) for 6 turns — your fleet is ready, and 4 of their 5 systems are on your vine frontier. Declaring war now would break the Peace Treaty with Lumeris, which is one of your 3 peace treaties contributing to the +20% FIDSI bonus.",
+      q: "At what point does declaring war on Lumeris become the correct economic decision?",
+      opts: [
+        "Declare war immediately — the Lumeris systems on your vine frontier are worth more than the FIDSI bonus.",
+        "Never declare war — the FIDSI bonus from maintaining peace is always worth more than conquest.",
+        "Evaluate the trade-off quantitatively: calculate the per-turn FIDSI loss from losing one peace treaty against the per-turn FIDSI gain from owning the Lumeris systems after conquest. The break-even turn depends on how good the Lumeris systems are, how long the conquest takes, and how many other peace treaties remain active. If losing the Lumeris treaty reduces your FIDSI by X per turn, and conquering their 4 systems adds Y per turn after a Z-turn campaign, declare war when the cumulative gain exceeds the cumulative loss. Expert play suggests delaying until the vine is confirmed on all intended targets and the fleet can complete the war quickly.",
+        "Declare war but immediately propose a peace treaty to a different faction to replace the lost FIDSI treaty."
+      ],
+      correct: 2,
+      explain: "This is fundamentally an economic break-even calculation, not a binary choice. The +20% FIDSI passive is empire-wide and multiplies every system you own — losing 1/3 of its treaty support (dropping from 3 to 2 active treaties) may reduce the FIDSI bonus, but by how much depends on the law's specific mechanics. Meanwhile, 4 Lumeris systems on the vine frontier represent permanent economic additions once captured. The correct question is how many turns of reduced FIDSI income equals the ongoing output of those captured systems — and whether waiting longer would increase the system quality you'd capture vs. the FIDSI you're delaying war to preserve. Expert players (Panczasu) delay war deliberately for this reason: every extra turn of peace is a FIDSI compounding turn. But the war itself is not wrong — it's the timing that requires analysis. Option A is oversimplified, Option B is too passive, Option D introduces unnecessary diplomatic complexity."
+    },
+    {
+      scenario: "Turn 35. You are building vineships using the empty-hull strategy. You have just researched Military Stage 2. You want to build 3 new vineships as quickly as possible to reach 5-ship (4-turn) vining speed. Your current Dust reserves are 1,200. Your current Industry production is 180/turn.",
+      q: "What is the correct build approach for the 3 vineships given Military Stage 2?",
+      opts: [
+        "Build 3 standard Entwiner hulls with engines and Vine Beacons fully equipped from the start.",
+        "Build 3 bare hulls (no engine, no modules) at Stage 2 cost, then Dust-upgrade each to a design with engine and Vine Beacon after construction. Calculate: Stage 2 full vineship = (200 + 400) + 100 = 700 Industry. Stage 2 bare hull = 600 Industry (hull only, no module cost). Dust upgrade adds the remaining 100 Industry equivalent in Dust. This converts your surplus Dust into saved Industry turns.",
+        "Wait until Military Stage 3 before building more vineships, because at Stage 3 the engines are better and the vineships will be faster.",
+        "Build the vineships using Industry buyout with Dust to complete them immediately."
+      ],
+      correct: 1,
+      explain: "The empty-hull strategy is the standard Unfallen vineship build approach because the Unfallen characteristically run Dust surplus and Industry scarcity. At Stage 2, a fully equipped Entwiner costs (200 + 400) hull + 100 Vine Beacon module = 700 Industry. The bare hull costs 600 Industry. The 100 Industry saved per ship via Dust upgrade is small individually, but across 3 ships it's 300 Industry — roughly 1.5 turns of your current production. More importantly, the design principle extends to future military stages: Stage 3 vineships cost 900 hull + 100 module = 1,000 Industry each. Every Industry point saved by converting to Dust at that stage is magnified. Option C (wait for Stage 3) is wrong — Stage 3 engines are better but the wait time and cost increase more than offset the speed gain. Option D (buyout) converts Dust to Industry at a conversion rate that is rarely favorable for repeated high-cost builds."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
