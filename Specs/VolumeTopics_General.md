@@ -40,9 +40,10 @@
 2. The Empire Development Tech Tree: Food, Approval, Ship Hulls and Political Development
 3. Expansion: Colony Ships and Founding/Developing an Outpost
 4. Evaluating Systems Before Colonizing: Population Space vs. Overcolonization Penalty *(→ Vol.3 for detrimental anomalies)*
-5. Influence as a Resource and System Influence Zones *(→ Vol.6 for Diplomacy)*
-6. The Political System: Parties, Laws & Senators — includes hero senator role *(→ Vol.5 for heroes as senators)*
-7. The Population Sentiment: Government Types, Elections, Political Support & Long-term Control
+5. Terraforming
+6. Influence as a Resource and System Influence Zones *(→ Vol.6 for Diplomacy)*
+7. The Political System: Parties, Laws & Senators — includes hero senator role *(→ Vol.5 for heroes as senators)*
+8. The Population Sentiment: Government Types, Elections, Political Support & Long-term Control
 
 ---
 
