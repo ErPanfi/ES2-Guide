@@ -61,9 +61,8 @@ be presented as a sourced fact. Permissible uses:
 #### Conflict resolution protocol
 When sources at different tiers contradict each other:
 1. Higher tier always wins on the factual claim
-2. The conflict must be reported to the user but NOT included in the generated file content. The only exception to this rule is if 
-two Tier 2 sources do conflict: if that's the case present both positions INTO the generated file and flag the mechanic as disputed.
-4. If uncertainty cannot be resolved within the available sources, say so rather than picking
+2. The conflict must be reported to the user but NOT included in the generated file content. The only exception to this rule is if two Tier 2 sources do conflict: if that's the case present both positions INTO the generated file and flag the mechanic as disputed.
+3. If uncertainty cannot be resolved within the available sources, say so rather than picking
    one arbitrarily.
 
 ### What does NOT count as a valid source
