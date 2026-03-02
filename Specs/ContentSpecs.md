@@ -28,12 +28,21 @@ All claims in this guide must be traceable to a source retrieved and read in the
 — higher tier always wins. Document the conflict and resolution in the planning discussion before
 writing content.
 
-#### Tier 1 — User-uploaded files (highest trust)
-Files directly uploaded by the user in the current session. These represent curated,
-session-specific primary material and take precedence over everything else. If a Tier 1 source
-conflicts with any lower tier, always trust the uploaded file and flag the discrepancy explicitly.
 
-#### Tier 2 — Authoritative ES2 community sources
+#### Tier 1 — ES2 wiki dump contained in the project KB  (highest trust)
+The project KB contains a dump of all the ES2 wiki pages, in all the files named `wiki_*.md`.
+These contains all the contributions that various internet users have accumulated and should
+take precedence over everything else. The role of the wiki is to confirm, refute or 
+help going into detail of the claim made by lower tier sources. 
+If a source of this tier conflicts with a lower tier always trust it, and flag the discrepancy explicitly in your report.
+
+#### Tier 2 — User-uploaded files
+Files directly uploaded by the user in the current session. These represent curated,
+session-specific primary material and should guide the generation of the volume. 
+If a source of this tier conflicts with a lower tier always trust it,
+and flag the discrepancy explicitly in your report.
+
+#### Tier 3 - Authoritative ES2 community sources
 Any page successfully fetched from the following domains, treated as equally reliable among
 themselves:
 - `wiki.endless-space.com/`
@@ -41,16 +50,16 @@ themselves:
 - `community.amplitude-studios.com/amplitude-studios/endless-space-2/`
 - `www.reddit.com/r/EndlessSpace/`
 
-When two Tier 2 sources conflict with each other, flag the conflict explicitly in the content
+When two sources of this tier conflict with each other, flag the conflict explicitly in the content
 rather than silently picking one — the reader should know the mechanic is disputed.
 
-#### Tier 3 — Other web sources
-Any page successfully fetched from the web that does not belong to a Tier 2 domain (e.g. Steam
+#### Tier 4 — Other web sources
+Any page successfully fetched from the web that does not belong to a Tier 3 domain (e.g. Steam
 guides, YouTube transcripts obtained via fetch, personal blogs, other wikis). Useful for
 corroboration but should not be the sole source for a mechanical claim. If a Tier 3 source
-conflicts with a Tier 2 source, trust Tier 2 and note the discrepancy if it is meaningful.
+conflicts with a Tier 3 source, trust Tier 3 and note the discrepancy if it is meaningful.
 
-#### Tier 4 — Claude's training data (lowest trust)
+#### Tier 5 — Claude's training data (lowest trust)
 General knowledge from training, not retrieved from any source in the current session. Must never
 be presented as a sourced fact. Permissible uses:
 - Filling genuine gaps where no higher-tier source is available, provided it is explicitly flagged
@@ -60,8 +69,10 @@ be presented as a sourced fact. Permissible uses:
 
 #### Conflict resolution protocol
 When sources at different tiers contradict each other:
-1. Higher tier always wins on the factual claim
-2. The conflict must be reported to the user but NOT included in the generated file content. The only exception to this rule is if two Tier 2 sources do conflict: if that's the case present both positions INTO the generated file and flag the mechanic as disputed.
+1. Higher trust tier (which means lower tier number) always wins on the factual claim
+2. The conflict must be reported to the user but NOT included in the generated file content. The 
+   only exception to this rule is if two Tier 1 or two Tier 2 sources do conflict: if that's the 
+   case present both positions INTO the generated file and flag the mechanic as disputed.
 3. If uncertainty cannot be resolved within the available sources, say so rather than picking
    one arbitrarily.
 
