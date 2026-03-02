@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The United Empire: Imperial Machine Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+<style>
+  /* ── Fac07 — United Empire: Imperial Red ──────────────────────────────── */
+  :root {
+    --accent:            var(--ue-color);
+    --card-accent:       var(--accent);
+    --accent-dim:        rgba(var(--ue-color), 0.10);
+    --accent-bright-rgb: 220,90,70;
+  }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--ue-color), 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--ue-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--ue-color), 0.4),
+      0 0 80px rgba(var(--ue-color), 0.15);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  /* ── Buyout formula display ── */
+  .formula-block {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-left: 3px solid rgb(var(--accent));
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 12px 0;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionLabel);
+    line-height: 1.9;
+  }
+  .formula-block .f-label {
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: rgb(var(--accent));
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .formula-block .f-eq  { color: rgb(var(--accent-bright-rgb)); font-size: var(--ts_sectionLabel); }
+  .formula-block .f-note { color: var(--text-dim); font-size: var(--ts_sectionTitle); margin-top: 4px; }
+
+  /* ── Population fork cards ── */
+  .pop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 14px 0;
+  }
+  .pop-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-top: 2px solid rgb(var(--accent));
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .pop-card.gold-top  { border-top-color: rgb(var(--gold)); }
+  .pop-card.cyan-top  { border-top-color: rgb(var(--cyan)); }
+
+  .pop-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--ts_quizTitle);
+    font-weight: 700;
+    color: rgb(var(--accent-bright-rgb));
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .pop-role {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: rgb(var(--accent));
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .pop-card.gold-top .pop-role { color: rgb(var(--gold)); }
+  .pop-card.cyan-top .pop-role { color: rgb(var(--cyan)); }
+
+  .pop-body { font-size: var(--ts_quizTitle); line-height: 1.65; color: var(--text); }
+
+  .pop-milestone {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    margin: 5px 0;
+    font-size: var(--ts_sectionTitle);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .pop-milestone .pm-thr { min-width: 42px; color: rgb(var(--accent)); font-weight: 700; }
+  .pop-card.gold-top .pm-thr { color: rgb(var(--gold)); }
+  .pop-card.cyan-top .pm-thr { color: rgb(var(--cyan)); }
+  .pop-milestone .pm-val { color: var(--text-dim); }
+
+  /* ── Phase headers in tech tree ── */
+  .phase-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 2px;
+    color: rgb(var(--accent));
+    font-weight: 700;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(var(--ue-color), 0.25);
+    padding-bottom: 4px;
+    margin: 16px 0 8px;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.07</div>
+    <div class="guide-name">The United<br>Empire</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">⚔️ Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Core Mechanics</div>
+  <div class="nav-item" onclick="scrollByID('t1')">⚙️ Emperor's Will Engine <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🧬 The Population Fork <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🏛️ Political Management <span class="nav-check" id="nc3"></span></div>
+
+  <div class="nav-section-label">// Strategy</div>
+  <div class="nav-item" onclick="scrollByID('t4')">🚀 Opening Decisions <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🌍 Expansion &amp; Approval <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🔬 Tech Tree Priorities <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Military</div>
+  <div class="nav-item" onclick="scrollByID('t7')">🛸 Ship Arsenal <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Endgame</div>
+  <div class="nav-item" onclick="scrollByID('t8')">🏆 Victory Path Playbook <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-item" onclick="scrollByID('t9')">🗓️ First 30 Turns Playbook <span class="nav-check" id="nc9"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.07</span> // The United Empire</div>
+    <h1 class="page-title"><img src="../images/Races/UnitedEmpireIcon.webp"> The United<br>Empire</h1>
+    <p class="page-subtitle">The compounding machine. The United Empire has no exotic affinity, no game-changing unique mechanic — just a feedback loop that turns Industry into Influence and Influence into faster Industry, and then keeps going. The player who understands this engine, fuels it early, and protects it through the mid-game will find themselves operating an economy that other factions cannot catch. This deep dive is about understanding the engine at the formula level, then using that understanding to make every strategic decision that follows.</p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Compounding Machine</h2>
+        <div class="topic-subtitle">No exotic mechanics. Just numbers that reinforce each other faster than anyone else.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Core Traits at a Glance</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge">◈ UNITED EMPIRE — BY THE EMPEROR'S WILL ◈</div>
+
+        <p>The wiki's frank assessment: <em>"The United Empire is a rather vanilla faction with very few special mechanics; they mostly differentiate themselves by numerical bonuses rather than changed mechanics."</em> This is accurate and, properly understood, is exactly why the faction is dangerous. There is nothing to learn that requires a completely different mental model — instead, the UE takes systems every faction uses and runs them harder and longer than anyone else can. Their identity is acceleration, not transformation.</p>
+
+        <table class="ref-table" style="margin-top:14px">
+          <tr><th>Trait</th><th>Effect</th><th>Implication</th></tr>
+          <tr>
+            <td class="cell-key">Emperor's Will (Affinity)</td>
+            <td>Use Influence to buy out constructions, technologies, and marketplace items. Each Industry point spent passively generates 0.1 Influence.</td>
+            <td class="cell-good">The entire mid/late-game engine. Influence becomes a second currency insulated from Dust inflation.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Expansionist I</td>
+            <td>−25% Overcolonization penalty empire-wide</td>
+            <td class="cell-good">Enables wider expansion before Approval collapse. More systems → more Industry → more Influence.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Patriots II</td>
+            <td>+25% Manpower capacity empire-wide</td>
+            <td class="cell-good">Supports aggressive warfare without running dry on invasion troops.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Yuusho Starting Citizens</td>
+            <td>+1 Yuusho population on home system at game start</td>
+            <td>Yuusho boost Manpower Capacity and Militarist political output. Minor early benefit.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Xenolinguistics (Pre-researched)</td>
+            <td>Xeno-Industrial Infrastructure + Titanium exploitation available from turn 1</td>
+            <td class="cell-good">The single most powerful early Industry building is available to build immediately.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Off-World Agribusiness (Pre-researched)</td>
+            <td>Economy &amp; Trade Stage 2 unlocked from the start</td>
+            <td class="cell-good">Bypasses the first Economy tree requirement. Reach markets and buyout tech faster.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Starting Government</td>
+            <td>Federation — 3 Industrialist seats + 1 Militarist seat</td>
+            <td class="cell-good">Industrialist laws immediately available. Federation enables the hero-senator overcolonization bonus.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Home Planet: Raia (Terran — Temperate + Fertile)</td>
+            <td>8 Food / 4 Industry / 6 Dust / 4 Science per pop</td>
+            <td class="cell-good">Qualifies for Xeno-Industrial Infrastructure's +10 Industry bonus on both tags. Home system snowballs faster than most.</td>
+          </tr>
+        </table>
+
+        <div class="trait-block">
+          <div class="trait-label">THE TWO-PHASE ENGINE</div>
+          The single most important thing to understand about the United Empire is that their Influence economy has two distinct phases. In the early game (turns 1–~20), Influence is genuinely scarce — it competes with law costs, minor faction diplomacy, and buyout needs. Every point has an opportunity cost. In the mid-to-late game, once Industry reaches meaningful levels and the passive 0.1 Influence/Industry generation compounds across many systems, Influence approaches abundance. Expert play commentary describes this directly: <em>"I have pretty much infinite Influence as United Empire."</em> The skill is navigating the scarce phase without starving your laws or diplomacy, then knowing when to start weaponizing the abundance.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: UE/Traits</span>
+          <span class="src-pill">wiki: UE/Gameplay</span>
+          <span class="src-pill">4XAlch — T1-30 Guide</span>
+          <span class="src-pill">Panczasu LP</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ═══════════════════════════════════════════════════════════ T1: ENGINE -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Emperor's Will: The Core Engine</h2>
+        <div class="topic-subtitle">Industry → Influence → buyout → more Industry. Understand the formulas before you pull the trigger.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">⚙️</span>
+        <span class="block-title">The Feedback Loop and Buyout Formulas</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The United Empire's Emperor's Will affinity does three things. First, it adds a passive generator: every Industry point spent anywhere in the empire generates 0.1 Influence — automatically, every turn, with no action required. Second, it converts Influence into a buyout currency for any System Improvement, Technology, or Marketplace purchase. Third, the Influence buyout is scaled differently from the Dust buyout and is completely insulated from Dust inflation.</p>
+
+        <div class="formula-block">
+          <div class="f-label">DUST BUYOUT COST</div>
+          <div class="f-eq">Cost = ( IndustryCost ^ 1.2125 + 50 ) × DustInflation</div>
+          <div class="f-note">Exponent 1.2125. Scales steeply with Industry cost. Multiplied by inflation, which rises with your Dust income.</div>
+          <div class="f-label" style="margin-top:12px">INFLUENCE BUYOUT COST (Emperor's Will)</div>
+          <div class="f-eq">Cost = ( IndustryCost ^ 1.1 ) + 100</div>
+          <div class="f-note">Exponent 1.1 — shallower curve. No inflation multiplier. Completely unaffected by Dust income.</div>
+          <div class="f-label" style="margin-top:12px">TECH BUYOUT COST (Influence only)</div>
+          <div class="f-eq">Cost = ( ScienceCost ^ 1.01 ) + 150</div>
+          <div class="f-note">Exponent 1.01 — nearly linear. The only buyout in the game that scales almost linearly with cost.</div>
+        </div>
+
+        <p>The gap between formulas matters most at higher Industry costs. At 160 Industry (early buildings), Dust and Influence costs are comparable. At 1120 Industry (late-tier buildings), the exponent divergence is significant — and Dust cost is further multiplied by whatever inflation your economy has accumulated. A high-Dust economy in the late game is, counterintuitively, exactly when switching to Influence buyout becomes most advantageous.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE EFFICIENCY RULE: MANY SMALL BEATS ONE LARGE</div>
+          Because cost scales with Industry cost raised to a power greater than 1, it is always more Influence-efficient to buy out several small projects than one large one. Buying out seven Drone Networks (160 Industry each) costs roughly 25% less total Influence than buying out one Predictive Logistics (1120 Industry). Queue cheap improvements in every new colony, buy them out immediately, and repeat. Each project stays in the low-cost exponent bracket.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE 1-TURN EXCEPTION</div>
+          A project completing in 1 turn cannot be bought out. Workaround: switch the queue to a different project, buy that out with Influence, then switch back. The original finishes that turn and you save its Industry cost. Niche but useful when you need something urgently.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: Influence (ResourceConverterDefinitions.xml)</span>
+          <span class="src-pill">wiki: Dust (buyout formula)</span>
+          <span class="src-pill">wiki: UE/Gameplay</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">Influence Generation Sources</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The passive 0.1 Influence per Industry is the backbone, but it is not the only source. Understanding what generates Influence — and when each source comes online — determines when you can start buying out aggressively.</p>
+
+        <table class="ref-table">
+          <tr><th>Source</th><th>How It Works</th><th>Availability</th></tr>
+          <tr>
+            <td class="cell-key">Emperor's Will (passive)</td>
+            <td>0.1 Influence per Industry point spent per turn, empire-wide</td>
+            <td class="cell-good">Always active</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Imperials base pop</td>
+            <td>+1 Influence per Imperial citizen</td>
+            <td class="cell-good">From start</td>
+          </tr>
+          <tr>
+            <td class="cell-key">System Improvements</td>
+            <td>SPIN Project and other Political/Religious buildings add flat Influence per pop</td>
+            <td>Requires tech + build time</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Trading Company + Counselor Hero</td>
+            <td>A Counselor hero with trading company affinity adds +50 Influence when a trading company is present in their system</td>
+            <td>Mid-game, hero-market dependent</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Imperials 20-pop milestone</td>
+            <td>+15% Influence on systems with Imperials — fires as soon as 20 Imperials exist empire-wide</td>
+            <td class="cell-good">Mid-game</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Imperials 50-pop milestone</td>
+            <td>+0.1 Influence per Industry spent on systems with Imperials. Whether this stacks additively with the base affinity or describes the same mechanic is unconfirmed — do not plan around stacking until verified in-game.</td>
+            <td>Late-game</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Emperor's Shadow (ED Stage 4)</td>
+            <td>Zelevas Incarnate improvement: grants Dust and Industry bonuses tied to total empire Influence output. The reverse amplifier — Influence → Industry → more Influence.</td>
+            <td class="cell-good">Late-game payoff tech</td>
+          </tr>
+        </table>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: UE/Traits (pop milestones)</span>
+          <span class="src-pill">wiki: Emperor's Shadow</span>
+          <span class="src-pill">wiki: Influence</span>
+          <span class="src-pill unverified">⚠ Imperials 50-pop stacking — unverified</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1c">
+      <div class="block-header" onclick="toggle('cb1c')">
+        <span class="block-icon">🧮</span>
+        <span class="block-title">Influence vs. Dust Buyout: Decision Framework</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Having two buyout currencies doesn't mean using them interchangeably. The decision is not "Influence OR Dust" but rather "which currency is currently cheaper per unit of progress, and what am I giving up by spending it here?"</p>
+
+        <table class="ref-table">
+          <tr><th>Scenario</th><th>Preferred Currency</th><th>Reasoning</th></tr>
+          <tr>
+            <td class="cell-key">Early game, Influence scarce, small projects</td>
+            <td>Dust (once Multi-Thread Management researched)</td>
+            <td>Every Influence point has law and diplomacy opportunity costs in early turns.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Mid game, Industry growing, Dust inflation rising</td>
+            <td>Influence for medium-tier buildings</td>
+            <td>Engine approaching abundance. The exponent gap starts favoring Influence.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Large projects (1120+ Industry) with high Dust inflation</td>
+            <td class="cell-good">Influence decisively</td>
+            <td>Exponent gap (1.1 vs 1.2125) is significant. Dust further multiplied by inflation. Influence wins.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Tech buyout, Influence abundant</td>
+            <td class="cell-good">Influence</td>
+            <td>1.01 exponent is near-linear. Snap up Stage 3–4 techs 1–2 turns early or bypass expensive research entirely.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">New colony, cheap buildings (&lt;280 Industry)</td>
+            <td class="cell-good">Influence — cycle rapidly</td>
+            <td>Many-small rule. Each cheap project stays in the low exponent bracket. Snowball new colonies fast.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Marketplace resource purchase</td>
+            <td>Check both — Influence buyout not affected by Dust inflation</td>
+            <td>In high-Dust economies, Marketplace items bought with Dust cost more in real terms. Influence may be strictly cheaper.</td>
+          </tr>
+        </table>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: UE/Strategy</span>
+          <span class="src-pill">wiki: Influence (formulas)</span>
+          <span class="src-pill">4XAlch — T1-30 Guide</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════ T2: POPULATION FORK -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">The Population Fork: Imperials, Mezari, or Sheredyn</h2>
+        <div class="topic-subtitle">A one-time quest decision with permanent empire-wide consequences. The most consequential UE-specific choice in the game.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🧬</span>
+        <span class="block-title">The Quest Decision and What Each Path Gives</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>During the United Empire questline you will receive a single one-time choice: convert every Imperial population unit in your empire to Mezari or Sheredyn, or change nothing and keep Imperials. This decision is <strong>permanent and irreversible</strong>. The quest milestone at which this fires varies — check your current quest objectives early and plan your answer before it arrives.</p>
+
+        <div class="pop-grid">
+          <div class="pop-card">
+            <div class="pop-name">IMPERIALS</div>
+            <div class="pop-role">⚔️ THE INFLUENCE ENGINE</div>
+            <div class="pop-body">
+              <div class="pop-milestone"><span class="pm-thr">BASE</span><span class="pm-val">+1 Influence per pop. Increases Industrialist political output.</span></div>
+              <div class="pop-milestone"><span class="pm-thr">10 pop</span><span class="pm-val">Increases Industrialist Political Output (UE faction-specific)</span></div>
+              <div class="pop-milestone"><span class="pm-thr">20 pop</span><span class="pm-val">+15% Influence on systems with Imperials</span></div>
+              <div class="pop-milestone"><span class="pm-thr">50 pop</span><span class="pm-val">+0.1 Influence per Industry spent (stacking with affinity unverified)</span></div>
+            </div>
+          </div>
+          <div class="pop-card cyan-top">
+            <div class="pop-name">MEZARI</div>
+            <div class="pop-role">🔬 THE SCIENCE BRIDGE</div>
+            <div class="pop-body">
+              <div class="pop-milestone"><span class="pm-thr">BASE</span><span class="pm-val">+1 Science, +0.5 Influence per pop. Increases Scientist political output.</span></div>
+              <div class="pop-milestone"><span class="pm-thr">10 pop</span><span class="pm-val">Increases Scientist Political Output (UE faction-specific)</span></div>
+              <div class="pop-milestone"><span class="pm-thr">20 pop</span><span class="pm-val">+10% Science on systems with Mezari</span></div>
+              <div class="pop-milestone"><span class="pm-thr">50 pop</span><span class="pm-val">−10% Technology Cost empire-wide</span></div>
+            </div>
+          </div>
+          <div class="pop-card gold-top">
+            <div class="pop-name">SHEREDYN</div>
+            <div class="pop-role">🛡️ THE WAR MACHINE</div>
+            <div class="pop-body">
+              <div class="pop-milestone"><span class="pm-thr">BASE</span><span class="pm-val">+20 Manpower Capacity, +0.5 Influence per pop. Increases Militarist political output.</span></div>
+              <div class="pop-milestone"><span class="pm-thr">10 pop</span><span class="pm-val">Increases Militarist Political Output (UE faction-specific)</span></div>
+              <div class="pop-milestone"><span class="pm-thr">20 pop</span><span class="pm-val">+15% Manpower Capacity on systems with Sheredyn</span></div>
+              <div class="pop-milestone"><span class="pm-thr">50 pop</span><span class="pm-val">+5 Influence per 100 Manpower Stock on systems</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">WHICH PATH TO CHOOSE?</div>
+          <strong>Imperials (keep as-is)</strong> is strongest for the pure Influence engine. The 15% Influence multiplier at 20 pop compounds with the passive generation and directly accelerates the core buyout snowball. Best for Wonder Victory or Pacific Conversion builds where Influence is the primary resource being optimized.<br><br>
+          <strong>Mezari</strong> directly addresses UE's structural weakness: science output. Terran and Monsoon planets produce poor Science. The −10% Technology Cost at 50 pop is a significant permanent reduction that compounds over hundreds of technologies across the entire game. Strongest for Science Victory paths or any game where tech speed feels like the binding constraint.<br><br>
+          <strong>Sheredyn</strong> locks UE into an aggressive military identity. The Manpower capacity bonuses amplify Patriots II. The 50-pop bonus (+5 Influence per 100 Manpower Stock) creates a secondary Influence source in high-Manpower military empires. Best for early-war Military or Conquest paths.<br><br>
+          There is no wrong answer — the choice defines your empire's personality for the entire game. Make the decision <em>intentionally</em> and build your tech tree and senate strategy around it.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: UE/Traits (pop milestones)</span>
+          <span class="src-pill">wiki: UE/Gameplay (population section)</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════ T3: POLITICS -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Political Management</h2>
+        <div class="topic-subtitle">Keeping Industrialists in power while managing a Militarist surge that is almost inevitable if you fight.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">The Starting Senate and Industrialist Anchor</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The United Empire starts with a Federation government, 3 Industrialist seats and 1 Militarist seat. Industrialist is the primary engine party — their laws provide Dust feedback from Industry, expansion bonuses, and industrial maximization effects that directly power the snowball. Militarist is the natural secondary in any game involving warfare, but can disrupt law progression if it surges too high.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE INDUSTRIALIST/MILITARIST TENSION</div>
+          This is an active management challenge, not a passive setup. Every battle won, every war declared, every ship built pushes political sentiment toward Militarists. If Militarist support overshoots your target, Industrialist law tier access can erode, and vice versa. Expert play describes this directly: <em>"I'm afraid that if I support Militarists then Industrialists will suddenly lose and I cannot afford that — I actually care about some cool Industrialist laws."</em> The Industrialist law progression is the anchor. Everything else fits around protecting it.
+        </div>
+
+        <table class="ref-table">
+          <tr><th>Industrialist Laws (Key)</th><th>Effect</th><th>Priority</th></tr>
+          <tr><td class="cell-key">Super Tax Act (Tier 0)</td><td>+3 (+4 Republic) Dust per Population. −20 Approval.</td><td class="cell-good">Pass on turn 1. Approval penalty is negligible early.</td></tr>
+          <tr><td class="cell-key">Public-Private Partnerships (Tier 1)</td><td>+30 Science on Fertile+Temperate planets. Scales to +50 on Monsoon combinations.</td><td class="cell-good">Key science gap solver for UE's weak-science planet types.</td></tr>
+          <tr><td class="cell-key">Brains over Bucks (Tier 2)</td><td>Science conversion from Dust. Useful in high-Dust economies.</td><td>Mid-game optional.</td></tr>
+        </table>
+
+        <table class="ref-table" style="margin-top:12px">
+          <tr><th>Militarist Laws (Key)</th><th>Effect</th><th>Notes</th></tr>
+          <tr><td class="cell-key">Ships Bill</td><td>Fleet cost reduction / ship production bonus</td><td>Early enabling law during military build-up.</td></tr>
+          <tr><td class="cell-key">My Precious</td><td>+Dust per strategic resource deposit held</td><td>Expert play picks this at turn ~30 to offset military upkeep Dust drain.</td></tr>
+          <tr><td class="cell-key">Spoils of War Act</td><td>Dust income during active wartime</td><td class="cell-good">Expert LP confirms this as the economic sustainer during extended campaigns.</td></tr>
+          <tr><td class="cell-key">Same Skies Blue (Tier 3)</td><td>Named by expert play as "one of the best laws in the entire game." Exact values: verify in-game.</td><td class="cell-good">High-priority Militarist law target — requires sustained party experience investment.</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE 4-INDUSTRIALIST-LAWS OBJECTIVE</div>
+          A UE questline objective requires 4 Industrialist laws active simultaneously. This requires either high Industrialist party experience (unlocking tier 3–4 laws) or changing government via Xeno Anthropology to unlock additional law slots. Plan your senate support actions and election strategy around this milestone — it does not happen automatically.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: Laws (Industrialist section)</span>
+          <span class="src-pill">wiki: Politics (senate)</span>
+          <span class="src-pill">Panczasu LP (Industrialist/Militarist tension — direct observation)</span>
+          <span class="src-pill">4XAlch — T1-30 Guide (laws + objectives)</span>
+          <span class="src-pill unverified">⚠ Same Skies Blue values — verify in-game</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🗳️</span>
+        <span class="block-title">Government Type and the Federation Bonus</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Federation government adds +1 overcolonization threshold per Hero currently acting as a political representative for leading parties. A hero-heavy senate stack can grant +3 or +4 bonus threshold systems — meaningful for a wide-expansion faction. Since UE starts in Federation, this bonus is immediately available without any tech investment.</p>
+
+        <p>The Xeno Anthropology technology (Empire Development Stage 3) unlocks Government Diversity. The UE-specific variant is called <strong>Patriotic Press</strong> instead of the generic Pooster Program: it provides <strong>+2 systems</strong> before overcolonization triggers, compared to the generic factions' +1. This makes the UE variant of this tech strictly more valuable than it is for other factions. It stacks with Expansionist I (−25% penalty) and Federation's hero bonus, allowing significantly wider play before Approval collapses.</p>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: Xeno Anthropology (UE variant — Patriotic Press, confirmed +2 vs. +1)</span>
+          <span class="src-pill">wiki: Politics (faction traits)</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T4: OPENING DECISIONS -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Opening Decisions: UE-Specific Turn 1 Optimizations</h2>
+        <div class="topic-subtitle">The moves that are uniquely correct for United Empire — not a generic "how to start" primer.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Turn 1 Decision Sequence</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">LAW</div>
+            <div class="tl-body">Pass <strong>Super Tax Act</strong> immediately. The −20 Approval penalty is negligible in the first turns when you are far from the overcolonization threshold and happiness is naturally high. The Dust income compounds from turn 1.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">DMITRI</div>
+            <div class="tl-body">Assign Dmitri Lenko as <strong>home system governor — not on the scout ship.</strong> Dmitri's +10% Industry on his assigned system is active at level 0, shortening Xeno-Industrial Infrastructure by 1 turn at no cost. Putting him on the scout ship instead loses this bonus for many turns and reduces Patrol movement to 4. The math favors the governor assignment unambiguously.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">PROBES</div>
+            <div class="tl-body"><strong>Refit the Patrol ship to 4 probes</strong> before moving it. Cost: 80 Dust (base refit — gun removal brings it to baseline). You now have 4 probes on the Patrol + 2 on the Colony ship = 6 total. Probes do not consume movement points — fire all 6 on turn 1 before either ship moves. Wide exploration at zero opportunity cost.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">QUEUE</div>
+            <div class="tl-body">Build <strong>Xeno-Industrial Infrastructure</strong> first. On Raia (Temperate + Fertile), it gives +10 Industry per matching tag = +30 Industry immediately, scaling to +50 on Monsoon systems. This is the most efficient Industry-per-turn investment in the early game and is available from turn 1 because Xenolinguistics is pre-researched.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">RESEARCH</div>
+            <div class="tl-body">Queue <strong>Xenobiology</strong> first — unlocks second movement tier and is required to progress in the Economy tree. Then immediately queue <strong>Public-Private Partnerships</strong> (accessible because Off-World Agribusiness is pre-researched): adds +30 Science on Fertile+Temperate planets, tripling early output on Raia and solving UE's early science gap.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">SETTLER</div>
+            <div class="tl-body">Do not commit the Colony ship to a direction until probes reveal a clear candidate. <strong>Atoll</strong> is the preferred first colony target: 8 Food / 6 Industry baseline vs. Terran's 8/4. The +2 Industry per pop compounds immediately with industrial buildings. Commit only once you know what you're committing to.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">PIPELINE</div>
+            <div class="tl-body">Track minor factions on first contact. Praising a minor faction for ~50 Influence starts relationship building 10–20 turns before you have assimilation capacity. A prepared pipeline means 2–3 of your first 6 systems can be assimilation acquisitions at no colony ship cost — UE's passive Influence generation makes early diplomacy cheap.</div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">4XAlch — T1-30 Guide (Dmitri, probe refit, settler timing)</span>
+          <span class="src-pill">YT01 TechTreeFocus (Xenobiology priority, Atoll preference)</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════ T5: EXPANSION -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Expansion and Approval Management</h2>
+        <div class="topic-subtitle">UE can go wider than anyone — but the snowball requires protecting new systems during their vulnerable early turns.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🌍</span>
+        <span class="block-title">The Wide Empire Framework</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>UE's expansion advantage comes from three stacking effects: Expansionist I reduces the approval penalty per extra system by 25%; the UE variant of Xeno Anthropology (Patriotic Press) adds 2 to the overcolonization threshold rather than 1; and Federation government's hero-senator bonus can add further threshold increases. Together these allow UE to maintain comfortable Approval at system counts that would cripple other factions.</p>
+
+        <table class="ref-table">
+          <tr><th>Source</th><th>Expansion Benefit</th></tr>
+          <tr><td class="cell-key">Expansionist I (trait)</td><td>−25% overcolonization penalty empire-wide</td></tr>
+          <tr><td class="cell-key">Xeno Anthropology — Patriotic Press (UE variant)</td><td class="cell-good">+2 systems before overcolonization triggers (vs. generic +1)</td></tr>
+          <tr><td class="cell-key">Federation government hero-senators</td><td>+1 threshold per Hero acting as political representative for leading parties</td></tr>
+          <tr><td class="cell-key">Autonomous Administration (system improvement)</td><td>+1 system threshold per developed system</td></tr>
+        </table>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">BLOCKADE VULNERABILITY: THE NEW COLONY RISK</div>
+          A newly placed colony under enemy blockade grows significantly slower and can in extreme cases starve and die — losing the system entirely. This is not hypothetical: in competitive play against aggressive neighbors, a freshly converted outpost is a viable harassment target. UE's wide expansion strategy makes this risk structural rather than incidental. Always have at least one ship capable of defending each new colony during its first 5–10 turns, or time colonizations during diplomatic safety windows.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PACIFIC CONVERSION: THE INFLUENCE EXPANSION PATH</div>
+          Once SLC Systems is researched (ED Stage 4), UE can convert enemy systems via Influence dominance rather than warfare. The conversion clock ticks based on how much more Influence you generate than the system's defensive output. This pairs naturally with Emperor's Shadow and a high-Influence endgame, but requires committing fully to Influence maximization over Industry-first. Understand the engine at full power before pursuing this route.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: UE/Gameplay (expansion section)</span>
+          <span class="src-pill">wiki: Xeno Anthropology (UE variant)</span>
+          <span class="src-pill">Panczasu LP (blockade vulnerability — direct observation)</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════ T6: TECH TREE -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Tech Tree Priorities</h2>
+        <div class="topic-subtitle">The sequence is always map-dependent. The framework is not.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">Phase-by-Phase Sequencing</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The guiding principle: the tech tree serves your current constraints. If your map opens onto Atoll or Forest systems, you can skip much of the Science &amp; Exploration tree and route directly into Economy and Military — exactly as expert play demonstrates on tight-galaxy starts. Map reading replaces rigid tech order. The phases below are a normal-start default; adjust for your actual situation.</p>
+
+        <div class="phase-label">Phase 1 — Turns 1–~15: Foundation</div>
+        <table class="ref-table">
+          <tr><th>Tech</th><th>Tree</th><th>Why for UE</th></tr>
+          <tr>
+            <td class="cell-key">Xenobiology</td>
+            <td>Science &amp; Exploration</td>
+            <td class="cell-good">Unlocks second movement tier. Required to progress Economy tree. First pick in nearly every game.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Public-Private Partnerships</td>
+            <td>Economy &amp; Trade</td>
+            <td class="cell-good">Solves the early science gap: +30 Science on Fertile+Temperate (Raia qualifies). Accessible because Off-World Agribusiness is pre-researched.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Military Tier 1</td>
+            <td>Military</td>
+            <td>Improved weapons and ships. Required for pirates and early defense. Don't skip regardless of playstyle.</td>
+          </tr>
+        </table>
+
+        <div class="phase-label">Phase 2 — Turns ~15–30: Engine Online</div>
+        <table class="ref-table">
+          <tr><th>Tech</th><th>Tree</th><th>Why for UE</th></tr>
+          <tr>
+            <td class="cell-key">Commercial Framework</td>
+            <td>Economy &amp; Trade</td>
+            <td>Enables trading companies. Target: first trading company by turn ~40. Pairs with Counselor hero for +50 Influence.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Multi-Thread Management</td>
+            <td>Economy &amp; Trade</td>
+            <td>Unlocks Dust buyout as complement to Influence buyout. Required for Marketplace access and Galactic Commodities.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Xeno Anthropology (UE variant)</td>
+            <td>Empire Development Stage 3</td>
+            <td class="cell-good">Patriotic Press: +2 overcolonization threshold (vs. generic +1). Government Diversity unlock. One of the highest-value UE-specific techs.</td>
+          </tr>
+        </table>
+
+        <div class="phase-label">Phase 3 — Mid-game: Payoff Techs</div>
+        <table class="ref-table">
+          <tr><th>Tech</th><th>Tree</th><th>Why for UE</th></tr>
+          <tr>
+            <td class="cell-key">Emperor's Shadow</td>
+            <td>Empire Development Stage 4</td>
+            <td class="cell-good">UE-exclusive. Zelevas Incarnate improvement: Dust and Industry bonuses tied to total empire Influence output. The reverse amplifier that completes the loop. Top priority once Stage 4 is accessible.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">SLC Systems</td>
+            <td>Empire Development Stage 4</td>
+            <td>Unlocks Pacific Conversion. Only pursue if committing to an Influence-based territorial expansion strategy.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Liquid Composites</td>
+            <td>Empire Development Stage 4</td>
+            <td>Unlocks Carrier hulls. Required for the Zelevas — UE's most powerful combat platform.</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">WATCH FOR UE FACTION-ICON TECHS</div>
+          Technologies with the UE faction icon are modified specifically for United Empire and are almost always higher-value than the generic version. Xeno Anthropology (confirmed +2 vs. +1 threshold) is the clearest example. HyperPACs also has a UE variant — specific differences unconfirmed; verify in-game before prioritizing.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">ANTI-MATTER: SECURE THE RESOURCE BEFORE THE TECH</div>
+          Anti-matter is required for Stage 4 Military and late-game ships. Identify anti-matter deposits on your map early and secure those systems — researching the tech without the resource wastes the investment entirely.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01 TechTreeFocus (phase 1–2 sequencing)</span>
+          <span class="src-pill">4XAlch — T1-30 Guide (skip-SE logic, anti-matter note)</span>
+          <span class="src-pill">wiki: UE/Strategy</span>
+          <span class="src-pill">wiki: Emperor's Shadow</span>
+          <span class="src-pill unverified">⚠ HyperPACs UE variant — unconfirmed</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T7: SHIPS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Ship Arsenal</h2>
+        <div class="topic-subtitle">Decision space, not build templates. The variables that matter shift with every game state.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🛸</span>
+        <span class="block-title">Hull-by-Hull: Strategic Characteristics</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>UE ships are described by the wiki as "well-rounded with many Squadron slots." This understates the structural advantages that make specific hulls worth understanding in detail. No build templates are given here — as expert play explicitly argues, the right loadout varies dramatically by game state, enemy faction, resource availability, and threat type.</p>
+
+        <div class="ship-grid">
+          <div class="ship-card">
+            <div class="ship-name">GALENAS ARRAY</div>
+            <div class="ship-role">ATTACKER CLASS</div>
+            <div class="ship-body">
+              Up to 3 weapon modules with one top-mounted slot. Top-mounted guns have a <strong>270° fire arc</strong> compared to broadside guns' 120°. The Attacker can engage enemy ships without requiring broadside orientation — a genuine tactical advantage in the 3-phase combat system. Can alternatively be configured with 2 defense modules for a tankier role.
+              <div class="ship-stat"><span>TOP-MOUNT ARC</span><span>270° vs 120° broadside</span></div>
+            </div>
+          </div>
+
+          <div class="ship-card gold-top">
+            <div class="ship-name">COORDINATOR</div>
+            <div class="ship-role">PROTECTOR CLASS (SUPPORT)</div>
+            <div class="ship-body">
+              Attracts fire to protect other ships (+10% Plating and Shield defensive bonus). Multiple utility slots make this hull viable both as combat support and as a troop transport for ferrying Manpower between systems for invasion. Don't overlook the transport function when planning campaigns.
+              <div class="ship-stat"><span>COMMAND POINTS</span><span>3 CP / Size 2</span></div>
+            </div>
+          </div>
+
+          <div class="ship-card">
+            <div class="ship-name">SOPRON</div>
+            <div class="ship-role">HUNTER CLASS (BATTLESHIP)</div>
+            <div class="ship-body">
+              Second-highest offense of any Hunter class. Retains the top-mounted gun advantage — 270° arc weapons that engage without broadside alignment. Adamantian slots (3 total after upgrade) enable late-game module options other Hunters lack. Below-average defense relative to its attack profile — play it as a dedicated damage dealer and protect it with Coordinators.
+              <div class="ship-stat"><span>ADAMANTIAN SLOTS</span><span>3 (after upgrade)</span></div>
+            </div>
+          </div>
+
+          <div class="ship-card cyan-top">
+            <div class="ship-name">ZELEVAS</div>
+            <div class="ship-role">CARRIER CLASS (DREADNOUGHT)</div>
+            <div class="ship-body">
+              UE's flagship platform and centerpiece of any late-game fleet. Key feature: <strong>up to 6 squadron slots</strong> (2 require upgrade), combined with 2 Heavy slots, Orichalcix + Quadrinix material slots, and flexible multi-purpose slots configurable for offense or defense. All-in offense configuration reaches 8 attack slots. If you lack the strategic resources, use the Marketplace — buy what you need rather than waiting for natural production.
+              <div class="ship-stat"><span>SQUADRON SLOTS</span><span>Up to 6 (2 require upgrade)</span></div>
+              <div class="ship-stat"><span>COMMAND POINTS</span><span>6 CP / Size 4</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">LATE-GAME FLEET COMPOSITION</div>
+          Expert play converges on a <strong>Battleships + Carriers core</strong> for the primary fleet, with Corvettes and Patrol ships used as early fillers or niche roles only. The reasoning is scale: at high tech levels, Carriers and Hunters deliver disproportionately more firepower per Command Point. Don't invest heavily in Corvette fleets past the early game — the Industry is better spent on fewer, larger hulls.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">GROUND TROOPS: FAVOR TANKS HEAVILY</div>
+          When loading Manpower for planetary invasions, target approximately 70% tanks. AI opponents over-invest in infantry, and tanks counter infantry effectively. Even if an opponent builds anti-tank units, the AI typically does not optimize counter-compositions. A tank-heavy loadout is the safest default for most invasion scenarios.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: UE/Ships (hull data)</span>
+          <span class="src-pill">YT02 Pangolin — Ships Analysis (270° arc, carrier slots)</span>
+          <span class="src-pill">Panczasu LP (late-game fleet composition, tanks)</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T8: VICTORY -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Victory Path Playbook</h2>
+        <div class="topic-subtitle">How the engine serves each victory type — and where it strains.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Victory Paths Through the UE Lens</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label gold">WONDER VICTORY — THE NATURAL HOME</div>
+          The Influence engine was effectively designed for this path. The Obelisks of All Space Time (Stage 6 Wonder technology) are among the most expensive constructions in the game — and the UE's buyout cascade is the exact tool for completing them. The path: build Industry → generate Influence → buy out every system improvement → pile up Industry and Influence → research and buy out Wonder technologies → buy out the Obelisks themselves. The snowball's natural endpoint is a Wonder Victory. Focus on maximizing system count, per-system Industry output, and time Emperor's Shadow to amplify the final construction push.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MILITARY VICTORY — EASY SYNERGY</div>
+          Industrialist + Militarist coexistence is natural for a wide UE empire (many wars push Militarist sentiment; many systems produce more ships). Patriots II provides native Manpower advantage. Priorities: secure anti-matter deposits early, unlock the Hunter hull, build the Battleships + Carrier fleet composition, use Spoils of War Act to sustain Dust during campaigns, and use tank-heavy ground forces for invasions.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CONQUEST VICTORY — SHARES MILITARY INFRASTRUCTURE</div>
+          Requires total system domination. Minor faction assimilation counts as system control, making UE's natural Influence-based assimilation track a genuine contribution to the win condition. The late-game bottleneck is mopping up remote AI holdouts — Pacific Conversion can assist in final captures without additional warfare.
+        </div>
+
+        <div class="trait-block cyan">
+          <div class="trait-label cyan">PACIFIC CONVERSION — INFLUENCE DOMINANCE PATH</div>
+          Viable but specialized. Requires SLC Systems (ED Stage 4) and Influence output that outcompetes target system defensive production. Emperor's Shadow is the linchpin: once online, it generates Industry from Influence which generates more Influence — reaching output levels that dominate border disputes passively. Combine with Influence luxuries in System Development Projects. This is the most technically demanding UE path and requires committing fully to Influence maximization over Industry-first.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">SCIENCE VICTORY — LEAST NATURAL PATH</div>
+          UE's science weakness is structural: preferred planet types (Terran, Monsoon) produce poor Science, and there is no faction-wide science multiplier. Mezari population (−10% tech cost at 50 pop) and Public-Private Partnerships close the gap but don't eliminate it. To compete with Sophons on a pure Science Victory timeline requires deliberate commitment: Cold planet colonization for science output, Mezari population fork, and using the near-linear tech buyout formula (1.01 exponent) to snap expensive Stage 4–5 techs. Only attempt if the population fork went Mezari and your map has Cold planets in reach.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">wiki: UE/Strategy (victory types)</span>
+          <span class="src-pill">wiki: Victory Conditions</span>
+          <span class="src-pill">wiki: Influence (Pacific Conversion)</span>
+          <span class="src-pill">4XAlch — T1-30 Guide (Wonder as natural endpoint)</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T9: PLAYBOOK -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">First 30 Turns Playbook</h2>
+        <div class="topic-subtitle">The optimized sequence from turn 1 to the early-mid-game handoff. Verified against Endless difficulty.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Turn-by-Turn Decision Framework</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURN 1</div>
+            <div class="tl-body"><strong>Queue:</strong> Xeno-Industrial Infrastructure. <strong>Research:</strong> Xenobiology. <strong>Law:</strong> Super Tax Act. <strong>Hero:</strong> Assign Dmitri as home system governor. <strong>Ships:</strong> Refit Patrol to 4 probes (80 Dust). Fire all 6 probes before moving anything. Hold Colony ship pending probe results.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T 2–5</div>
+            <div class="tl-body"><strong>Exploration:</strong> Probe 2–3 Star Lane directions simultaneously. Identify system quality before committing Colony ship — prefer Atoll and Forest targets. <strong>Diplomacy:</strong> First contact with minor factions costs ~50 Influence — do one interaction per discovery and track the assimilation pipeline. Relationship builds passively over 10 turns.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T 5–10</div>
+            <div class="tl-body"><strong>Research:</strong> Xenobiology completes → queue Public-Private Partnerships immediately. <strong>Colony:</strong> Commit to best revealed system — Atoll or Forest preferred. <strong>Queue:</strong> Add Food improvements to home system to sustain colony supply chains. <strong>Military:</strong> If aggressive neighbor or Cravers adjacent, insert Military Tier 1 here before Commercial Framework.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T 10–20</div>
+            <div class="tl-body"><strong>Engine initializing.</strong> Industry growing; Influence following passively at 0.1× rate. Begin minor faction praise actions to advance 1–2 assimilation timelines. <strong>Buyout:</strong> Start cycling cheap improvements (160 Industry) in new colonies — many-small rule in action. Do not save Influence for large projects at this stage. <strong>Research:</strong> Route toward Commercial Framework unless military threat demands otherwise.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T 20–30</div>
+            <div class="tl-body"><strong>First election occurring.</strong> Verify Industrialist party has maintained tier access. Support them if needed — do not let Militarist surge erase your law progression. <strong>Second law slot:</strong> My Precious (if Dust is strained from upkeep) or an Industrialist tier-2 law if party experience allows. <strong>Xeno Anthropology:</strong> If Empire Development Stage 3 is accessible, prioritize — the +2 threshold is immediately valuable.</div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T 30 STATE</div>
+            <div class="tl-body"><strong>A strong position looks like:</strong> 5–7 systems (3 colonized, 2–3 assimilated), Industrialist majority maintained, Influence generation running at 30–50/turn minimum, first assimilation complete, Commercial Framework in queue or researched, no serious Approval collapse. The engine is initialized — mid-game is about amplifying what's running, not correcting structural errors.</div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">4XAlch — T1-30 Guide (primary source, Endless difficulty)</span>
+          <span class="src-pill">YT01 TechTreeFocus (tech sequencing)</span>
+          <span class="src-pill">wiki: UE/Traits (starting conditions)</span>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">United Empire decisions under real game conditions — one right answer, concrete reasoning required</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const VOLUME = 'fac07';
+const TOTAL  = 10;
+const doneTopics = new Set();
+let qIdx = 0, answered = false;
+
+const quizzes = [
+  {
+    scenario: "Turn 1. You have 100 Dust, a Patrol ship with 1 gun and 2 probes, and a Colony ship with 2 probes. Dmitri Lenko (Counselor, level 0) is available. Xeno-Industrial Infrastructure is queued (8 turns without Dmitri). You have three Star Lanes leading in different directions and no system quality information yet.",
+    q: "What is the optimal sequence of actions for turn 1?",
+    opts: [
+      "Assign Dmitri to the Patrol ship for combat backup, fire both Colony ship probes forward, and commit the Colony ship to the best-looking Star Lane immediately.",
+      "Spend 80 Dust to refit the Patrol ship to 4 probes (replacing the gun), assign Dmitri as home system governor, fire all 6 probes before moving either ship, and hold the Colony ship until probes reveal system quality.",
+      "Assign Dmitri to the Colony ship to speed colonization, fire all probes, and send the Colony ship toward the Star Lane with the most visible Dust resources.",
+      "Don't spend Dust on the refit — the gun provides early combat insurance against pirates. Fire the 4 existing probes and commit the Colony ship to the nearest Star Lane."
+    ],
+    correct: 1,
+    explain: "Option B captures three independent advantages simultaneously. Refitting to 4 probes for 80 Dust (base refit cost, netted to zero by removing the gun) gives 6 total probes — all of which fire before either ship moves, because probes don't consume movement points. Dmitri at level 0 already provides +10% Industry on the home system, shortening Xeno-Industrial Infrastructure by 1 turn; putting him on the Patrol ship costs that bonus and slows the ship to 4 movement. Holding the Colony ship until probes reveal system quality prevents wasting colonization turns heading toward an unknown or inferior target — if an Atoll is 2 turns away in a different direction, you want to know that before committing. The gun is irrelevant at this stage; early pirates are manageable without it and probe information is worth far more."
+  },
+  {
+    scenario: "Turn 15. Your Industry output is 85/turn across 2 systems. Passive Influence generation is approximately 9/turn (0.1 × 85). You have 3 buildings queued in your new colony: Drone Networks (160 Industry, 5 turns), Planetary Landscaping (280 Industry, 9 turns), and Xeno-Industrial Infrastructure (160 Industry, 5 turns). You have 140 accumulated Influence.",
+    q: "How should you deploy your Influence across these queued buildings?",
+    opts: [
+      "Save all Influence for Planetary Landscaping — it's the most expensive building and buying it out delivers the highest single-transaction value.",
+      "Buy out Drone Networks and Xeno-Industrial Infrastructure now (two 160-Industry projects). Do not buy out Planetary Landscaping yet.",
+      "Don't buy anything out — 140 Influence is too low to be meaningful and is better saved for law costs at the next election.",
+      "Buy out all three buildings simultaneously to get the new colony fully operational as fast as possible."
+    ],
+    correct: 1,
+    explain: "The efficiency rule applies directly here. Influence buyout cost = (IndustryCost^1.1) + 100. For 160-Industry projects: (160^1.1) + 100 ≈ 432 Influence each. For 280-Industry: (280^1.1) + 100 ≈ 568 Influence. Two cheap projects cost ~864 total; the expensive project costs 568. But the two cheap projects deliver equivalent buildings in 5 turns each while the expensive one takes 9 — and you only have 140 Influence. Buying both small projects over the next few turns (as Influence accumulates) is strictly more efficient per Influence point than holding out for the large one. Option A reverses the logic of the efficiency rule. Option C is wrong — 140 Influence at turn 15 is exactly the right level to start the buyout cycle on cheap improvements. Option D would require ~1432 Influence total, which far exceeds your reserves."
+  },
+  {
+    scenario: "Turn 22. The United Empire questline fires the population choice event. You currently have 18 Imperials across your empire. You are playing a wide-expansion game targeting Wonder Victory with 5 systems and growing Influence output. Your science output is 180/turn and you feel mildly behind on tech speed.",
+    q: "Which population fork do you choose?",
+    opts: [
+      "Sheredyn — Manpower and Militarist support will let you expand militarily, capturing more systems faster, which compounds for Wonder Victory.",
+      "Imperials — keep them. The +15% Influence multiplier fires almost immediately (you have 18, need 20), and the 50-pop milestone deepens the passive generation loop. Wonder Victory is an Influence engine victory and Imperials amplify the exact resource you need most.",
+      "Mezari — the −10% Technology Cost at 50 pop addresses your stated science weakness and slower tech is the most likely constraint on a Wonder Victory timeline.",
+      "Keep Imperials for now, but plan to switch to Mezari after hitting the 20-pop milestone to cover both bonuses."
+    ],
+    correct: 1,
+    explain: "Wonder Victory is built on the Influence engine snowball. Imperials directly amplify the primary resource: the 20-pop +15% Influence multiplier fires in roughly 2 turns (you have 18, population grows each turn), multiplying every source simultaneously — passive industry generation, system improvements, heroes. Mezari's −10% tech cost at 50 pop is real value but addresses a secondary constraint (tech speed) rather than the primary one (Influence output for buyout and Wonder construction). Sheredyn optimizes for Military, the wrong victory path here. Option D is not possible — the population choice is one-time and irreversible; you cannot stage it or revisit it after choosing. The correct framing is: Wonder Victory = Influence Victory = Imperials is the natural, synergistic choice."
+  },
+  {
+    scenario: "Turn 30. Election results: Industrialists 3 seats, Militarists 1 seat, Ecologists 1 seat (surprise third party). You have 2 law slots active: Super Tax Act (Industrialist T0) and My Precious (Militarist). You need to reach 4 active Industrialist laws for a questline objective. Your Dust balance is comfortable at +45/turn.",
+    q: "What is your priority action regarding the senate and the 4-law objective?",
+    opts: [
+      "Replace My Precious with a second Industrialist law immediately — you need 4 Industrialist laws and having a Militarist law in a slot counts against that objective.",
+      "Check whether your Industrialist party has enough experience to unlock tier 2 and tier 3 laws. If not, the 4-law objective cannot be met by choosing laws alone — you need either more law slots (via Developing Empire Laws at ED Stage 3, Exemplary Empire Laws at ED Stage 5, or government changes from Xeno Anthropology) or higher Industrialist party tier first.",
+      "Support the Ecologist party to diversify the senate — their laws provide bonuses you're missing, and a third party adds political flexibility.",
+      "Drop Super Tax Act since Dust is comfortable — replace it with a higher-tier Industrialist law for better long-term value."
+    ],
+    correct: 1,
+    explain: "At turn 30 with 2 law slots, you physically cannot have 4 Industrialist laws active simultaneously regardless of what you choose. The 4-law objective requires both enough active law slots AND the Industrialist party having experience high enough to offer tier 3 or 4 laws. Law slots unlock through tech (Developing Empire Laws, Exemplary Empire Laws) and possibly government changes via Xeno Anthropology. Option A misidentifies the constraint — swapping My Precious for another Industrialist law still leaves you at 2 slots with 2 Industrialist laws, not 4. The correct response is to identify whether party experience or slot count is the binding constraint, then invest in whichever path unlocks the objective. My Precious is not the problem."
+  },
+  {
+    scenario: "Turn 45. Your Influence output is 68/turn and growing. Emperor's Shadow is in the research queue (ED Stage 4, 12 turns to complete). A Sophon border system nearby produces 12 Influence/turn. You have not yet researched SLC Systems. You are targeting Wonder Victory.",
+    q: "Should you divert research to SLC Systems now to capture that Sophon system via Pacific Conversion?",
+    opts: [
+      "Yes — capturing a Sophon system without war saves Manpower, avoids diplomatic penalties, and adds Industry to the engine faster than waiting 12 more turns for Emperor's Shadow.",
+      "No — Emperor's Shadow is the linchpin tech for your Wonder Victory engine: it generates Dust and Industry from Influence output, which feeds back into more Influence. Delaying it to unlock a single system capture via Pacific Conversion is a misallocation. Finish Emperor's Shadow first, then evaluate SLC Systems as a secondary unlock.",
+      "Divert only if you can complete SLC Systems before the Sophons colonize that system with a new outpost.",
+      "Yes, but only if you can afford a war declaration — fighting is faster than waiting for Pacific Conversion timers anyway."
+    ],
+    correct: 1,
+    explain: "Emperor's Shadow is the reverse amplifier that completes the UE loop: Influence → Industry → more Influence. Every turn it is active, the engine runs faster — more Industry generates more passive Influence which generates more buyout capacity for Wonder construction. Delaying it by 8–15 turns to unlock a Stage 4 tech detour for a single system capture is a compounding loss. The Pacific Conversion clock against that 12 Influence/turn system runs slowly even after SLC Systems is researched — you'll capture it eventually regardless. Emperor's Shadow, by contrast, has a direct and immediate impact on every turn of the rest of the game. Complete the core engine first; unlock optional mechanics from a position of strength."
+  },
+  {
+    scenario: "Turn 50. You have 6 Hunters and 2 Carriers in your fleet. Strategic inventory: 18 Hyperium, 4 Adamantian, 0 Antimatter. A war with Cravers is active. You want to upgrade Hunters to the Sopron final tier (requires Adamantian). You could also build 2 new Carriers (requires Antimatter — 0 in stock, available on Marketplace at 450 Dust each = 900 Dust total). Your Dust inflation is high.",
+    q: "What is the correct approach to fleet development this turn?",
+    opts: [
+      "Upgrade the existing Hunters with your 4 Adamantian now, then save Dust for Antimatter purchases later.",
+      "Buy Antimatter on the Marketplace for 900 Dust and start building Carriers immediately — Carriers are the end-game platform and every turn without them is falling behind.",
+      "Before spending Dust or Influence, check the Emperor's Will buyout cost for Antimatter on the Marketplace against the Dust cost. High Dust inflation means the face-value Dust cost is understating the real cost. The Influence buyout is unaffected by inflation — in a high-Dust economy, buying Antimatter with Influence may be strictly cheaper than 900 Dust. Check both prices, then act.",
+      "Neither — with 4 Adamantian, upgrading only 4 of 6 Hunters creates asymmetric investment. Wait until you have 6."
+    ],
+    correct: 2,
+    explain: "This is an Emperor's Will decision disguised as a resource question. The Marketplace allows UE to buy items with either Dust or Influence. Dust inflation means the effective purchasing power cost of 900 Dust is higher than the face value in a high-Dust economy — the Dust buyout formula multiplies by inflation. The Influence buyout formula has no inflation multiplier whatsoever. At turn 50 with the engine running, Influence may be approaching abundance while Dust is being strained by military upkeep. Option C is the only response that correctly identifies the decision framework: always check the currency efficiency before committing in a high-inflation scenario. Options A and D are tactically plausible but miss the core UE economic insight entirely — which is that Influence and Dust are not equivalent currencies, and their relative cost changes dynamically with your economy state."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
