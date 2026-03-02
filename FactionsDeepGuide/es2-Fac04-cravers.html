@@ -102,7 +102,7 @@
 <main class="main">
   <div class="page-header">
     <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.04</span> // The Cravers</div>
-    <h1 class="page-title"><img src="../images/Races/CraversIcon.webp"> The<br>Cravers</h1>
+    <h1 class="page-title">🪳 The<br>Cravers</h1>
     <p class="page-subtitle">A locust swarm wearing the skin of a civilization. The Cravers cannot stop expanding — every planet they occupy degrades permanently, so they must always move forward. In the hands of a player who understands the depletion engine, this becomes a weapon: a war machine that fights harder the more it destroys, subsidized by colonies that are deliberately consumed and abandoned. The player who treats depletion as a crisis will lose. The player who treats it as the plan will dominate.</p>
   </div>
 
@@ -227,31 +227,49 @@
       <div class="topic-num">01</div>
       <div>
         <h2 class="topic-title">Depletion &amp; Population Math</h2>
-        <div class="topic-subtitle">The numbers behind the consumption engine. Slave Driver and the depletion bonus are multiplicative in ways the UI doesn't fully explain.</div>
+        <div class="topic-subtitle">The +150% FIDSI bonus is active from turn 1 on fresh planets — and it degrades as you consume them. Understanding the depletion curve is the difference between thriving and collapsing.</div>
       </div>
     </div>
 
     <div class="content-block open" id="cb1a">
       <div class="block-header" onclick="toggle('cb1a')">
         <span class="block-icon">📊</span>
-        <span class="block-title">The Depletion Bonus: +150% FIDSI on Full Depletion</span>
+        <span class="block-title">The Depletion Bonus: +150% FIDSI While Fresh, −50% When Depleted</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
 
-        <div class="trait-block">
-          <div class="trait-label">WHAT THE +150% ACTUALLY MEANS</div>
-          A fully depleted Craver planet receives a <strong>+150% FIDSI bonus</strong>. This is an additive modifier on the system's base output — meaning the total FIDSI multiplier on a fully depleted system is <strong>×2.5</strong> (base ×1, plus 150% = 2.5). This is enormous. A fully depleted system producing 40 Food base now produces 100 Food. The catch is that depletion also imposes its own penalty as it accrues, so the net curve is not linear — partial depletion imposes output penalties before the full bonus kicks in. The strategic implication: <strong>partial depletion is the worst state</strong>. You want systems either fresh (pre-depletion) or fully depleted (bonus active). The transition zone is the pain.
+        <div class="trait-block warn">
+          <div class="trait-label warn">CRITICAL: THE BONUS IS ACTIVE FROM THE START, NOT AT THE END</div>
+          The +150% FIDSI bonus applies to planets that are <strong>not yet depleted</strong>. A fresh Craver planet produces at ×2.5 its base output from turn 1. As depletion accumulates, this bonus degrades. When the planet reaches full depletion, the bonus is gone entirely — and output drops to approximately <strong>−50% of base</strong>, making a fully depleted planet roughly half as productive as it was when empty. The strategic direction is therefore the opposite of what you might assume: <strong>you extract maximum value before depletion, then abandon or minimally maintain the planet.</strong>
         </div>
 
         <div class="trait-block">
-          <div class="trait-label">DEPLETION CURVE — THE TRANSITION ZONE</div>
-          As depletion accumulates from 0 to 150, the FIDSI penalty grows proportionally. The bonus only fully activates at 150. This means there is a trough: systems in the 60–140 depletion range are producing below their base value with no bonus yet. Fast-depleting strategies (all Craver pops, no management) push through this trough quickly. Slow-depleting strategies (mixed populations, fewer Craver pops) reduce trough depth but extend the time before the bonus pays off. The correct choice depends on your overall strategy — see Topic 03 for the three strategy archetypes.
+          <div class="trait-label">THE DEPLETION CURVE IN PRACTICE</div>
+          A fresh planet outputting 40 Food base produces 100 Food at game start (×2.5 with the undepleted bonus). As your Craver pops consume it, the bonus degrades toward zero. At full depletion, that same planet produces roughly 20 Food (−50%). The slope is not a cliff — it is a long gradual decline — but the message is clear: every turn you spend on a planet past its productive peak is a turn you are bleeding output. The goal is to have your next colony already running before the current one's bonus has significantly degraded.
+          <br><br>
+          This also reframes the role of Slave Driver on depleted planets. As Panczasu describes: Slave Driver on depleted worlds makes them "not completely useless — kind of still rubbish but not as rubbish." It is a recovery tool, not a design state to aim for.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">PLANET SIZE AND DEPLETION TIMING</div>
+          Larger planets take longer to fully deplete, because they have more base capacity before the clock runs out. When choosing which planet in a multi-planet system to colonise first, the bigger planet buys more time to build infrastructure before you must move on. This is a non-obvious but consistent heuristic: if you have a forest and an arid in the same starting system and can only colonise one immediately, the larger planet gives you a longer productive window.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU</span>
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE UI TIMER LIES</div>
+          The in-game depletion timer assumes static population. As your pops grow, they add more depletion per turn — accelerating the real deadline beyond what the tooltip shows. Never treat the displayed depletion counter as exact. If your planet shows "8 turns to depletion" but your population is actively growing, the real window may be 5–6 turns. Build infrastructure and queue your colony ship accordingly.
+          <div class="source-row" style="margin-top:4px;">
+            <span class="src-pill">LP_PANCZASU</span>
+          </div>
         </div>
 
         <div class="source-row">
-          <span class="src-pill">TRANSCRIPT01 (4Xalch)</span><span class="src-pill">WIKI_FACTIONS</span>
+          <span class="src-pill">LP_PANCZASU</span><span class="src-pill">LP_TECTOSS</span><span class="src-pill">WIKI_FACTIONS</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
@@ -352,10 +370,10 @@
             <td>Active fleet combat</td>
           </tr>
           <tr>
-            <td class="cell-key">Deadly Intent</td>
-            <td>Militarist</td>
-            <td class="cell-good">+1% ship and troop damage per depleted planet owned</td>
-            <td>Depleted planets — scales endgame</td>
+            <td class="cell-key">Deadly Intent Bill</td>
+            <td>Militarist L4</td>
+            <td class="cell-good">+33% Damage on Weapon Modules; +33% Troops Damage (flat bonus, not per-depleted-planet)</td>
+            <td>Requires Militarist at Potent (L4) — endgame law</td>
           </tr>
           <tr>
             <td class="cell-key">Righteous Fury</td>
@@ -369,11 +387,24 @@
             <td class="cell-good">+20 Approval all systems; +20 additional per Hero assigned to system</td>
             <td>Heroes on systems</td>
           </tr>
+          <tr>
+            <td class="cell-key">Wartime Taxes Bill</td>
+            <td>Independent L4</td>
+            <td class="cell-good">+10% Dust per Empire at War on Systems (scales with active wars, like Jingoist scales Approval)</td>
+            <td>Autocracy/Dictatorship only; mutually exclusive with Parks not Quarks</td>
+          </tr>
         </table>
 
+        <div class="callout callout-warn">
+          <div class="callout-label">NOTE: "WATER TAX BILL" AND "AFTER DEATH" ARE UNVERIFIED</div>
+          These law names appear in Panczasu's LP commentary but are not present in the wiki laws database. They may be imprecise names for other laws, outdated names from a patched version, or mod-specific content. Do not rely on them. The Wartime Taxes Bill above is the verified Dust-scaling law for Autocracy Cravers that Panczasu was likely describing. If you encounter "After Death" in-game, report back — it may exist as a minor faction population law not covered in the main wiki.
+        </div>
+
         <div class="callout callout-tip">
-          <div class="callout-label">THE JINGOIST JOY BILL IN PRACTICE</div>
-          At Autocracy tier the Jingoist Joy Bill gives +25 per major war and +15 per minor war. In a game where you are simultaneously at war with 3 major factions and 2 minor factions: +75 (major) + +30 (minor) = +105 Approval from this single law. This is the largest single approval source available to Cravers and the reason you must maintain active wars at all times, not just when you want to conquer.
+          <div class="callout-label">THE JINGOIST JOY BILL IN PRACTICE — INCLUDING MINOR FACTIONS</div>
+          The values in the table (+25 major / +15 minor) are the <strong>Autocracy forced-law bracket values</strong> — these only apply when Militarists are the dominant party in an Autocracy. Base values are +15 per major war and +5 per minor war. For Cravers in Autocracy, you always get the enhanced values. In a game where you are simultaneously at war with 3 major factions and 2 minor factions: +75 (major) + +30 (minor) = +105 Approval from this single law. This is the largest single approval source available to Cravers and the reason you must maintain active wars at all times.
+          <br><br>
+          The implication: pirates and minor factions encountered during exploration are not nuisances — they are <strong>approval resources</strong>. Declare war on every minor faction you find, even if you have no immediate plans to conquer them. Each war declaration costs nothing under Eternal War rules, and each active minor war adds +15 Approval permanently while the war is live. Panczasu explicitly plans around having multiple minor faction wars active simultaneously as approval padding, independent of any conquest intent.
         </div>
 
         <div class="source-row">
@@ -406,8 +437,13 @@
         </div>
 
         <div class="trait-block">
-          <div class="trait-label">FEEDING PITS — EMERGENCY APPROVAL BUILDING</div>
-          The Feeding Pits system improvement provides <strong>+25 Approval for 10 turns</strong> and removes the −10 Approval penalty from enslaved pops in that system for the duration. It stacks with multiple castings. In an approval emergency (about to drop below Happy before a war ends), queuing Feeding Pits across your systems is a legitimate emergency brake — it buys 10 turns of headroom while you rebuild the wartime approval base. After 10 turns the bonus expires and you must re-queue or the penalty returns.
+          <div class="trait-label">FEEDING PITS — TWO DISTINCT USES</div>
+          <strong>As an emergency approval tool (mid/late game):</strong> The Feeding Pits system improvement provides <strong>+25 Approval for 10 turns</strong> and removes the −10 Approval penalty from enslaved pops in that system for the duration. In an approval crisis, queuing it across your systems buys 10 turns of headroom while you rebuild the wartime approval base.
+          <br><br>
+          <strong>As a turn-1 opener (situational, high-risk):</strong> Feeding Pits can be used on turn 1 to immediately consume your starting non-Craver pop, converting them into Food and Approval for 10 turns. This sounds counter-productive, but Panczasu documents the case for it: because Cravers are extremely efficient on undepleted planets, the population recovers faster than you'd expect — and the food/approval pulse funds an aggressive early war. The condition is strict: <strong>only do this if you are certain you can completely conquer your nearest neighbour within ~15 turns</strong> (fast game speed). If that window is not available from your scouting, play the standard opening.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU</span>
+          </div>
         </div>
 
         <div class="trait-block">
@@ -586,13 +622,15 @@
           <div class="tl-row">
             <div class="tl-turn">TURN 1</div>
             <div class="tl-body">
-              <strong>Colony ship out, hero to Revealer fleet.</strong> The colony ship must leave Turn 1. No exceptions. Scout for your nearest habitable system simultaneously — two Revealers covering different directions doubles your information. Queue Jingoist Joy Bill immediately; you are already at war with everyone (Eternal War trait), so it pays immediately. Research priority: early infrastructure for your first colony's planet type, and the tech that unlocks Termite-class siege ships.
+              <strong>Colony ship out, hero to Revealer fleet.</strong> The colony ship must leave Turn 1. No exceptions. Scout for your nearest habitable system simultaneously — two Revealers covering different directions doubles your information. Queue Jingoist Joy Bill immediately; you are already at war with everyone (Eternal War trait), so it pays immediately.
+              <br><br>
+              <strong>First research — Xenobiology:</strong> Panczasu's consistent opening regardless of starting planet type. The reason is not colonisation unlocks — it is that Xenobiology unlocks <strong>Public-Private Partnerships</strong>, a key early economic building that significantly boosts Industry output. Cravers are not the brute-force barbarians they appear; early Industry investment is what lets you actually build the ships and improvements your strategy demands. Research military tech second, not first.
             </div>
           </div>
           <div class="tl-row">
             <div class="tl-turn">TURNS 1–10</div>
             <div class="tl-body">
-              <strong>Scout hard, find pirates, find minor factions.</strong> Craver scouts should be prioritizing: pirate locations (for Manpower, clearable with your starting fleet), minor faction locations (for assimilation and future slave pop acquisition), and nearest major faction home systems (for future Us or Them value). The Husk is still producing; use this window to build your first military ships and queue your first proper colony's infrastructure.
+              <strong>Scout hard, find pirates, find minor factions — and declare war on all of them.</strong> Craver scouts should be prioritizing: pirate locations (for Manpower), minor faction locations (for both future slave pop acquisition and immediate Jingoist Joy Bill approval), and nearest major faction home systems (for future Us or Them value). Every minor faction you find is a free +15 Approval once you declare war — do this immediately on discovery, even if you have no intention of conquering them for many turns. The Husk is still producing; use this window to build your first military ships and queue your first colony's infrastructure.
               <br><br>
               <strong>Faction quest choice:</strong> When the faction questline presents the early branch decision, the community consensus is to take the <strong>Destroy</strong> path for the Cyborg Stomachs unique improvement reward, which provides permanent Food bonuses that help sustain the Chain Gang Program. Specific values should be confirmed from the in-game quest screen.
             </div>
@@ -627,11 +665,125 @@
         </div>
 
         <div class="source-row">
-          <span class="src-pill">TRANSCRIPT01 (4Xalch)</span><span class="src-pill">TRANSCRIPT03 (ESAcademy — ESG mod)</span>
+          <span class="src-pill">TRANSCRIPT01 (4Xalch)</span><span class="src-pill">LP_PANCZASU</span><span class="src-pill">TRANSCRIPT03 (ESAcademy — ESG mod)</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
           <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">Tech Priorities and the Population Transfer Unlock</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">RESEARCH OPENING — XENOBIOLOGY FIRST</div>
+          Panczasu's consistent opening in his tutorial series, stated explicitly as near-universal: <strong>Xenobiology</strong> as the first research, regardless of starting planet type. The primary reason is not colonisation unlocks — it is access to <strong>Public-Private Partnerships</strong>, an early economic building that significantly boosts Industry. Don't be fooled by Cravers' reputation as a purely military faction: Industry output in the first 15 turns determines how fast you build your first fleet, your first Chain Gang, and your first colony's infrastructure. Researching military tech on turn 1 leaves you slower than necessary on all of these.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ERA 2 PRIORITY — BASIC SYSTEM DEVELOPMENT</div>
+          Once past the opening, <strong>Basic System Development</strong> is a high-priority research in Era 2. It unlocks <strong>Space Boards</strong>, which allow population transfer between your systems. This is critical for Craver plague strategy: as planets deplete, you need to redistribute populations — moving slave pops to fresh systems where they can be productive under Slave Driver, and pulling Craver pops to systems with Chain Gang Programs. Without population transfer, you are locked into whatever pop distribution happened naturally, which is almost never optimal. Panczasu frames this as essential infrastructure, not optional.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU</span>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ATMOSPHERIC FILTRATION — THE EXPANSION ENABLER</div>
+          Ash planets appear frequently in Craver starts and mid-game expansion zones, and are productive (high Industry output). <strong>Atmospheric Filtration</strong> is the tech that allows Ash planet colonisation. Panczasu names it as an almost-always-wanted Era 2 research. If your scouting reveals several Ash systems in your expansion corridor, prioritise this early to open those colonisation options.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">AVOID REDUNDANT TECHNOLOGY — THE CUMULATIVE COST WARNING</div>
+          Every research you complete increases the cost of all subsequent research in that era by a small amount. Panczasu explicitly notes the temptation to grab colonisation techs for planet types you may not use (Mediterranean, Gas Giant, Barren) — and warns against it. Colonising a type you won't need for many turns delays your real priorities for a compounding cost. Research only planet-type techs when you have confirmed targets of that type in your near-term expansion zone.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">LP_PANCZASU</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4c">
+      <div class="block-header" onclick="toggle('cb4c')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">Faction Quest: Branch Choices and Final Rewards</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">CHAPTER 1 — DESTROY (INDUSTRIALIST) vs. CAPTURE (RELIGIOUS)</div>
+          The first branch choice determines your entire questline path and party alignment.
+          <br><br>
+          <strong>DESTROY (Industrialist):</strong> Reward is 50 Titanium/Hyperium, then Chapter 2 leads toward the Infinity Shield defense module. Locks into the Industrialist questline.
+          <br><br>
+          <strong>CAPTURE (Religious):</strong> Reward is a free Tier 2 Cruiser (keep it — it outclasses anything you can build early) plus the Hive Hall improvement (no upkeep for heroes assigned to that system). The wiki's own route suggestion favors this: the free T2 Cruiser is immediately deployable for bullying neighbors and assimilating minor factions, saving you the Industry cost of building a combat ship yourself. This branch locks into the Religious questline and is the path to acquiring <strong>Reyaryn Cious</strong>, the unique Virtual Endless hero.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CHAPTER 2 BRANCH — INDUSTRIALIST PATH</div>
+          <strong>CONQUER (Industrialist):</strong> Build Signal Seeker (+50 Industry, +10 Vision) in a Minor Civ home system. Reward: Infinity Shield defense module (HP +10%, Shield +270, Energy Defense +31 — strong early combat tech).
+          <br><br>
+          <strong>STUDY (Religious):</strong> Use 50 Titanium + 50 Hyperium to explore a curiosity. Reward: Reyaryn Cious (Hero, level 8 on arrival, Religious/Guardian class, Virtual Endless faction). See below for his skill tree.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CHAPTER 2 BRANCH — RELIGIOUS PATH</div>
+          <strong>INVESTIGATE (Industrialist):</strong> Obtain 2 marked systems. Reward: Infinity Shield (same stats as above — this module is available via both major branches).
+          <br><br>
+          <strong>RESTORE (Religious):</strong> Build Synchronous Hive (+30 Approval, +10 Influence) in one of your systems. Reward: Reyaryn Cious (level 8 hero).
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">REYARYN CIOUS — THE UNIQUE HERO</div>
+          Reyaryn joins at <strong>level 8</strong> — significantly higher than any standard hired hero. His starting skills are +20% damage on his ship and +1 Industry per population. His Virtual Endless skill tree includes:
+          <br><br>
+          Notable skills: <em>Chrono Ordnance 1 & 2</em> (+40%/+80% Shield Penetration on fleet) is particularly powerful — if opponents expect Cravers to run projectiles (the hero gives a bonus to projectile weapons), the energy fleet with 80% shield penetration can catch them unprepared. <em>Endless Charisma</em> (+40% Manpower refill and max capacity on fleet) directly amplifies invasion capability. <em>Grease the Wheels 1 & 2</em> (−20%/−40% upkeep on fleet) further compounds the Craver cost advantage.
+          <br><br>
+          Reyaryn is obtainable via either questline branch if you acquire him in Chapter 2 — he then unlocks a special Religious final chapter option.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CHAPTER 3 REWARDS (BOTH PATHS)</div>
+          Both paths converge on the same two Chapter 3 choices:
+          <br><br>
+          <strong>Endless Augmentation Factory (Industrialist/Soldiers path):</strong> +40% Manpower Refill rate on Heroes, +20% Health Regen on Heroes, +20% Ship HP Regen on Hero-Assigned Fleet. Empire-wide improvement. The Ship HP Regen on hero fleets is the most broadly useful effect.
+          <br><br>
+          <strong>Accelerated Ovipositor (Religious/Reyaryn path):</strong> +30% Manpower Capacity on Systems. The wiki notes this is "largely invalidated by titanium siege modules" at Stage 2 tech — Endless Augmentation Factory is generally the stronger pick.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">FINAL CHAPTER — INSATIABLE MAW vs. VOICE OF THE QUEEN</div>
+          <strong>REBELLION (Industrialist): Insatiable Maw</strong> — Refuse Force Truce without cost or penalty. This is the correct endgame reward for Cravers. Force Truce is the one diplomatic tool that Diplomacy-oriented factions can use to interrupt a Craver conquest mid-campaign. Insatiable Maw removes that vulnerability entirely: no one can force you to stop eating. The wiki calls it "hands-down the best reward" for Cravers, and the reasoning is sound.
+          <br><br>
+          <strong>SUBMISSION (Religious): Voice of the Queen</strong> — +2 Influence per destroyed Command Point on ships. Cravers have little use for Influence (they aren't spending it on diplomacy), making this significantly weaker than Insatiable Maw in most games. It is only relevant in a Religious strategy where Influence funds law upkeep and Saints & Sinners sustainability.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">RECOMMENDED PATH IN BRIEF</div>
+          Religious Chapter 1 (free T2 Cruiser) → Religious Chapter 2 (get Reyaryn at level 8) → Industrialist Chapter 3 (Endless Augmentation Factory) → Industrialist Final (Insatiable Maw). This path gives you the best early military boost (free Cruiser), the unique hero, the most useful empire improvement, and the critical endgame protection against forced peace.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI_FACTION_QUEST</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4c',this)">✓ MARK DONE</button>
         </div>
       </div>
     </div>
@@ -708,6 +860,54 @@
         </div>
       </div>
     </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">🪖</span>
+        <span class="block-title">Ground Invasion: Tanks Only, Skip Infantry Upgrades</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">THE GROUND COMBAT PRIORITY — TANKS</div>
+          Craver ground invasions rely on Manpower, which is plentiful thanks to Chain Gang Programs and the +10% Manpower hull trait. The unit composition in ground battles is: <strong>tanks are the primary combat unit; infantry are inefficient and should not be upgraded</strong>. Panczasu's reasoning: every resource invested in upgrading infantry is wasted because the AI battle resolution converts tanks and air units between types as losses accumulate — upgrading infantry just makes you fill those secondary conversion slots faster rather than keeping your effective tank count high. Replace infantry with tanks as quickly as available, and invest upgrade resources exclusively into tanks.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU</span>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SIEGE DOCTRINE — DRAIN MANPOWER BEFORE INVADING</div>
+          The standard Craver siege sequence: send dedicated siege ships (Termite corvettes if available, or any ship with siege modules) to orbit the target system. Each turn of siege drains the defender's Manpower. Once the system Manpower is near zero, bring in the invasion fleet with Coordinators loaded with ground troops. The Craver +10% Manpower per ship means your invasion fleets carry more troops than equivalent fleets of other factions — but this advantage is wasted if you invade before draining defender Manpower. Patience before the invasion pays off in lower troop losses.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">HEROSHIP AS A DESIGNATED DAMAGE SPONGE</div>
+          A deliberate late-game fleet tactic: equip the hero's ship with the module that <strong>increases its chance of being targeted</strong>, plus heavy self-repair or regeneration modules. The enemy — AI or human — will concentrate fire on it, burning their DPS budget while your actual combat ships work through their fleet uncontested. Panczasu explicitly calls this "throwing the AI" and frames it as an intentional design decision, not a side effect. For this to work, the hero's ship needs enough HP and repair to survive the focused fire for several rounds. A hero with strong personal defensive skills compounds the durability further.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU_P2</span>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PREEMPTIVE BOMBING — READ THE DEFENDER FIRST</div>
+          Before committing to a full invasion, TecToss on Impossible difficulty recommends using preemptive bombing to probe the defender's response. Watching how they react (do they conscript? do they scramble a fleet?) tells you whether your advantage is sufficient to proceed immediately or whether you need another turn of siege. If your military power greatly exceeds theirs, skip the probe and invade directly — the extra turn costs you more than it saves.
+          <div class="source-row" style="margin-top:4px;">
+            <span class="src-pill">LP_TECTOSS</span>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">LP_PANCZASU</span><span class="src-pill">LP_PANCZASU_P2</span><span class="src-pill">LP_TECTOSS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <hr class="topic-divider">
@@ -732,21 +932,62 @@
       <div class="block-body">
 
         <div class="trait-block">
-          <div class="trait-label">DEADLY INTENT — THE ENDGAME LAW</div>
-          Deadly Intent (Militarist) provides <strong>+1% ship damage and +1% troop damage per depleted planet owned</strong>. Both bonuses apply simultaneously. At 50 depleted planets: +50% ship damage and +50% troop damage — a flat combat multiplier that applies to your entire military. No other faction has access to a scaling late-game combat law of this magnitude. The depleted planet trail your empire leaves behind is not a liability by late game: it is the fuel for a military multiplier that compounds with every conquest.
+          <div class="trait-label">DEADLY INTENT BILL — THE ENDGAME LAW</div>
+          Deadly Intent Bill (Militarist L4) provides <strong>+33% Damage on Weapon Modules</strong> and <strong>+33% Troops Damage</strong> — a flat combat multiplier that applies to your entire military simultaneously. This is the most powerful combat law available to any faction and requires Militarists to reach Potent (Level 4) experience. At +33% to both ship weapons and ground troops, every fleet engagement and every invasion resolves faster and at lower cost.
+          <br><br>
+          <div class="callout callout-warn" style="margin-top:8px;">
+            <div class="callout-label">CORRECTION: THE "+1% PER DEPLETED PLANET" MECHANIC DOES NOT EXIST IN THE BASE GAME</div>
+            Multiple sources including LP transcripts described Deadly Intent as "+1% damage per depleted planet owned" — a scaling mechanic that would make the law more powerful the more planets you deplete. The wiki laws database has no such mechanic. The law grants a flat +33%. This may have originated from a mod (ESG), an outdated version, or a misread. The flat +33% is already excellent; the law does not need per-planet scaling to be worth taking.
+          </div>
           <div class="source-row" style="margin-top:8px;">
-            <span class="src-pill">WIKI_LAWS</span><span class="src-pill">TRANSCRIPT01 (4Xalch)</span>
+            <span class="src-pill">WIKI_LAWS</span>
           </div>
         </div>
 
         <div class="trait-block">
-          <div class="trait-label">THE DEPLETED EMPIRE LOOP</div>
-          The mature Craver endgame operates as follows: conquered systems begin fresh, are worked by slaves under Slave Driver for production, deplete over time to the +150% FIDSI bonus state, then are used as forward military bases as the Craver empire advances further. Old depleted systems in the rear provide: +150% FIDSI output (from the depletion bonus), their Deadly Intent contribution (depleted planet count), and Manpower from Chain Gang buildings. The economic and military cores of your empire are the same depleted worlds.
+          <div class="trait-label">THE DEPLETED EMPIRE LOOP — WHAT ACTUALLY HAPPENS</div>
+          The mature Craver endgame works differently than the fresh-planet extraction phase. Conquered systems begin fresh (+150% FIDSI bonus active), are worked hard by slaves under Slave Driver, and deplete over time. Once fully depleted, they drop to ~−50% base output — but Slave Driver on depleted worlds partially recovers this, and Chain Gang buildings convert whatever Food they still produce into Manpower. The rear of your empire becomes a Manpower factory rather than an economic engine. Your economic core should always be your newest, freshest conquests at the frontier. Your depleted rear systems contribute via Deadly Intent (depleted planet count) and Chain Gang Manpower. These are distinct roles — plan your building queues accordingly.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">POPULATION REDISTRIBUTION — THE LATE-GAME ECONOMIC CYCLE</div>
+          As older systems approach or reach full depletion, they accumulate surplus pops that are no longer needed locally — their diminished output doesn't justify the population count. The correct response is to ship them out: transfer both surplus Craver pops and slave pops to newly conquered fresh systems where the +150% undepleted bonus makes every worker highly productive. Panczasu describes this as "endless creative immigration" and treats it as a core late-game habit: depleted rear systems continuously export their excess workers to the frontier.
+          <br><br>
+          The logistics require <strong>Space Boards</strong> (from Basic System Development) to be built in the source system. When configuring transfers, always include at least one Craver pop in the shipment to any fresh system — so Slave Driver activates immediately on arrival rather than waiting for natural migration. Shipping a mix of one Craver and several slave pops to a fresh system gives you the full multiplicative stack from turn one of occupation.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU_P2</span>
+          </div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CATHEDRAL OF THE SWARM — BUILD IT ON A FRESH SYSTEM</div>
+          The Cathedral of the Swarm is the Cravers' unique late-game system improvement: a permanent approval anchor with additional bonuses. Counter-intuitively, do not build it in your most productive (currently highest-output) system — that system is likely near depletion and will halve in output before long. Instead, build it in a system that is fresh or recently colonised and expected to remain viable for the rest of the game. You want your permanent approval anchor tied to a system that will still be functional in 20 turns, not one that becomes an ash heap next week.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU_P2</span>
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">ACADEMY ENDGAME QUEST — HEROES CANNOT BE REPLACED DURING IT</div>
+          At some point in the late game, the cooperative/competitive Academy quest triggers (all factions simultaneously must choose sides: support the Academy or oppose it). Cravers naturally align against the Academy. During this quest, the Academy is closed: no new heroes can be hired or appear until it resolves. Panczasu's warning is direct — do not throw heroes into fights you might lose during this period. A dead hero is gone permanently until the quest ends, and losing a key Admiral mid-endgame significantly degrades your fleet's effectiveness. Play conservatively with heroes from the moment the quest triggers.
+          <div class="source-row" style="margin-top:4px;">
+            <span class="src-pill">LP_PANCZASU_P2</span>
+          </div>
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">AUTOMATION POLICIES — DO NOT USE THEM</div>
+          Automation policies allow the AI to queue improvements in your systems automatically. For most factions this is a convenience; for Cravers it is a liability. Craver system management requires precise per-system decisions: which systems get Chain Gang Programs, which get science converters, which get Feeding Pits. Automation cannot reason about depletion timelines or pop configuration and will queue generic improvements in systems where they actively waste resources. Panczasu catches automation queuing a high-cost improvement in a nearly-depleted system — wasted Industry on a world about to become an ash heap. Keep automation off and manage queues manually.
+          <div class="source-row" style="margin-top:4px;">
+            <span class="src-pill">LP_PANCZASU_P2</span>
+          </div>
         </div>
 
         <div class="trait-block">
           <div class="trait-label">TIMING: US OR THEM → DEADLY INTENT SWAP</div>
-          There is a law slot decision point in the late game. Us or Them Decree provides +20 Approval per captured Home System — valuable in the mid-game when you are still building that count. Deadly Intent provides the ship/troop damage multiplier — scales directly with depleted planet count. The swap should happen when: (a) your depleted planet count makes Deadly Intent's combat bonus substantial (roughly 20+ depleted planets for +20% damage) and (b) your Approval base from other sources is sufficient without Us or Them. Typically this swap is correct somewhere between turn 50–80 depending on game speed.
+          There is a law slot decision point in the late game. Us or Them Decree provides +20 Approval per captured Home System — valuable in the mid-game when you are still building that count. Deadly Intent Bill provides a flat +33% damage to all weapons and troops — the most powerful combat multiplier in the game, but it does nothing for Approval. The swap question is entirely about your Approval budget: if your other sources (Jingoist, Saints & Sinners, heroes, Cathedral) can hold you at Happy without Us or Them, then swapping in Deadly Intent is correct as soon as you unlock it. If dropping Us or Them would risk falling below Happy, wait until your Approval foundation is solid.
+          <br><br>
+          Note: Deadly Intent requires Militarists to have reached Level 4 (Potent) experience, which typically occurs in the mid-to-late game. It is not available from turn 1.
         </div>
 
         <div class="trait-block">
@@ -759,15 +1000,18 @@
 
         <div class="trait-block">
           <div class="trait-label">VICTORY PATHS</div>
-          <strong>Supremacy (recommended):</strong> Eliminate or subjugate all other factions. The Craver military multiplier from Deadly Intent, combined with Big Fleets II and the +10% Manpower hull trait, makes this the natural endgame. By the time you have 40+ depleted planets, your fleet hits 40% harder and your invasions resolve in fewer turns than any opponent can sustain.
+          <strong>Supremacy / Conquest (primary):</strong> The natural Craver endgame. The military multiplier from Deadly Intent, Big Fleets II, and the +10% Manpower hull trait makes both viable. Conquest (majority of systems) is faster and less demanding than full Supremacy (eliminate all opponents). Either works; choose based on map density and remaining opponents.
           <br><br>
-          <strong>Conquest:</strong> Viable as a faster alternative to Supremacy — capture a majority of systems rather than eliminating all opponents. Can be faster depending on map size. The military toolkit is the same; the victory condition is less demanding.
+          <strong>Science Victory (legitimately viable — possibly easiest):</strong> Panczasu, who runs this faction at tutorial depth across multiple sessions, states directly that Science Victory is his pick for the easiest Craver win condition. The +150% FIDSI bonus on fresh planets applies to <em>all</em> resources including Science — meaning a Craver empire that is constantly expanding onto fresh planets can sustain exceptional Science output. If you are uncomfortable with the full military endgame, or the map has a Sophon neighbour making Supremacy dangerous, the Science path is not a fallback — it is a genuine primary option.
           <br><br>
-          <strong>Other victories:</strong> Score Victory is reachable if the game goes very long and your depleted empire is large. Science Victory is possible in the Religious strategy if the tech pace is maintained. Both are suboptimal choices — Cravers are designed for military victory and their economic toolkit underperforms compared to factions built for Science or Economic victory.
+          <strong>Other victories:</strong> Economic and Diplomatic victories require infrastructure and relationships that Eternal War makes difficult to build. Score Victory is reachable if the game goes very long. Neither is a recommended target, though both are achievable by an experienced player who builds around them from turn 1.
+          <div class="source-row" style="margin-top:8px;">
+            <span class="src-pill">LP_PANCZASU</span><span class="src-pill">STEAM_SNUFFALO</span>
+          </div>
         </div>
 
         <div class="source-row">
-          <span class="src-pill">STEAM_SNUFFALO</span><span class="src-pill">TRANSCRIPT01 (4Xalch)</span><span class="src-pill">WIKI_FACTIONS</span>
+          <span class="src-pill">LP_PANCZASU</span><span class="src-pill">LP_PANCZASU_P2</span><span class="src-pill">STEAM_SNUFFALO</span><span class="src-pill">TRANSCRIPT01 (4Xalch)</span><span class="src-pill">WIKI_FACTIONS</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
@@ -834,16 +1078,16 @@
       explain: "Feeding Pits provides +25 Approval for 10 turns and removes the −10 Approval per enslaved pop penalty for that duration in the target system — it is the fastest emergency approval source available. The drop from losing one major war under Jingoist Joy Bill is ~25 points, which would push you from 74 to ~49 — well below Happy. Feeding Pits queued in 2–3 systems simultaneously adds +50–75 Approval within 1 turn. Switching laws (option B) loses your current Jingoist bonus entirely and takes time. Deadly Intent (option C) at this stage gives minimal bonus (you don't have 25+ depleted planets yet). Declaring a new war (option D) is valid but has a delay — you won't see the Jingoist bonus until the war declaration is processed."
     },
     {
-      scenario: "Turn 50. You have 12 systems, 8 of which are fully depleted. You are running Jingoist Joy Bill + Us or Them Decree + Spoils of War Act in your 3 law slots. You have 6 captured Home Systems (contributing +120 Approval from Us or Them). Your military is now large enough that you expect to win most fights. You are considering swapping Us or Them for Deadly Intent.",
+      scenario: "Turn 50. You are running Jingoist Joy Bill + Us or Them Decree + Spoils of War Act in your 3 law slots. You have 6 captured Home Systems (contributing +120 Approval from Us or Them). Militarists have now reached Level 4 (Potent), unlocking Deadly Intent Bill (+33% Weapon and Troops damage — a flat empire-wide combat multiplier). You are considering swapping Us or Them for Deadly Intent.",
       q: "Is this the right time to swap Us or Them for Deadly Intent?",
       opts: [
-        "Yes — 8 depleted planets gives +8% ship and troop damage. That's meaningful and only grows, while Us or Them is static.",
+        "Yes — Deadly Intent's +33% damage is enormous and there's no reason to delay. Swap immediately.",
         "No — never swap Us or Them. The +120 Approval from 6 Home Systems is irreplaceable and any approval drop risks cascading penalties.",
-        "Not yet — wait until you have at least 20 depleted planets before swapping, so Deadly Intent provides +20% damage as a meaningful floor. Verify your approval budget can absorb the loss of +120 before committing.",
+        "It depends entirely on your Approval budget. +33% damage is always worth having, but if dropping +120 Approval causes you to fall below Happy, you must first secure another Approval source (Saints & Sinners, heroes, Cathedral) before making the swap.",
         "Swap immediately and replace the Approval loss with Feeding Pits in all systems."
       ],
       correct: 2,
-      explain: "The swap calculus here has two parts: (1) does Deadly Intent's bonus justify losing Us or Them's Approval, and (2) can your approval survive without it? At 8 depleted planets, Deadly Intent gives +8% damage — real but not yet dominant. At 20+, it becomes a substantial combat multiplier. More importantly, dropping +120 Approval from Us or Them with no replacement source is dangerous unless your other approval sources comfortably keep you above 85 (Ecstatic). The correct answer is to model your approval budget first: if Jingoist + Spoils of War + buildings + heroes keeps you at Ecstatic without Us or Them, the swap is justified at 15–20 depleted planets. At only 8, wait — the benefit doesn't yet offset the approval risk."
+      explain: "Deadly Intent Bill is a flat +33% to all weapon damage and troop damage empire-wide — one of the most powerful laws in the game and it does not scale with depleted planet count. The swap question is purely about Approval: can you afford to lose +120 Approval from Us or Them? If Jingoist + Spoils of War + buildings + heroes already keeps you comfortably above Happy (70) without Us or Them, swap immediately — there's no reason to delay +33% damage. If dropping Us or Them would push you below Happy, you need to build your Approval floor first. Budget before swapping, not after you've crashed."
     },
     {
       scenario: "Turn 40. You are running Standard Militarist strategy with 1 Craver + 3 non-Craver pops per system. A friend suggests you should switch to Saints & Sinners (Religious L3) to reduce your war dependency for approval. To reach L3 Religious requires going through L1 (Species Stability Act) and L2 (Admit & Improve Bill), each costing a law slot for several turns.",
@@ -858,7 +1102,7 @@
       explain: "Saints & Sinners is +20 flat to all systems plus +20 per hero per system. With 5 systems and 5 heroes assigned: +200 Approval empire-wide — better than any single Militarist law. But the value is gated on having heroes. If you have 1–2 heroes governing systems, the bonus is +20 base + 20–40 hero bonus = +60–80 total — competitive with Jingoist in a 2-major-war game, but not clearly superior. The transition also costs you 2 law slots temporarily while climbing the Religious tier. At turn 40 in Standard Militarist, your approval should be manageable with Militarist laws. The pivot is worth planning — but the correct answer is: evaluate hero count and approval margin before committing, not blindly pivot because Saints & Sinners is theoretically stronger."
     },
     {
-      scenario: "Turn 60. You have 25 depleted planets. You are approaching the endgame. Deadly Intent is in your law slots (+25% ship and troop damage). An opponent has a large fleet of 8 ships defending their home system, and you have a fleet of 10 ships. Your fleet has slightly better tech but the opponent has more hull HP.",
+      scenario: "Turn 60. Deadly Intent Bill is active in your law slots (+33% ship and troop damage). An opponent has a large fleet of 8 ships defending their home system, and you have a fleet of 10 ships. Your fleet has slightly better tech but the opponent has more hull HP.",
       q: "What weapon type should your primary combat ships carry going into this engagement?",
       opts: [
         "Kinetic weapons — they deal more raw damage per volley against heavily armoured targets.",
@@ -867,7 +1111,31 @@
         "A 50/50 split of beams and kinetics to cover all scenarios."
       ],
       correct: 1,
-      explain: "Per Pangolin's fleet analysis: beams deal damage to approximately 90% of the total fleet HP distributed across all flotillas, while kinetics deal damage to approximately 25% in the targeted flotilla. Against an 8-ship fleet with significant total HP, beams reduce the whole fleet's HP simultaneously — dragging all ships toward destruction at once. Kinetics concentrate damage on one flotilla but leave the others at full strength. With Deadly Intent providing +25% damage to all weapons, beams at +25% against 90% of fleet HP is drastically more efficient than kinetics at +25% against 25%. The only exception: if the opponent's protector flotilla is shield-heavy and beam-resistant, target it specifically with kinetics first, then switch to beams for the main engagement."
+      explain: "Per Pangolin's fleet analysis: beams deal damage to approximately 90% of the total fleet HP distributed across all flotillas, while kinetics deal damage to approximately 25% in the targeted flotilla. Against an 8-ship fleet with significant total HP, beams reduce the whole fleet's HP simultaneously — dragging all ships toward destruction at once. Kinetics concentrate damage on one flotilla but leave the others at full strength. With Deadly Intent Bill providing +33% damage to all weapons, beams at +33% against 90% of fleet HP is drastically more efficient than kinetics at +33% against 25%. The only exception: if the opponent's protector flotilla is shield-heavy and beam-resistant, target it specifically with kinetics first, then switch to beams for the main engagement."
+    },
+    {
+      scenario: "Turn 6. Your home planet shows '9 turns until depletion' in the UI. Your population has been growing for 3 turns and you have 2 more pops than when you colonised. You have a colony ship ready but no second system identified yet.",
+      q: "How should you interpret the '9 turns' countdown, and what does it mean for your decisions right now?",
+      opts: [
+        "Take it at face value — you have 9 turns before you need to worry. Use this time to build more infrastructure on the home planet to maximise it before it degrades.",
+        "The timer assumes static population. Your pops are actively growing, which adds more depletion per turn — the real deadline is shorter than 9 turns. Scout aggressively now and send the colony ship the moment you identify a target.",
+        "The timer doesn't matter — the +150% bonus activates at full depletion anyway, so depleting faster is actually desirable.",
+        "9 turns is more than enough. Focus on building your military first, then worry about expansion."
+      ],
+      correct: 1,
+      explain: "The in-game depletion countdown assumes population does not change. Growing pops each add depletion per turn — so a planet with 2 extra pops depletes faster than the tooltip calculated. The real window is shorter, sometimes significantly. Option C represents the old (incorrect) understanding of the mechanic — the +150% bonus is active on fresh planets, not depleted ones. Depleting faster means losing the bonus faster, not gaining it. The correct response to any depletion timer is to treat it as an upper bound and plan your colony ship departure conservatively."
+    },
+    {
+      scenario: "Turn 1 research decision. You are playing Standard Militarist Cravers. Your starting planet is a Jungle. There are no unusual resources near your starting system that you know of yet.",
+      q: "What should your first research be and why?",
+      opts: [
+        "Xeno-Industrial Infrastructure — to boost Industry immediately and start building ships faster.",
+        "Xenobiology — not for planet type unlocks, but because it leads to Public-Private Partnerships, the key early Industry building that should be online as fast as possible.",
+        "Military tier 1 tech — you are always at war and need better ships before anything else.",
+        "Whichever colonisation tech opens your nearest uncolonised planet type — expansion speed is everything for Cravers."
+      ],
+      correct: 1,
+      explain: "Panczasu's consistent opening: Xenobiology first, almost regardless of starting planet, primarily because it unlocks Public-Private Partnerships — an early economic building with meaningful Industry output. Cravers are not the technology-ignoring brutes they appear; their early Industry output determines how fast they can build fleets, Chain Gang Programs, and colony ships simultaneously. Military tech is important but comes second — you can fight adequately with starting ships for the first 10 turns. Building industry improvements you can't afford to build yet (option A) is less targeted. Rushing colonisation tech (option D) before you have a confirmed target of that type adds cumulative research cost for a benefit that may not materialize for 10+ turns."
     }
   ];
 </script>
