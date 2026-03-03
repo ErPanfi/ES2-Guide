@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Riftborn: Continuum Sculptors Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+<style>
+  /* ── Fac08 — Riftborn: cold cyan ──────────────────────────────────────── */
+  /* Link order in <head>:                                                    */
+  /*   1. es2-guide.css                                                       */
+  /*   2. es2-faction-deepdive.css                                            */
+  /*   3. This <style> block                                                  */
+
+  :root {
+    --accent:            var(--riftborn-color);
+    --accent-rgb:        0,229,255;
+    --accent-dim:        rgba(var(--accent-rgb), 0.09);
+    --accent-bright-rgb: 160,245,255;
+  }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--accent-rgb), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--accent-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--accent-rgb), 0.4),
+      0 0 80px rgba(var(--accent-rgb), 0.15);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  /* Singularity type chips */
+  .sing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+    margin: 16px 0;
+  }
+
+  .sing-card {
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-top: 2px solid rgb(var(--accent));
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .sing-card.dilation-top  { border-top-color: rgb(var(--red)); }
+  .sing-card.rip-top       { border-top-color: rgb(var(--purple)); }
+  .sing-card.fold-top      { border-top-color: rgb(var(--gold)); }
+  .sing-card.stasis-top    { border-top-color: rgb(var(--cyan)); }
+
+  .sing-name {
+    font-family: 'Orbitron', sans-serif;
+    font-size: var(--ts_quizTitle);
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+    color: rgb(var(--accent-bright-rgb));
+  }
+  .sing-card.dilation-top .sing-name { color: rgb(var(--red)); }
+  .sing-card.rip-top .sing-name      { color: rgb(var(--purple)); }
+  .sing-card.fold-top .sing-name     { color: rgb(var(--gold)); }
+  .sing-card.stasis-top .sing-name   { color: rgb(var(--cyan)); }
+
+  .sing-cost {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .sing-body {
+    font-size: var(--ts_quizTitle);
+    line-height: 1.65;
+    color: var(--text);
+  }
+
+  .sing-unlock {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: rgb(var(--cyan));
+    margin-top: 7px;
+    letter-spacing: 1px;
+  }
+
+  /* Pop cost scale chips */
+  .pop-scale {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin: 10px 0;
+    align-items: center;
+  }
+  .pop-scale-chip {
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    font-weight: 700;
+    letter-spacing: 1px;
+    border: 1px solid;
+  }
+  .pop-scale-chip.c1  { background: rgba(var(--green), 0.10); color: rgb(var(--green)); border-color: rgba(var(--green), 0.3); }
+  .pop-scale-chip.c2  { background: rgba(var(--gold),  0.10); color: rgb(var(--gold));  border-color: rgba(var(--gold),  0.3); }
+  .pop-scale-chip.c3  { background: rgba(var(--red),   0.10); color: rgb(var(--red));   border-color: rgba(var(--red),   0.3); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.08</div>
+    <div class="guide-name">The<br>Riftborn</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">❄️ Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Core Mechanics</div>
+  <div class="nav-item" onclick="scrollByID('t1')">🏗️ Constructed Population <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🌌 Industry-Driven Colonization <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🪐 Biophobic &amp; Planet Tiers <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">⏱️ Singularities <span class="nav-check" id="nc4"></span></div>
+
+  <div class="nav-section-label">// Strategy</div>
+  <div class="nav-item" onclick="scrollByID('t5')">🗺️ Empire Architecture <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🏛️ Politics &amp; Victory Paths <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Military</div>
+  <div class="nav-item" onclick="scrollByID('t7')">🚀 Ships &amp; Fleet Doctrine <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Opening</div>
+  <div class="nav-item" onclick="scrollByID('t8')">🗓️ First 30 Turns Playbook <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.08</span> // The Riftborn</div>
+    <h1 class="page-title"><img src="../images/Races/RiftbornIcon.webp"> The<br>Riftborn</h1>
+    <p class="page-subtitle">Refugees from a dying dimension, the Riftborn have rebuilt themselves into machines of controlled time. They don't grow, they don't starve, and they don't terraform toward life — they terraform away from it. Every mechanic they have pushes in the same direction: more industry, more sterile worlds, more constructed pops, wider expansion with zero food overhead. The faction that appears simple on the surface is hiding a precise resource engine underneath — and a toolkit for bending time itself.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Engine That Runs Without Food</h2>
+        <div class="topic-subtitle">Industrious, wide, cold — the Riftborn play by a completely different resource loop than any organic faction.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">❄️</span>
+        <span class="block-title">Core Traits and the Riftborn Logic</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge">◈ RIFTBORN — THE CONTINUUM SCULPTORS ◈</div>
+
+        <p>Most factions are shaped by what their populations eat and where they choose to live. The Riftborn have eliminated both constraints. Their native population doesn't consume food — it consumes industry queues. Their preferred planets are the ones every other faction ignores. This isn't a quirk layered on top of standard ES2 gameplay; it is a fundamentally different coupling of the production system, and understanding it is the prerequisite for every decision that follows.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">CONTINUUM SCULPTORS — THE AFFINITY</div>
+          The Riftborn's faction affinity. It unlocks the Singularity system (five types of time-bubble deployable on any visible system, including enemy ones), inverts the terraforming direction from fertile→sterile, modifies the colonization tech tree to unlock sterile planet types first, and adds unique improvements that expand pop capacity on sterile planets. This single affinity ties together every unique element of the faction.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">WIKI — POLITICS</span></div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CONSTRUCTED POPULATION — THE CORE LOOP</div>
+          Riftborn native pops are not born. They are built via an explicit industry action in the system queue, at a cost that scales with the total Riftborn count empire-wide. They cannot starve. They generate +5 Dust, +5 Science, and +5 Industry per pop — making each one highly productive regardless of planet type.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">WEARY TRAVELERS — THE MOVEMENT PENALTY</div>
+          All Riftborn ships suffer −1 Movement Point. This is a real early-game constraint: exploration is slower, colonization windows are narrower, and you will lose outpost races to faster factions unless you compensate with engine retrofits immediately on turn 1. The faction quest partially addresses this later, but in the opening turns it requires deliberate management.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">YT01 — 4X ALCHEMIST</span><span class="src-pill">YT04 — PANCZASU</span></div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">BIOPHOBIC — THE PLANET PREFERENCE</div>
+          The entire faction approval structure is inverted. Sterile planets give a bonus; fertile planets give a penalty. This applies to all population types in the empire, not just native Riftborn. The colony ship colonization tech tree is correspondingly mirrored: lava, ash, and barren are easy tier-0 planets; terran and ocean require late-game tech. The Riftborn terraform in the opposite direction from everyone else — toward sterile, never toward fertile.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span></div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">INDUSTRY-DRIVEN COLONIZATION — THE EXPANSION DIFFERENCE</div>
+          Outposts grow on industry value at the target planet rather than the food value of the supply world. No supply ships are sent. Multiple simultaneous outposts cost nothing from established colonies — each grows independently on its own industry. This is the mechanical foundation for wide empire play.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">WIKI — ECONOMY</span></div>
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T1: CONSTRUCTED POPULATION -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Constructed Population: The Scaling Cost Engine</h2>
+        <div class="topic-subtitle">Riftborn pops are industry investments with an escalating cost curve — managing that curve is the central micro-decision of the faction.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🏗️</span>
+        <span class="block-title">The Cost Formula and the Minimum Floor</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Building a Riftborn pop is an explicit queue action: the cost starts at 50 Industry for the first pop and increases by 100 Industry for every Riftborn pop that exists <strong>empire-wide</strong>. This is a global counter — every system you've ever built a Riftborn on contributes to the cost of the next one anywhere.</p>
+
+        <div class="pop-scale">
+          <span class="pop-scale-chip c1">1st: ~50 ⚙</span>
+          <span class="pop-scale-chip c1">2nd: ~150 ⚙</span>
+          <span class="pop-scale-chip c2">3rd: ~250 ⚙</span>
+          <span class="pop-scale-chip c2">4th: ~350 ⚙</span>
+          <span class="pop-scale-chip c3">…+100 ⚙ each</span>
+        </div>
+
+        <p>There is a hard floor: no matter how high your system industry is, constructing a Riftborn always takes at least one full turn. You cannot rush it below one turn by stacking industry. This matters when your capital is producing 400+ industry per turn in the mid-game — any pop below a certain cost threshold simply completes in one turn regardless, and the overflow industry is reassigned to the next item in the queue.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">QUEUE BUG — WATCH YOUR OVERFLOW</div>
+          If a pop construction would complete but there is no free population slot on the planet, the game stops the pop from finishing but does not clearly alert you. It silently eats queue capacity. If you had additional Riftborn pops queued after the blocked one, the entire sequence stalls. Always verify that the planet has a free slot before queuing pops. If you get the "wasted industry" warning during normal queue processing, this is often the cause.
+          <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        </div>
+
+        <p>Riftborn pops cannot die from starvation. If a planet's only inhabitants are Riftborn, the food output is simply set to zero — no negative food spiral, no population loss. Minor faction pops that live alongside Riftborn still require food and can die or grow via the standard food mechanic. This separation means you can mix Riftborn and non-Riftborn pops freely without the food interaction bleeding into your Riftborn population stability.</p>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">🏭</span>
+        <span class="block-title">The Pop Factory Strategy</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Because pop construction cost scales with the <em>total empire-wide Riftborn count</em>, building pops in your most productive system becomes increasingly expensive as your empire grows. The efficient counter-strategy is the <strong>pop factory</strong>: identify a mid-tier system with modest-but-reliable industry output (around 50–70 Industry/turn), dedicate it almost exclusively to producing one Riftborn per turn at minimum cost, then transfer those pops to systems that need population via the spaceport network.</p>
+
+        <p>The logic: a system sitting at 50 Industry will always complete a Riftborn pop in exactly one turn, regardless of the escalating cost, because the one-turn floor applies. Meanwhile, your high-industry capital is freed from the escalating-cost trap and can focus on buildings, ships, and Singularities instead of constantly feeding its own pop queue at 400+ Industry per pop.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">POP FACTORY SELECTION CRITERIA</div>
+          Look for systems you have no other plans for: 1–2 sterile planets, modest industry base (~50+/turn after infrastructure), centrally located for easy pop transfers. Lava or ash planets with low pop caps are ideal — their high Industry/pop output reaches the target number quickly with minimal development investment.
+          <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        </div>
+
+        <p>A secondary technique for managing mixed populations: non-Riftborn pops that arrive on your systems (from minor faction assimilation, conquests, or events) will grow using food, and may outpace your Riftborn construction if you're not attentive. If you want a system to be exclusively Riftborn, the population-transfer mechanic lets you ship those non-natives out to a designated dump system. Once all non-Riftborn are gone from a planet, no new food-grown pops can spawn there — the food value simply reads zero.</p>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">YT02 — ESACADEMY</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T2: INDUSTRY-DRIVEN COLONIZATION -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Industry-Driven Colonization: No Drag, No Limit</h2>
+        <div class="topic-subtitle">The mechanic that enables the Riftborn's wide playstyle — and the resource leverage that can accelerate or stall an outpost race.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🌌</span>
+        <span class="block-title">How Riftborn Outposts Work</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Standard factions colonize by parking a supply ship at a target system, which then drains Food from the nearest established colony to accumulate 300 colonization points. The Riftborn version replaces Food with Industry: the target planet's own Industry output accumulates toward the 300-point threshold. No supply ship is dispatched; no established colony loses output to feed the process.</p>
+
+        <p>This means you can plant outposts at five systems simultaneously and not one of your existing colonies will be slowed. There is no food-drain interaction to model. Each outpost races its own local clock based on what the target planet already produces. High-industry planets (lava, ash) colonize fast. Low-industry fertile planets colonize slowly regardless of how many Hyperium you throw at it — they just don't produce much industry to begin with.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">BASE COLONY SHIP COST IS TRIPLE THE STANDARD</div>
+          Riftborn colony ships cost 150 Industry to build, versus the standard 50 Industry for most other factions. Plan for this: building your second and third colony ships in the early game is a meaningful investment. Engine retrofits to offset the movement penalty add further cost. Budget these carefully in your opening turns.
+          <div class="source-row"><span class="src-pill">WIKI — ECONOMY</span></div>
+        </div>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">WIKI — ECONOMY</span><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">Accelerating Colonization: Hyperium and Titanium</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Two strategic resources can be spent to accelerate an active outpost's colonization progress:</p>
+
+        <table class="ref-table">
+          <tr><th>Resource</th><th>Effect on Target Planet</th><th>Note</th></tr>
+          <tr><td class="cell-key">Hyperium</td><td class="cell-good">+100% Industry value</td><td>Multiplies the base; doubles progress per turn</td></tr>
+          <tr><td class="cell-key">Titanium</td><td class="cell-good">+25 flat Industry</td><td>Additive bonus on top of existing output</td></tr>
+        </table>
+
+        <p>These two bonuses stack multiplicatively with each other: Titanium's flat +25 is applied first, then Hyperium doubles the result. On a planet producing 15 Industry/turn, Titanium brings it to 40, and Hyperium doubles that to 80 — a 5× improvement from base. On an already productive planet the multiplication is even more dramatic.</p>
+
+        <p>This makes Hyperium and Titanium access a strategic colonization priority, not just an economy or military asset. Securing deposits of both early shapes how aggressively you can race rival factions to contested systems. The wiki notes the interaction explicitly; it is the main reason early Xeno-linguistics (which unlocks Titanium mining) is a standard opening tech for Riftborn.</p>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">WIKI — ECONOMY</span><span class="src-pill">YT04 — PANCZASU</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T3: BIOPHOBIC & PLANET TIERS -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Biophobic &amp; the Inverted Planet Hierarchy</h2>
+        <div class="topic-subtitle">What every other faction avoids is your home territory — and the inverted tech tree means you can occupy it before rivals can even reach you.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🪐</span>
+        <span class="block-title">Approval, Pop Cap, and the Sterile Advantage</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Biophobic trait reverses the approval relationship with planet fertility. The bonus and penalty apply empire-wide to <em>all</em> population types, not just native Riftborn pops — meaning even food-grown minor faction populations living in your empire are subject to the biophobic modifiers based on the planet they inhabit.</p>
+
+        <table class="ref-table">
+          <tr><th>Planet Type</th><th>Approval Effect</th><th>Riftborn Priority</th></tr>
+          <tr><td class="cell-key">Sterile (Ash, Lava, Barren, Ice, Arctic, Toxic…)</td><td class="cell-good">+10 Approval per pop (unverified — see note)</td><td>Tier 0 — colonize immediately</td></tr>
+          <tr><td class="cell-key">Fertile (Forest, Terran, Ocean, Atoll…)</td><td class="cell-bad">−2 Approval per pop (unverified — see note)</td><td>Tier 3–4 — require late tech, minimal value</td></tr>
+        </table>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">APPROVAL VALUES — UNVERIFIED</div>
+          The +10 / −2 figures above come from a single low-confidence playthrough source (YT03) and could not be confirmed against the wiki, which describes the effect qualitatively without numbers. Treat these as plausible estimates pending in-game verification. The directional claim (sterile = bonus, fertile = penalty) is fully corroborated by multiple sources.
+          <div class="source-row"><span class="src-pill unverified">YT03 — UNVERIFIED</span></div>
+        </div>
+
+        <p>Sterile planets also benefit from unique Riftborn population capacity bonuses. Through their faction trait and associated technologies, the Riftborn gain <strong>+4 Population slots on sterile planets</strong> and <strong>−1 Population slot on fertile planets</strong> compared to other factions. This directly cancels the biggest inherent weakness of sterile worlds — their default low pop cap — and transforms Lava and Barren planets from niche high-industry worlds into genuinely high-ceiling systems.</p>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🗺️</span>
+        <span class="block-title">The Inverted Tech Tree and Terraforming Direction</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Riftborn colonization tech tree is a mirror of the standard tree. Planets that require no tech for other factions (Terran, Ocean, Forest) require late-game research for Riftborn. Planets that require advanced tech for other factions (Lava, Ash, Barren) are available from the start.</p>
+
+        <table class="ref-table">
+          <tr><th>Planet Type</th><th>Standard Tech Required</th><th>Riftborn Tech Required</th></tr>
+          <tr><td class="cell-key">Lava</td><td>Maximised Exploitation</td><td class="cell-good">None (start)</td></tr>
+          <tr><td class="cell-key">Ash</td><td>Atmospheric Filtration</td><td class="cell-good">None (start)</td></tr>
+          <tr><td class="cell-key">Barren</td><td>Adaptive Bureaucracies</td><td class="cell-good">None (start)</td></tr>
+          <tr><td class="cell-key">Ice</td><td>Wave Function Control</td><td class="cell-good">None (start)</td></tr>
+          <tr><td class="cell-key">Snow</td><td>Eukaryotic Sap</td><td class="cell-good">Xenobiology</td></tr>
+          <tr><td class="cell-key">Terran</td><td class="cell-good">None (start)</td><td class="cell-bad">Maximised Exploitation</td></tr>
+          <tr><td class="cell-key">Ocean</td><td class="cell-good">None (start)</td><td class="cell-bad">HyperPACs</td></tr>
+          <tr><td class="cell-key">Forest</td><td class="cell-good">None (start)</td><td class="cell-bad">Atmospheric Filtration</td></tr>
+        </table>
+
+        <p>Terraforming is similarly inverted. The Riftborn cannot terraform toward fertile planets — the game enforces this as an absolute political restriction, not a tech gate. They can terraform <em>from</em> fertile toward sterile: for example, pushing a Terran toward Steppe, then Desert, then eventually Barren or Ash. The Climate Engineering tech that usually enables fertile-direction terraforming is instead modified for Riftborn to do the opposite.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PRACTICAL PRIORITY: LAVA FIRST, ALWAYS</div>
+          When choosing between planets to colonize early, choose lava almost every time over desert or barren. Lava planets produce the highest base Industry of any non-gas planet (up to 16 Industry/pop at their class peaks), are available from the start, and have high natural synergy with pop construction and Compression Singularity costs. Even a lava with a negative anomaly will usually outperform a clean desert for Riftborn purposes.
+          <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        </div>
+
+        <div class="source-row"><span class="src-pill">WIKI — PLANETS</span><span class="src-pill">WIKI — RIFTBORN</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T4: SINGULARITIES -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Singularities: The Continuum Sculptor Toolkit</h2>
+        <div class="topic-subtitle">Five types of time-manipulation — three available at game start, two requiring specific tech. Each deployable on any visible system, including enemy ones.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">⏱️</span>
+        <span class="block-title">Core Rules: Limits, Costs, and Placement</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>A Singularity is a special system improvement costing one turn of queue time plus strategic resources and Dust. It takes effect immediately on placement and persists for a fixed duration of <strong>10 turns</strong>. After expiration, the effect ends and the resources are consumed — the Singularity must be rebuilt to continue the effect.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">LIMIT</span><span>You can have <strong>3 active Singularities</strong> simultaneously. This cap is raisable to 6 via the Faction Quest (community-confirmed; not verifiable against a complete faction quest wiki article at this time).</span></li>
+          <li><span class="step-n">COST SCALING</span><span>The base Dust cost for any Singularity is <strong>100 Dust + 100 Dust for each Singularity already built</strong>. The first one costs 100 Dust. The second costs 200 Dust. The third costs 300 Dust. Strategic resource requirements are fixed per type (see below) and do not scale.</span></li>
+          <li><span class="step-n">PLACEMENT</span><span>Singularities can be placed on any system <em>within your empire's vision</em> — this explicitly includes enemy systems within sensor range. The placement does not require you to control the system.</span></li>
+          <li><span class="step-n">QUEUE</span><span>Singularities are built in a system's construction queue like any other improvement. They always cost 1 turn of queue time, regardless of that system's industry output.</span></li>
+        </ul>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">WIKI — POLITICS</span><span class="src-pill">YT05 — BABI (duration)</span><span class="src-pill">COMMUNITY CONSENSUS (cap)</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">🌀</span>
+        <span class="block-title">The Five Singularity Types</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="sing-grid">
+
+          <div class="sing-card">
+            <div class="sing-name">COMPRESSION</div>
+            <div class="sing-cost">20 Titanium · 100+ Dust</div>
+            <div class="sing-body">
+              +25% FIDSI on target system · +100% Hero XP gain · +100% ship XP per turn · +100% Hero recovery rate · +100% hacking speed · +100% depletion points/turn on planets.<br><br>
+              <strong>Your go-to early singularity.</strong> The FIDSI boost plus doubled hero XP creates a compounding advantage: heroes level faster, which means governor/admiral skills come online sooner, which multiplies everything else. Place on your capital first, then rotate through your most productive colonies.
+            </div>
+            <div class="sing-unlock">AVAILABLE FROM START</div>
+          </div>
+
+          <div class="sing-card dilation-top">
+            <div class="sing-name">DILATION</div>
+            <div class="sing-cost">20 Hyperium · 100+ Dust</div>
+            <div class="sing-body">
+              −25% FIDSI on target system · −50% Hero XP · −50% ship XP · −50% Hero recovery · −25% hacking speed · −50% depletion points/turn.<br><br>
+              <strong>An offensive tool.</strong> Place on enemy systems within vision range to cripple their output, slow their hero leveling, and decelerate their planet depletion (making sieges harder for them, but also slowing their resource consumption if they're Cravers). Dilation on an enemy capital during a war can meaningfully degrade their war machine.
+            </div>
+            <div class="sing-unlock">AVAILABLE FROM START</div>
+          </div>
+
+          <div class="sing-card rip-top">
+            <div class="sing-name">RIP</div>
+            <div class="sing-cost">5 Antimatter · 100+ Dust</div>
+            <div class="sing-body">
+              +10% Influence on empire · −75% hacking speed on system · Fleets arriving in the Singularity can return to their origin · Space and ground battles within can be re-fought.<br><br>
+              <strong>The battle-replay tool.</strong> The Influence bonus is a minor empire-wide passive. The combat replay is the interesting mechanic: if you lose a battle badly on a Rip-covered system, you can replay it with adjusted tactics. Also lets you pull fleets back to safety after a bad engagement — treat it as a tactical insurance policy on contested systems.
+            </div>
+            <div class="sing-unlock">TECH: TACHYON PHYSICS (Stage 4 S&amp;E)</div>
+          </div>
+
+          <div class="sing-card fold-top">
+            <div class="sing-name">FOLD</div>
+            <div class="sing-cost">5 Adamantian · 100+ Dust</div>
+            <div class="sing-body">
+              +10% Dust on empire · +200% hacking speed · Arriving fleets have movement points fully refilled · Heroes are not affected by assignment lock · Bonuses from the top construction item apply while it is still being built (does not apply to Wonders, Resource generators, or Singularity/Population improvements).<br><br>
+              <strong>The logistics accelerator.</strong> The queue-bonus mechanic is the headline: a building that gives +15% Industry starts giving that bonus immediately on construction start rather than on completion. The fleet movement reset turns a Fold-covered system into a logistics hub — fleets passing through arrive with full movement.
+            </div>
+            <div class="sing-unlock">TECH: TACHYON PHYSICS (Stage 4 S&amp;E)</div>
+          </div>
+
+          <div class="sing-card stasis-top">
+            <div class="sing-name">STASIS</div>
+            <div class="sing-cost">1 Orichalcix · 1 Quadrinix · 100+ Dust</div>
+            <div class="sing-body">
+              +10% Science on empire · Freezes the target system entirely: no resource collection, no improvement progress, no invasion, no hero or fleet movement into or out of it.<br><br>
+              <strong>The hard lock.</strong> The freeze is total. Use it defensively to lock down a system being invaded (the enemy's troops and ships also cannot move while Stasis is active). Offensively, use it to freeze a productive enemy system before you're ready to siege. The rare resource cost (Orichalcix + Quadrinix) limits how often you can use this.
+            </div>
+            <div class="sing-unlock">TECH: UNIFIED TACHYON THEORY (Stage 5 S&amp;E)</div>
+          </div>
+
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">STASIS BONUS — SOURCE CONFLICT</div>
+          The Riftborn faction wiki article lists Stasis as granting +10% Science empire-wide. The wiki's politics article and exploration article list +25% Influence instead. Two Tier 2 sources conflict here. The faction-specific article is more likely to have been maintained accurately; the +10% Science figure is treated as the preferred value in this guide. Verify in-game before relying on either number.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN (+10% Science)</span><span class="src-pill unverified">WIKI — POLITICS/EXPLORATION (+25% Influence — disputed)</span></div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TOWER OF TEMPORAL PARADOX</div>
+          Unlocked by the <em>Personal Singularities</em> tech, this unique system improvement generates Dust at a rate that increases every turn it remains built. It snowballs indefinitely. If you can rush this tech and protect the system it's built in, the Tower becomes a late-game Dust engine. Detailed strategic analysis of this building is pending a dedicated source — treat this as a high-priority item to explore in your own games and flag for a future guide revision.
+          <div class="source-row"><span class="src-pill">WIKI — POLITICS</span></div>
+        </div>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN</span><span class="src-pill">WIKI — EXPLORATION</span><span class="src-pill">YT05 — BABI (Dilation offensive use)</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T5: EMPIRE ARCHITECTURE -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Empire Architecture: Wide Is the Riftborn Natural State</h2>
+        <div class="topic-subtitle">The mechanics don't just allow wide expansion — they punish every strategic reason to stay tall.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🗺️</span>
+        <span class="block-title">Why Wide Works and Tall Doesn't</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Tall empire play (few highly-developed systems) depends on two things: population growth to fill those systems, and food to drive that growth. Riftborn have neither — they build population manually at escalating cost, and can't produce food efficiently. The tall model doesn't fit. Wide play (many systems, each moderately developed) is where the Riftborn mechanics converge:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">NO FOOD DRAG</span><span>Multiple simultaneous outposts cost nothing from established colonies. Organic factions that plant two outposts simultaneously drain food from one anchor colony in both directions, potentially driving it negative. Riftborn outposts grow in parallel on their own local industry. You can plant ten outposts at once and your capital doesn't notice.</span></li>
+          <li><span class="step-n">SINGULARITY SCALING</span><span>Singularity bonuses are percentage-based (e.g. Compression's +25% FIDSI). More systems with more base FIDSI means larger absolute gains from the same Singularity. A wide empire multiplied by Compression outperforms a tall empire multiplied by Compression — because the tall empire has a smaller base to multiply.</span></li>
+          <li><span class="step-n">POP COST DISTRIBUTION</span><span>Building pops in multiple cheap systems (each at the one-turn floor) produces more total Riftborn per turn than concentrating all pop-building in one expensive system at high cost. Width enables production distribution.</span></li>
+          <li><span class="step-n">STERILE PLANET DENSITY</span><span>The galaxy is full of sterile planets that other factions can't access early or don't want. As a Riftborn player, those are your free real estate — move quickly to claim them before opponents can compete with mid-game colonization tech.</span></li>
+        </ul>
+
+        <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span><span class="src-pill">YT04 — PANCZASU</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">🔒</span>
+        <span class="block-title">Bottleneck Colonization: Controlling the Map</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Wide expansion doesn't mean random. A high-value early target is the <strong>constellation chokepoint</strong>: the system where a star lane narrows to a single connection. Colonizing this system walls off the remainder of the constellation from rival factions, forcing them to research Wormhole tech or Baryonic Shielding (free movement) before they can access that space. This buys turns — turns in which you backfill the secured space with more outposts at your pace.</p>
+
+        <div class="concept-box">
+          <div class="concept-title">THE BACKFILL PRINCIPLE</div>
+          <p>Plant the bottleneck colony first, even if the systems behind it are only mediocre. You are not colonizing for immediate output — you are buying the right to colonize those systems at all. Once the chokepoint is secured, backfill the space with outposts in order of industry priority. Lava and ash systems get colony ships immediately; snow and ice systems can wait for Xenobiology unless the position is strategically critical.</p>
+        </div>
+
+        <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T6: POLITICS & VICTORY -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Politics, Victory Paths &amp; Key Pitfalls</h2>
+        <div class="topic-subtitle">The Riftborn fit naturally into Industrialist politics, but the Religious party opens expansion options that the faction otherwise lacks.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Political Parties and the Republic Advantage</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Riftborn are naturally oriented toward the Industrialist party: their construction-heavy playstyle generates Industrialist political opinion, their faction quest reinforces Industrialist support, and Industrialist laws synergize with Industry production bonuses. Starting as a Republic government, the combination of Industrialist dominance and the Religious minority is particularly powerful.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">RELIGIOUS PARTY — THE EXPANSION UNLOCK</div>
+          When the Religious party is in government (even as a minority in a coalition), the Republic "Future Stability" law becomes available. This law suppresses Approval penalties on newly annexed systems, which matters enormously for the Riftborn: every new colony added to a wide empire reduces empire-wide Approval momentarily, and Riftborn cannot offset this via food-boosted population growth the way organic factions can. Religious laws smooth the Approval curve during aggressive expansion phases. Panczasu describes engineering Religious party presence as a deliberate mid-game priority.
+          <div class="source-row"><span class="src-pill">YT04 — PANCZASU</span></div>
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">NEVER USE DARK GLITTER AS A SYSTEM IMPROVEMENT</div>
+          Dark Glitter is a luxury resource improvement that grants +200% Manpower assigned to a system. Riftborn produce no passive Manpower from food-grown population cycles — their chronic low-manpower state is a real constraint, and Dark Glitter feels like a solution. It is not. The Manpower bonus is too small to compensate for the opportunity cost of using a system improvement slot, and the improvement actively competes with Industry buildings that are universally more valuable for the Riftborn. Use Fabricated Forces (Industry→Manpower conversion) instead when manpower is urgently needed; reserve all improvement slots for production infrastructure.
+          <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        </div>
+
+        <div class="source-row"><span class="src-pill">YT04 — PANCZASU</span><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Victory Conditions and the Faction Quest</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Riftborn are genuinely flexible on victory paths because their FIDSI output (once constructed pop counts are high) covers Science, Industry, and Dust at strong values. The faction doesn't force a specific win condition the way Cravers force expansion or Vodyani force Ark management. That said, some paths have natural advantages:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">SUPREMACY</span><span>Strong. Fabricated Forces converts Industry to Manpower for infinite troop production. Mid-to-late-game ships (Triangular and Tetrahedral classes) are individually powerful. Wide empire provides the industrial base to sustain war at scale. This is Panczasu's preferred path for Riftborn.</span></li>
+          <li><span class="step-n">SCIENCE</span><span>Strong. The faction's per-pop Science output is high, Compression Singularities accelerate researcher leveling, and Stasis provides a late-game Science empire bonus. Panczasu describes Riftborn as having "very powerful late-game tools to boost science."</span></li>
+          <li><span class="step-n">DUST / ECONOMY</span><span>Viable. The Tower of Temporal Paradox (if rushed) provides a compounding Dust source. Fold Singularity grants +10% Dust empire-wide. However, the faction's organic Dust mechanics are not exceptional, and dedicated Dust factions (Lumeris) will outscale you.</span></li>
+          <li><span class="step-n">EXPANSION / WONDER</span><span>Expansion victory is constrained by slow-growth mechanics and the movement penalty. Wonder victory (if enabled) benefits from the high Industry output but requires sustained production focus. These are playable but not the path of least resistance.</span></li>
+        </ul>
+
+        <p>The Faction Quest is worth completing quickly. Its later chapters can power-boost individual Riftborn population output or reduce pop construction cost — either outcome directly accelerates the wide-empire engine. Completing Chapter 1 early also supports the Industrialist party, reinforcing your political position.</p>
+
+        <div class="source-row"><span class="src-pill">YT04 — PANCZASU</span><span class="src-pill">WIKI — RIFTBORN (quest rewards)</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T7: SHIPS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Ships &amp; Fleet Doctrine: Rigid, Powerful, Brittle</h2>
+        <div class="topic-subtitle">Riftborn hulls are highly specialized with no hybrid slots — they require deliberate mixed-fleet composition to function.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Hull Architecture: The Hidden Modifier and Slot Specialization</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Two structural properties define Riftborn ships across all hull classes:</p>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">HIDDEN −10% HEALTH MODIFIER</div>
+          All Riftborn ships have 10% less health than equivalent ships from other factions. This modifier is not listed in the faction trait panel — it is a hidden game parameter. The practical consequence is that Riftborn ships are somewhat squishier than their slot count suggests. Account for this when calculating fleet survivability, especially on attacker hulls that already have minimal defensive slots.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN/SHIPS</span></div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">NO HYBRID SLOTS — RIGID SPECIALIZATION</div>
+          Unlike most factions, Riftborn ships have zero hybrid module slots. Every slot is purely offensive, purely defensive, or purely utility. Attackers have more offense slots than any other faction's attackers. Defenders have concentrated defense and utility slots. There is no in-between. This makes Riftborn hulls individually powerful in their role but completely inflexible — you cannot adapt an attacker to fill a defensive gap mid-fleet without replacing the ship entirely.
+          <div class="source-row"><span class="src-pill">WIKI — RIFTBORN/SHIPS</span></div>
+        </div>
+
+        <div class="source-row"><span class="src-pill">WIKI — RIFTBORN/SHIPS</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Early Fleet: The Guardian Tank Composition</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Riftborn's early attacker hull (Geist-class) carries four offense slots — more than any other faction's equivalent — but only one defense slot. It hits extremely hard but dies fast. The early defender hull (Rational-class) carries the <strong>Guardian</strong> trait: enemy fire prioritizes Guardian ships before other fleet members.</p>
+
+        <p>The correct early fleet composition is a deliberate tank-and-DPS split:</p>
+
+        <div class="ship-grid">
+          <div class="ship-card">
+            <div class="ship-name">GEIST / ATTACKER</div>
+            <div class="ship-role">GLASS CANNON</div>
+            <div class="ship-body">
+              4 offense slots, 1 defense. Equip 3 missile modules + 1 kinetic gun for range engagement. Extremely high damage output, dies quickly if focused. <strong>Must be protected by Guardians.</strong>
+            </div>
+            <div class="ship-stat"><span>Effective only</span><span>behind tanks</span></div>
+          </div>
+          <div class="ship-card gold-top">
+            <div class="ship-name">RATIONAL / DEFENDER</div>
+            <div class="ship-role">GUARDIAN TANK</div>
+            <div class="ship-body">
+              The <strong>Guardian</strong> trait forces all enemy fire onto this ship first. 2 defense slots + more HP means it absorbs the damage that would otherwise one-shot your attackers. Run at least 1 Rational per 2 Geists.
+            </div>
+            <div class="ship-stat"><span>Blocks fire for</span><span>Geist DPS</span></div>
+          </div>
+        </div>
+
+        <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7c">
+      <div class="block-header" onclick="toggle('cb7c')">
+        <span class="block-icon">💥</span>
+        <span class="block-title">Mid-Game Power Spike: Triangular and Tetrahedral Classes</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Riftborn's real military identity arrives with medium-tier hulls. Panczasu describes these as the best ships the faction has, and the reason the Riftborn are worth playing aggressively in the mid-game:</p>
+
+        <div class="ship-grid">
+          <div class="ship-card">
+            <div class="ship-name">TRIANGULAR CLASS</div>
+            <div class="ship-role">EXTREME ATTACKER</div>
+            <div class="ship-body">
+              Described as "the best glass cannon in the game." The offense slot count is extraordinary; the defense is paper-thin. It tears through everything in seconds but needs support. Pair with Tetrahedral for the support modules it provides.
+            </div>
+            <div class="ship-stat"><span>Role</span><span>Pure DPS</span></div>
+          </div>
+          <div class="ship-card gold-top">
+            <div class="ship-name">TETRAHEDRAL CLASS</div>
+            <div class="ship-role">SUPPORT / CARRIER</div>
+            <div class="ship-body">
+              Contains a small fighter/bomber contingent plus significant support module capacity. The fleet accelerator module (speed boost for all fleet members) on a Tetrahedral partially compensates for the Riftborn movement penalty. This is also the hull for the Fabricated Forces manpower-generation module.
+            </div>
+            <div class="ship-stat"><span>Role</span><span>Support + Speed</span></div>
+          </div>
+        </div>
+
+        <p>Both hulls start with access to Titanium and Hyperium, making their construction feasible as soon as you've secured the early resource nodes the colonization strategy already prioritized. The combination of Triangular DPS and Tetrahedral support significantly outperforms the early Geist+Rational composition against late-game fleets.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">MANPOWER — THE CHRONIC WEAKNESS</div>
+          Riftborn produce no passive Manpower from natural population growth cycles (which require food). The only reliable Manpower sources are Fabricated Forces (Industry→Manpower conversion at 50% rate, upgradeable via faction quest rewards) and occasional event bonuses. In any prolonged war, you will feel this shortage. Do not use Fabricated Forces early — the Industry cost is too high when you need it for buildings and pops. Reserve it for specific invasion windows, and plan wars to be fast.
+          <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span><span class="src-pill">WIKI — RIFTBORN (quest rewards)</span></div>
+        </div>
+
+        <div class="source-row"><span class="src-pill">YT04 — PANCZASU</span></div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ T8: PLAYBOOK -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">First 30 Turns Playbook</h2>
+        <div class="topic-subtitle">Specific, ordered. The Riftborn opening has fewer moving parts than organic factions, but the sequence is strict.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Turn-by-Turn Opening</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="timeline">
+
+          <div class="tl-row">
+            <div class="tl-turn">T1</div>
+            <div class="tl-body">
+              <strong>Retrofit the starting colony ship with a faster engine</strong> before doing anything else. The −1 movement penalty means the base engine leaves you too slow to compete for early systems. Use the obsolete-tier +2 movement engine if the full +3 upgrade would leave you Dust-short for the probe exploit (you need ~141 Dust free for the probe redesign). Assign your hero to the capital as governor — not to the scout fleet. <strong>Begin the probe exploit</strong> to expand early vision.
+              <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">T1 QUEUE</div>
+            <div class="tl-body">
+              Standard opening queue for the home system: <strong>Compression Singularity → Riftborn Pop → Riftborn Pop → Interplanetary Transport Network → Geist Colony Ship → 2× more Riftborn pops</strong>. The Compression Singularity goes first because its hero XP doubling starts paying off immediately on the governor. The ITN comes after the second pop because the network bonus multiplies across all planets in the system.
+              <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">T1 TECH</div>
+            <div class="tl-body">
+              <strong>Xeno-linguistics first.</strong> This unlocks Xeno-Industrial Infrastructure (+10 Industry flat per planet, regardless of type) — the single best early Industry building — and enables Titanium mining for colonization acceleration. Starting techs are Plasma Metallurgy (unlocks Titanium mining, Hyperium exploitation) and Xenobiology (unlocks Snow colonization). If you see Titanium or Hyperium deposits in your constellation, prioritize accordingly.
+              <div class="source-row"><span class="src-pill">YT02 — ESACADEMY (general framing)</span><span class="src-pill">YT04 — PANCZASU</span></div>
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">T2–T8</div>
+            <div class="tl-body">
+              <strong>Scout the constellation aggressively.</strong> Identify where the star lane narrows to a single chokepoint. Dispatch the retrofitted colony ship toward the chokepoint system — plant there before any rival faction can block you. Send probes toward every curiosity you can reach; exploring them on your capital increases relations with local minor factions passively.
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">T5–T12</div>
+            <div class="tl-body">
+              <strong>Plant outposts at lava and ash planets immediately</strong> — these are your tier-0 high-value targets. They colonize fast on their own industry and give the Industry base you need. Deploy Titanium or Hyperium acceleration on any outpost that's racing a rival faction. Build a second Geist as soon as you have the Industry for it.
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">T10–T15</div>
+            <div class="tl-body">
+              <strong>Complete Faction Quest Chapter 1</strong> by this point — choose "Strengthen" over "Explore" in most cases. Strengthen is more reliable and supports Industrialist party. Reach out is only worth choosing if there's a desirable minor faction immediately adjacent. Chapter 2 involves colonizing a new system; you should already have that covered.
+              <div class="source-row"><span class="src-pill">YT04 — PANCZASU</span></div>
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">T15–T30</div>
+            <div class="tl-body">
+              <strong>Begin identifying your pop factory location.</strong> Look for a mid-tier sterile system (ash, barren, ice) that can sustain ~50 Industry/turn with basic development, that you have no other plans for, and that is centrally located for pop transfers. Queue it for pop production exclusively and start ferrying pops to newly colonized systems that can't yet produce Riftborn efficiently at reasonable cost. Meanwhile, rotate Compression Singularities across your most active construction systems.
+              <div class="source-row"><span class="src-pill">YT01 — 4X ALCHEMIST</span></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Riftborn-specific decisions — pop construction, colonization, singularity use, fleet composition, and political timing</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac08';
+  const TOTAL = 9;
+  let qIdx = 0;
+  let answered = false;
+
+  const quizzes = [
+    {
+      scenario: "Turn 8. Your home system (lava + barren, 2 planets) has 2 Riftborn pops and is producing 85 Industry/turn. Your empire-wide Riftborn count is 2. Your construction queue shows: Riftborn Pop (cost 250 Industry, 2 turns) → Riftborn Pop (cost 350 Industry) → Interplanetary Transport Network. You also have a freshly colonized ash system 2 lanes away with 0 Riftborn pops, producing 35 Industry/turn. The ash system's pop slot is empty.",
+      q: "What is the correct construction priority given this state?",
+      opts: [
+        "Continue the current queue — building all pops at the capital first is most efficient because it's your highest-industry system.",
+        "Cancel the capital's queued pops. Build Xeno-Industrial Infrastructure in the capital first (+10 Industry/planet flat), which will lower the turns-to-complete on future pops. Begin constructing a Riftborn pop in the ash system (cost: 50 Industry, 1 turn) simultaneously — the empire-wide pop count is what drives cost, not location.",
+        "Deploy a Compression Singularity on the ash system to boost its industry so it can build pops faster.",
+        "Transfer one of the capital's Riftborn pops to the ash system via spaceport, then build new pops only at the capital."
+      ],
+      correct: 1,
+      explain: "The core insight here is that pop construction cost scales with total empire-wide Riftborn count, not where you build. Building in the ash system at count=2 costs 250 Industry (3rd pop). But the ash system only has 35 Industry/turn — that still hits the one-turn minimum floor. So you get a Riftborn pop in the ash system in 1 turn at the 1-turn floor regardless of the nominal 250 cost. Meanwhile, at the capital with 85 Industry, the same 250-cost pop completes in 3 turns without XIO. Adding XIO first reduces future build times at the capital, which is the correct sequence. Option C is wrong because Compression costs 20 Titanium + 100 Dust and takes a full queue turn — that's worse than just building the pop directly at the ash system's floor cost. Option D is wrong because you lose a pop turn and gain nothing: pops produced locally at the one-turn floor are more efficient than transferring ones you already paid for."
+    },
+    {
+      scenario: "Turn 15. You have 4 active outposts. One is on a lava planet (Industry: 22/turn), one on a barren (Industry: 8/turn), one on a snow planet (Industry: 4/turn), and one on a savannah (Industry: 12/turn with minor faction bonus). You have 1 unit of Hyperium available. All outposts need 300 colonization points. Current progress: lava at 180, barren at 60, snow at 30, savannah at 90.",
+      q: "Where should you spend the Hyperium?",
+      opts: [
+        "Lava — it's closest to completion and Hyperium will finish it this turn or next.",
+        "Savannah — the minor faction bonus means it has good output and will pay off best as a colony.",
+        "Snow — it's furthest behind and needs the help most urgently.",
+        "Barren — it has low base industry and Hyperium's 100% multiplier will have the largest relative effect there."
+      ],
+      correct: 0,
+      explain: "Hyperium doubles the target planet's industry value. On the lava (22/turn, at 180/300), with Hyperium it produces 44/turn — completing colonization in 3 more turns instead of ~6. That's the fastest possible conversion from 'Hyperium spent' to 'colony operational and producing output'. Colonizing the lava first also gives you the most valuable long-term colony. The barren gets the largest relative boost from Hyperium (8→16), but starting from 60/300 it still takes 15 turns to finish. Snow (4→8/turn from 30/300) is the worst investment — it takes forever regardless. Savannah has reasonable progress but a lava colony producing 22 Industry/turn is almost always more strategically valuable than a savannah. Spend Hyperium to convert the nearly-done high-value colony, then use your next Hyperium on the next-most-advanced outpost."
+    },
+    {
+      scenario: "Turn 22. You have 3 active Singularities running (Compression on capital, Compression on Colony A, Compression on Colony B). Your capital governor hero just hit Level 5 (you no longer need the doubled XP as urgently). A rival Craver empire has just appeared 2 systems away. Their capital is within probe range. You have 20 Hyperium banked.",
+      q: "Is this the correct moment to replace one of the Compression Singularities with a Dilation on the Craver capital?",
+      opts: [
+        "No — always keep all 3 Singularities as Compression. The FIDSI bonus is always worth more than debuffing an enemy.",
+        "Yes — a Dilation on the Craver capital immediately reduces their output by 25% and slows their hero leveling. Given that Cravers are an aggressive faction, early debuffing buys you time before they can field a war fleet.",
+        "Yes, but only if you're already at war with the Cravers. Placing Dilation before declaring war is an act of hostility that will worsen relations.",
+        "No — wait until you have the Tachyon Physics tech and replace it with Stasis instead, which is a full freeze."
+      ],
+      correct: 1,
+      explain: "Dilation can be placed on any visible system, including neutral or enemy ones. It is not restricted to wartime and does not formally count as a declaration of war (though it may affect diplomatic mood as a minor hostility, similar to winning outpost races). Given that Cravers are an inherently aggressive faction with no sustained diplomacy path, and you already know conflict is likely, the early Dilation investment is correct: −25% FIDSI on their capital reduces their Industry, Science, and Dust simultaneously, slowing their ship queue and hero leveling. Swapping one of the later-placed Compressions (where the marginal XP value is decreasing as your heroes approach higher levels anyway) is the correct trade. Option C is incorrect — there is no mechanic that restricts Singularity placement to wartime. Option D is a real alternative but Stasis requires Orichalcix + Quadrinix (rare resources) and Stage 5 tech — Dilation is available now and costs only Hyperium, which you have."
+    },
+    {
+      scenario: "Turn 35. Your empire has 8 systems, 18 Riftborn pops empire-wide, and is running a Republic government with Industrialists dominant and Ecologists as the second party. An election is 3 turns away. You have enough Dust to either: (A) lobby the Religious party to strong support, potentially getting them into government alongside Industrialists, or (B) bribe Industrialists to ensure they win the largest majority and you get their top law.",
+      q: "Which Dust investment is stronger for a wide-empire Riftborn in the mid-game?",
+      opts: [
+        "Option B — Industrialist top law gives a direct Industry bonus which compounds on your wide empire immediately.",
+        "Option A — Religious party in government unlocks the Future Stability law (Republic + Religious = suppressed Approval penalties on new systems). At 8 systems and expanding, the Approval management this provides is more valuable than marginal Industry bonuses, especially because Riftborn cannot rapidly offset Approval drops via food-grown population.",
+        "Neither — save the Dust for Compression Singularity construction next turn.",
+        "Option A, but only if you're planning a Supremacy victory. Religious party is useless for Science victory."
+      ],
+      correct: 1,
+      explain: "The Religious party + Republic synergy provides Approval mitigation on expansion, which is the Riftborn's structural weakness in the mid-game. Every new system temporarily reduces empire-wide Approval, and unlike organic factions, Riftborn cannot recover it via population growth speed — pops cost Industry queues, not food. Future Stability law directly reduces the Approval penalty per new colony. At 8 systems expanding to 12–15 in the next 20 turns, this law is active and impactful for every system you plant. The Industrialist Industry bonus is always good, but it applies to existing systems you already have. The Religious law shapes how efficiently you can add more systems — which is the limiting constraint right now. Option D is wrong: Future Stability helps any wide victory path regardless of the win condition."
+    },
+    {
+      scenario: "Turn 40. You have a frontier fleet of 3 Geist attackers (loaded with missiles) and 2 Rational defenders. A rival United Empire fleet of 6 ships (their standard balanced composition) is approaching. You have enough Industry to build either 2 more Rational defenders OR 1 Triangular-class attacker (newly unlocked) before the engagement in 4 turns.",
+      q: "What do you build?",
+      opts: [
+        "2 Rational defenders — more Guardian tanks means your fragile Geists survive longer and output more damage over the battle.",
+        "1 Triangular attacker — the Triangular's extreme offense slots will spike damage dramatically before the enemy can focus fire, ending the battle faster than additional tank time would save.",
+        "Neither — spend the Industry on a Compression Singularity on the frontier system to level your fleet heroes faster before combat.",
+        "2 Rational defenders, but immediately begin retrofitting the Geists to kinetic weapons to counter United Empire's typical shield-heavy builds."
+      ],
+      correct: 1,
+      explain: "The Triangular class is described as the best glass cannon in the game — its offense slot count dwarfs anything in the early-to-mid game. Against a United Empire fleet of 6 ships, the Triangular's burst damage can likely destroy 1–2 of their ships in the opening salvo before they can respond, reducing incoming fire volume immediately. More Rational defenders extend your Geists' survival time, but you already have 2 Guardians absorbing fire — the bottleneck is not survivability, it's kill speed. A faster kill reduces total damage taken by your fleet more than additional HP on tanks. Option C is wrong for the timeline: Singularity XP doubling takes multiple turns to manifest in meaningful hero levels, and you need the battle result in 4 turns. Option D adds a wrinkle that may be correct tactically but the primary question is build priority — the Triangular answer is correct regardless of weapon type refinements."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
