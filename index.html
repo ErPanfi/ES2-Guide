@@ -132,9 +132,26 @@
   .coming-soon {
     padding: 20px 20px;
     border-radius: 8px;
-    border: 1px dashed var(--border);
     margin-bottom: 8px;
     opacity: 0.4;
+/*     border: 1px dashed var(--text-dim); */
+    --card-accent: var(--text-dim);
+    border-style: dashed;
+    border-width: 1px;
+  }
+
+  .vol-card.coming-soon::before
+  {
+    background: var(--text-dim);
+  }
+
+  .vol-card.coming-soon:hover
+  {
+    transform: none;
+  }
+
+  .vol-card.coming-soon:hover .vol-card-emoji {
+      filter: drop-shadow(0 0 10px var(--text-dim));
   }
 
   .coming-soon-label {
@@ -296,10 +313,14 @@
         <div class="vol-card-arrow">→</div>
       </a-->
 
-      <div class="coming-soon">
-        <div class="coming-soon-label">// MORE COMING</div>
-        <div class="coming-soon-text">Factions primers and how to choose the right faction for you</div>
-      </div>
+      <div class="vol-card left coming-soon">
+        <div class="vol-card-emoji">⏳</div>
+        <div class="vol-card-text">
+
+          <div class="coming-soon-label">// MORE VOLUMES COMING SOON</div>
+          <div class="coming-soon-text">Factions primers and how to choose the right faction for you</div>
+          </div>
+        </div>
 
     </div>
 
@@ -311,7 +332,7 @@
          style="--card-accent: var(--lumeris-color);">
         <div class="vol-card-emoji">💰</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.01 ◈</div>
+          <div class="vol-card-badge">◈ FAC.1 ◈</div>
           <div class="vol-card-title">The Lumeris</div>
           <div class="vol-card-sub">Trade empire, Dust economy, TAKT decision framework, off-piste colonization and the Industrialist pivot</div>
         </div>
@@ -322,7 +343,7 @@
          style="--card-accent: var(--horatio-color);">
         <div class="vol-card-emoji">🧬</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.02 ◈</div>
+          <div class="vol-card-badge">◈ FAC.2 ◈</div>
           <div class="vol-card-title">The Horatio</div>
           <div class="vol-card-sub">Gene splicing, GENE SEQUENCER framework, nursery systems, splice priority ranking and the 40-turn pipeline</div>
         </div>
@@ -333,7 +354,7 @@
          style="--card-accent: var(--sophon-color);">
         <div class="vol-card-emoji">🔬</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.03 ◈</div>
+          <div class="vol-card-badge">◈ FAC.3 ◈</div>
           <div class="vol-card-title">The Sophons</div>
           <div class="vol-card-sub">Omniscience decay curve, Industry problem, Burning Light admiral path, fleet design and the Supremacy vs. Science Victory tradeoff</div>
         </div>
@@ -344,7 +365,7 @@
          style="--card-accent: var(--cravers-color);">
         <div class="vol-card-emoji">🪳</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.04 ◈</div>
+          <div class="vol-card-badge">◈ FAC.4 ◈</div>
           <div class="vol-card-title">The Cravers</div>
           <div class="vol-card-sub">Depletion math, Slave Driver mechanics, approval toolkit, three strategic paths and the depleted-planet military endgame</div>
         </div>
@@ -355,27 +376,41 @@
          style="--card-accent: var(--vodyani-color);">
         <div class="vol-card-emoji">🦋</div>
         <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.04 ◈</div>
+          <div class="vol-card-badge">◈ FAC.5 ◈</div>
           <div class="vol-card-title">The Vodyani</div>
           <div class="vol-card-sub">Essence economy, BARK math, population virtualization, Righteous Fury, drain-to-invade doctrine and the 40-turn playbook</div>
         </div>
         <div class="vol-card-arrow">→</div>
       </a>
 
-      <div class="coming-soon">
-        <div class="coming-soon-label">// MORE COMING</div>
-        <div class="coming-soon-text">Riftborn · Umbral Choir · and more</div>
-      </div>
+      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac07-unitedempire.html"
+         style="--card-accent: var(--ue-color);">
+        <div class="vol-card-emoji">⚔️</div>
+        <div class="vol-card-text">
+          <div class="vol-card-badge">◈ FAC.7 ◈</div>
+          <div class="vol-card-title">The United Empire</div>
+          <div class="vol-card-sub">Emperor's Will buyout formulas, population fork, Industrialist/Militarist tension, wide expansion framework and the compounding machine</div>
+        </div>
+        <div class="vol-card-arrow">→</div>
+      </a>
+
+      <div class="vol-card right coming-soon">
+        <div class="vol-card-emoji">⏳</div>
+        <div class="vol-card-text">
+
+          <div class="coming-soon-label">// MORE VOLUMES COMING SOON</div>
+        <div class="coming-soon-text">Hissho · Vaulters · Umbral Choir · and more</div>
+          </div>
+        </div>
 
     </div>
-  </div>
 
+  </div>
   <!-- ── FOOTER ── -->
   <footer class="index-footer">
     <span>ENDLESS SPACE 2 — FIELD MANUAL</span>
     <span>ErPanfi + Claude Free</span>
   </footer>
 
-</div>
 </body>
 </html>

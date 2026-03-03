@@ -63,8 +63,10 @@ Naming conventions:
 | `FactionsDeepGuide/es2-Fac01-lumeris.html` | Complete, content awaiting user revision | 13 | |
 | `FactionsDeepGuide/es2-Fac02-horatio.html` | Complete, content awaiting user revision | 10 | |
 | `FactionsDeepGuide/es2-Fac03-sophons.html` | Complete, content awaiting user revision | 9 | |
-| `FactionsDeepGuide/es2-Fac04-cravers.html` | Built, looking for sources for extra topics | 7 | |
+| `FactionsDeepGuide/es2-Fac04-cravers.html` | Complete, content awaiting user revision | 7 | |
 | `FactionsDeepGuide/es2-Fac05-vodyani.html` | Complete, content awaiting user revision | 11 | |
+| `FactionsDeepGuide/es2-Fac06-unfallen.html` | Complete, content awaiting user revision | 11 | |
+| `FactionsDeepGuide/es2-Fac07-unitedempire.html` | Building in progress | ? | |
 
 ---
 
