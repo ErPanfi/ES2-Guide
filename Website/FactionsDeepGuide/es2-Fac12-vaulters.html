@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Vaulters: Nomadic Science Empire</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+<style>
+  /* ── Fac12 — Vaulters: Teal / Portal Glow ──────────────────────────────── */
+  :root {
+    --accent:            var(--vaulters-color);
+    --card-accent:       var(--accent);
+    --accent-dim:        rgba(var(--vaulters-color), 0.10);
+    --accent-bright-rgb: 100,240,220;
+  }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--vaulters-color), 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--vaulters-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.12</div>
+    <div class="guide-name">The<br>Vaulters</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🌀 Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Colonization</div>
+  <div class="nav-item" onclick="scrollByID('t1')">🚀 The Argosy System <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🌍 Turn 1: System Selection <span class="nav-check" id="nc2"></span></div>
+
+  <div class="nav-section-label">// Empire</div>
+  <div class="nav-item" onclick="scrollByID('t3')">🔩 Material Expertise <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">🌐 The Portal Network <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">📜 Heroes, Politics &amp; Laws <span class="nav-check" id="nc5"></span></div>
+
+  <div class="nav-section-label">// Shadow Tools</div>
+  <div class="nav-item" onclick="scrollByID('t6')">☠️ Corsairs &amp; Pirate Relations <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Military</div>
+  <div class="nav-item" onclick="scrollByID('t7')">⚔️ Ships &amp; Combat Philosophy <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Endgame</div>
+  <div class="nav-item" onclick="scrollByID('t8')">🏆 Victory &amp; Empire Strategy <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Opening</div>
+  <div class="nav-item" onclick="scrollByID('t9')">🗓️ First 30 Turns Playbook <span class="nav-check" id="nc9"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.12</span> // The Vaulters</div>
+    <h1 class="page-title"><img src="../images/Races/VaultersIcon.webp"> The<br>Vaulters</h1>
+    <p class="page-subtitle">Space Vikings who escaped a dying world on a single ship — and built an empire from scattered outposts connected by teleportation gates. The Vaulters are the archetypal tall faction: fewer systems than their neighbors, but each one is exceptional. Their instant colonization, Golden Age FIDSI surges, and portal network create a playstyle that is fundamentally different from every other faction in ES2. If you want to understand what "going tall" actually means, mechanically and strategically, this is the faction that teaches it.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Tall Empire</h2>
+        <div class="topic-subtitle">Fewer systems than anyone else. Each one hand-picked. All of them one turn away from each other.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">🌀</span>
+        <span class="block-title">Core Traits and the Vaulter Identity</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge">◈ VAULTERS — THE NOMADIC SCIENTISTS ◈</div>
+
+        <p>Most factions in ES2 race to colonize as many systems as possible in the first 30 turns. The Vaulters cannot do this and should not try. They have one colonization ship — the Argosy — which cannot be built, bought, or replaced by another. What the Argosy does instead is colonize <em>instantly</em>, without outposts, and then return to service within 2–3 turns, triggering a Golden Age FIDSI surge on every new system. The result is fewer colonies than competitors, but each colony arrives already producing at full capacity, skips the food-drain period entirely, and is connected to every other system in the empire via teleportation gates. The Vaulters do not build a contiguous border — they cherry-pick the best systems scattered across the galaxy and link them into a unified network.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">INVOLUNTARY NOMADS — THE STARTING CONDITION</div>
+          The Vaulters do not start on a home system. They begin on the Lodestone of the Nine — a special Rejuvenation Field anomaly that has no habitable planets. From turn 1, you control the Argosy and must fly it to a system to found your first colony. The Rejuvenation Field provides modest Dust income and powerful ship health regeneration to any fleet that passes through it. If it falls within your influence sphere, it is a genuine tactical asset — but it is not your capital.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">METAFOLDING — THE DEFINING AFFINITY</div>
+          Vaulters can build Portals: system improvements that allow any fleet (military or civilian pop-transport ships) to teleport instantly between any two portal-equipped systems, regardless of distance, consuming all movement points. Allies may also use your portals. This affinity defines the entire late-game: your empire has no "shape" problem — every system is equally reachable from every other system on any given turn.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MATERIAL EXPERTISE — USING STRATEGICS AS LUXURIES</div>
+          Vaulters can spend Strategic Resources (Titanium, Hyperium, Adamantian, Antimatter, Orichalcix, Quadrinix) as System Development upgrades, alongside or instead of Luxury Resources. This decouples their economic progression from Luxury RNG — a significant advantage in low-luxury starts.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CORSAIRS — PRIVATEERS FROM TURN 1</div>
+          Most factions access the Privateers action only after researching a mid-to-late-game technology. Vaulters have it from the start, and can use their own faction ships in privateer mode (not just marketplace ships). Their unique fleet action, the Non-Aggression Pact, can buy temporary Cordial status with the Pirate League for a single Influence payment.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">BLACK THUMB II — THE FOOD PENALTY</div>
+          Vaulters produce −15% Food on all systems. In practice this is rarely crippling: the Golden Age bonus on new colonies covers the shortfall during the vulnerable early period, and by the time Golden Age wanes, a single Drone Network or food-generating system improvement compensates. It does mean that food-starved opening positions hurt more than average, and planet type selection at turn 1 matters.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CORE WORLDS — APPROVAL SAFETY NET</div>
+          While the empire is below its Overcolonization threshold, Vaulter systems receive +10 Approval. This is an active incentive to stay tall — the moment you expand past the threshold, you lose this bonus while gaining the overcolonization penalty on top of it. The game rewards restraint with a direct FIDSI multiplier bonus.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">VAULTERS IN ONE SENTENCE</div>
+          Find the best systems in the galaxy, colonize them instantly, connect them with teleportation gates, and maintain a smaller empire at higher quality than every neighbor can match at any given turn.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS</span><span class="src-pill">YT01 — 4XALCH</span><span class="src-pill">YT04 — 4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T1: ARGOSY SYSTEM -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The Argosy System</h2>
+        <div class="topic-subtitle">One ship. No replacements. Understands the cooldown or the whole faction falls apart.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Instant Colonization &amp; the Two-Timer System</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Other factions consume a colony ship to create an outpost, then feed that outpost food for 8–15 turns while it matures. Vaulters do neither. When the Argosy colonizes a system, the target planet becomes a full colony immediately — no outpost stage. No food drain. The Argosy then docks in the new system and becomes available for redeployment in <strong>2–3 turns</strong>.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE TWO TIMERS — HARD CEILING VS. SOFT CEILING</div>
+          After the Argosy becomes available (2–3 turns), two separate countdowns are visible:
+          <ul class="step-list" style="margin-top:0.75rem;">
+            <li><span class="step-n">FREE COLONIZATION</span><span>After approximately 10 turns, the next colonization costs nothing. This is the hard ceiling on colonization speed — you cannot push faster than roughly one free colony per 10 turns.</span></li>
+            <li><span class="step-n">BUYOUT COLONIZATION</span><span>Before those 10 turns expire, you can colonize early by paying a cost in Dust + Titanium + Hyperium. This cost starts extremely high immediately after colonization and decreases by roughly 10% each turn until it reaches zero. So after 5 turns, the cost is approximately half the initial value; after 10, it's zero.</span></li>
+          </ul>
+          The practical implication: if you find an exceptional system, you can pay to colonize it early rather than waiting. If you have Titanium and Hyperium stockpiled and a high Dust income, treat the cooldown as flexible rather than fixed.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">VERSION NOTE — ARGOSY READY TIME</div>
+          The wiki states the Argosy becomes usable again in 2–3 turns after colonization. An older video guide (4X Alchemist, pre-patch) states 4 turns. The wiki figure is authoritative for current versions — but confirm in-game if you observe a different number, as patches may have adjusted this.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE ARGOSY IS IRREPLACEABLE</div>
+          There is exactly one Argosy. If it is destroyed before you have founded even one colony, the game ends — no one can repair it. After you have a colony, a destroyed Argosy can be repaired from that system's shipyard. Treat it as a precious strategic asset: never let it wander into a combat zone without an escort, and never park it in a system under active blockade.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS</span><span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">REDDIT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">✨</span>
+        <span class="block-title">Golden Age: The FIDSI Surge on Every Colonization</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every time the Argosy founds a new colony, that colony enters a Golden Age — a temporary burst of FIDSI bonuses that lasts for a variable number of turns. The exact bonus breakdown, sourced from the wiki:</p>
+
+        <table class="ref-table">
+          <tr><th>Bonus</th><th>Scope</th></tr>
+          <tr><td class="cell-key">+25 FIDS</td><td class="cell-good">On the new system</td></tr>
+          <tr><td class="cell-key">+25 Manpower</td><td class="cell-good">Empire-wide</td></tr>
+          <tr><td class="cell-key">+15 Approval</td><td class="cell-good">On the new system</td></tr>
+          <tr><td class="cell-key">+10 Approval</td><td class="cell-good">Empire-wide</td></tr>
+          <tr><td class="cell-key">+5 Influence</td><td class="cell-good">On the new system</td></tr>
+          <tr><td class="cell-key">−50% Influence Conversion Rate</td><td class="cell-bad">On the new system (minor drawback)</td></tr>
+        </table>
+
+        <p>The +25 to all FIDS on a new system is enormous in the early game — 4X Alchemist observed Science output of 3,750 and Industry of 75 on turn 1 of the first colony with the Golden Age active. This allows the Vaulters to immediately start building system improvements while other factions are still building their first Drone Network.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">GOLDEN AGE DURATION — STACKING BY WAITING</div>
+          The Golden Age duration for the <em>next</em> colony increases by approximately 2–3 turns for every turn the Argosy is ready but unused. There is reportedly a cap around 15 turns maximum duration. This means deliberately delaying colonization (to scout a better system, for example) is not purely a loss — you are banking Golden Age turns for the eventual colony. <em>Note: exact accrual rate and cap per the 4X Alchemist playthrough guide; not confirmed in wiki. Treat as likely-accurate community knowledge.</em>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">STRATEGIC IMPLICATION OF GOLDEN AGE</div>
+          Other factions <em>lose</em> output when they colonize — their core systems drain food to feed the new outpost. Vaulters <em>gain</em> output when they colonize. This is why the advice "expand whenever possible" applies to Vaulters when it explicitly doesn't apply to most other factions. Every colonization pays for itself immediately via the Golden Age and never taxes the existing systems.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS</span><span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">YT01 — 4XALCH</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T2: TURN 1 -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Turn 1: System Selection &amp; Early Scouting</h2>
+        <div class="topic-subtitle">The decision that shapes the entire game. You can choose — so choose well.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🌍</span>
+        <span class="block-title">Reading the Starting Map and Picking Your Capital</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>At game start, the Argosy shows you every system reachable from the Rejuvenation Field. The wiki confirms there is always a guaranteed 4-planet system nearby. Sometimes you can see a 5-planet option; sometimes you need to spend a turn or two scouting for one. The Golden Age bank compensates for the delay — waiting 2 turns to find a 5-planet system instead of a 4-planet one is usually worth it.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">PLANET TYPE PRIORITY AT TURN 1</div>
+          <ul class="step-list">
+            <li><span class="step-n">INDUSTRY-BEARING</span><span>Jungle and Arid planets provide strong Industry. The Golden Age covers your early Food gap — what you actually need on turn 1 is the Industry to build improvements immediately while the Golden Age is active. A Jungle planet with Titanium is an exceptional opening.</span></li>
+            <li><span class="step-n">STRATEGIC RESOURCES PRESENT</span><span>Titanium and Hyperium in your home system are multiplicatively valuable: they power your colonization buyouts AND your Material Expertise system upgrades. Starting with both on your home system is close to an ideal roll. Do not sacrifice system quality for strategic resources, but weight them heavily in otherwise-equal choices.</span></li>
+            <li><span class="step-n">PLANET COUNT</span><span>5-planet systems are worth scouting for. The Vaulters' tall strategy means each system needs to do more total work. A 5-planet system with one fertile, one arid, one boreal, and two others will consistently outperform a 3-planet system no matter how good the individual planets are.</span></li>
+            <li><span class="step-n">LUXURY RESOURCES PRESENT</span><span>A secondary consideration. With Material Expertise, Vaulters are less RNG-dependent on luxury variety than other factions. A system with strategics and decent planet count beats a system with rare luxuries and poor planets.</span></li>
+          </ul>
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE REJUVENATION FIELD — KEEP IT IN YOUR SPHERE</div>
+          Your starting anomaly provides Dust income and powerful fleet health regeneration to nearby ships. It also regenerates ships during battle if a fleet is engaged near it. If you colonize a nearby system and extend your influence sphere to include the Field, these benefits are free and permanent. Don't let your first colony's influence zone exclude it — scout the geometry before committing.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS</span><span class="src-pill">YT01 — 4XALCH</span><span class="src-pill">REDDIT01</span><span class="src-pill">STEAM02 — RUZEN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">🛸</span>
+        <span class="block-title">The Dart Scout: Your Most Versatile Early Asset</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Vaulter scout ship (the Dart, class name Faering) is the best explorer ship in the game. The wiki confirms it matches Umbral Choir and Horatio's exploration capability, but unlike those factions, the Dart also has a dedicated weapon slot — making it a credible early combat ship without sacrificing probe capacity.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">DART CONFIGURATION PHILOSOPHY</div>
+          The Dart has up to 4 support slots available, plus a weapon slot and a defense slot. This gives you two viable early configurations:
+          <ul class="step-list" style="margin-top:0.75rem;">
+            <li><span class="step-n">PURE EXPLORER</span><span>3 probe modules + max speed engines. 6 probes and high movement make it the fastest system-scanner in the game. Build 2–3 of these immediately and fan out across the galaxy before competitors claim the high-value systems you want.</span></li>
+            <li><span class="step-n">COMBAT-CAPABLE EXPLORER</span><span>2 probes + 1–2 engines + weapon slot equipped. Can blockade outposts, harass rivals in privateer mode, and assist in early combat. The same hull retrofits into a military ship in the mid-game, meaning your exploration investment converts directly into fleet expansion without building new ships from scratch.</span></li>
+          </ul>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE REFIT PATH</div>
+          Build your early Darts as explorers. When you've identified your colonization targets (turns 10–20), refit them into combat ships. You get exploration and early military coverage from the same Industry investment.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS (SHIPS)</span><span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">STEAM02 — RUZEN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T3: MATERIAL EXPERTISE -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Material Expertise &amp; System Development</h2>
+        <div class="topic-subtitle">The ability to use Strategic Resources as system upgrades — and why the resource tension it creates is a genuine strategic problem.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🔩</span>
+        <span class="block-title">Strategic vs. Luxury: The Full Comparison</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Standard System Development upgrades consume Luxury Resources. Vaulters can instead consume Strategic Resources. The bonuses are different in structure, not just in type. Data from the Fandom wiki (fetched this session):</p>
+
+        <table class="ref-table">
+          <tr><th>Resource</th><th>Tier</th><th>System Dev Effect</th><th>vs. Equivalent Luxury</th></tr>
+          <tr><td class="cell-key">Common Luxury (e.g. Jadonyx)</td><td>Common</td><td class="cell-good">+60 to one FIDS stat</td><td>—</td></tr>
+          <tr><td class="cell-key">Titanium</td><td>Common (costs 40)</td><td>+40 Food + 40 Industry</td><td class="cell-good">+80 total, split across two stats</td></tr>
+          <tr><td class="cell-key">Hyperium</td><td>Common (costs 40)</td><td>+40 Dust + 40 Science</td><td class="cell-good">+80 total, split across two stats</td></tr>
+          <tr><td class="cell-key">Adamantian</td><td>Uncommon (costs 20)</td><td>+3 Food/pop + 3 Industry/pop</td><td>Same total as Uncommon luxuries (+4/pop single stat)</td></tr>
+          <tr><td class="cell-key">Antimatter</td><td>Uncommon (costs 20)</td><td>+3 Dust/pop + 3 Science/pop</td><td>Same total as Uncommon luxuries (+4/pop single stat)</td></tr>
+          <tr><td class="cell-key">Orichalcix</td><td>Rare (costs 10)</td><td>+5% FIDS/System Level</td><td>Rare luxuries give +15% to one FIDS stat; Orichalcix is weaker but spread</td></tr>
+          <tr><td class="cell-key">Quadrinix</td><td>Rare (costs 10)</td><td class="cell-good">×150% to all existing System Dev effects</td><td class="cell-good">No luxury equivalent — unique multiplier</td></tr>
+        </table>
+
+        <div class="trait-block">
+          <div class="trait-label">READING THE TABLE</div>
+          Titanium and Hyperium give more total FIDSI than Common luxuries (+80 vs +60), but split across two stats. Whether this is better depends on what the system needs. A pure Industry system probably wants Jadonyx (+60 Industry) rather than Titanium (+40 Food +40 Industry). But if the system needs both stats, Titanium wins outright. The biggest advantage of Material Expertise is <strong>removing the dependency on luxury RNG</strong>: Vaulters can always develop their systems even without the correct luxury type, which is not true for other factions.
+          <br><br>
+          <strong>Quadrinix is exceptional.</strong> A ×150% multiplier on all existing System Development effects is the strongest possible late-game upgrade on any system that has already been developed. Prioritize securing Quadrinix in the late game for your best systems.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS (TRAITS)</span><span class="src-pill">FANDOM WIKI — LUXURY RESOURCES</span><span class="src-pill">REDDIT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">The Titanium/Hyperium Tension</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Titanium and Hyperium are demanded by <em>three competing uses</em>: colonization cooldown buyouts, Portal construction (5× each per portal), and Material Expertise system development. This is the central resource management puzzle of any Vaulters game.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">RESOLUTION FRAMEWORK</div>
+          <ul class="step-list">
+            <li><span class="step-n">COLONIZATION FIRST</span><span>If a high-value system is at risk of being claimed by an AI, the colonization buyout is the highest-priority use of your Titanium and Hyperium. A system lost to a competitor is permanent — a delayed system upgrade is not.</span></li>
+            <li><span class="step-n">PORTALS SECOND</span><span>Each portal costs 5 Titanium + 5 Hyperium + 160 Industry. In the early game, delay portals until your colonization pipeline is stable. Once you have 3+ systems, portal construction becomes the priority — the defensive and logistical value compounds with every additional system you add to the network.</span></li>
+            <li><span class="step-n">SYSTEM DEVELOPMENT THIRD</span><span>Use Titanium/Hyperium for system development when you have surplus above your colonization and portal pipeline needs. The koxsos guide (Tier 4 source) suggests a useful heuristic: prefer Titanium for development (since Hyperium is also consumed by engines and ship modules), but this depends heavily on your ship build priorities.</span></li>
+            <li><span class="step-n">MARKETPLACE AS PRESSURE VALVE</span><span>Sell surplus Luxury Resources to buy Titanium and Hyperium when the colonization cooldown is expiring and you're short. Vaulters generate more luxury resources than average (they can choose starting planet luxuries), so selling them to fund strategic resource purchases is a natural economic loop.</span></li>
+          </ul>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS (TRAITS)</span><span class="src-pill">REDDIT01</span><span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">STEAM01 — KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T4: PORTAL NETWORK -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">The Portal Network</h2>
+        <div class="topic-subtitle">Not a defensive tool. Not an offensive tool. A strategic force-multiplier that redefines what distance means.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🌐</span>
+        <span class="block-title">Portal Mechanics and the Full Tech Upgrade Ladder</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>A Portal is a system improvement costing 160 Industry + 5 Titanium + 5 Hyperium, with 16 Dust upkeep. It provides +10 Science to its system. Any fleet can teleport from a portal system to any other portal system in one turn — consuming all remaining movement points. Portal use is automatic: when you plot a course, the game routes you through the portal network if it's faster than star lane travel.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE TECH UPGRADE LADDER — ALL PORTAL BONUSES</div>
+          Portals gain additional functions as you research Metafolding affinity technologies. All data sourced from the wiki knowledge base:
+
+          <table class="ref-table" style="margin-top:0.75rem;">
+            <tr><th>Tech Unlocked</th><th>Portal Upgrade Added</th></tr>
+            <tr><td class="cell-key">Base Building</td><td>Teleportation + +10 Science + 16 Dust upkeep</td></tr>
+            <tr><td class="cell-key">Hardship Bonus Incentives (Metafolding affinity)</td><td class="cell-good">Drydock: +15% Health Regen for fleets docked in portal system</td></tr>
+            <tr><td class="cell-key">Interstitial Spaces (Metafolding affinity, Economy tree)</td><td class="cell-good">Manpower: +20 planetary Manpower/turn on portal systems</td></tr>
+            <tr><td class="cell-key">Dimensional Metafolding (Metafolding affinity of Stage 4 Dimensional Folding)</td><td class="cell-good">Argosy II hull upgrade: Argosy becomes a mobile portal node</td></tr>
+            <tr><td class="cell-key">Hyperfolding (Vaulters-only, Stage 5)</td><td class="cell-good">Hyperfold Hulls: portal transit costs only 1 movement point (not all MP)</td></tr>
+          </table>
+
+          <p style="margin-top:0.75rem;">The Broadcast and Wellness portal upgrades are referenced in the wiki economy article but their tech unlock sources are not fully documented in the available knowledge base — treat them as existing upgrades pending source confirmation.</p>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">HYPERFOLD HULLS — THE LATE-GAME GAME-CHANGER</div>
+          Once you research Hyperfolding (Stage 5 Science &amp; Exploration), portal transit costs only <strong>1 movement point</strong> instead of all remaining movement points. Before this tech: a fleet teleports, then stops. After this tech: a fleet teleports and can continue moving normally. A fleet with 8 movement points can teleport across the galaxy and still patrol 7 systems worth of space in the same turn. This transforms portal-connected systems from "defensible" to "immediately reinforceable from anywhere."
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">ALLIES CAN USE YOUR PORTALS</div>
+          Allied factions' fleets can use your portal network. With Hyperfold Hulls, the 1-movement-point cost applies to Vaulters and any allied faction that shares the Metafolding affinity. Other allies can still teleport but pay the full movement cost. This makes a portal-equipped Vaulter ally extraordinarily valuable in multiplayer and coalition diplomatic scenarios.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS (METAFOLDING)</span><span class="src-pill">WIKI — EXPLORATION (HYPERFOLDING)</span><span class="src-pill">WIKI — EXPLORATION (DIMENSIONAL METAFOLDING)</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">🧩</span>
+        <span class="block-title">Strategic Applications: Defense, Offense, and Population</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">FLEET UNIFICATION — ONE FLEET DEFENDS EVERYTHING</div>
+          Because portal transit is instant (before Hyperfold) or nearly free (after), the Vaulters can maintain a single large fleet and respond to any attack within one turn. Other factions must distribute fleets across their borders or accept that some systems will always be exposed. Vaulters accept neither: one strong fleet, stationed in a central portal hub, can be at any system on the next turn. This means your combat power is never diluted by geography.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">OFFENSIVE PORTAL NODES</div>
+          A portal in a conquered forward system — or even in a system adjacent to an enemy — creates a staging point for power projection. 4X Alchemist describes this as sending "ships like hordes" once a forward portal is online. The offensive application is less about the individual system you're attacking and more about reducing the logistical cost of sustained pressure to near-zero.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CIVILIAN POP TRANSIT — THE HIDDEN POWER</div>
+          The wiki makes a critical point that most guides underemphasize: portal transit works for <strong>civilian population transport ships</strong>, not just military fleets. This means Vaulters can move population from any full core system to any new distant colony in one turn, with zero interception risk. Other factions must route pop transports through hostile territory, past pirates, or across long star lane chains — a journey that can take 10–20 turns and be intercepted. Vaulters do it in one turn, every time. A new distant colony can be fully populated within a few turns of founding it. The Ruzen guide explicitly identifies this as the key to making distant isolated colonies viable.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">OFFENSIVE AND DEFENSIVE SHIP DESIGN SPLIT</div>
+          Because portal transit eliminates the need for defensive ships to move independently, you can design two variants of the same hull:
+          <ul class="step-list" style="margin-top:0.5rem;">
+            <li><span class="step-n">OFFENSIVE VARIANT</span><span>Equipped with movement modules — engines in support slots — for fleet patrolling and strike operations that move through star lanes between portals.</span></li>
+            <li><span class="step-n">DEFENSIVE VARIANT</span><span>No movement modules at all. The support slots freed from engines can be filled with weapons, defense, or combat support modules instead. These ships sit in a portal system, fight any fleet that arrives, and teleport to wherever the threat is next turn. They don't need to move under their own power — the portal does it.</span></li>
+          </ul>
+          This is a genuine efficiency gain: the same hull, optimized for its role. Ruzen's guide recommends labeling these ships explicitly (e.g. prefixing the name with "O-" or "D-") to avoid mixing them up mid-war.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS (CIVILIAN PORTALS)</span><span class="src-pill">STEAM02 — RUZEN</span><span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">STEAM01 — KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T5: HEROES, POLITICS & LAWS -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Heroes, Politics &amp; Laws</h2>
+        <div class="topic-subtitle">Petrov stays home. The Senate rewards Industry efficiency. Influence becomes a bottleneck you must plan around.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">Petrov: Governor, Not Admiral</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Vaulters start with Petrov Utica, an Overseer/Scientist class hero. Her skill tree is designed for system governance, not fleet combat. Both community sources and the wiki's ship data confirm she has no exceptional fleet bonuses to justify removing her from a system — and her governor abilities are too strong to waste on a fleet role.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">PETROV'S KEY GOVERNOR ABILITIES</div>
+          <ul class="step-list">
+            <li><span class="step-n">FARMING LOGISTICS (TIER 1)</span><span>+10 Food per Fertile planet in the system at level 1, doubling to +20 at level 2. If your home system has 1–2 Fertile planets (common for Vaulters due to system selection flexibility), this translates to +20–40 bonus Food immediately. Maximum population is reached much faster.</span></li>
+            <li><span class="step-n">SCIENCE BONUS (TIER 2)</span><span>A percentage Science bonus on the governed system — reported as +20% at level 1, +30% at level 2 by the 4X Alchemist guide. On a system already producing high Science from Golden Age and improvements, this percentage multiplier is substantial.</span></li>
+            <li><span class="step-n">STRATEGIC DEPOSIT STRENGTH (UNIQUE)</span><span>Her unique starting skill increases output from strategic resource deposits in the system. Combined with a home system that ideally has Titanium and/or Hyperium, this generates additional strategics income without consuming your deposits' normal output.</span></li>
+          </ul>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">HERO ACADEMY TIMING</div>
+          Recruit a second hero from the Academy as early as you can afford one. Vaulters level their governors quickly due to high Industry output (more improvements built = more XP). A second hero can govern your second colony while Petrov stays on the capital, establishing a dual-governor setup that significantly accelerates both systems' development.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">YT01 — 4XALCH</span><span class="src-pill">STEAM01 — KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">Politics, Laws &amp; the Influence Bottleneck</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">STARTING GOVERNMENT — SCIENTIFIC/MILITARIST FEDERATION</div>
+          The Vaulters begin as a Federation with Scientists as the dominant party and Militarists as the secondary. Federation gives a bonus to core world Approval and influence income. Scientists are the natural dominant party: Vaulter populations are Science-typed, their improvements tend toward Scientists, and the science bonuses compound directly into tech speed. The Militarist secondary is a useful fallback for military laws without needing to build their party from scratch.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">EARLY LAW PRIORITY — DIRTY HANDS ACT</div>
+          The 4X Alchemist guide makes an explicit recommendation here: choose <strong>Dirty Hands Act</strong> (−20% Industry cost on system improvements) over Lower Fleet Costs as your early law. The reasoning: Vaulters spend more Industry on system improvements than on ships in the early game, because the Golden Age enables you to build improvements immediately. A −20% discount on improvements compounds every time you construct something during the first 30 turns — which you're doing constantly. Lower Fleet Costs is useful but secondary to the empire-building priority.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">INFLUENCE BECOMES A BOTTLENECK AT SCALE</div>
+          Vaulters grow population quickly. More population means more influence required to maintain laws. The Ruzen guide flags this explicitly: around turns 30–40, your influence income may no longer comfortably cover law maintenance costs as population scales. Plan for this:
+          <ul class="step-list" style="margin-top:0.5rem;">
+            <li><span class="step-n">EARLY</span><span>Build the standard Influence improvements as part of your system pipeline — do not skip them in favor of FIDS buildings exclusively.</span></li>
+            <li><span class="step-n">MID-GAME</span><span>Use hero Senate bonuses to supplement influence income. Keep a hero assigned to a Senate role if you are feeling law-maintenance pressure.</span></li>
+            <li><span class="step-n">PORTALS AS HELP</span><span>Koxsos notes that portals help with population logistics (moving pops to better Influence-generating systems), which indirectly stabilizes the Influence situation — but this requires having portals already built.</span></li>
+          </ul>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">STEAM02 — RUZEN</span><span class="src-pill">STEAM01 — KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T6: CORSAIRS -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Corsairs &amp; Pirate Relations</h2>
+        <div class="topic-subtitle">Blockade without war. Neutralize the pirate threat before it exists. Turn pirate bases into portal nodes.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">☠️</span>
+        <span class="block-title">Privateers, Blockades, and the Non-Aggression Pact</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Most factions must research a relatively late-game technology to access the Privateers action. Vaulters have it from turn 1, and can apply it to their own faction ships — not just marketplace vessels. In privateer mode, your ships are disguised as pirates and can engage in combat, blockade systems, and invade ground targets without triggering formal diplomatic consequences.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">PRACTICAL CORSAIR USE CASES</div>
+          <ul class="step-list">
+            <li><span class="step-n">BLOCKADE SNIPING</span><span>If an AI has started an outpost on a system you want, switch your Dart scouts to privateer mode and blockade the outpost. A blockaded outpost cannot grow and will eventually be abandoned. You appear as pirates — no diplomatic incident. Once clear, colonize with the Argosy.</span></li>
+            <li><span class="step-n">HARASSMENT WITHOUT WAR</span><span>In the mid-game, corsair harassment of a rival's supply lines or border systems applies pressure without triggering their alliance network. The wiki confirms that if a blockaded-and-invaded system becomes a "hunting ground," the Vaulters can then colonize it.</span></li>
+            <li><span class="step-n">EARLY AGGRESSION WINDOW</span><span>Koxsos notes that the early game window (before neighbors build detection) is when corsair play is cheapest — your Darts are already out scouting, and the privateer switch costs nothing but a toggle.</span></li>
+          </ul>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">NON-AGGRESSION PACT — MECHANICS</div>
+          Vaulters can spend Influence to force a Cordial relationship with the Pirate League, regardless of the underlying relationship value. This is not a bribe that shifts the actual friendship score — it overrides the behavior for a fixed period: <strong>10 turns on Normal speed</strong> per the wiki. The pirate league will not attack you during this window even if the underlying score would normally trigger hostility. You can also use standard dust bribes in parallel.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">PIRATE BASES AS PORTAL NODES</div>
+          The wiki confirms: if you maintain a Cordial rating with the Pirate League (via either method), <strong>pirate bases count as usable portal nodes for your fleets</strong>. This extends your portal network to pirate-controlled locations across the galaxy — potentially giving you teleportation access to areas you haven't colonized. This is a significant strategic bonus that requires almost no additional investment if you're already managing pirate relations.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS (CORSAIRS)</span><span class="src-pill">YT01 — 4XALCH</span><span class="src-pill">STEAM01 — KOXSOS</span><span class="src-pill">YT03 — MAGICMANSCOTT</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T7: SHIPS & COMBAT -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Ships &amp; Combat Philosophy</h2>
+        <div class="topic-subtitle">Weak T1 attackers. Exceptional scouts. Unique quest modules. Boarding as a primary win condition.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Hull Overview and the Combat Identity</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Vaulters do not have a military identity in the traditional sense. They receive no passive offensive bonuses (no flat damage boost, no weapon damage multiplier). Their T1 attacker is one of the weakest in the game. The wiki states directly: "it's important as the vaulters to get your higher tier ships online" — their T2 ships are competitive, but T1 is not a position of strength. Combat is not where Vaulters are designed to dominate; it is something to be managed around their strategic advantages.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE KARVE (T1 ATTACKER) — KNOW THE WEAKNESS</div>
+          The Karve has only 2 base Attack slots and broadside-only weapon mount positions — no top-mounted turret. The Pangolin ship analysis guide confirms this means the Karve has a 120° firing arc per weapon and dead zones directly ahead and aft. It is also the weakest T1 attacker in the game by module count. The practical implications: do not engage enemies ship-for-ship with Karves early. Use Darts in the combat role instead (which have a top-mounted weapon and better flexibility), and push hard to unlock T2 hulls.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">VAULTER ADVANCED WARP — THE UNIQUE MOVEMENT MODULE</div>
+          When you research the Advanced Topology Algorithms tech (the Vaulters' faction-specific variant of N-Dimensional Topologies), you unlock <strong>Vaulter Advanced Warp</strong> instead of the standard Accelerated Warp Drive. The wiki confirms the stats: +50 Health, +10% repair after battle, +5 movement points. This is simultaneously a speed module <em>and</em> a passive repair/durability module — a unique combination that no other faction gets. For the "fragile early ships" problem, this is the most accessible mitigation: install these on your Darts and early attackers to give them survivability as well as reach.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE TIRYAK DRIVE — QUEST REWARD, NOT TO BE SKIPPED</div>
+          The Vaulter faction quest (Chapter 1) offers a reward choice that includes the <strong>Tiryak Drive</strong>, a Support Module that provides high evasion — the wiki notes it gives values "most factions can only get in the lategame." Evasion is one of the most effective defensive stats in ES2 because it causes attacks to miss entirely. Stack 3–4 Tiryak Drives on your Dart scouts and you have ships that are extremely difficult to kill despite their low armor. This quest reward is worth planning your Chapter 1 objective around.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">BOARDING — THE PRIMARY COMBAT IDENTITY</div>
+          The Vaulters have access to Tier 2 boarding modules before other factions can research comparable options. Boarding pods deal crew damage over a battle duration and can, if the enemy crew is reduced to zero, <em>capture</em> the enemy ship. The wiki (Ruzen, koxsos, Pangolin guide all agree): boarding is the Vaulter combat style. Crew-kill battle cards combined with boarding pods and fast ships that close to melee range is the most effective Vaulter offensive posture. The Hellraiser Torpedo quest reward (50 DPS, 15% crit) is a secondary option for the missile slot but the boarding identity is the primary one to build around.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">WEAPON TYPE — LASERS OVER MISSILES</div>
+          For Vaulters, laser weapons are superior to kinetic missiles in most compositions. The Ruzen guide explains the reasoning: Vaulters' combat style involves closing to melee range for boarding. Missiles fire fewer, higher-damage salvos and are vulnerable to flak defenses. Lasers fire continuously at shorter range, which aligns with the close-quarters boarding engagement Vaulters want. Missiles are less efficient when the enemy can deflect them with point-defense as you close in.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — VAULTERS (SHIPS)</span><span class="src-pill">WIKI — TECH (ADVANCED TOPOLOGY ALGORITHMS)</span><span class="src-pill">YT02 — PANGOLIN</span><span class="src-pill">STEAM02 — RUZEN</span><span class="src-pill">STEAM01 — KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T8: VICTORY -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Victory Paths &amp; Empire Strategy</h2>
+        <div class="topic-subtitle">When to stop colonizing. Which victory condition the kit points toward. How to end a war without starting one.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">The System Count Ceiling &amp; Empire Quality vs. Quantity</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">THE OVERCOLONIZATION THRESHOLD — YOUR SOFT CAP</div>
+          Once your colony count exceeds the Overcolonization threshold, every system suffers an Approval penalty. For Vaulters this matters more than for wide factions because: (a) they lose the Core Worlds +10 Approval bonus, and (b) their system quality already depends on maintaining Devoted or Ecstatic Approval for maximum FIDS multipliers. The 4X Alchemist guide explicitly recommends staying at or below ~8 high-quality systems — not because the mechanic forces you to, but because the quality differential between a Devoted 6-system Vaulter empire and an Overcolonized 12-system Vaulter empire is stark. 8 exceptional systems consistently outperform 12 average ones.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT "TALL" ACTUALLY REQUIRES</div>
+          The tall strategy only works if each system you colonize is genuinely exceptional. If you colonize average systems because they're available, you lose the quality premium that makes the constrained colony count worthwhile. The scouting investment in the early game is not optional — it is the prerequisite for everything else working. Every system you add above the threshold should be better than any system your neighbors have colonized, or it's not worth the Approval cost.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01 — 4XALCH</span><span class="src-pill">WIKI — VAULTERS (TRAITS)</span><span class="src-pill">REDDIT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')">
+        <span class="block-icon">🎯</span>
+        <span class="block-title">Victory Conditions: What the Kit Points To</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">WONDER VICTORY — THE NATURAL OUTPUT</div>
+          Both the 4X Alchemist guide and the koxsos guide identify Wonder Victory as the most natural Vaulter win condition. The reasoning: Vaulters have exceptional early Industry (via Golden Age), access to strategic resources from their home system, the Dirty Hands Act Industry discount, and high Science output for rapid tech progression. All of this directly powers Wonder construction. A Titanium + Jade Onyx starting system can build competitive Wonders within the first 30 turns, establishing a lead that compounds throughout the game.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SCIENCE VICTORY — THE ALTERNATIVE</div>
+          If your starting position has Hyperium and strong Science-bearing planets, a Science Victory is achievable. The Vaulters' natural Science output (starting with Xenobiology and Rare Earth Foams already researched, Science-typed population, portal +10 Science per system, Petrov's percentage bonuses) can exceed other science-focused factions in well-optimized games. The 4X Alchemist guide notes that Vaulters can "out-research a Sophon" with a Hyperium-focused system development strategy.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CONQUEST VIA CORSAIRS — CONTROLLED EXPANSION</div>
+          The 4X Alchemist recommended late-game approach: identify the weakest neighbor (in their example, Horatio), use corsair fleets to clear their border systems without formal war declaration, then colonize the cleared systems with the Argosy. This expands the empire without triggering full-scale diplomatic retaliation, while staying below the system count ceiling by taking only the best available systems. Pause after each conquest, consolidate and build portals in new acquisitions, then assess whether another expansion is warranted.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01 — 4XALCH</span><span class="src-pill">YT04 — 4XALCH</span><span class="src-pill">STEAM01 — KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T9: PLAYBOOK -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">First 30 Turns Playbook</h2>
+        <div class="topic-subtitle">Turn-by-turn priorities from the Rejuvenation Field to a functioning portal-linked network.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Opening Sequence</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURN 1</div>
+            <div class="tl-body">
+              <strong>Assess the starting map.</strong> Note every system reachable from the Rejuvenation Field. Count planets, identify strategic resources, check planet types. If the best visible option is a 4-planet system with good types and at least one strategic resource, colonize it immediately — the Golden Age starts banking turns while you move. If you see a possibility of a 5-planet system one more turn of scouting away, spend the turn: the Golden Age accrual compensates the delay.
+              <br><br>
+              <strong>Build 2 Dart scouts immediately</strong> from your starting Industry. Configure them as pure explorers (max speed + probes). Set Petrov as governor on your new capital as soon as it's founded.
+              <br><br>
+              <strong>Research priority:</strong> Xenolinguistics if you have Fertile planets + strategics (gives both colonization tech and curiosity boost). Otherwise: whichever T1 colonization tech covers your available planet types.
+              <br><br>
+              <strong>Law:</strong> Dirty Hands Act immediately for the −20% Industry improvement discount.
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 2–8</div>
+            <div class="tl-body">
+              <strong>Fan scouts outward.</strong> You want to identify your second and third colonization targets before the Argosy is ready. Each scout should be heading toward a different constellation arm. Probe every system you reach.
+              <br><br>
+              <strong>Build improvements during Golden Age.</strong> The +25 FIDS boost means you are producing at full capacity from turn 1. Queue: Drone Networks → Xeno-Industrial Infrastructure → whatever FIDS building your system type favors. Do not queue ships during this window unless you have a specific threat to address — improvements return far more value per Industry point while the Golden Age bonus multiplies production.
+              <br><br>
+              <strong>Argosy available in 2–3 turns.</strong> Identify your target system before it returns. If you have a clear excellent option, prepare the Argosy to move immediately. If not, let it bank more Golden Age turns.
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 8–15</div>
+            <div class="tl-body">
+              <strong>Second colonization.</strong> Pick the best system your scouts have found. Colonize and ride the second Golden Age. If the system is already partially known to have the right resources, consider using Titanium/Hyperium to buy the colonization early rather than waiting the full 10 turns — especially if a competitor is visible nearby.
+              <br><br>
+              <strong>Start building toward your first portal.</strong> 160 Industry + 5 Titanium + 5 Hyperium is the cost. With two systems producing, this should be achievable within 10–15 turns of your second colony. Prioritize the portal on your capital (most central position) first.
+              <br><br>
+              <strong>Recruit a second hero</strong> from the Academy if it has been discovered. Put them on your second colony as governor.
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 15–25</div>
+            <div class="tl-body">
+              <strong>Third colonization.</strong> By now your scouts should have mapped a significant portion of the galaxy. Pick the third system to maximize quality — distance from your capital is irrelevant because portals will connect it regardless.
+              <br><br>
+              <strong>Non-Aggression Pact with pirates</strong> if the pirate league is becoming aggressive. One Influence payment for 10 turns of peace is cheap. If you can reach Cordial naturally through dust bribes, pirate bases begin functioning as portal nodes — map where they are relative to your intended colonization targets.
+              <br><br>
+              <strong>Assess combat situation.</strong> If you have hostile neighbors within range, refit 2–3 Darts into combat configuration (weapon slot + Tiryak Drive if available) and establish a defensive fleet. Station it at your most central portal-connected system.
+            </div>
+          </div>
+
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 25–30</div>
+            <div class="tl-body">
+              <strong>Portal network coming online.</strong> If capital portal is built, second portal should be the next Industry priority in your second colony. Once two portals exist, fleet unification becomes operational: one fleet covers both systems.
+              <br><br>
+              <strong>Material Expertise upgrades.</strong> If you have surplus Titanium or Hyperium beyond your colonization and portal pipeline, begin System Development upgrades. Titanium for Food + Industry systems; Hyperium for Dust + Science systems.
+              <br><br>
+              <strong>Faction quest progress.</strong> Review Chapter 1 objectives. If the Tiryak Drive reward is achievable (reach Cordial with pirates for 12 turns, or possess 4 anomalies on colonized planets), begin working toward it actively. The Tiryak Drive is worth significant detour to acquire.
+              <br><br>
+              <strong>By turn 30:</strong> 3–4 systems, first portal online or close to it, scouts mapped most of the galaxy, Petrov at governor level 3+, Dirty Hands Act active, 1–2 Wonders under construction or queued.
+            </div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">YT01 — 4XALCH</span><span class="src-pill">STEAM01 — KOXSOS</span><span class="src-pill">STEAM02 — RUZEN</span><span class="src-pill">REDDIT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Vaulter decisions under real game pressure — portals, colonization timing, resource tension, and combat posture</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac12';
+  const TOTAL = 10;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "Turn 6. You just founded your first colony 2 turns ago on a 4-planet Jungle system with Titanium and Jade Onyx. The Argosy is available but the free colonization counter still shows 8 turns remaining. Your scout has just found an extraordinary 5-planet system two lanes away — Mediterranean, Jungle, Arctic, Boreal, and Arid — with both Hyperium and a curiosity. The buyout cost is currently 2,800 Dust + 8 Titanium + 8 Hyperium. Your current stockpile: 1,100 Dust, 5 Titanium, 5 Hyperium. You cannot afford the buyout.",
+      q: "What is the correct course of action?",
+      opts: [
+        "Send the Argosy to a closer, worse system immediately — a colony now is always better than a colony later, regardless of quality.",
+        "Wait the remaining 8 turns for the free colonization. Meanwhile, aggressively sell surplus Jade Onyx on the marketplace and research any Titanium/Hyperium income tech to build up resources in case a competitor appears near the target. Station a Dart scout in privateer mode at the 5-planet system to block any AI colony ship from landing.",
+        "Colonize a different system you haven't scouted yet — the 5-planet system might not be reachable before an AI gets there anyway.",
+        "Use all 5 Titanium and 5 Hyperium on a Material Expertise system upgrade for your capital right now, since you can't afford the buyout anyway."
+      ],
+      correct: 1,
+      explain: "The 5-planet system is precisely the quality level the Vaulter tall strategy requires — wait for it, and protect it. Selling Jade Onyx (a luxury you have access to as a deposit bonus) on the marketplace to build Dust reserves is the correct economic move. Stationing a Dart in privateer mode at the target system costs nothing and prevents any AI outpost from forming. Colonizing a closer but worse system would permanently occupy a scarce Argosy colonization slot with a suboptimal system. Using the Titanium/Hyperium on a system upgrade now would eliminate your ability to fund the buyout should you need to act early — and you want those resources liquid for the colonization. Wait, protect, and colonize the exceptional system for free."
+    },
+    {
+      scenario: "Turn 22. You have 3 systems: your capital (portal built, 6 pop, producing 180 Science/turn), a second colony (no portal, 3 pop, strong Industry), and a third colony just founded 2 turns ago (Golden Age active, 1 pop, booming). Your Titanium stockpile is 12, Hyperium is 9. Your colonization cooldown expires in 4 turns — free. You've spotted a 4th excellent system. Building a portal in your second colony costs 5 Titanium + 5 Hyperium. Your capital and third colony are connected via the existing portal — but the second colony is isolated.",
+      q: "Before the 4th colonization in 4 turns, should you build the portal on the second colony now?",
+      opts: [
+        "No — save all Titanium and Hyperium for the upcoming colonization's potential buyout. 4 turns is too close to spend resources on a portal.",
+        "Yes — the second colony is your Industry powerhouse. Isolating it from the portal network means any fleet stationed there cannot respond to threats at the capital or third colony. Building the portal now (costs 5 Ti + 5 Hy, leaves you 7 Ti and 4 Hy) keeps enough resources for the free colonization in 4 turns and closes the defensive gap. 4 turns is actually the ideal window: portal construction takes a few turns, so it will finish around the same time as the free colonization.",
+        "Yes, but only if the second colony is under immediate threat of attack.",
+        "No — portals should only be built on the capital. Never build them on secondary systems first."
+      ],
+      correct: 1,
+      explain: "The colonization in 4 turns is FREE — you need zero Titanium and Hyperium for it. This means spending 5+5 now leaves 7 Ti and 4 Hy in reserve, which is sufficient for early-game portal upkeep and emergency buyouts. The second colony being isolated from the portal network is a genuine vulnerability: any attacking fleet can blockade it and your response fleet would have to travel there via star lanes rather than teleporting. Connecting it now closes a real defensive hole. The trap in option A is assuming the upcoming free colonization competes with portal resources — it doesn't, because it costs nothing. Only if you were considering an expensive buyout colonization would the resource competition be real."
+    },
+    {
+      scenario: "Turn 35. You have 5 systems, all portal-connected. Approval empire-wide is 82 (Ecstatic). A Sophon neighbor has been friendly so far, but your scout confirms their border system — a 3-planet system with average resources — is weakly defended (2 small ships). They have no system adjacent to yours but are expanding toward a high-value 5-planet system you also want. The Argosy cooldown expires in 3 turns (free). You have a fleet of 4 refitted Dart-combat ships available.",
+      q: "What is your optimal play for the 5-planet system?",
+      opts: [
+        "Declare war immediately and send your fleet to destroy the Sophon ships before they colonize the target.",
+        "Send your fleet to the target system in privateer (corsair) mode right now. If the Sophons have an outpost there, blockade it to death without a war declaration. When clear, send the Argosy in 3 turns for a free colonization. If the system is still uncontested, park the fleet there as a blockade deterrent — any AI colony ship that arrives will find the system 'guarded' and divert.",
+        "Let the Sophons take the 5-planet system — diplomacy is more valuable than the system, and you can Science-victory without it.",
+        "Use all your Titanium and Hyperium to buyout colonize the system immediately (don't wait the 3 turns) to beat the Sophons there."
+      ],
+      correct: 1,
+      explain: "This is exactly the scenario the Corsairs trait is designed for. Privateer mode lets your refitted Darts block or destroy any outpost without triggering a formal war against the Sophons — they see pirates, not Vaulters. If the 5-planet system is currently unoccupied, a privateer fleet stationed there acts as a deterrent: AI colony ships will not land in a system with hostile ships present. This secures the system for the Argosy's free colonization in 3 turns at zero resource cost and zero diplomatic cost. Declaring formal war (A) risks triggering Sophon allies and is unnecessary when corsairs achieve the same result for free. Ceding the system (C) violates the core tall-empire principle: never accept a lower-quality system when an exceptional one is within reach. The buyout (D) wastes the free colonization timing — wait 3 turns and save the resources."
+    },
+    {
+      scenario: "Turn 48. You have 7 systems, all portal-connected. You've researched Hyperfolding (portal transit now costs only 1 movement point). Your main combat fleet is 6 ships with 9 movement points each, stationed at your central hub system. A United Empire player has declared war and is moving a 9-ship fleet along star lanes toward your outer colony — currently 4 turns away from your colony via star lanes. Your outer colony has no fleet.",
+      q: "How does the Hyperfold Hulls tech change your defensive response?",
+      opts: [
+        "It doesn't change much — you still need to teleport your fleet there, which uses all movement points as before.",
+        "Your fleet can teleport to the threatened colony (costing 1 movement point) and still has 8 movement points remaining. In the same turn, it can patrol toward the incoming UE fleet along the star lane, potentially intercepting them 1–2 turns earlier than the colony itself — before they reach it. This collapses the 4-turn warning window into a potential turn-1 interception.",
+        "Teleport to the colony and fortify — Hyperfold still uses all movement, it just costs less resource.",
+        "Send only half the fleet by portal; keep the other half at the hub in case of a second attack."
+      ],
+      correct: 1,
+      explain: "This question tests whether you understand the mechanical difference Hyperfold Hulls creates. Before Hyperfolding: teleport = all movement consumed = fleet arrives at the destination and stops. After Hyperfolding: teleport costs only 1 movement point, leaving 8 of 9 remaining. Your fleet can teleport to the outer colony AND move 8 nodes along the star lane toward the incoming UE fleet in the same turn. Instead of defending your colony reactively, you can intercept the enemy fleet mid-approach — a fundamentally different strategic posture. This is the single most important late-game tech for Vaulter military play: it converts the portal network from a reactive defense tool into an active force-projection system."
+    },
+    {
+      scenario: "Turn 15. You have 2 systems. You hold 6 Titanium and 4 Hyperium in reserve. Your capital has room for a System Development upgrade. You're trying to decide between: (A) using Titanium for Material Expertise (+40 Food +40 Industry on capital), (B) saving both for an upcoming colonization buyout (the free colonization timer shows 6 turns remaining), or (C) using Hyperium for Material Expertise (+40 Dust +40 Science on capital).",
+      q: "Your capital is a Jungle system with strong Industry already (120/turn), and your Science output is currently your weakest FIDS stat at 55/turn. Which choice is best?",
+      opts: [
+        "Use Titanium — the +40 Food +40 Industry split is always the best Material Expertise choice in the early game.",
+        "Save everything — never spend Titanium or Hyperium before turn 30.",
+        "Use Hyperium for the +40 Dust +40 Science upgrade. Your Industry is already strong (120/turn), so a +40 Industry boost delivers diminishing returns relative to a +40 Science boost on a system producing only 55/turn. The Science gain of roughly +73% from a single upgrade is worth more than a +33% Industry gain. The free colonization in 6 turns costs nothing — you don't need to hold these resources for a buyout. After the upgrade, you still have 6 Titanium for portal construction or emergency colonization needs.",
+        "Use Titanium — Industry is always more valuable than Science in the early game because it produces more improvements."
+      ],
+      correct: 2,
+      explain: "Material Expertise decisions require reading what your empire actually needs. Industry at 120/turn is already functional — the +40 Industry from Titanium represents a 33% gain. Science at 55/turn is your bottleneck — the +40 Science from Hyperium represents a 73% gain from the same resource cost. More importantly: the free colonization in 6 turns costs 0 Titanium and 0 Hyperium, so there is no resource conflict between the upgrade and the colonization. The trap answers (A and D) assume a blanket rule about which upgrade is 'always' better — but Material Expertise decisions are context-dependent. The correct approach is to identify your weakest FIDS stat and apply the strategic resource that boosts it. Never apply a +40 to a stat already at high output when a bottleneck stat can use the same resource."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
