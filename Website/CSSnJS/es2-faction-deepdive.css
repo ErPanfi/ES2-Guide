@@ -82,7 +82,9 @@
    2. FACTION IDENTITY BADGE AND ICON
    ═══════════════════════════════════════════════════════════════════════════ */
 
-/*.faction-badge {
+/* this became a vol-badge
+
+	.faction-badge {
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -104,6 +106,11 @@ h1.page-title img
 	width: 80px;
 }
 
+h1.page-title {
+	/*text-shadow: none;  0 0 40px rgba(var(--accent), 0.45), 0 0 80px rgba(var(--accent), 0.15);*/
+	filter: drop-shadow(0 0 6px rgba(var(--accent), 0.55));
+
+}
 
 /* ═══════════════════════════════════════════════════════════════════════════
    3. TRAIT BLOCKS
