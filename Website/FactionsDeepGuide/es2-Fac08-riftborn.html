@@ -16,23 +16,18 @@
 
   :root {
     --accent:            var(--riftborn-color);
-    --accent-rgb:        0,229,255;
-    --accent-dim:        rgba(var(--accent-rgb), 0.09);
+	--card-accent: 		 var(--accent);
+    --accent-dim:        rgba(var(--accenT), 0.09);
     --accent-bright-rgb: 160,245,255;
   }
 
   body::before { background:
-    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--accent-rgb), 0.05) 0%, transparent 65%),
-    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--accent-rgb), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 70% 50% at 15% 40%, rgba(var(--accenT), 0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(var(--accenT), 0.04) 0%, transparent 65%),
     radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
   }
 
-  h1.page-title {
-    text-shadow:
-      0 0 40px rgba(var(--accent-rgb), 0.4),
-      0 0 80px rgba(var(--accent-rgb), 0.15);
-  }
-
+  
   .sidebar-logo .game-name { color: rgb(var(--accent)); }
 
   /* Singularity type chips */

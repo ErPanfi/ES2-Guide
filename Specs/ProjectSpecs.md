@@ -130,7 +130,7 @@ Google Fonts link (also required in `<head>`):
 | Riftborn      | ❄️    | `--riftborn-color` | 0,229,255   | Cold cyan |
 | Sophon        | 🔬    | `--sophon-color`   | 45,143,255  | Blue |
 | Cravers       | 🪳     | `--cravers-color`  | 68, 108, 36 | Dark olive green |
-| Hissho        | 🪶     | `--hissho-color`   | 232,64,64   | Red |
+| Hissho        | 🦅     | `--hissho-color`   | 232,64,64   | Red |
 | Horatio       | 🧬    | `--horatio-color`  | 240,168,208 | Narcissist pink | 
 | Unfallen      | 🌿    | `--unfallen-color` | 29,185,106  | Green |
 | Umbral Choir  | 👁️    | `--umbral-color`   | 139,92,246  | Purple |
