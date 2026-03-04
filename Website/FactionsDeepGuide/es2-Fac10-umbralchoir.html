@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Umbral Choir: Shadows &amp; Network Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+<style>
+  /* ── Fac10 — Umbral Choir: deep purple ──────────────────────────────────── */
+  :root {
+    --accent:            var(--umbral-color);
+    --card-accent:       var(--umbral-color);
+    --accent-dim:        rgba(var(--umbral-color), 0.10);
+    --accent-rgb:        139,92,246;
+    --accent-bright-rgb: 190,150,255;
+  }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 10% 40%, rgba(var(--umbral-color), 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 90% 70%, rgba(var(--umbral-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 5%,  rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--umbral-color), 0.45),
+      0 0 80px rgba(var(--umbral-color), 0.18);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  /* Layer dividers between topic groups */
+  .layer-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 32px 0 8px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    letter-spacing: 3px;
+    color: rgba(var(--accent-rgb), 0.5);
+  }
+  .layer-divider::before, .layer-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(var(--accent-rgb), 0.18);
+  }
+
+/*
+  .quest-branch.harmony { border-top: 3px solid rgb(var(--red)); }
+  .quest-branch.freedom { border-top: 3px solid rgb(var(--accent)); }
+
+  .quest-branch.harmony .quest-branch-title { color: rgb(var(--red)); }
+  .quest-branch.freedom .quest-branch-title { color: rgb(var(--accent)); }
+*/
+
+  .quest-branch.harmony { --questAccent: var(--red); }
+
+
+  /* Bandwidth scaling mini-table */
+  .bw-scale {
+    display: grid;
+    grid-template-columns: 80px 1fr 1fr;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 12px 0;
+    font-size: var(--ts_sectionTitle);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .bw-scale-cell {
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .bw-scale-cell:last-child, .bw-scale-cell:nth-last-child(2), .bw-scale-cell:nth-last-child(3) { border-bottom: none; }
+  .bw-scale-cell.header { background: rgba(var(--accent-rgb), 0.10); color: rgb(var(--accent)); font-weight: 700; letter-spacing: 1px; }
+  .bw-scale-cell.pop { color: rgb(var(--accent)); font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.10</div>
+    <div class="guide-name">The Umbral<br>Choir</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">👁️ Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Infrastructure</div>
+  <div class="nav-item" onclick="scrollByID('t1')">🌑 The Nexus <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">📡 Bandwidth <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🛸 Sanctuaries <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">👻 Cloaking &amp; Transmigration <span class="nav-check" id="nc4"></span></div>
+
+  <div class="nav-section-label">// Dynamics</div>
+  <div class="nav-item" onclick="scrollByID('t5')">🧬 Population Pipeline <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">🕸️ Hacking Architecture <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">🤝 Minor Factions <span class="nav-check" id="nc7"></span></div>
+
+  <div class="nav-section-label">// Leverage</div>
+  <div class="nav-item" onclick="scrollByID('t8')">⚖️ Government, Laws &amp; Tech <span class="nav-check" id="nc8"></span></div>
+  <div class="nav-item" onclick="scrollByID('t9')">🔱 Faction Quest <span class="nav-check" id="nc9"></span></div>
+  <div class="nav-item" onclick="scrollByID('t10')">🏆 Victory Paths &amp; Fleet <span class="nav-check" id="nc10"></span></div>
+  <div class="nav-item" onclick="scrollByID('t11')">🎯 Playing Against the UC <span class="nav-check" id="nc11"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.10</span> // The Umbral Choir</div>
+    <h1 class="page-title"><img src="../images/Races/UmbralChoirIcon.webp"> The<br>Umbral Choir</h1>
+    <p class="page-subtitle">One system. Infinite network. Everything flows back to Nexus. The Umbral Choir is the most structurally alien faction in ES2: they cannot colonize, cannot assimilate foreign populations, and hold their entire productive empire on a single cloaked node adrift in space. In exchange, they see everything — hacking outward through a growing web of Sanctuaries and Sleepers, converting enemy pops into superpowered shadows, and winning games their opponents didn't realise were being played. This deep dive is structured in three layers: the Infrastructure layer (what your empire physically is), the Dynamics layer (how it moves and grows), and the Leverage layer (how you turn it into a win condition).</p>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Ghost in Every Machine</h2>
+        <div class="topic-subtitle">The UC does not play the same game as everyone else. Understanding what it is — and what it is not — is the prerequisite for everything that follows.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">👁️</span>
+        <span class="block-title">Core Traits and the True UC Identity</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge">◈ UMBRAL CHOIR — IN THE SHADOWS ◈</div>
+
+        <p>The Umbral Choir's faction affinity is called <em>In the Shadows</em>, and it defines everything: one hidden home system (the Nexus) located on a special node, moveable at cost to another special node; no conventional colonization but the ability to place hidden Sanctuaries on planets by hacking; the capacity to abduct Sleeper agents from enemy populations and convert them into enhanced Umbral Shadows; and immunity to influence conversion. Their ships can be attacked in Cold War even while on the home system — a specific vulnerability that compensates for being otherwise invisible.</p>
+
+        <p>The faction's governing logic: Sanctuaries funnel FIDSI back to the Nexus. Bandwidth — generated by population — powers the hacking network that expands those Sanctuaries. Umbral Shadows on the Nexus multiply that FIDSI output. The whole machine runs without ever holding a planet in the conventional sense, and it is invisible to opponents who haven't invested in detection.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">GHOSTS — ALL SHIPS CLOAK</div>
+          Every ship the UC owns — faction ships, mercenaries, minor faction rewards, hero ships, everything except Juggernauts and Obliterators — cloaks automatically with no module required. Cloaking upgrades via the military tech tree apply instantly and empire-wide. No other faction can do this.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ORGANIC NETWORK — HACKING ADVANTAGE</div>
+          +1 maximum hacking operation on Empire. Combined with Twitch Infiltrators (+10% hacking speed) and Exploited Sleepers (+1 Bandwidth per Sleeper on Empire), the UC does hacking better than every other faction — and hacking <em>is</em> their economy, their expansion, and their military projection.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">IMMATERIAL POPULATION — MANPOWER FLOOR</div>
+          −75% Food to Manpower conversion on systems. This is not a nuisance — it is the faction's defining structural weakness. The UC is the worst faction in the game at manpower replenishment in both relative and absolute terms, and this does not fully resolve at any point in the game. It is managed, never eliminated. Plan accordingly.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">STAY-AT-HOME — OVERCOLONIZATION DOUBLE PENALTY</div>
+          +100% overcolonization Approval penalty on Empire, and −5% maximum Bandwidth per system above the overcolonization limit. Expanding recklessly does not just hurt Approval — it actively destroys your hacking capacity. The bandwidth penalty alone can bankrupt your entire operation if you exceed the limit by 20 or more systems.
+        </div>
+
+        <div class="trait-block gold">
+          <div class="trait-label gold">FLEDGLING TRADERS — THE SUBSIDIARY COMPENSATION</div>
+          −50% Star System Trade Value on Empire. This sounds crippling. It is not, because every Sanctuary automatically has a trading subsidiary placed on it — without any action from you. The Fledgling Traders penalty is specifically sized to offset the immense bonus of this automatic subsidiary network. The UC potentially has more trade income than the Lumeris simply because the network scales with hacking breadth.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">YT01-PANGOLIN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- LAYER DIVIDER -->
+  <div class="layer-divider">▸ INFRASTRUCTURE LAYER ◂</div>
+
+  <!-- ══════════════════════════════════════════════════════════ T1: NEXUS -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The Nexus: Anatomy of a One-System Empire</h2>
+        <div class="topic-subtitle">Your home is not a planet. It is a special node — and everything about how you develop, defend, and relocate it is unique to the UC.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🌑</span>
+        <span class="block-title">Crescent Planets, System Development, and the Cloak Ceiling</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Nexus sits on a special node — a nebula cloud, black hole, or similar anomaly. These nodes are normally uninhabitable; the UC breaks this rule. The system contains <strong>Crescent planets</strong>, which are cold and sterile. This matters: planet-type bonuses that require temperate, tropical, or other classifications don't apply, and improvements offering "+N FIDSI per planet" may yield less than their face value since Crescents are not counted as "planets" for all bonus calculations. However, Crescent planets are not weak — the UC's improvements are specifically tuned to work with them, and the +5 FIDSI per Umbral Shadow (from the faction-specific improvement cascade) applies universally.</p>
+
+        <p>The UC starts with <strong>Titanium and Hyperium</strong> deposits on their home planet. Both strategic resources are important for early tech unlocks and system development — this starting advantage offsets some of the Expensive Tastes penalty (see below).</p>
+
+        <div class="trait-block">
+          <div class="trait-label">SYSTEM DEVELOPMENT — THE DOUBLE FUNCTION</div>
+          Building system development improvements does two things simultaneously: it unlocks production queues and FIDSI bonuses as normal, and it <strong>raises the Nexus cloak level</strong>. Level 1 improvement → Tier 1 cloak. Level 2 → Tier 2. Level 3 (Tier 4) → still Tier 2 cloak. There is no Tier 4 cloaking in the game; the third system improvement confers no additional stealth benefit beyond the FIDSI unlock. Delaying the first two improvements to hunt for ideal luxury resources is a valid strategy — but failing to upgrade at all is not, because cloaking tier directly determines how hard you are to detect.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">EXPENSIVE TASTES — LUXURY COST PENALTY</div>
+          +100% system development luxury cost on Empire. Since you develop exactly one system across the entire game, every luxury resource you spend on development costs twice as much. In practice: you can deliberately delay Tier 1 development until you find a higher-tier luxury resource (e.g. Adamantium instead of Titanium), paying the doubled cost but getting a stronger per-unit return. The total luxury spend across the whole game is still modest — one system, three upgrades.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE KEY IMPROVEMENT MECHANIC</div>
+          Many system improvements for the UC include the line <em>"also applies to planets on Sanctuary systems."</em> This is the foundational advantage that compensates for all the penalties. You build an improvement once on your Nexus, and it cascades FIDSI bonuses to every Sanctuary planet in your empire simultaneously. This means overcolonization penalties and expensive luxury costs are effectively one-time costs paying for empire-wide permanent returns.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T2: BANDWIDTH -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Bandwidth: The Hidden Currency</h2>
+        <div class="topic-subtitle">Bandwidth is not just a hacking resource cost. It is the UC's primary scaling stat — generating manpower, powering operations, and gating population milestones.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">📡</span>
+        <span class="block-title">Bandwidth Sources, Scaling, and Population Milestones</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every UC population unit produces <strong>+1 Bandwidth and +1 Science</strong> per turn. Umbral Shadows produce the same (+1 BW, +1 Science) but doubled — +2 BW, +2 Science. This means growing your population is not just about FIDSI output; it directly fuels your hacking network capacity.</p>
+
+        <p>Population also unlocks milestone bonuses at specific counts:</p>
+
+        <div class="bw-scale">
+          <div class="bw-scale-cell header">POPS</div><div class="bw-scale-cell header">BONUS</div><div class="bw-scale-cell header">STRATEGIC IMPACT</div>
+          <div class="bw-scale-cell pop">10</div><div class="bw-scale-cell">+1 Pacifist output per pop</div><div class="bw-scale-cell">Minor — supports law access</div>
+          <div class="bw-scale-cell pop">20</div><div class="bw-scale-cell">+1 Influence per allocated Bandwidth + 15 flat Bandwidth on Empire</div><div class="bw-scale-cell">Strong — Influence scales with how much BW you're actively using</div>
+          <div class="bw-scale-cell pop">50</div><div class="bw-scale-cell">+15% Hacking Speed</div><div class="bw-scale-cell">Critical — hacking speed determines whether you complete hacks before being traced</div>
+        </div>
+
+        <p>Additional Bandwidth sources beyond base population: the <strong>Exploited Sleepers</strong> trait (+1 BW per Sleeper on Empire), Transmigration Beacons (each costs 10 BW to place but provides a FIDSI bonus from the special node while charged), idle Bandwidth converting to manpower via <strong>Dark Matter Manipulators</strong> (+0.5 Manpower per idle BW per turn), and Hero skill tree bandwidth upgrades.</p>
+
+        <div class="trait-block gold">
+          <div class="trait-label gold">POPULATION BOOSTING — UC VERSION IS DIFFERENT</div>
+          Spending a super spud to boost population growth normally grants +1 Food and +1 Industry to the pop. For UC, boosting grants <strong>+1 Science and +1 Bandwidth</strong> — matching and doubling the base per-pop output. This is disproportionately powerful: when bandwidth is tight during an aggressive hacking phase, a well-timed boost effectively doubles your per-pop resource output that turn. Boost when you need BW headroom; the cost is modest and the effect is immediate.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">HERO SKILL POINT RESERVE</div>
+          The faction quest will ask you to raise your Bandwidth by a specific amount at certain milestones. If your starting hero has skill points in bandwidth upgrades (+10 BW per point), you can save those points unspent and dump them all the turn the quest asks — completing the milestone in a single turn rather than waiting for natural growth. Always hold 2–3 bandwidth skill points in reserve until the relevant quest chapter triggers.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">STEAM-KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T3: SANCTUARIES -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Sanctuaries: Expansion Without Colonization</h2>
+        <div class="topic-subtitle">Sanctuaries are not just hacking infrastructure. They are your population distribution network, your ship construction yards, your FIDSI engine, and your strategic reach — all simultaneously.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🛸</span>
+        <span class="block-title">Creating Sanctuaries and the Improvement Cascade</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Sanctuaries are created by hacking a planet on a target system. The hack doesn't colonize the system — it places a hidden Sanctuary on one planet in that system, cloaked at a level equal to the number of Sanctuaries on that system (1 Sanctuary = Tier 1 cloak, 2 = Tier 2, 3+ = Tier 3). The system is now controlled by the UC for all game purposes, including victory conditions.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">CONQUEST VICTORY VIA SANCTUARIES — CONFIRMED</div>
+          Every system where the UC has at least one Sanctuary counts as owned by the Umbral Choir for Conquest and Supremacy victory conditions. This means placing a Sanctuary on every major faction's home system wins a Conquest victory without invading a single one. This is not a loophole — it is the intended play pattern, confirmed by direct in-game testing.
+        </div>
+
+        <p>FIDSI produced on Sanctuary planets flows back to the Nexus. The key multiplier: <strong>improvements built on the Nexus that carry the "also applies to planets on sanctuary systems" text</strong> apply their bonuses to every Sanctuary planet in your entire empire simultaneously. The starting tech Xenolinguistics is the clearest example: its UC version grants +10 Science per planet and +10 Science per temperate planet, and it applies to all Sanctuary planets. Building one improvement once multiplies across your entire network.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">SANCTUARY APPROVAL — FIXED AT 50%</div>
+          Sanctuaries always enter at 50% Approval (Content). This is the base overcolonization Approval, and it applies whether the planet is exceptional or terrible. Importantly, the Endless Research Park wonder grants a temporary +25% boost to new Sanctuaries when it is active — pushing them to 75% Content on arrival. If you're in a heavy expansion phase, timing your Sanctuary creation while the Endless Research Park is active meaningfully smooths Approval management.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">POPULATION ROUTING TO SANCTUARIES — PARTIALLY UNKNOWN</div>
+          When the Nexus population is full, excess population is distributed to Sanctuaries. The priority rules for which Sanctuary receives population first are not fully documented — the wiki explicitly flags this as "a total mystery." What is confirmed: you can designate a Sanctuary as the <strong>Selected Sanctuary</strong>, which directs both new population overflow and new ship construction to that location. Use this to control where your population goes rather than relying on the automatic routing.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">PLAYER-VERIFIED</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">⚠️</span>
+        <span class="block-title">Overcolonization: The Bandwidth Penalty</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The UC's overcolonization limit works identically to other factions in terms of Approval penalties — but adds a second, unique punishment: <strong>−5% maximum Bandwidth per system above the limit</strong>. Exceeding the limit by 20 systems can effectively bankrupt your hacking capacity. This is not recoverable in the short term.</p>
+
+        <p>The default overcolonization limit is raised by two specific techs: <strong>Xeno Anthropology</strong> (+2 colony slots) and <strong>Cultural Invertics</strong> (+4 colony slots). These are the only reliable mechanical extenders. Government type also matters: Federation grants additional colony slots and is the practical tool for managing expansion in the mid-to-late game. Approval management via laws and hero skills can neutralize the Approval penalty, but does nothing for the Bandwidth penalty — which is a harder constraint.</p>
+
+        <p>The early-game election timing also matters: only pops on the Nexus vote. Pops you've already sent to Sanctuaries have no political voice. Do not distribute your first pops to Sanctuaries before the first election if you want any control over the political climate — keep 4+ pops on the Nexus through the first vote cycle.</p>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">FANDOM-STRATEGY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T4: CLOAKING & TRANSMIGRATION -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Cloaking &amp; Transmigration: The Stealth Architecture</h2>
+        <div class="topic-subtitle">Stealth is not a bonus feature — it is the structural balance mechanism for having one system, no manpower, and no standing army for most of the game.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">👻</span>
+        <span class="block-title">Fleet Cloaking, Detection, and Nexus Visibility</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>All UC ships cloak passively — no module required. Cloaking level upgrades automatically apply empire-wide when the relevant military tech is researched. The Nexus is permanently cloaked, but its cloak tier is tied to system development level (Tier 1 at Level 1 improvement, Tier 2 at Level 2, capped at Tier 2 because there is no Tier 4 cloaking in the game). The third system improvement provides no further stealth benefit.</p>
+
+        <p>The UC does <em>not</em> gain any special detection advantage. They detect cloaked ships the same way everyone else does. The closest UC-specific detection tool is a hero skill (available to UC heroes) that sets fleet anti-cloak level to Tier 3 — useful in mirror matchups or when facing the Vaulters.</p>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">HOW YOU GET FOUND</div>
+          Two primary exposure vectors: (1) An opponent researches anti-cloak technology to sufficient tier and sends a fleet or probe to your Nexus location. (2) You hack a system directly from your Nexus, the hack gets traced, and the trace reveals your home system's location. The second vector is entirely within your control — never hack directly from the Nexus once you have proxy Sanctuaries. See Topic 6.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">OFF-GRID NEXUS POSITIONING</div>
+          Special nodes that sit off the main star lane network are significantly harder to find. If early exploration reveals a special node that is not connected to any lane, place a Transmigration Beacon there as a priority. Moving your Nexus off-grid means opponents must specifically send probes into uncharted space to find you, rather than stumbling across you while navigating normal lanes.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">🌀</span>
+        <span class="block-title">Transmigration Beacons: Timing, Cost, and Consequences</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Transmigration Beacons are placed on special nodes and cost 10 Bandwidth to deploy. Once placed, they charge over approximately 7 turns. When a beacon is fully charged, activating it teleports the Nexus to that location with <strong>no penalty</strong> — the move is free, immediate, and clean, except that all other active beacons are dismantled and you incur a temporary −50% Bandwidth penalty for several turns.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">EMERGENCY TRANSMIGRATION — READ THIS CAREFULLY</div>
+          Activating an <em>uncharged</em> beacon destroys up to 99% of all population and improvements on the Nexus. The percentage of destruction scales with how many turns the beacon still needed to fully charge. This is not a recoverable situation — it can eliminate decades of Umbral Shadow accumulation in one click. The game warns you clearly. Never activate an uncharged beacon except as an absolute last resort. Plan moves ahead of time.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">TRANSMIGRATION SEVERS ALL TRADE ROUTES</div>
+          Moving the Nexus destroys all active trade company routes. If you have a large trading subsidiary network generating significant Dust income, transmigrating at the wrong moment can trigger an immediate economic crisis. Before activating any beacon — charged or not — audit your trade route income and plan for several turns of reduced Dust while routes re-establish.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">TRANSMIGRATION REMOVES EMBEDDED SANCTUARIES AND SLEEPERS</div>
+          Any Sanctuaries or Sleepers present on the system you're transmigrating from are removed at no population cost. The Nexus also returns to a "hidden/unknown" state after moving — anyone who previously detected you must relocate the new position.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">CITADEL BEHEMOTH TELL</div>
+          Placing a Citadel behemoth on the Nexus for defense is effective — but it leaves a visible ring around the system that any player with vision of that area can see. For a faction whose core advantage is invisibility, this is a meaningful cost. Evaluate whether the defensive value outweighs the exposure before committing a Citadel to your home system.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">FANDOM-STRATEGY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- LAYER DIVIDER -->
+  <div class="layer-divider">▸ DYNAMICS LAYER ◂</div>
+
+  <!-- ══════════════════════════════════════════════════════════ T5: POPULATION -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Population Pipeline: Choir, Shadows, and the Manpower Crisis</h2>
+        <div class="topic-subtitle">Two population types. One conversion chain. A structural manpower deficit that never goes away. The UC's population system is its engine and its most persistent constraint.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🧬</span>
+        <span class="block-title">Umbral Shadows: The Conversion Chain</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The UC has two and only two population types. <strong>Umbral Choir</strong> are the base pop: +1 Science, +1 Bandwidth per turn, standard FIDSI output. <strong>Umbral Shadows</strong> are the super-pop: double FIDSI output and double Food consumption compared to standard pops, living only on the Nexus.</p>
+
+        <p>Shadows are created through a three-step chain:</p>
+        <ul class="step-list">
+          <li><span class="step-n">STEP 1</span><span><strong>Plant a Sleeper:</strong> Hack a system with a UC pop from a Sanctuary present. One of the hack outcome options converts a Sanctuary pop on that system into a Sleeper agent embedded in the enemy population.</span></li>
+          <li><span class="step-n">STEP 2</span><span><strong>Abduct the Sleeper:</strong> Hack the same system again. One outcome abducts the Sleeper back to the Nexus. One Sleeper per hack, one hack per system.</span></li>
+          <li><span class="step-n">STEP 3</span><span><strong>Conversion:</strong> The abducted Sleeper replaces one Umbral Choir pop on the Nexus with an Umbral Shadow. If the Nexus is already full of Shadows, the conversion instead grants a direct Science and Dust bonus (enhanced further by a specific tech).</span></li>
+        </ul>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE PRE-CONVERSION TRICK</div>
+          You do not need to pre-position a Sanctuary pop on the target system before you hack it. When the hack dialog opens, you can dismiss it, manually convert a nearby Sanctuary pop into a Sleeper on that system, then re-open the hack dialog and immediately abduct them. The order of operations allows you to create and recover a Sleeper within the same hack cycle — saving turns you would otherwise spend on a separate "plant" hack.
+        </div>
+
+        <p>The fastest Shadow generation is via <strong>invasion</strong>. Using the Abduct invasion outcome on a system with Sleepers already planted recovers <em>all</em> Sleepers present simultaneously. A well-prepared invasion of a system holding 10 planted Sleepers generates 10 Shadows in a single turn. This is a strong mid-game military pivot driver: hack to plant Sleepers ahead of a declared war, then invade and abduct the full stack.</p>
+
+        <p>The Shadow bonus from the starting hero skill: <strong>+1% FIDSI per Umbral Shadow on home system</strong>. At a Nexus fully converted to Shadows (up to 45 pops at maximum development), this is +45% FIDSI empire-wide, stacking multiplicatively with the economic behemoth. Filling the Nexus with Shadows is the UC's primary mid-to-late game FIDSI goal.</p>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">STEAM-KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">The Manpower Crisis: Honest Assessment</span>
+        <span class="block-tag tag-mech">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The −75% Food to Manpower trait is not a nuisance. You will struggle with manpower replenishment throughout the entire game, regardless of the mitigation steps you take. This is the honest assessment: the UC is the worst faction in the game at manpower in both relative and absolute terms, and no combination of available tools fully closes the gap. They are managed, never eliminated.</p>
+
+        <p>The available mitigation toolkit, in order of reliability:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">DARK MATTER</span><span><strong>Dark Matter Manipulators:</strong> +0.5 Manpower per idle Bandwidth per turn. With 20+ idle Bandwidth, this generates 10+ Manpower/turn — meaningful, but slow to accumulate.</span></li>
+          <li><span class="step-n">ELITE SHADOWS</span><span><strong>Elite Shadows law</strong> (Ecologist T4): +20 Manpower/turn per Umbral Shadow pop. On a full Nexus of Shadows this becomes +900/turn — the single strongest manpower tool available to the UC, but requires a late-game build-up to function.</span></li>
+          <li><span class="step-n">MINOR FACS</span><span><strong>Minor faction friendship actions:</strong> Maxing friendship with a minor faction and repeatedly requesting aid (Survival Training replaces Selective Migration) grants 100 Manpower per interaction. Unlimited, but costs Dust and influence per trigger.</span></li>
+          <li><span class="step-n">SCRAPPING</span><span><strong>Scrapping ships:</strong> Scrapping (not selling) any ship returns all the manpower embedded in it. Pirate reward ships, minor faction fleet rewards, and curiosity-reward ships cost you nothing — scrapping them is free manpower. Never sell reward ships; always scrap them. This is underused and reliable.</span></li>
+          <li><span class="step-n">DIPLOMACY</span><span><strong>Trade for Manpower:</strong> AI factions frequently have manpower surpluses in the mid-game. Trading resources for manpower is often worth doing even at unfavorable rates.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">CONSEQUENCE FOR WAR PLANNING</div>
+          Because manpower is chronically low, the UC's optimal military strategy is siege-first. Establish Sanctuaries inside enemy territory before declaring war, then spawn dedicated siege ships from those Sanctuaries to besiege systems without spending manpower on ground invasion. Win the ground battle only when you can stack enough Sleepers to make an Abduct outcome worthwhile — then the invasion serves a double purpose.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">YT01-PANGOLIN</span><span class="src-pill">STEAM-KOXSOS</span><span class="src-pill">STEAM-RUZEN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T6: HACKING -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Hacking Architecture: Network Building and the Proxy Imperative</h2>
+        <div class="topic-subtitle">Hacking is not a supplementary tool for the UC. It is their economy, their colonization, their military intelligence, and their primary detection risk — all at once.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🕸️</span>
+        <span class="block-title">Operation Slots, Distance, and the Proxy Chain</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The UC starts with more hacking operations than any other faction, and can expand this further. Maximum hacking operations scale with tech and quest rewards. The operation count determines how many simultaneous hacks you can sustain — this is the primary expansion bottleneck in the early game.</p>
+
+        <p>Hacking speed determines whether you complete a hack before a trace returns to you. A successful hack that still gets caught on the way out reveals your position. The +15% Hacking Speed at population 50, Twitch Infiltrators (+10%), and various tech unlocks (Accelerator offensive program, Eukaryotic Sap tech) compound here. Speed is not about finishing hacks faster — it is about <strong>finishing before the trace fires</strong>.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">THE PROXY IMPERATIVE — NEVER HACK FROM NEXUS</div>
+          Hacking directly from the Nexus exposes your home system to trace-back if the hack is detected. The correct architecture: hack to a neutral special node or empty system first, establish a Sanctuary there, then hack outward from that Sanctuary. Your Nexus is never the origin point for any offensive operation once you have a single proxy established. The extra 2–3 turns to chain through a proxy is always worth the security. Getting detected at the Nexus is a potential game-ending event.
+        </div>
+
+        <p>Distance matters: hack time scales with the number of hops between origin and target. Hacking from a closer Sanctuary is always faster than from the Nexus or a distant proxy. When targeting a high-value system, position a staging Sanctuary as close as possible <em>before</em> initiating the important hack. A 3-turn hack from close range beats a 7-turn hack from your home system on every axis — speed, security, and operation efficiency.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">CANCEL PENALTY — COMMIT TO YOUR HACKS</div>
+          Cancelling an active hacking operation incurs a −30 Bandwidth penalty for 3 turns. With a typical mid-game Bandwidth pool of 60–100, this is painful. Before initiating a hack, confirm the target is the right choice. Pivoting costs more than waiting.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">STEAM-KOXSOS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">🔓</span>
+        <span class="block-title">UC-Exclusive Hack Outcomes and Defensive Programs</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Beyond the standard hack outcomes available to all factions, the UC has access to four exclusive operations:</p>
+
+        <table class="ref-table">
+          <tr><th>Outcome</th><th>Effect</th><th>Notes</th></tr>
+          <tr><td class="cell-key">Create Sanctuary</td><td>Places a Sanctuary on a planet in the target system</td><td class="cell-good">Core expansion action</td></tr>
+          <tr><td class="cell-key">Install Transmigration Beacon</td><td>Places a beacon on a special node for later Nexus move</td><td>Costs 10 BW; charges over ~7 turns</td></tr>
+          <tr><td class="cell-key">Abduct Sleeper</td><td>Recovers a Sleeper from the system; converts a Nexus pop to Shadow</td><td>1 Sleeper per hack per system</td></tr>
+          <tr><td class="cell-key">Recover Lost Home System</td><td>Special emergency recovery action</td><td class="cell-bad">Situational; costs significant BW</td></tr>
+        </table>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">ENCRYPT DOES NOT SLOW TRACES</div>
+          The Encrypt defensive program's description states it slows enemy hacking by 50%. This does <em>not</em> apply to traces. An opponent tracing a hack back to its origin is not slowed by Encrypt. Encrypt prevents hacks from succeeding; it does not prevent you from being located if you hack from an unprotected origin. Place Encrypt on the Nexus to block incoming hacks — not to prevent traces from your outgoing ones. Proxy hacking is the correct solution to trace exposure.
+        </div>
+
+        <p>Overload is the offensive program that forces a target system's Encrypt stack down from its maximum (normally 4) to 3. A system with 3 Encrypt programs running effectively maxes out its defensive wall — but an Overload from you temporarily caps that maximum at 3, invalidating one of their Encrypt slots. When you need to hack a heavily defended home system, Overload first.</p>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">STEAM-KOXSOS</span><span class="src-pill">AMPLITUDE-FORUM</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T7: MINOR FACTIONS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Minor Factions: Anchors, Manpower, and Range Extension</h2>
+        <div class="topic-subtitle">Minor factions serve two distinct strategic functions for the UC that no other faction shares in the same combination.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🤝</span>
+        <span class="block-title">Manpower Source and Assimilation Range Extension</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Minor factions at maximum friendship donate Manpower — the Survival Training reward (which replaces Selective Migration for the UC since you cannot accept foreign populations) grants <strong>100 Manpower per interaction</strong>. This is the most consistent and controllable manpower source available to the UC outside of the Elite Shadows law. Prioritize reaching max friendship with at least one minor faction early, and keep them alive as long as possible to repeat this interaction.</p>
+
+        <p>The second and strategically more important function: <strong>assimilating a minor faction spawns Sanctuaries on every planet they colonized, anywhere in the galaxy.</strong> Unlike the Unfallen's vine network — which is constrained by distance and must extend continuously from your territory — the UC can assimilate a minor faction on the opposite side of the galaxy and instantly have a Sanctuary cluster 60 lanes from home. This cluster becomes a new staging post for proxy hacking in a completely different galactic region.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">ASSIMILATION MECHANICS — WHAT YOU GET AND WHAT YOU DON'T</div>
+          When you assimilate a minor faction (via Influence buyout labeled "Purge," or via the Assist quest), you receive: their assimilation trait, their orbiting fleet, and Sanctuaries over every planet they colonized. You do not receive their population — they vanish. The new Sanctuaries are initially empty. The fleet is worth scrapping for manpower if you have no immediate military use for it.
+        </div>
+
+        <p>Two minor factions are priority acquisition targets for the UC specifically:</p>
+
+        <div class="trait-block gold">
+          <div class="trait-label gold">TIKANAN — "INFINITE SOLDIERS" TRAIT</div>
+          Assimilating the Tikanan minor faction grants the Infinite Soldiers trait: +100 Manpower income on Empire per turn. This is a permanent, passive solution to the faction's worst structural weakness. Tikanan is an S-tier assimilation target for the UC above almost any other consideration.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">KALMAT — BANDWIDTH COST REDUCTION</div>
+          The Kalmat assimilation trait gives −10% Bandwidth costs on hacking programs. Combined with the faction's native Twitch Infiltrators and other hacking speed bonuses, this further stretches your Bandwidth pool and allows riskier hack routes to become viable.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">FANDOM-TRAITS</span><span class="src-pill">YT01-PANGOLIN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- LAYER DIVIDER -->
+  <div class="layer-divider">▸ LEVERAGE LAYER ◂</div>
+
+  <!-- ══════════════════════════════════════════════════════════ T8: GOVERNMENT, LAWS, TECH -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Government, Laws &amp; Tech Priorities</h2>
+        <div class="topic-subtitle">The UC's unique laws substitute directly for standard laws and include some of the strongest per-system scaling effects in the game. Tech priorities are non-obvious and diverge from generalist faction play.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">Government Options and the Federation Case</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The UC starts as a <strong>Democracy</strong> with a heavy Pacifist bias. Because both UC population types share identical political traits and you cannot manage population diversity, elections tend to produce Pacifist-dominated results. Democracy is functional — multiple party laws active simultaneously suits the UC's generalist nature well — but offers limited control over law composition.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">FEDERATION — THE OVERCOLONIZATION TOOL</div>
+          Federation's primary benefit for the UC is not its representation mechanic — it is the <strong>additional colony slots</strong> it grants, which directly extend the overcolonization limit. When you are in an aggressive mid-game expansion phase and approaching the bandwidth penalty threshold, switching to Federation is the practical pressure valve. The tradeoff: you lose Republic's law bonuses and Democracy's multi-party flexibility.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">REPUBLIC — LATE-GAME LAW OPTIMIZATION</div>
+          Republic's significant law bonuses compound strongly with the UC's unique law substitutions. If you have finished major expansion and want to maximize the per-Sanctuary and per-Shadow FIDSI output in the late game, Republic is the correct destination. The 2-slot representation and bonus law effects make expensive laws genuinely affordable.
+        </div>
+
+        <p><strong>Opening turns political note:</strong> Your first hero, Fasol Staccato, is a Scientist. Assign them to a scout fleet for fast levelling on curiosity exploration. Hold 2–3 bandwidth skill points unspent. The Scientist party will naturally gain strength; the Pacifist party's dominance tends to moderate as hero elections give Scientists representation. Do not force a government change in the first 20 turns unless overcolonization is already a problem.</p>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">FANDOM-STRATEGY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">Unique Laws: The UC Substitution Set</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Several standard laws are replaced with UC-specific variants. The replacements are not minor tweaks — they are fundamental to how the UC scales in the mid and late game. All law effects shown below are base values; Republic government adds approximately 50% to these numbers.</p>
+
+        <table class="ref-table">
+          <tr><th>Law</th><th>Replaces</th><th>Party</th><th>Tier</th><th>Effect</th></tr>
+          <tr><td class="cell-key">Bits to Bytes</td><td>New Colony Rule</td><td>Industrialist</td><td>1</td><td class="cell-good">+20 Food per Sanctuary</td></tr>
+          <tr><td class="cell-key">Dust and Grub</td><td>Species Stability Act</td><td>Religious</td><td>1</td><td class="cell-good">+5 Dust per original Empire pop; +10% Food on Home System</td></tr>
+          <tr><td class="cell-key">Nightshifters</td><td>Peace and Prayer Act</td><td>Religious</td><td>4</td><td class="cell-good">+1% FIDSI per Sleeper on Home System</td></tr>
+          <tr><td class="cell-key">Umbral Anglers</td><td>Cool Copies Clause</td><td>Ecologist</td><td>2</td><td class="cell-good">+2 Food per Umbral Shadow on Home System; +2 Food per pop on planets</td></tr>
+          <tr><td class="cell-key">Backdoor Boon</td><td>Power to the People Act</td><td>Ecologist</td><td>3</td><td class="cell-good">+1% Science and +1% Industry per Backdoor on Home System</td></tr>
+          <tr><td class="cell-key">Elite Shadows</td><td>All Hands Dictum</td><td>Ecologist</td><td>4</td><td class="cell-good">+20 Manpower/turn per Umbral Shadow + 10 FIDSI per Shadow on Home System</td></tr>
+        </table>
+
+        <p>Elite Shadows is the law the entire faction eventually builds toward. At 45 Shadows on a full Nexus: +900 Manpower/turn and +450 FIDSI. This is the inflection point where the UC's manpower crisis effectively resolves and their FIDSI output becomes overwhelming.</p>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8c">
+      <div class="block-header" onclick="toggle('cb8c')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">Tech Priorities: Why the UC Tree Reads Differently</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The UC tech tree has the same structure as every other faction, but several techs have altered descriptions — specifically the "also applies to sanctuary systems" modifier. These techs are disproportionately valuable because they multiply across the entire sanctuary network, not just the Nexus. Tech choices that look average for other factions are strong picks for the UC for this reason.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">1ST TECH</span><span><strong>Xenolinguistics:</strong> UC version cascades +Science per planet to all Sanctuary planets. This is the multiplier that validates your entire expansion strategy. Researching this first is the consensus among all sources reviewed.</span></li>
+          <li><span class="step-n">2ND TECH</span><span><strong>Behemoth Blueprints:</strong> The economic behemoth's FIDSI multiplier applies empire-wide because Sanctuary FIDSI flows to Nexus. One economic behemoth multiplies everything. Community sources diverge on whether to prioritize the scientific behemoth (to lower science costs faster) or the economic behemoth (for immediate FIDSI compounding). Both are valid depending on your victory path; the consensus leans economic for general play.</span></li>
+          <li><span class="step-n">HACKING OPS</span><span><strong>Autonomous Materials + Low Kelvin Sciences:</strong> These two techs together add +2 maximum hacking operations. Getting to 4 simultaneous operations in the mid-game unlocks the hacking expansion rate needed to build a galaxy-spanning network before opponents can settle the best planets.</span></li>
+          <li><span class="step-n">DIRTY HANDS</span><span><strong>Dirty Hands Act:</strong> −10% system improvement costs. You only build improvements once, but the cost is doubled by Expensive Tastes. Taking Dirty Hands Act early and dropping it once improvements are built is a cost-efficient approach — no other faction benefits from it as a temporary law in quite this way.</span></li>
+          <li><span class="step-n">CLOAKING</span><span><strong>Military tier:</strong> Cloaking upgrades apply empire-wide automatically on research. You do not need to equip modules or refit ships. Stay ahead of the anti-cloak tech curve of whoever is nearest — falling behind leaves you exposed.</span></li>
+        </ul>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">LP02-GUD</span><span class="src-pill">FANDOM-STRATEGY</span><span class="src-pill">STEAM-RUZEN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T9: FACTION QUEST -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">Faction Quest: The Imane Kyriv Fork</h2>
+        <div class="topic-subtitle">The UC faction quest bifurcates into two fundamentally different reward paths at the Chapter 2 hero choice. The fork is mechanically consequential, not cosmetic.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🔱</span>
+        <span class="block-title">Quest Fork: Harmony vs. Freedom</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Imane Kyriv — the pilgrim hero introduced in Chapter 2 — presents a choice: take the <em>Harmony</em> path (accept her as a military leader, valuing collective unity) or the <em>Freedom</em> path (accept her as a hacking specialist, valuing individual agency). This choice gates you into one of two distinct questline completions.</p>
+
+        <div class="quest-fork">
+          <div class="quest-branch harmony">
+            <div class="quest-branch-title">⚔️ HARMONY BRANCH</div>
+            <div class="quest-reward-row">
+              <span class="quest-reward-label">CH.2</span>
+              <span>Imane Kyriv as combat fleet commander; +5 Production per Sleeper on home system</span>
+            </div>
+            <div class="quest-reward-row">
+              <span class="quest-reward-label">CH.3</span>
+              <span>Military ship production requirements; intermediate fleet rewards</span>
+            </div>
+            <div class="quest-reward-row">
+              <span class="quest-reward-label">FINAL</span>
+              <span><strong>+30% fleet evasion</strong> on Empire</span>
+            </div>
+            <div class="quest-verdict">Best if: committing to a military victory path early; fleet combat is your primary plan</div>
+          </div>
+
+          <div class="quest-branch freedom">
+            <div class="quest-branch-title">👁️ FREEDOM BRANCH</div>
+            <div class="quest-reward-row">
+              <span class="quest-reward-label">CH.2</span>
+              <span>Imane Kyriv as hacking specialist; +3 Influence per Sleeper on Empire</span>
+            </div>
+            <div class="quest-reward-row">
+              <span class="quest-reward-label">CH.3</span>
+              <span><strong>Burning Metal law</strong> unlocked: +5% Hacking Speed per Backdoor on Empire (independent law, no Influence upkeep)</span>
+            </div>
+            <div class="quest-reward-row">
+              <span class="quest-reward-label">FINAL</span>
+              <span><strong>+1 maximum hacking operation</strong> on Empire</span>
+            </div>
+            <div class="quest-verdict">Best if: standard UC play — more operations compounds faster than fleet evasion for most win conditions</div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">DEFAULT RECOMMENDATION: FREEDOM</div>
+          The +1 maximum hacking operation from the Freedom branch is the stronger reward for most UC games. Going from 3 to 4 (or 4 to 5) simultaneous operations meaningfully accelerates Sanctuary network growth and Sleeper pipeline throughput. The Burning Metal intermediate law is also strictly better than no free law. The Harmony branch is correct only when you have an early military commitment — for example, if you're in a position to win a Supremacy victory through conquest before the freedom branch pays off. In most games, take Freedom.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">STEAM-KOXSOS</span><span class="src-pill">LP02-GUD</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T10: VICTORY & FLEET -->
+  <div class="topic" id="t10">
+    <div class="topic-header">
+      <div class="topic-num">10</div>
+      <div>
+        <h2 class="topic-title">Victory Paths &amp; Fleet Design</h2>
+        <div class="topic-subtitle">The UC can pursue any victory condition — but some paths align with the faction's natural advantages; others fight against structural weaknesses.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb10a">
+      <div class="block-header" onclick="toggle('cb10a')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Victory Condition Analysis</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="trait-block">
+          <div class="trait-label">CONQUEST / SUPREMACY — NATURAL PRIMARY PATH</div>
+          The Sanctuary mechanic makes Conquest the UC's most natural win condition. Every system with a Sanctuary counts as controlled. Placing Sanctuaries on all six major faction home systems wins a Conquest victory without a single invasion. In practice, the UC races to expand their Sanctuary network before opponents can settle all the best planets — a well-played UC often hits the Conquest threshold before opponents realize a victory is imminent. Supremacy follows the same logic: establish a Sanctuary on every major faction's home system, then use that network as a staging ground for the final military push if needed.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ECONOMIC VICTORY — VIABLE AND UNDERESTIMATED</div>
+          The automatic trading subsidiary on every Sanctuary, combined with an empire-wide network that can reach dozens of systems, generates Dust output that can rival or exceed the Lumeris at scale. A fully converted Shadow Nexus running Elite Shadows law additionally dumps enormous Dust through FIDSI compounding. Economic Victory requires no direct military action — a natural fit for a faction that prefers invisibility.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SCIENCE VICTORY — CHALLENGING BUT FEASIBLE</div>
+          High Science output from Umbral Shadows (+2 Science/pop on Nexus), combined with cloaked science ships and sanctuary-cascading improvements, can generate competitive research output. The challenge is speed: Sophons will typically outpace you on a pure Science race. The path is viable if you have significant tech lead from hacking opponents' research early, or if the Sophons are not in the game.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">SUPREMACY / MILITARY — FIGHT YOUR WEAKNESSES</div>
+          Full military Supremacy requires coordinated fleet action across the map. The UC's chronic manpower shortage, single production system, and paper-thin ships make pitched battle campaigns costly. The correct military approach is siege-from-Sanctuaries: spawn siege ships inside enemy territory from pre-planted Sanctuaries, besiege while their fleet is occupied elsewhere, never fight on their terms. Never attempt a war of attrition — you cannot sustain one.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">LATE-GAME PIRATE DROID HACKING</div>
+          Once you have exhausted meaningful expansion targets, dedicate hacking operations to the Pirate Droids. At high hacking operation counts, targeting droids produces random high-tier resources — Adamantium, Antimatter, Quadrinix — at a rate that meaningfully supplements your resource economy in the late game. Especially valuable after Tier 3+ curiosity research is complete.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">STEAM-KOXSOS</span><span class="src-pill">STEAM-RUZEN</span><span class="src-pill">PLAYER-VERIFIED</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb10b">
+      <div class="block-header" onclick="toggle('cb10b')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Fleet Design: Multi-Specialised, Never General-Purpose</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>UC ships have heavy utility and defense slot profiles with frequent hybrid defense/utility slots. The implication: they are fast and reasonably tanky, but their weapon hardpoints are fewer than dedicated combat hulls. UC ships are not brawlers — they are assassins, scouts, and siege platforms depending on how you configure them.</p>
+
+        <p>The recommended fleet philosophy across sources: <strong>multiple ship designs, each specialised for one role</strong>. A UC fleet should not be a general-purpose combat formation. Build:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">AMBUSHER</span><span>Cloaked strike ships prioritizing initiative (Ambusher module) and speed. Fire first, do maximum damage in the opening phase, use cloak to disengage if the fight turns unfavorable. The Ambusher module is the most important single module in UC combat design.</span></li>
+          <li><span class="step-n">SIEGE</span><span>Dedicated siege ships with slow speed are best <em>redesigned</em> at the time of need and reverted afterward. Build siege-optimized designs in a Sanctuary close to the target, besiege, then redesign at the same Sanctuary for mobility. You can change ship designs at any Sanctuary.</span></li>
+          <li><span class="step-n">EVASION</span><span>UC heroes have access to fleet evasion skills (+10% per tier). Combined with multiple support utility slots, evasion-focused builds can become nearly unhittable in the early-mid game. Stack evasion on fast attack ships for a harassment and disruption role.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">UC SHIPS ARE MADE OF PAPER</div>
+          The faction's ships die fast in equal-number engagements against dedicated military factions. Never fight their main fleet head-to-head unless you have a significant firepower advantage. Your cloak is the force multiplier — choose fights where the enemy is outnumbered, out of position, or retreating. Ambush supply lines at Sanctuaries, not fleet engagements at their home system.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI KB</span><span class="src-pill">YT01-PANGOLIN</span><span class="src-pill">STEAM-RUZEN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ T11: COUNTER-PLAY -->
+  <div class="topic" id="t11">
+    <div class="topic-header">
+      <div class="topic-num">11</div>
+      <div>
+        <h2 class="topic-title">Playing Against the Umbral Choir</h2>
+        <div class="topic-subtitle">The intelligence briefing your opponent wishes you didn't have. What follows is written from the opposing player's perspective — the three temporal windows where the UC is vulnerable.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb11a">
+      <div class="block-header" onclick="toggle('cb11a')">
+        <span class="block-icon">🌅</span>
+        <span class="block-title">Early Game (Turns 1–30): Detection Pressure and Exploration Race</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The UC is at its most vulnerable in the early game — before their Sanctuary network is established, before they have a proxy chain, and while their Nexus is low-cloak-tier. Your actions here can force them to spend tech turns on military defense rather than hacking expansion, which is their primary compounding resource.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">EXPLORE FAST</span><span><strong>Saturate special nodes with probes.</strong> The UC needs specific special nodes to place beacons. If you discover and stake claims near special nodes early, you limit their transmigration options and may force their Nexus to remain on an exposed location.</span></li>
+          <li><span class="step-n">SETTLE EARLY</span><span><strong>Colonize good planets before the UC hacks them.</strong> Once a planet has a Colony or Outpost, placing a Sanctuary requires a longer hack (enemy system vs. empty system). Racing to settle planets near your territory denies the UC's easiest expansion targets.</span></li>
+          <li><span class="step-n">ANTI-CLOAK T1</span><span><strong>Research Survival Suits</strong> (first anti-cloak tech, Military Tier 3). This doesn't reveal the UC home system — Tier 1 anti-cloak is not strong enough — but it allows you to see cloaked scout fleets and Sanctuaries at close range. The key impact: it tells you the UC is in your region, which is information they do not want you to have.</span></li>
+          <li><span class="step-n">TURN SLEEPERS</span><span><strong>Keep Approval high.</strong> Sleepers embedded in your systems are removed when that system's happiness rises above a threshold (approximate; keep above "Content"). This is the cheapest possible counter — a well-managed empire passively purges Sleepers without any dedicated action.</span></li>
+        </ul>
+
+        <div class="source-row">
+          <span class="src-pill">AMPLITUDE-FORUM</span><span class="src-pill">STEAM-RUZEN</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t11','cb11a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb11b">
+      <div class="block-header" onclick="toggle('cb11b')">
+        <span class="block-icon">🌆</span>
+        <span class="block-title">Mid Game (Turns 30–80): Wonder Contest, Sleeper Purges, Locating the Nexus</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>This is the window where the UC's Sanctuary network is growing but not yet mature. Their Nexus is still locatable if you have anti-cloak Tier 2+, and their FIDSI output hasn't yet been amplified by a full Shadow conversion. The mid-game is your best opportunity to disrupt their compounding engine before it becomes unstoppable.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">WONDERS</span><span><strong>Contest wonders aggressively.</strong> The UC home system is a prime contender for every competitive wonder — it is a fully developed single system, often with high production, and the economic behemoth multiplies all wonder FIDSI benefits. If you see a wonder completing at the UC Nexus, know that they've likely already won the production race. Prioritize building key wonders before turn 60, or accept you won't get them.</span></li>
+          <li><span class="step-n">COUNTER-HACK</span><span><strong>Trace the source of hacks, not just block them.</strong> Encrypt defensive programs block incoming hacks, but the real prize is a successful trace — which reveals where the hack originated. If you can trace a hack back to a Sanctuary, you now know one node of their network. Stack defensive programs and trace programs, not just Encrypt.</span></li>
+          <li><span class="step-n">ANTI-CLOAK</span><span><strong>Research Anti-Matter Channeling</strong> (Military Tier 4, anti-cloak Tier 2 + improved probes). At this tier, a dedicated scouting fleet can scan special nodes systematically. Combine with the knowledge that the UC Nexus sits on a special node — send probes to every special node in your galaxy sector. One of them is your target. Once you find the Nexus, the UC is forced to either fight or transmigrate (with all the costs that entails).</span></li>
+          <li><span class="step-n">FIND SANCTUARIES</span><span><strong>Locate and target Sanctuaries before declaring war.</strong> Sanctuaries are the UC's forward bases. If you attack before locating them, you'll find ships materializing from inside your own territory. Invest in anti-cloak scouting of your own systems before committing to war — know where their network is before the shooting starts.</span></li>
+        </ul>
+
+        <div class="source-row">
+          <span class="src-pill">AMPLITUDE-FORUM</span><span class="src-pill">STEAM-RUZEN</span><span class="src-pill">FANDOM-STRATEGY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t11','cb11b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb11c">
+      <div class="block-header" onclick="toggle('cb11c')">
+        <span class="block-icon">🌃</span>
+        <span class="block-title">Late Game (Turn 80+): Direct Pressure, Transmigration Trap, Tactical Counters</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>By the late game a well-played UC is difficult to stop — their FIDSI output is compounding, their Sanctuary network may span the galaxy, and they potentially have a Conquest victory threshold within reach. Your window is narrow. Direct pressure on the Nexus is the most effective remaining option, because it forces a choice: fight or flee.</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">GO FOR THE HEAD</span><span><strong>Pressure the Nexus directly.</strong> A UC that is sieged at their home system cannot develop it, cannot easily spawn ships, and may be forced into emergency transmigration (which destroys their improvements if uncharged). Even if you cannot take the system, sustained pressure prevents the FIDSI machine from running at full speed.</span></li>
+          <li><span class="step-n">BEACON TRAP</span><span><strong>Guard known special nodes with cloaked fleets.</strong> The UC must land on a special node when transmigrating. If you have anti-cloak Tier 3 ships waiting at the most obvious destination nodes, a forced transmigration lands them directly into your fleet. A UC that transmigrates into a waiting fleet simultaneously loses most of their population (emergency move) and their fleet. This combination is typically game-ending for them.</span></li>
+          <li><span class="step-n">BOARDING PODS</span><span><strong>Exploit the manpower weakness.</strong> The UC is chronically low on manpower. Boarding pod modules on your ships force crew-based casualties that the UC cannot easily replace. This asymmetric tactic disproportionately degrades UC fleet combat effectiveness in repeated engagements.</span></li>
+          <li><span class="step-n">ION WAVE</span><span><strong>Ion wave concentrated sanctuary clusters.</strong> If the UC has stacked multiple Sanctuaries in a system and is mass-producing ships from that location, an Ion Wave (wonder ability) directed at that system disables their entire production pipeline in that region temporarily. Pair with an assault fleet.</span></li>
+          <li><span class="step-n">ANTI-CLOAK T3</span><span><strong>Quadrinix Toroids</strong> (Military Tier 5, anti-cloak Tier 3): full detection of all but the highest-tier cloaked ships. At this point, the UC's invisibility is nearly gone. Combined with the above tools, a fully prepared late-game opponent can dismantle the UC's advantage entirely — but only if they invested in detection consistently rather than reacting after they were already behind.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE ASYMMETRIC TIMING PROBLEM</div>
+          All of the above countermeasures require consistent investment from turn 1. The player who reactively researches anti-cloak at turn 70 when the UC is at 80% Conquest will not have time to execute the beacon trap, locate all Sanctuaries, and build boarding pod ships before the game ends. Fighting the UC requires preparation before you know they're a threat — which is exactly how they're designed.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">AMPLITUDE-FORUM</span><span class="src-pill">STEAM-RUZEN</span><span class="src-pill">FANDOM-STRATEGY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t11','cb11c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">UC decisions under real game conditions — infrastructure, network, manpower, counter-play, and one empire diagnostic. Concrete situations, one right answer.</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac10';
+  const TOTAL = 12;
+  let qIdx = 0;
+  let answered = false;
+
+  const quizzes = [
+    // Q1 — Bandwidth / hero skill reserve
+    {
+      scenario: "Turn 12. You have 6 Bandwidth, 1 hacking operation active (building a Sanctuary), 3 idle Bandwidth, and 4 pops on Nexus. Your faction quest just triggered a milestone: raise your total Bandwidth by 10 to complete Chapter 1. Your starting hero Fasol Staccato has 3 skill points unspent — 2 of which could each give +10 Bandwidth if assigned to the Bandwidth skill. The natural pop growth rate would reach the milestone in roughly 8–10 turns.",
+      q: "What is the correct response to this quest milestone?",
+      opts: [
+        "Spend both hero Bandwidth skill points now — completing the milestone in 2 turns saves 6–8 turns of waiting and there's no downside to spending them early.",
+        "Wait for natural growth — skill points are more valuable in later tiers and should not be spent on Bandwidth when population will get there anyway.",
+        "Spend both Bandwidth skill points this turn. The quest specifically exists to drain these reserves at milestone moments, and the mechanic of holding bandwidth points unspent until quest demand is one of the primary reasons to not spend skill points freely in the early game. You complete the milestone immediately and can resume normal skill investment. The 6–8 turns saved has real compounding value at this game speed.",
+        "Spend one Bandwidth point to partially complete the milestone, keep the other in reserve for a later quest demand."
+      ],
+      correct: 2,
+      explain: "The correct play is to spend both Bandwidth skill points immediately. The UC faction quest is specifically designed to ask for Bandwidth increases at key chapter milestones — this is not accidental. Holding 2–3 hero skill points unspent in BW upgrades until the quest triggers is the intended mechanic, allowing instant milestone completion rather than 8–10 turns of waiting. Option A is also numerically correct but the framing 'no downside' misses the point — the reason NOT to spend them early is specifically to have them available for exactly this moment. Option B's reasoning about tier value is incorrect for BW skills; they are most valuable as a quest completion mechanism, not as long-term scaling. Option D is suboptimal — completing the milestone halfway while delaying 3–5 more turns gains nothing."
+    },
+    // Q2 — Proxy hacking decision
+    {
+      scenario: "Turn 25. You have a Sanctuary two hops from an enemy (Sophons) home system. You have no other proxy closer. Hacking the Sophons home system directly from that Sanctuary takes 5 turns. Hacking it from your Nexus takes 3 turns. The Sophons do not appear to have anti-cloak tech yet. You want a Sleeper on their home system as soon as possible.",
+      q: "Do you hack from the Nexus (3 turns) or from the Sanctuary proxy (5 turns)?",
+      opts: [
+        "Hack from the Nexus — 3 turns vs. 5 turns is a significant difference and there's no visible anti-cloak threat. Speed is the priority.",
+        "Hack from the Sanctuary proxy — the 2-turn difference is irrelevant compared to the security risk. If the hack is detected and traced from the Nexus, your home system is revealed. The Sophons may not have anti-cloak tech yet, but a trace-back doesn't require anti-cloak — it follows the hack path. Once your Nexus is located, the Sophons can research and deploy a response. The proxy chain is not optional — it is the foundational security rule of UC play.",
+        "Neither — wait until you have a proxy one hop away before hacking the home system.",
+        "Hack from the Nexus but assign maximum defensive Encrypt programs to it first — this will prevent the trace from succeeding."
+      ],
+      correct: 1,
+      explain: "Always use the proxy, even at a 2-turn cost. The security principle is absolute: the Nexus is never the origin point of an offensive hack. A trace-back exposing the home system is a high-severity event — it tells the opponent exactly where you are, allows them to deploy a detection fleet, and can force a premature emergency transmigration. Option A's reasoning (no visible anti-cloak) is flawed because trace-backs are not anti-cloak — they follow the hack's path regardless of cloak levels. Option D is specifically wrong: Encrypt does not slow or prevent traces (it only blocks incoming hacks from succeeding). Option C is too cautious — a 2-hop proxy is already a valid security chain; you do not need to be 1 hop away."
+    },
+    // Q3 — Manpower triage
+    {
+      scenario: "Turn 58. You have 0 Manpower, 3 ships with empty troop slots, and 4 pirate reward ships from a recent curiosity find sitting idle in a fleet. A minor faction (Tikanan) is at maximum friendship and 2 turns from assimilation. You need roughly 200 Manpower to fill your combat fleet's troop capacity before a planned invasion.",
+      q: "What is your fastest path to 200 Manpower this turn?",
+      opts: [
+        "Wait for assimilation of Tikanan — their Infinite Soldiers trait (+100 Manpower/turn) will solve all future manpower problems.",
+        "Request Manpower aid from a diplomat AI — most have surplus manpower in the mid-game.",
+        "Scrap the 4 pirate reward ships immediately. Scrapping (not selling) returns all embedded manpower at no cost — these ships were free rewards, so scrapping them is pure manpower gain. Combine with triggering the Tikanan friendship action (Survival Training, +100 MP) this turn before assimilation completes. Between scrapping and one friendship action you likely reach 200 Manpower in a single turn.",
+        "Hold off on the invasion until the Elite Shadows law is active — that is the only reliable manpower source."
+      ],
+      correct: 2,
+      explain: "The correct play combines two underused mechanics. Scrapping reward ships (pirate ships, minor faction fleet gifts, curiosity rewards) is free manpower — you spent nothing to receive them, and scrapping returns all the manpower they contain. Most players sell reward ships to the market; UC players should scrap them by default. The Tikanan friendship action (Survival Training = 100 MP) can be triggered before assimilation completes and is the second fastest immediate source. Together these likely provide the required 200 MP this turn. Option A is correct long-term (Tikanan Infinite Soldiers is an S-tier trait) but doesn't help this turn. Option B is viable as backup but slower than the mechanical sources already in your hands. Option D defers a combat opportunity unnecessarily — the invasion window may close."
+    },
+    // Q4 — Overcolonization/Bandwidth penalty
+    {
+      scenario: "Turn 42. You currently have 18 Sanctuaries, which puts you 3 systems above your overcolonization limit (limit is 15). You are running the standard −100% Approval penalty and −15% maximum Bandwidth penalty. Your total Bandwidth is 90, giving you an effective cap of 76.5 (90 × 0.85). You have 3 hacking operations active and 4 idle Bandwidth. You're considering hacking 2 more systems this turn for better resource planets.",
+      q: "Should you expand further this turn, or address the overcolonization situation first?",
+      opts: [
+        "Expand — you still have idle Bandwidth and the Bandwidth penalty is manageable at −15%. Push expansion while you have the operations available.",
+        "Do not expand. You are already at −15% Bandwidth penalty with 3 systems over limit. Two more Sanctuaries pushes the penalty to −25% (5 systems × 5%). At 90 max Bandwidth, this drops your effective cap to 67.5 — and each additional system compounds the penalty. Before expanding, either research Xeno Anthropology (+2 colony slots) or Cultural Invertics (+4 colony slots), or switch government to Federation for additional slots. Expand only after addressing the limit — the compounding Bandwidth penalty is a harder constraint than the Approval penalty.",
+        "Expand and immediately pass the Backdoor Boon law to compensate for the Bandwidth loss.",
+        "Expand — overcolonization Approval penalties only matter for FIDSI output, and your Sanctuary FIDSI is already flowing back to Nexus normally."
+      ],
+      correct: 1,
+      explain: "The overcolonization Bandwidth penalty is the harder constraint. At 3 systems over limit you're already paying −15%. Each additional system adds −5% more. Going to 5 over pushes to −25%, then −30%, etc. — this compounds multiplicatively against your available hacking capacity. Unlike the Approval penalty (which affects FIDSI output percentages), the Bandwidth penalty directly reduces how many hacking operations you can sustain and how much manpower your idle BW generates. The correct action is to first remove or minimize the penalty through tech (Xeno Anthropology, Cultural Invertics) or government switch (Federation adds colony slots), then expand. Option A's 'manageable at −15%' reasoning is correct for now but wrong as a pattern — continuing to expand without addressing the limit compounds the problem until it becomes critical, typically when you're 10+ over and paying −50% BW. Option D is flatly wrong: FIDSI penalties from approval affect your entire empire output."
+    },
+    // Q5 — Counter-play (opponent perspective)
+    {
+      scenario: "You are playing United Empire. Turn 44. No anti-cloak tech researched yet. While sending a scout probe to a nebula cluster, you accidentally uncover a UC Sanctuary on one of your border planets — the planet has a faint ring structure you don't recognize as your own. You now know a UC player is in your region but do not know where their Nexus is. The UC player has not attacked you.",
+      q: "What do you prioritize in the next 5 turns?",
+      opts: [
+        "Immediately declare war — you know they have a Sanctuary in your territory and the earlier you attack the less entrenched they are.",
+        "Ignore it and continue normal development — a Sanctuary is just a Sanctuary, it can't hurt you by itself.",
+        "Research anti-cloak as your next military tech (Survival Suits → Tier 1), begin sending probes to every special node in your sector systematically, increase Approval in the affected system to purge any embedded Sleepers, and place Defensive Programs on your home system. Do not declare war yet — you have one data point (one Sanctuary), not a strategic picture. The UC may have 10 more Sanctuaries in your territory. Going to war blind against an unknown network is a severe mistake.",
+        "Offer the UC a peace treaty immediately to buy time and learn their identity through diplomacy."
+      ],
+      correct: 2,
+      explain: "One detected Sanctuary is an intelligence cue, not a war trigger. The correct response is systematic information gathering before any military action. Anti-cloak Tier 1 (Survival Suits) allows your scouts to detect Sanctuaries and low-tier cloaked ships at close range — researching it this turn starts giving you visibility into the UC network. Probing special nodes in your sector has a chance of locating the Nexus directly. Raising Approval in the compromised system passively purges Sleepers. Defensive Programs on your home system prevent your tech from being hacked. The reason not to declare war immediately (Option A) is that the UC's network may already extend far into your territory — fighting them without knowing where their Sanctuaries are means they spawn ships inside your lines from positions you never knew existed. Option B's passivity ignores a real strategic threat that will compound. Option D has some merit but the UC is immune to influence conversion and gains little from your peace treaty offer."
+    },
+    // Q6 — DIAGNOSTIC: Turn 55 UC empire read
+    {
+      scenario: "EMPIRE DIAGNOSTIC — Turn 55, UC player. Settings: Normal galaxy, Serious difficulty, fast speed. State: 22 Sanctuaries (limit is 18 — 4 over), effective Bandwidth 72 of a base 95 (−20% penalty, 2 systems of Bandwidth currently paying for active beacons). 3 hacking operations running. Nexus has 11 Umbral Choir pops, 4 Umbral Shadows — home system is at Level 1 development (Tier 1 cloak). Fasol Staccato is Level 6, assigned to Nexus as Governor. No government change from Democracy. Approval at 55% (Content, barely). Science output: 420/turn. No Elite Shadows law active. No faction quest Chapter 2 completed. Food: 180/turn (net positive 40 after Shadow consumption).",
+      q: "This UC empire has multiple problems. Identify the most critical failure and the correct resolution sequence.",
+      opts: [
+        "Primary failure: approval at 55% is too low. Fix: switch to Federation for colony slots, drop 2 Sanctuaries to reduce overcolonization, pass Bits to Bytes (Industrialist T1) for food per Sanctuary.",
+        "Primary failure: Nexus is at Level 1 development with Tier 1 cloak at turn 55 — this is the existential risk. A UC player that has not upgraded their Nexus to at least Level 2 by turn 55 is vulnerable to detection by anyone with standard anti-cloak tech (Military Tier 4, widely researched by this point). Tier 1 cloak is insufficient. The resolution sequence: (1) immediately build Level 2 system development on Nexus — this raises cloak to Tier 2 and unlocks the improvement cascade for Sanctuaries; (2) address the Bandwidth penalty by researching Xeno Anthropology to raise the overcolonization limit; (3) complete Chapter 2 faction quest to get the Shadow pipeline moving; (4) assign Fasol to a fleet to level faster — a Level 6 Governor in this economy is under-leveling due to limited production turns. The Shadow count (4 of a potential 45) at turn 55 indicates the Sleeper pipeline is almost non-functional.",
+        "Primary failure: only 3 hacking operations. Fix: rush Autonomous Materials and Low Kelvin Sciences to get to 5 operations immediately — expansion rate is the core constraint.",
+        "Primary failure: food at only 180/turn. The Umbral Shadows are consuming too much food and the empire cannot sustain further Shadow conversion without crashing population growth."
+      ],
+      correct: 1,
+      explain: "This is a compound failure state, and sequencing the diagnosis correctly matters. The primary failure is the Nexus cloak level. Tier 1 cloak at turn 55 means any opponent who has researched Anti-Matter Channeling (Military Tier 4, standard by mid-game) can detect the Nexus with a probe sweep of special nodes. An exposed Nexus is an existential threat for a faction with no secondary systems. This takes priority above all other issues. The secondary failure is the overcolonization Bandwidth penalty (−20% at 4 over limit) — this is actively degrading hacking capacity at a critical expansion phase. Third in sequence: the Shadow pipeline. Only 4 Shadows at turn 55 means the hero skill bonus (+1% FIDSI per Shadow) is contributing almost nothing, the Elite Shadows law is inaccessible, and Chapter 2 quest is incomplete. Option A correctly identifies the Approval issue but misdiagnoses the primary failure — Approval at 55% (Content) is below optimal but not an emergency. Option C's hacking operation priority is real but secondary to cloaking. Option D's food assessment is wrong — 40/turn net positive with only 4 Shadows means food is currently adequate; it becomes a problem later when Shadow count rises, but it is not a current crisis."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
