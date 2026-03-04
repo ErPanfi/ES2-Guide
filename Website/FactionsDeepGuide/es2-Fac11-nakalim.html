@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Nakalim: Last Empire Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+<style>
+  /* ── Fac11 — Nakalim: pale sacred gold ──────────────────────────────────── */
+  /* Link order in <head>:                                                      */
+  /*   1. es2-guide.css                                                         */
+  /*   2. es2-faction-deepdive.css                                              */
+  /*   3. This <style> block                                                    */
+
+  :root {
+    --accent:            var(--nakalim-color);
+    --card-accent:       var(--accent);
+    --accent-dim:        rgba(var(--nakalim-color), 0.10);
+    --accent-bright-rgb: 255,240,180;
+  }
+
+  /* Faction-specific starfield ambience — ancient, dusty, sacred */
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 20% 35%, rgba(var(--nakalim-color), 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 50% 40% at 80% 65%, rgba(var(--nakalim-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  h1.page-title {
+    text-shadow:
+      0 0 40px rgba(var(--nakalim-color), 0.5),
+      0 0 80px rgba(var(--nakalim-color), 0.2);
+  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  /* Re-Awakening version callout */
+  .reawakening-banner {
+    background: rgba(var(--nakalim-color), 0.08);
+    border: 1px solid rgba(var(--nakalim-color), 0.35);
+    border-left: 3px solid rgb(var(--nakalim-color));
+    border-radius: 4px;
+    padding: 10px 14px;
+    margin-bottom: 18px;
+    font-size: var(--ts_sectionLabel);
+    line-height: 1.6;
+  }
+  .reawakening-banner strong {
+    color: rgb(var(--nakalim-color));
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 0.04em;
+  }
+
+  /* Relic assignment grid */
+  .relic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 14px 0;
+  }
+  .relic-card {
+    background: rgba(var(--nakalim-color), 0.06);
+    border: 1px solid rgba(var(--nakalim-color), 0.25);
+    border-radius: 4px;
+    padding: 10px 12px;
+  }
+  .relic-card-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: var(--ts_sectionTitle);
+    color: rgb(var(--nakalim-color));
+    letter-spacing: 0.06em;
+    margin-bottom: 5px;
+  }
+  .relic-card p {
+    margin: 0;
+    font-size: var(--ts_sectionLabel);
+    line-height: 1.55;
+  }
+  @media (max-width: 640px) {
+    .relic-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Science deficit meter */
+  .science-meter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0;
+    font-size: var(--ts_sectionLabel);
+    font-family: 'Share Tech Mono', monospace;
+  }
+  .science-meter-label {
+    white-space: nowrap;
+    color: rgb(var(--cyan));
+    min-width: 130px;
+  }
+  .science-bar {
+    flex: 1;
+    height: 8px;
+    background: rgba(var(--text-rgb, 255,255,255), 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .science-fill {
+    height: 100%;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.11</div>
+    <div class="guide-name">The<br>Nakalim</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🏛️ Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Relic System</div>
+  <div class="nav-item" onclick="scrollByID('t1')">📦 Relic Economy <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🔭 Forgotten Lore &amp; Early Relics <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">⚗️ Relic Assignment <span class="nav-check" id="nc3"></span></div>
+
+  <div class="nav-section-label">// Temple System</div>
+  <div class="nav-item" onclick="scrollByID('t4')">🏛️ Temples: Mechanics &amp; Placement <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">📖 Cathedrals <span class="nav-check" id="nc5"></span></div>
+
+  <div class="nav-section-label">// Empire</div>
+  <div class="nav-item" onclick="scrollByID('t6')">🔬 Rebuilding Science <span class="nav-check" id="nc6"></span></div>
+  <div class="nav-item" onclick="scrollByID('t7')">📜 Faction Quest &amp; Politics <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">🚀 Ships &amp; Fleet Design <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Strategy</div>
+  <div class="nav-item" onclick="scrollByID('t9')">🗡️ Strategic Directions <span class="nav-check" id="nc9"></span></div>
+  <div class="nav-item" onclick="scrollByID('t10')">🗓️ First 40 Turns Playbook <span class="nav-check" id="nc10"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.11</span> // The Nakalim</div>
+    <h1 class="page-title"><img src="../images/Races/NakalimIcon.webp"> The<br>Nakalim</h1>
+    <p class="page-subtitle">The Last Empire — custodians of a dead civilization's ruins, relic hunters, and patient engineers of influence. The Nakalim pay for every technology twice: once with Industry, and once with a permanent science penalty that never goes away. In exchange, they start with two tiers of tech already unlocked, generate massive Influence through Temples, and possess the only mechanism in the game that converts enemy territory to the Academy peacefully — turning geography itself into a resource. They are not a science faction. They are a faction that has learned to win without science.</p>
+  </div>
+
+  <!-- ════════════════════════════════════════════════ T0: FACTION IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Empire That Outlasted Its Gods</h2>
+        <div class="topic-subtitle">Understanding what the Nakalim trade away — and what they get in return — is prerequisite to every other decision.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Core Traits and the True Nakalim Identity</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge">◈ NAKALIM — THE LAST EMPIRE ◈</div>
+
+        <div class="reawakening-banner">
+          <strong>⚠ VERSION NOTE — RE-AWAKENING DLC</strong><br>
+          This guide covers the <strong>Re-Awakening DLC version</strong> of the Nakalim. The original faction had the trait <em>"Cannot obtain technology from other empires"</em> (hard lock). Re-Awakening changed this to <em>"+300% Influence cost to receive Technologies"</em> — diplomatic tech exchange is now possible at extreme cost. Several other trait values also changed. Where a mechanic is version-sensitive, this guide flags it explicitly. If you are playing the base game without Re-Awakening, some specific numbers may differ.
+        </div>
+
+        <p>The Nakalim are the surviving remnants of an empire that served the Endless — and watched them die. Their defining mechanical identity is a structural asymmetry: they begin the game already knowing more technology than any other faction (Forgotten Lore: Tiers 1–2 pre-unlocked), but generate science at a fraction of the normal rate (<em>Beliefs Not Breakthroughs</em>: no science from planets, all science improvements 50% less effective, ship-destruction science halved). This is not a temporary early-game problem — it is a permanent ceiling that reshapes every decision about research, expansion, and military strategy.</p>
+
+        <p>The Nakalim's answer to this ceiling is threefold: Relics (which generate flat science independent of the planet malus), Hacking (which allows stealing technologies from opponents), and Temples (which sacrifice FIDS output to generate Influence at a rate that lets the Nakalim out-convert almost any neighbor). The faction that understands how these three tools interact — and prioritizes them correctly in the opening turns — plays a fundamentally different game from the one that simply tries to "play normally and cope with the science penalty."</p>
+
+        <div class="trait-block">
+          <div class="trait-label">FORGOTTEN LORE — THE STARTING ADVANTAGE</div>
+          Nakalim begin with all Tier 1 and Tier 2 technologies already researched. This is the single most valuable early-game advantage in the faction: while opponents spend their first 20–30 turns unlocking basic colonization, food, and production upgrades, the Nakalim can go straight to Tier 3. The correct use of this advantage is not to skip the opening — it's to apply turns that would have been spent on Tiers 1–2 to accelerating the Tier 3 techs that matter most (hacking speed, terraforming, ship upgrades). The wiki frames it plainly: it makes the Nakalim an excellent explorer and early-harasser faction.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">BELIEFS NOT BREAKTHROUGHS — THE PERMANENT TAX</div>
+          Planets generate zero base Science. All science improvements (buildings, improvements) are 50% less effective. Science from destroying ships is also halved. Critically, <strong>Relic science (+50 per unassigned relic) is NOT cut in half</strong> — this exemption is what makes relics the primary science engine of the faction. The wiki's end-game analysis confirms this deficit never closes: in a full-game LP, the Sophons (science faction) maintained a science lead over the Nakalim for the entire game, even as the Nakalim won decisively on every other metric.
+          <br><br>
+          The correct mental model: the Nakalim do not <em>fix</em> their science problem. They <em>route around it</em> — using Forgotten Lore's head start, relic science, and hacking to stay relevant while their influence engine produces advantages that raw science cannot replicate.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE LAST EMPIRE — RELICS, TEMPLES, AND THE ACADEMY</div>
+          Nakalim can collect Relics from special map nodes, assign them to generate science or provide empire/hero bonuses, build Temple of the Lost planetary specializations (massive Influence per pop, sacrifices FIDS), and — when a system with a Temple is inside their influence zone — convert that system to Academy ownership. Academy conversion returns Relics, provides a permanent tithe, and counts toward Conquest victory. The full strategic loop: Temples → Influence → Zone expansion → Passive conversion → Relics and tithe income.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">POPULATION TRAITS</div>
+          Each Nakalim pop produces <strong>+2 Food</strong> and <strong>+2 Approval if the planet has a Temple of the Lost</strong> (Re-Awakening base values; verify against your version). Collection bonuses: 10 pops raises Religious political output, 20 pops gives +15% Dust on Nakalim systems, 50 pops gives +5% Resource Tithe on Academy-converted systems. The Xirmisala starting citizen is a unique minor faction pop unit with an exceptional growth penalty — detailed separately.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE NAKALIM IN ONE SENTENCE</div>
+          Use your tech head-start to explore aggressively and build influence early, route your science penalty through relics and hacking, convert the map to the Academy through temple-powered Influence, and win a Conquest victory that doesn't require you to match your opponents' science output.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — NAKALIM TRAITS</span><span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T1: RELIC ECONOMY -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">The Relic Economy</h2>
+        <div class="topic-subtitle">Relics are simultaneously your science replacement, your hero enhancement system, and your empire bonus engine. Understanding assignment logic is prerequisite to using any of them well.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">📦</span>
+        <span class="block-title">What Relics Are and How They Work</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">BASE BEHAVIOR — UNASSIGNED RELICS</div>
+          Every unassigned relic generates <strong>+50 Science per turn</strong>. This science is <em>not</em> subject to the Nakalim's 50% science malus — it bypasses the planet-science system entirely. With 4 unassigned relics, you are generating 200 Science/turn in a clean channel that no other mechanic touches. This is why the wiki guide's opening advice is to "slot these relics as soon as possible" — even one relic is worth more than most Tier 2 science buildings for a Nakalim.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ASSIGNMENT IS NON-DESTRUCTIVE AND REVERSIBLE</div>
+          Assigning a relic to an empire slot or a hero slot does NOT consume it. You can reassign freely with a 1-turn cooldown. This means the same relic can serve as a science generator during peacetime and as a fleet health bonus during a war phase — without losing anything. The wiki is explicit: <em>"you will never 'use up' a relic with any usage."</em> This reversibility changes the calculus entirely. You are not choosing between science and empire bonuses permanently; you are choosing where to park the relic this turn.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">RELIC VISIBILITY — COMPETITIVE AWARENESS</div>
+          Relics are <strong>invisible to all other factions except other Nakalim players</strong>. They also do not expire and are not time-limited. Against non-Nakalim opponents, you can safely leave relics uncollected until it is convenient to send a ship. The one critical exception: if another Nakalim player is in the game, relics become <em>first-come, only-served</em> and should be prioritized immediately. The wiki notes: <em>"Unless another Nakalim threatens to take them, never spend your hero's precious time on the 4-turn slog of extracting a relic."</em>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE RELIC HUNTER SHIP</div>
+          GUD's LP demonstrates a deliberate early build: a <strong>colonizer-class hull dedicated to relic retrieval</strong>. The colonizer hull has 3 support slots vs. 2 on other hulls, making it the cheapest, fastest dedicated ship for wide-map relic collection. Build this in the first few turns as a conscious decision, not as an afterthought. Stock it with pure engines. Free T1 quest reward ships and minor-faction fleet transfers are also effective relic runners — they spawn far afield and are not worth much in military use after the early game.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — RELICS</span><span class="src-pill">GUD LP02p01</span><span class="src-pill">STEAM GUIDE</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T2: FORGOTTEN LORE & EARLY RELICS -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Forgotten Lore &amp; the Early Relic Hunt</h2>
+        <div class="topic-subtitle">The tech head-start is a launch window — not a permanent advantage. Use it before opponents close the gap.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🔭</span>
+        <span class="block-title">Opening Priorities: Research, Exploration, and the Relic Pipeline</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>The Nakalim start with Tiers 1 and 2 already researched. This means every turn spent on a Tier 1 or 2 technology by an opponent is a turn the Nakalim can spend on Tier 3. The correct opening exploits this: go straight for the Tier 3 technologies that unlock the strongest mid-game capabilities, while simultaneously running a wide exploration pass to map relic locations and curiosities.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">FIRST RESEARCH — THREE OPTIONS (GUD framework)</div>
+          <strong>Autonomous Materials</strong> — unlocks an additional hacking operation plus speed. GUD's preference. Makes hacking a mid-game science equalizer immediately. Most relevant when you anticipate multiple opponents to steal tech from.<br><br>
+          <strong>Colonize Lava</strong> — situational. Only correct if your starting system has multiple Lava planets waiting. The faster you colonize, the faster your Temple placement options expand.<br><br>
+          <strong>Culture Center</strong> (Influence improvement) — relevant when targeting the early Academy conversion path. More relevant against opponents already near your starting zone.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">EXPLORATION PHILOSOPHY — CURIOSITIES BEFORE RELICS</div>
+          The wiki's advice is direct: explore curiosities <em>first</em>, with your hero-assigned explorer ships, because curiosity rewards are first-come-only-served. Relics sit unclaimed indefinitely (absent another Nakalim). Your hero's time is better spent gathering curiosity rewards (Dust, resources, quest triggers, free ships) than doing the 4-turn relic extraction slog. Once curiosities in a sector are cleared, <em>then</em> send a dedicated low-priority ship for the relics nearby. Dedicated relic runners (colonizer hull + pure engines, minor faction ships, free quest ships) should handle retrieval independently of your main exploration fleet.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">STARTING SYSTEM — SOBRA</div>
+          Sobra is a desert planet. The early food scarcity is the Nakalim's primary opener bottleneck — the Temple of the Lost reduces planet FIDS by 50%, which would tip a food-deficit planet into starvation. Do not build a Temple on Sobra in the first few turns. Colonize a second non-sterile planet first to create a food buffer, <em>then</em> erect an initial temple on whichever planet you are willing to sacrifice FIDS output on. The wiki notes the influence payoff is worth it "once you have a decent foothold — even as early as just colonizing another non-sterile planet in your home system."
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">RELIC NOTE — SCIENCE BEHEMOTHS</div>
+          Science Behemoths (deployed at special nodes) are confirmed viable for the Nakalim — <em>"Science behemoths are 100 OK"</em> (GUD, LP02p01). The enhanced configuration provides approximately +480 Science. Mechanism: each behemoth module essentially replaces a relic in terms of science generation. Useful in mid-game when relic count is still building.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — NAKALIM TRAITS</span><span class="src-pill">GUD LP02p01</span><span class="src-pill">CLASSIEST GAMER LP</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T3: RELIC ASSIGNMENT -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Relic Assignment: Empire Slots and Hero Slots</h2>
+        <div class="topic-subtitle">The same relic can serve three different roles — and you switch between them freely. The question is always: what is this relic worth more as right now?</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">⚗️</span>
+        <span class="block-title">Empire Relic Slots — Cathedrals</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>Empire relic slots are provided by Cathedrals (covered in Topic 5). Each Cathedral enables a set of empire-wide bonuses activated by assigning multiple relics to a slot. Only one bonus per Cathedral may be active at a time, but switching is free. The available slots:</p>
+
+        <div class="relic-grid">
+          <div class="relic-card">
+            <div class="relic-card-label">🧭 EXPLORATION SLOT</div>
+            <p>+25% Movement Point efficiency, +5 Vision Range on Fleets &amp; Systems. Accelerates the early relic hunt and reduces fleet travel time across the map. High value in opening turns.</p>
+          </div>
+          <div class="relic-card">
+            <div class="relic-card-label">🌍 EXPANSION SLOT</div>
+            <p>+1 Colonization Threshold per Cathedral, no disapproval from planet type on planets with temples. Directly enables wider temple placement without planetary satisfaction penalties.</p>
+          </div>
+          <div class="relic-card">
+            <div class="relic-card-label">🤝 DIPLOMACY SLOT</div>
+            <p>Constant minor faction relation bonus + increased influence radius. Supports the pacific conversion snowball by expanding your zone of influence faster.</p>
+          </div>
+          <div class="relic-card">
+            <div class="relic-card-label">⚖️ POLITICAL SLOT</div>
+            <p>Bonuses scale with active political party. Religious (preferred combo): Heroes earned faster, assignable outside borders. Pacifist: +100% Trade Value on Cathedral systems, +40% fleet health regen in friendly territory. Industrialist: +50% Strategic Deposit generation on Temples.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">PRIORITY GUIDANCE</div>
+          Early game: unassigned (science generation). Transition to Exploration or Diplomacy slot once you have 4+ relics and can spare 2 from the science pool. In war phases: pull relics from science to Political (Religious) for hero acceleration or Pacifist for fleet health regen. This is all reversible — do not overthink permanency.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — RELICS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🦸</span>
+        <span class="block-title">Hero Relic Slots — Four Tiers</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>Heroes can be assigned up to 8 relics across four slots. <strong>Slots must be filled in order</strong> — earlier slots must be filled before later ones unlock. Each slot takes 2 relics. The four slots, in order:</p>
+
+        <table class="ref-table">
+          <tr><th>Slot</th><th>Bonus per relic</th><th>Max (4 relics = 8 slots)</th></tr>
+          <tr><td class="cell-key">1st — Influence</td><td>+5% Influence on system per relic</td><td class="cell-good">+40% Influence on system</td></tr>
+          <tr><td class="cell-key">2nd — Fleet Health</td><td>+5% fleet health per relic</td><td class="cell-good">+40% fleet health</td></tr>
+          <tr><td class="cell-key">3rd — Industry</td><td>+5% Industry on system per relic</td><td class="cell-good">+40% Industry on system</td></tr>
+          <tr><td class="cell-key">4th — Fleet Damage</td><td>+5% fleet damage per relic</td><td class="cell-good">+40% fleet damage</td></tr>
+        </table>
+
+        <div class="trait-block">
+          <div class="trait-label">PRIORITY LOGIC</div>
+          Hero relic slots are better suited to <strong>fleet commander heroes</strong> during war phases (health + damage), and to <strong>governors on key Influence-generating systems</strong> during conversion phases. The wiki notes: "better suited to either slotting into your best systems, or to a key fleet commander, during the mid-to-late game." Reassign dynamically — pull from a governor before a fleet engagement, re-slot after. The wiki's opportunity cost calculation: each hero relic is worth 50 Science/turn unassigned, so 8 relics on a hero costs 400 Science/turn. Justify this against the concrete fleet or governor benefit.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">SLOT FILL ORDER IS NON-NEGOTIABLE</div>
+          You cannot skip to the 3rd slot (Industry) without filling slots 1 and 2 first. You need 4 relics before the 3rd slot activates at all. Plan your relic inventory before assigning: if you have 3 relics and want fleet health, fill slot 1 (Influence, 2 relics) and partially fill slot 2 (1 relic) — then acquire one more relic to unlock the second health bonus. The wiki clarifies: "the number of relics on the hero is counted regardless of whether the bonus its slot applies to is relevant" — meaning even system-bonus slots count toward unlocking fleet slots when the hero is commanding a fleet.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — HERO ASSIGNMENT</span><span class="src-pill">GUD LP02p02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T4: TEMPLES -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Temples: Mechanics and Placement</h2>
+        <div class="topic-subtitle">The Temple of the Lost is the Nakalim's core expansion tool — not a minor building. Placement decisions determine your mid-game Influence radius and conversion capability.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Temple Mechanics — What They Do and What They Cost</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">THE CORE MECHANIC</div>
+          A Temple of the Lost placed on a planet reduces that planet's FIDS output to <strong>50% of normal</strong>, and in return generates <strong>10 Influence per Population on that planet</strong> (wiki values; note: the wiki flags a section as outdated — current Re-Awakening behavior may convert the planet's base Science to Influence instead; verify in-game). The Influence output is substantial at any stage of the game and directly grows your sphere of influence.
+          <br><br>
+          Temples also grant <strong>+2 Approval per pop on that planet</strong> for Nakalim population units. This makes temple planets self-sustaining happiness-wise even as they sacrifice FIDS.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">TEMPLES DO NOT AMPLIFY INFLUENCE CIRCLE GROWTH</div>
+          A common misconception: temples do not apply a hidden multiplier to sphere-of-influence radius growth. They simply produce flat Influence, which feeds into the standard zone expansion mechanic at its normal rate. GUD observed this directly: <em>"the temple does not seem to have improved our radius as much as I would have expected."</em> This is confirmed by the wiki: <em>"The temples don't seem to apply any secret multiplier to the rate of influence-circle-growth; they simply provide a lot of influence, and work with the circle-growth mechanic in its vanilla formulation."</em> Scale your expectations accordingly — the effect is real but not magical.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — TEMPLE TO THE LOST</span><span class="src-pill">GUD LP02p01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4b">
+      <div class="block-header" onclick="toggle('cb4b')">
+        <span class="block-icon">📐</span>
+        <span class="block-title">Placement Calculus: Where to Put Temples</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>Every Temple sacrifices 50% of a planet's FIDS. Placement is therefore a tradeoff decision: which planets are expendable from a production standpoint, and which systems need temples for conversion purposes?</p>
+
+        <div class="trait-block">
+          <div class="trait-label">PREFER LOW-VALUE PLANETS</div>
+          GUD demonstrates this live: given two candidate planets, he explicitly rejects the higher-production temperate ("we would lose too much") and places the Temple on the lower-yield planet. The Influence output per pop is the same regardless of the planet's original FIDS — a sterile or lava planet with one pop still produces 10 Influence. Place temples where the 50% FIDS cost is smallest — on poor planets, not on productive ones. Your arable productive planets continue generating Food, Industry, and Dust without penalty.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">TEMPORARY TEMPLES FOR DIRECTIONAL EXPANSION</div>
+          GUD demonstrates a specific use case: placing a temporary Temple on a border planet specifically to push the influence zone in a particular direction — toward a target system for pacific conversion — then removing it once the zone has expanded to include that target. This is intentional: the influence zone, once it has expanded, does not retract when the temple is removed (the system still belongs to your influence). Use temples as directional levers for expansion, not only as permanent infrastructure.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE INFLUENCE BOMB — STACKING ON A CAPTURED CAPITAL</div>
+          The most powerful application, confirmed in GUD's late-game: capture a large enemy capital system with many planets and high population, place <em>multiple</em> temples on it, then assign a governor hero with the <strong>Joy Initiative</strong> skill. Joy Initiative sets a system's happiness to Ecstatic unconditionally. Ecstatic population generates a bonus Influence multiplier. The compound result — multiple temples × high pop count × Ecstatic multiplier — produces a sphere of influence that expands fast enough to passively capture adjacent enemy systems through pacific conversion, without further military action. This is the "influence bomb" strategy: it is not a single decision but a structure built over many turns, with the multi-temple capital as its trigger.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">ACADEMY CONVERSION PREREQUISITES</div>
+          A system can only be converted to the Academy when: (1) it is within your sphere of influence, and (2) you are <strong>not at war</strong> with the system's owner. GUD discovers this directly during the LP — he waits for truces before attempting conversions multiple times. Plan peace windows around your conversion queue.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span><span class="src-pill">WIKI — TEMPLE TO THE LOST</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb4c">
+      <div class="block-header" onclick="toggle('cb4c')">
+        <span class="block-icon">🏦</span>
+        <span class="block-title">Academy Conversion — What You Actually Get</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>When a system with a Temple of the Lost is inside your influence zone and you are at peace with its owner, the Nakalim can convert it to Academy ownership. The conversion is permanent unless reconquered by the original owner.</p>
+
+        <table class="ref-table">
+          <tr><th>Conversion Reward</th><th>Notes</th></tr>
+          <tr><td class="cell-key">Immediate Relics</td><td>Amount scales with system quality at time of conversion</td></tr>
+          <tr><td class="cell-key">Academy Competition Credit</td><td>Scales with system quality</td></tr>
+          <tr><td class="cell-key">Permanent Tithe</td><td>50% of system's Dust, Science, and Influence per turn — plus half its luxury resources if exploited</td></tr>
+          <tr><td class="cell-key">Conquest Victory Credit</td><td>Counts as a system you have "conquered" for Conquest victory purposes</td></tr>
+        </table>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">MINOR FACTION CONVERSION — NO ASSIMILATION BONUS</div>
+          If you convert a minor faction system to the Academy, you do <em>not</em> receive their assimilation trait. The assimilation bonus goes to Isyander (the Academy AI). This is a meaningful trade-off: assimilation traits can be powerful, and converting the system sacrifices them permanently. Evaluate whether the relic reward + tithe + conquest credit outweighs what you would gain from assimilating the minor faction conventionally.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">LUXURY TITHE — OFTEN THE MOST VALUABLE PART</div>
+          The wiki notes the luxury resource tithe "tends to be far more valuable" than the science or dust tithe in most game states. The Academy exploits the system's deposits and you receive half — comparable to running mining probes on the system, and permanent. Systems with good luxury deposits are prime early conversion targets precisely for this reason.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">LODESTONE QUEST INTERRUPTS RELIC FLOW</div>
+          When the Academy's Lodestone faction quest triggers, the Academy stops making requests — and therefore stops awarding relics for system donations until the quest resolves. GUD observes this directly: <em>"all the relics in the universe now are all we have for the moment until that quest is complete."</em> Time your major conversion waves around this — do not plan a big conversion push for the same turns when the Lodestone quest is active.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — TEMPLE TO THE LOST</span><span class="src-pill">GUD LP02p02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T5: CATHEDRALS -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Cathedrals</h2>
+        <div class="topic-subtitle">Cathedrals unlock empire relic slots and provide system bonuses. Their full strategic role in the Nakalim build is not yet fully documented from confirmed sources.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">📖</span>
+        <span class="block-title">Cathedral Mechanics — What Is Confirmed</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT CATHEDRALS DO</div>
+          Cathedrals are system improvements that provide empire relic slots (the Exploration, Expansion, Diplomacy, and Political slots described in Topic 3). Each Cathedral also appears to provide the <strong>Expansion Slot</strong>'s colonization threshold bonus (+1 per Cathedral), meaning more Cathedrals directly expand how many systems you can hold without overcrowding penalties. The faction quest Pacifist path can reward <strong>Cathedral to the Lost</strong>: a unique improvement that grants +3% FIDSI on System per Temple to the Lost built in the entire Empire — a late-game FIDSI multiplier that scales with your temple count empire-wide.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">⚠ CONTENT GAP — CATHEDRAL BUILD ORDER &amp; PLACEMENT</div>
+          The strategic question of <em>when</em> to build Cathedrals, <em>where</em> to place them, how many to build, and how they interact with the temple network's expansion sequencing is not covered by any source currently available to this guide. The wiki describes Cathedral slots but does not provide build-order guidance. The LP sources (GUD) do not demonstrate Cathedral construction explicitly in recorded play. This section will be updated when a reliable source addresses it. In the meantime: build Cathedrals as soon as Industry permits on your highest-population systems that already have temples — the FIDSI percentages scale with the system's existing output, so placement matters.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — RELICS</span><span class="src-pill">WIKI — FACTION QUEST</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T6: REBUILDING SCIENCE -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Rebuilding Science: Managing the Permanent Deficit</h2>
+        <div class="topic-subtitle">You cannot fix the science problem. You can route around it. The tools are relics, hacking, behemoths, and the Forgotten Lore head-start — used together.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">🔬</span>
+        <span class="block-title">Science Sources and the Routing Framework</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>The end-game verdict from a full LP: <em>"The Sophons had us the entire game. We were never ever gonna catch up to them on science."</em> This is not a failure state — the Nakalim won decisively while never matching the Sophon science output. The correct framing is not "close the gap" but "stay relevant enough, long enough, through other means."</p>
+
+        <div class="science-meter">
+          <span class="science-meter-label">Relic science</span>
+          <div class="science-bar"><div class="science-fill" style="width:85%;background:rgb(var(--nakalim-color));"></div></div>
+          <span style="color:rgb(var(--nakalim-color));font-size:var(--ts_sectionLabel);">UNHALVED</span>
+        </div>
+        <div class="science-meter">
+          <span class="science-meter-label">Hacking</span>
+          <div class="science-bar"><div class="science-fill" style="width:70%;background:rgb(var(--cyan));"></div></div>
+          <span style="color:rgb(var(--cyan));font-size:var(--ts_sectionLabel);">TECH THEFT</span>
+        </div>
+        <div class="science-meter">
+          <span class="science-meter-label">Planet science</span>
+          <div class="science-bar"><div class="science-fill" style="width:25%;background:rgb(var(--red));"></div></div>
+          <span style="color:rgb(var(--red));font-size:var(--ts_sectionLabel);">HALVED</span>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">TOOL 1 — RELICS (PRIMARY)</div>
+          +50 Science per unassigned relic, bypass the malus entirely. Target: 6–10 relics in the mid-game gives you 300–500 Science/turn in a clean channel. Forgotten Lore plus this relic baseline is what makes the Nakalim viable in Tier 3 and 4 research. Prioritize relic collection early; the compound value of having 8 relics at Turn 30 vs. Turn 60 is enormous.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">TOOL 2 — HACKING (SECONDARY)</div>
+          Autonomous Materials tech (recommended first Tier 3 research) unlocks additional hacking operations and speed. Hacking enemy systems via the hacking tree allows technology theft directly. GUD: <em>"hack them and steal their techs."</em> Version note: original Nakalim trait said "Cannot obtain technology from other empires" — this excluded diplomatic tech exchange but hacking operated through a separate mechanic. Re-Awakening changed diplomatic exchange to +300% Influence cost. Hacking-based tech theft is available in both versions.
+          <br><br>
+          Hacking also has a second confirmed powerful use: <strong>Jam Commands</strong> on an enemy capital forces the defender to choose a non-optimal ground tactic, enabling Blitz invasion of systems that would otherwise require many siege turns (GUD LP02p02, confirmed live on Myrop). This is independent of science but central to efficient military operations.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">TOOL 3 — BEHEMOTHS</div>
+          Science Behemoths deployed at special nodes provide ~+480 Science in enhanced configuration. The wiki and GUD confirm this. Treat as mid-game relic equivalents — each behemoth module "essentially replacing a relic per module" in terms of science generation. Build and deploy when Industry permits; do not delay past mid-game.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">TOOL 4 — BATTLE SCIENCE SALVAGE</div>
+          The wiki describes a specific module stack: equip Protector hulls (3–6 utility slots) with multiple science-salvage modules. Payout is multiplicative per module, not flat. The caveat: as of a later patch, science from ship destruction also suffers the 50% malus. This makes the per-battle yield lower than it appears, but still non-trivial in a war-heavy game. The Take Trophies battle tactic stacks with these modules.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — SCIENCE</span><span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T7: QUEST & POLITICS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Faction Quest &amp; Political Combo</h2>
+        <div class="topic-subtitle">The quest branches gate powerful unique improvements. Political combination shapes the mid-to-late game's economic and military character.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">Quest Structure and Branch Selection</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>The Nakalim questline has multiple branching chapters. The most strategically consequential branch rewards come from Chapter 4:</p>
+
+        <div class="trait-block">
+          <div class="trait-label">CHAPTER 4.1 — UNIQUE SYSTEM IMPROVEMENTS</div>
+          <strong>Temple of the Denaserdi:</strong> +1 Influence per Nakalim population (Pacifist path) or +2 Influence on Planets, +50% Influence, +10% on Awakened Ruins and Cathedrals (Re-Awakening path). Directly amplifies the influence engine.<br><br>
+          <strong>Relic Exploitation Site:</strong> +3 Industry per Nakalim population (original) or +2 Industry + 50% Industry on Awakened Ruins. Converts Nakalim population into an Industry multiplier.<br><br>
+          <strong>Galactic Faith Museum:</strong> +1 Approval per Nakalim population (original) or massive Approval multipliers on Ruins/Cathedrals. Happiness management.<br><br>
+          <strong>Center for Denaserdi Remembrance:</strong> +3 Dust per Nakalim population. Economy amplifier.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CHAPTER 4.2 — EMPIRE-WIDE REWARDS</div>
+          <strong>Cathedral to the Lost:</strong> +3% FIDSI on System per Temple to the Lost built in the Empire. This is the late-game FIDSI multiplier — with 10 temples empire-wide, every system gains +30% FIDSI. Build as many temples as possible before this reward arrives.<br><br>
+          <strong>Coupled Collaboration:</strong> Double effects from relics assigned to empire slots. Immediately doubles every Cathedral empire bonus — paired with good relic management, this is transformative.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">REPUBLIC + SPECIES STABILITY — THE EARLY LAW STACK</div>
+          GUD recommends starting as a Republic and taking the <strong>Species Stability</strong> law immediately. Effect: every time a new population unit arrives in a conquered system, you receive a Nakalim pop. This accelerates Nakalim population spread through military expansion, which directly scales every per-Nakalim-pop building bonus. The law weakens after a government change, so the value window is in the early-to-mid game while Republic is active.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — FACTION QUEST</span><span class="src-pill">GUD LP02p01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">⚖️</span>
+        <span class="block-title">Recommended Political Combination</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">RELIGIOUS + PACIFIST — GUD'S PREFERRED COMBO</div>
+          <em>"Religious pacifist is actually my preferred combination with this faction."</em> (GUD, LP02p01)<br><br>
+          <strong>Religious:</strong> Enables cold-war invasion mechanics (fight in cold war, apply economic coercion without formal war declaration). Heroes earned faster and assignable outside borders (via relic Political slot). All Religious political events support Nakalim pop output.<br><br>
+          <strong>Pacifist:</strong> Happiness bonuses, minor faction bonuses. Also directly enables <strong>force truce</strong> — the ability to unilaterally impose peace on an enemy when at max diplomatic pressure. This is crucial for the conversion strategy: raid an enemy to drain their manpower and resources, then force peace to resume conversion of their systems. GUD demonstrates this explicitly in LP02p02.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">DIPLOMATIC PRESSURE AS WEAPON</div>
+          Active use of imbroglios and the pressure system is a core Nakalim tool with Religious + Pacifist. At maximum pressure, you can demand tribute where refusal costs the enemy -15% to -30% all FIDSI. GUD: <em>"This is why war demands are so 100 guys."</em> He extracts adamantium, quadranix, science agreements, and antimatter from multiple factions through the pressure pipeline without formal war declarations. The Religious faction identity makes this available against more factions simultaneously.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T8: SHIPS & FLEET DESIGN -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">Ships &amp; Fleet Design</h2>
+        <div class="topic-subtitle">The Nakalim hulls are unusual but workable. Several have atypical slot counts that reward knowing what you are building before you slot.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Hull Overview — Nakalim Ship Classes</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>Hull names from GUD LP (pre-Re-Awakening, may differ slightly in retail): Recitation (colonizer), Salutation (explorer), Incantation (attacker), Potater / Inventory (support), Prostration (medium attacker, called "Commander"), Song (medium defender), Invocation (carrier), Psalm / Seneschal (coordinator). Wiki hull names for retail: Salutation (explorer), Prostration (Hunter), Psalm (Coordinator).</p>
+
+        <table class="ref-table">
+          <tr><th>Hull</th><th>Class</th><th>Strategic Notes</th></tr>
+          <tr><td class="cell-key">Salutation (Explorer)</td><td>Attacker small</td><td>3 support slots via Adaptive Colonies tech — best relic hunter hull in the early game</td></tr>
+          <tr><td class="cell-key">Prostration (Hunter)</td><td>Medium attacker, 3CP</td><td>Light on defense: contested attack/defense slots. Tilting offensive yields high firepower vs. average. Two slots contest attack vs. defense.</td></tr>
+          <tr><td class="cell-key">Psalm (Coordinator)</td><td>Support, 3CP</td><td>Unusual: only 1 hybrid attack/squadron slot (most factions get more). 3 uncontested utility slots. Solid for science salvage module stacking.</td></tr>
+          <tr><td class="cell-key">Invocation (Carrier)</td><td>Heavy / Carrier</td><td>Nakalim-specific tech can unlock additional modules. Confirmed effective in late-game carrier fleet compositions.</td></tr>
+        </table>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — HULLS</span><span class="src-pill">GUD LP02p01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb8b">
+      <div class="block-header" onclick="toggle('cb8b')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">Fleet Composition Philosophy</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">SCIENCE SALVAGE PROTECTORS — THE BATTLE-SCIENCE STACK</div>
+          The Nakalim Coordinator (Psalm) has 3 uncontested utility slots and up to 6 total at upgrade. Stack science-salvage modules on Coordinator hulls: each module independently pays out the same science per destroyed CP as a tactic card, multiplied by module count. A fleet with 4 Coordinators each running 5 salvage modules generates significant science income from each decisive engagement. Note: post-patch, ship-destruction science is halved — factor this into your module budget.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ACADEMY INSIGNIA FLEET — MID-GAME MILITARY BUMP</div>
+          Systems converted to the Academy can generate an Insignia fleet — a purchasable high-power fleet of approximately 5,000 combat power available for Dust. GUD: <em>"Buy a fleet from Academy for 849 Dust — a 5,000-power ship mid-game is huge."</em> This requires a temple in the system to be active. The fleet is temporary, but the combat power it provides during a critical window can tip a war. Use Insignia fleets opportunistically during major offensive pushes.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">XIRMISALA POPULATION — FLEET AND EMPIRE MANAGEMENT</div>
+          The Xirmisala citizen on the home system has a growth rate penalty so severe it is effectively not a growable population: wiki notes <em>"-2400 chance to increment"</em> (original version). Strategies from GUD: move the single Xirmisala to a dedicated isolated system to prevent it from appearing in unexpected places, or acquire the Master of Laws Academy reward (makes the smallest population faction grow first). Do not try to breed Xirmisala for collection bonuses — the effort is not worth it without specific mechanics supporting it.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — SALVAGED SCIENCE</span><span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T9: STRATEGIC DIRECTIONS -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">Strategic Directions</h2>
+        <div class="topic-subtitle">Two viable approaches — both use the same faction toolkit, but they prioritize different leverage points and win through different mechanisms.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">🕊️</span>
+        <span class="block-title">Path A — The Snowball Converter: Temples, Influence, and the Academy</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="takt-box">
+          <div class="takt-title">THE PACIFIC CONQUEST LOOP</div>
+          <p style="font-size:var(--ts_sectionLabel);line-height:1.75;margin:0;">
+            Temples generate Influence → Influence expands your zone → Enemy systems enter your zone → Academy conversion transfers them → Conversion generates Relics and tithe → Relics fund science → More relics fund better relic bonuses → Influence zone expands further. The loop compounds on itself. Military force is used only when the loop stalls — to break a war that is blocking conversion windows, or to capture a key capital for the influence bomb.
+          </p>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CORE STRUCTURE</div>
+          1. Expand wide early (Forgotten Lore lets you colonize efficiently from turn 1).<br>
+          2. Place temples on low-value planets in systems adjacent to expansion targets.<br>
+          3. Keep Religious + Pacifist political combo active for pressure tools and force-truce.<br>
+          4. Use the Joy Initiative governor on your highest-pop system (ideally a captured capital with multiple temples) to trigger the Influence Bomb.<br>
+          5. Convert systems during peace windows. Rebuild pressure during truces. Convert again.<br>
+          6. Conquest victory: Academy systems count. You do not need to occupy all capitals militarily.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">HERO ROLES IN THIS PATH</div>
+          <strong>Overseers with Joy Initiative:</strong> placed on the influence-bomb system to maintain Ecstatic happiness → amplified Influence → sphere expansion.<br>
+          <strong>Counselors with Bean Counter:</strong> governors on high-output systems for FIDSI efficiency.<br>
+          <strong>Fleet commanders with relics:</strong> assigned health/damage relics before major engagements, reassigned to system slots afterward.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE INFLUENCE BOMB — EXECUTION SUMMARY</div>
+          Capture a large enemy capital (multi-planet, high pop). Place 3–5 temples on its planets. Assign a governor with Joy Initiative. The system goes Ecstatic. Ecstatic multiplier × multi-temple Influence output × high pop count = sphere expansion fast enough to passively absorb adjacent systems. Then convert them all during the next peace window. GUD achieves this in LP02p02 against Vitarka (the former Riftborn capital), confirms it live. This is the late-game payoff of the entire temple-building investment.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span><span class="src-pill">WIKI — TEMPLE TO THE LOST</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb9b">
+      <div class="block-header" onclick="toggle('cb9b')">
+        <span class="block-icon">🗡️</span>
+        <span class="block-title">Path B — The Early Bully: Forgotten Lore Aggression and Pressure Snowball</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="takt-box">
+          <div class="takt-title">THE PRESSURE RATCHET</div>
+          <p style="font-size:var(--ts_sectionLabel);line-height:1.75;margin:0;">
+            Forgotten Lore gives you Tier 1–2 military tech from turn 1. Use it to harass early, build imbroglios aggressively, and extract tribute from opponents before they stabilize. Diplomatic pressure at max forces FIDSI penalties without formal war. War demands extract resources. Hack enemy capitals for tech theft and Jam Commands. The Nakalim early bully is not a warmongering faction — it is a coercive faction that wins by making every neighbor pay a constant toll.
+          </p>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CORE STRUCTURE</div>
+          1. Research Autonomous Materials first (hacking speed + operation unlock).<br>
+          2. Deploy a combat fleet to the nearest opponent early — use Take Trophies for Dust and science salvage.<br>
+          3. Build diplomatic pressure through imbroglios and proximity. Never formally declare war unless forced — cold war coercion is cheaper.<br>
+          4. Use hacking to establish backdoors in key enemy systems. Jam Commands before ground invasions (forces bad tactic, enables Blitz).<br>
+          5. Extract resources through war demands. Extort quadranix, adamantium, science treaties from weakened opponents.<br>
+          6. Convert any system that enters your influence zone through the ongoing temple network — this path uses conversion opportunistically rather than as the primary win condition.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">HACKING — JAM COMMANDS IN DETAIL</div>
+          GUD's live discovery: hacking an enemy capital and selecting Jam Commands forces the defender to choose a non-draft ground tactic. Without Draft, their manpower regeneration during the siege is severely limited. A system that would require 10+ siege turns to exhaust its manpower falls to Blitz in one action. GUD: <em>"I have just found my favorite new use for hacking. I am sold one hundred and fifty percent on hacking right now."</em> This is not situational — it is a consistent force multiplier for every military campaign. Always hack the target capital before committing your invasion fleet.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span><span class="src-pill">WIKI — SCIENCE SECTION</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ T10: FIRST 40 TURNS -->
+  <div class="topic" id="t10">
+    <div class="topic-header">
+      <div class="topic-num">10</div>
+      <div>
+        <h2 class="topic-title">First 40 Turns Playbook</h2>
+        <div class="topic-subtitle">Turn-by-turn priorities for establishing the Nakalim's early systems before opponents close the Forgotten Lore gap.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb10a">
+      <div class="block-header" onclick="toggle('cb10a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Turn Sequence: Opening to Mid-Game Transition</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 1–5</div>
+            <div class="tl-body">
+              <strong>First research decision:</strong> Choose based on strategic context. Default: Autonomous Materials (hacking speed, extra operation) — gives you the pressure toolkit online soonest. If your start has lava planets you want immediately: Colonize Lava. If your start is tight and you want to rush Academy influence: Culture Center (Influence improvement).<br><br>
+              <strong>Exploration fleet launched immediately.</strong> Assign your hero to the explorer ship. Map the starting region for curiosities, minor factions, and relic locations. Curiosities are time-sensitive; relics are not.<br><br>
+              <strong>Relic hunter built in turns 1–3:</strong> Colonizer hull (3 support slots) with pure engines. This ship runs the relic circuit independently of your hero. Do not send your hero to collect relics.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 5–15</div>
+            <div class="tl-body">
+              <strong>Food buffer before temples:</strong> Colonize at least one non-sterile planet in your home system or a nearby system. Do not build a Temple on Sobra until this food buffer is in place — the 50% FIDS penalty tips food-deficient planets into starvation. Once colonized, your home system can absorb the penalty on a lower-value planet.<br><br>
+              <strong>First temple placement:</strong> Identify the lowest-value planet in your home system (minimal FIDS contribution). Place the Temple there. The influence output begins immediately and grows with every pop on that planet.<br><br>
+              <strong>Hacking foundation:</strong> If you researched Autonomous Materials, begin building hacking infrastructure. Identify the nearest opponent capital for future backdoor installation. A backdoor in a neighboring capital is worth 20+ turns of preparation before the first war.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 15–25</div>
+            <div class="tl-body">
+              <strong>Second colony + temple:</strong> Your second colony should include at least one planet suitable for a Temple. Place it on the lowest-value planet in that system. Each temple system now generates Influence from two locations, compounding zone expansion.<br><br>
+              <strong>Relic count check:</strong> By turn 20 you should have 3–5 relics from the relic hunter circuit. Hold them unassigned for now (50 Science/relic/turn). Do not assign to hero slots until you have 4+ total — the slot-fill-order requirement means partial assignment is wasteful.<br><br>
+              <strong>Minor faction relations:</strong> The early Influence lead makes the Nakalim naturally strong at minor faction relations. If a minor faction system is in or near your zone, prioritize converting them before a neighbor does. Minor faction fleet transfers provide free ships for the relic hunter circuit.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">TURNS 25–40</div>
+            <div class="tl-body">
+              <strong>First target system enters influence zone:</strong> Identify the first enemy or minor system that will enter your zone. Begin the hacking chain toward its capital if relevant. Confirm you are not at war before the system converts — the conversion action requires peace.<br><br>
+              <strong>Academy competition awareness:</strong> The Nakalim is well-positioned for early Academy competitions (strong Influence, Dust from curiosity sales). The Spear of Asunder role is generally preferred for the early game. Win it by Turns 30–40 if possible — the first competition win provides laws and bonuses that compound through the mid-game.<br><br>
+              <strong>Republic + Species Stability:</strong> If your government is Republic, take Species Stability immediately. Every new population unit in a conquered system adds a Nakalim pop — scales all your per-Nakalim-pop building bonuses as you expand.<br><br>
+              <strong>Super Biofuel Factory path (optional):</strong> GUD identifies this as the late-game production inflection point (~turn 98 in his game). The factory converts food production into industry on the same planet. Nakalim (Religious, high pop, food output) can route food surpluses from non-temple planets into production without sacrificing FIDS. Begin the research chain that enables this in the mid-game.
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE NAKALIM TIPPING POINT</div>
+          Unlike Horatio (which tips at turns 50–70 through population scaling), the Nakalim tips at turns 70–100 when the influence network, relic economy, and temple infrastructure all compound together. The first 40 turns set up the infrastructure. The middle game expands it. The late game deploys it — Academy conversions cascade, pressure extracts tribute, and the Science deficit stops mattering because you are winning on every other axis simultaneously.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">GUD LP02p01</span><span class="src-pill">GUD LP02p02</span><span class="src-pill">WIKI — NAKALIM TRAITS</span><span class="src-pill">STEAM GUIDE</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ════════════════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Nakalim decisions under real game conditions — relic management, temple placement, conversion timing, science routing</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac11';
+  const TOTAL = 11;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "Turn 12. You have 3 unassigned relics (generating 150 Science/turn). Your first Cathedral is 8 turns away. You have a fleet commander hero leading your main combat fleet, currently engaged in minor harassment of a neighbor. A scout report shows a 4th relic at a special node 6 turns away. Your relic hunter ship is already en route to collect a different relic.",
+      q: "Should you divert your hero's fleet to collect the 4th relic?",
+      opts: [
+        "Yes — more relics means more science, and the sooner you collect it the better the cumulative gain.",
+        "No — the wiki is explicit: never spend your hero's precious time on the 4-turn relic extraction when the hero could be exploring curiosities or leading combat. Relics do not expire and are invisible to other factions (absent another Nakalim). Send a dedicated low-priority ship — a minor faction transfer ship, a free quest reward ship, or queue another colonizer-hull relic runner. Your hero's fleet command value in the ongoing harassment is far more time-sensitive than the relic.",
+        "Yes, but only if the relic node is along your existing patrol route.",
+        "No — you already have 3 relics which is enough for the early game."
+      ],
+      correct: 1,
+      explain: "The wiki's guidance on relic collection is unambiguous: relics do not expire, are invisible to opponents (no other Nakalim in this scenario), and your hero's time has higher opportunity cost than a 4-turn relic extraction. A minor faction ship, quest reward ship, or a second colonizer-hull relic runner handles collection without diverting combat assets. Option D is wrong because the question is about method, not quantity — 3 relics is not a ceiling. Option A is directionally correct (more relics = more science) but uses the wrong asset for the job."
+    },
+    {
+      scenario: "Turn 20. Your home system has a temperate planet (Food: 12, Industry: 8) and a barren planet (Food: 1, Industry: 2). You want to place your first Temple. Your food output is currently running at a slight surplus of +6 per turn. The nearest enemy system is 4 influence-zone units away — you need to expand your zone to reach it.",
+      q: "Which planet should receive the Temple, and why?",
+      opts: [
+        "The temperate planet — more population lives there, so the 10 Influence per pop yields more total Influence, accelerating zone expansion faster.",
+        "The barren planet — the Temple reduces that planet's FIDS to 50%, but the barren planet's 50% cost is far smaller (losing ~1 Food and ~1 Industry vs. losing 6 Food and 4 Industry on the temperate). Temple Influence output scales with population, not planet FIDS value. You get the same Influence per pop regardless of which planet hosts the Temple. Sacrifice the expendable planet, protect the productive one.",
+        "Neither — wait until you have two Temples ready to place simultaneously for maximum zone expansion.",
+        "The temperate planet — its larger population makes it the only viable candidate since a Temple needs high population to function."
+      ],
+      correct: 1,
+      explain: "Temple Influence output is 10 per population on that planet — it does not scale with the planet's FIDS stats. Both planets produce the same Influence per pop currently occupying them. The difference is entirely in the FIDS sacrifice: the temperate planet loses approximately 6 Food and 4 Industry (50% of high values); the barren planet loses approximately 1 Food and 1 Industry (50% of near-zero values). GUD demonstrates this exact calculus live, explicitly rejecting the higher-production temperate for a lower-yield planet. Option A correctly identifies that higher-population planets generate more Influence, but that argument applies to future population growth — the current pop count may be similar on both planets, and the barren planet can still host a growing Nakalim population over time."
+    },
+    {
+      scenario: "Turn 45. The Riftborn capital Vitarka converted into your influence zone last turn. You have 3 temples already placed in your empire on low-value planets. You have 6 heroes: 2 Overseers (one has Joy Initiative), 2 Counselors, and 2 Seekers. Vitarka is a multi-planet system with 8 planets and 22 population. You want to execute the Influence Bomb strategy. You are currently at peace with all factions.",
+      q: "What is the correct sequence of actions this turn?",
+      opts: [
+        "Immediately convert Vitarka to the Academy — take the relics and tithe now before the peace window closes.",
+        "Place 3–4 Temples on Vitarka's lowest-value planets. Assign the Overseer hero with Joy Initiative as governor of Vitarka. Then wait for the Influence output to build before targeting the next conversion. Converting Vitarka immediately would sacrifice the influence bomb engine — the whole point of holding a large multi-planet capital is to use its population count × temple count × Ecstatic multiplier to expand your zone passively. Vitarka converted to the Academy leaves you, not you holding it as an active influence generator.",
+        "Assign 8 relics to the Overseer's hero slots before placing temples, to maximize Influence output on the system.",
+        "Convert Vitarka immediately and then place temples on the next captured system — the relics received from conversion are more valuable than holding the system."
+      ],
+      correct: 1,
+      explain: "This is the core Influence Bomb decision. Vitarka's strategic value is not as a conversion target — it is as an influence engine. With 22 population, 3–4 temples give you potentially 220+ Influence per turn from this system alone (10 per pop per temple-covered population slot, scaled by Ecstatic multiplier). The Joy Initiative governor maintains Ecstatic happiness unconditionally, which amplifies the Influence output. This rapidly expands your zone to capture adjacent systems passively, which you then convert. Converting Vitarka immediately gives you a one-time relic reward and a tithe — good, but it removes the system from your active influence generation pipeline. The compound value of holding it as an influence bomb engine for 10–20 turns vastly exceeds the conversion reward. Option C (hero relic assignment) is worth considering alongside Option B but is not the primary action — the temple placement and governor assignment are the prerequisites."
+    },
+    {
+      scenario: "Turn 60. You have 5 relics. Your relic assignment: 3 unassigned (150 Science/turn), 2 assigned to hero slot 1 on your fleet commander (giving +10% Influence on his assigned system). A major war is starting — you need to invade Novarus, the Riftborn capital. Novarus has strong ground defenses. You have a hacking backdoor in Gate-Ria (2 systems away from Novarus).",
+      q: "What is the optimal preparation before committing your invasion fleet to Novarus?",
+      opts: [
+        "Reassign your 2 hero relics from the governor's Influence slot to the fleet health slot before the invasion.",
+        "From your Gate-Ria backdoor, hack Novarus and use Jam Commands. Then move your invasion fleet. Jam Commands forces the defender to choose a non-draft ground tactic — eliminating their population replenishment mechanic during the siege. A system that would otherwise require 10+ siege turns to exhaust falls to Blitz in a single action. Meanwhile, reassign the 2 hero relics from the Influence slot to fleet health (+10% health) for the engagement. Pull 1 unassigned relic to partially fill the health slot further if needed.",
+        "Convert Gate-Ria to the Academy first to deny the Riftborn a staging system, then invade.",
+        "Bring the invasion fleet to Novarus immediately — the hacking preparation is unnecessary and wastes turns."
+      ],
+      correct: 1,
+      explain: "The hacking prep is the highest-leverage action available: Jam Commands forces the Riftborn to fight without Draft, which is their primary manpower replenishment tactic during sieges. GUD describes this as his 'favorite use of hacking' after discovering it live — a system that required many siege turns instead fell to Blitz immediately after Jam Commands was applied. Combined with the relic reassignment (hero relics move from the Influence slot — which generates value for a system governor — to fleet health for the combat engagement), this is the full preparation sequence. Option C (convert Gate-Ria) is counterproductive: it removes the backdoor you need to launch the Novarus hack. Option D ignores a force multiplier that costs almost nothing to deploy."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
