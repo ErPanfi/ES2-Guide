@@ -384,7 +384,7 @@ h1.page-title img
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   10. QUEST BRANCH GRID  (Sophons — harmless on other pages)
+   10. QUEST BRANCH GRID
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .quest-grid {
@@ -403,6 +403,58 @@ h1.page-title img
   line-height: 1.65;
 }
 .quest-card strong { color: rgb(var(--accent-bright-rgb)); }
+
+/* Quest fork two-column grid */
+.quest-fork {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 16px 0;
+
+  --questAccent: var(--accent);
+}
+@media (max-width: 700px) { .quest-fork { grid-template-columns: 1fr; } }
+
+.quest-branch {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  border-top: 3px solid rgb(var(--questAccent));
+  padding: 14px 16px;
+  font-size: var(--ts_sectionLabel);
+  line-height: 1.7;
+}
+
+.quest-branch-title {
+  font-family: 'Orbitron', sans-serif;
+  font-size: var(--ts_quizTitle);
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+  color: rgb(var(--questAccent));
+}
+
+.quest-reward-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 5px 0;
+  font-size: var(--ts_sectionTitle);
+}
+.quest-reward-label {
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.quest-verdict {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: var(--ts_sectionTitle);
+  font-style: italic;
+  color: var(--text-dim);
+}
 
 
 /* ═══════════════════════════════════════════════════════════════════════════
