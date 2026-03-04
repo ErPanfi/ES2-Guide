@@ -68,7 +68,7 @@ Naming conventions:
 | `FactionsDeepGuide/es2-Fac06-unfallen.html` | Complete, content awaiting user revision | 11 | |
 | `FactionsDeepGuide/es2-Fac07-unitedempire.html` | Complete, content awaiting user revision | 10 | |
 | `FactionsDeepGuide/es2-Fac08-riftborn.html` | Complete, content awaiting user revision | 9 | |
-| `FactionsDeepGuide/es2-Fac09-hissho.html` | Currently being built | ? | |
+| `FactionsDeepGuide/es2-Fac09-hissho.html` | | Complete, content awaiting user revision | 10 | |
 
 
 ---
