@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES2 — The Hissho: Birds of War Deep Dive</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+<style>
+  /* ── Fac09 — Hissho: war-red ─────────────────────────────── */
+  :root {
+    --accent:            var(--hissho-color);
+    --accent-rgb:        var(--hissho-color);
+    --accent-dim:        rgba(var(--hissho-color), 0.10);
+    --accent-bright-rgb: 255,120,120;
+  }
+
+  body::before { background:
+    radial-gradient(ellipse 70% 50% at 20% 35%, rgba(var(--hissho-color), 0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 45% 40% at 80% 75%, rgba(var(--hissho-color), 0.04) 0%, transparent 65%),
+    radial-gradient(ellipse 30% 30% at 50% 5%,  rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
+  }
+
+  
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
+
+  /* Keii bar */
+  .keii-bar { display:flex; border-radius:6px; overflow:hidden; height:30px; margin:14px 0;
+              font-size:var(--ts_sectionTitle); font-family:'Share Tech Mono',monospace; }
+  .keii-seg { display:flex; align-items:center; justify-content:center;
+              font-weight:700; letter-spacing:1px; flex-shrink:0; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">FAC.09</div>
+    <div class="guide-name">The<br>Hissho</div>
+  </div>
+
+  <div class="nav-section-label">// Overview</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">🦅 Faction Identity <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Core Systems</div>
+  <div class="nav-item" onclick="scrollByID('t1')">⚡ Keii: Full Mechanics <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🌑 Resource Recovery Engine <span class="nav-check" id="nc2"></span></div>
+  <div class="nav-item" onclick="scrollByID('t3')">🗺️ Expansion Doctrine <span class="nav-check" id="nc3"></span></div>
+
+  <div class="nav-section-label">// Empire</div>
+  <div class="nav-item" onclick="scrollByID('t4')">🔥 Observances <span class="nav-check" id="nc4"></span></div>
+  <div class="nav-item" onclick="scrollByID('t5')">🏛️ Fealty &amp; Development <span class="nav-check" id="nc5"></span></div>
+  <div class="nav-item" onclick="scrollByID('t6')">📜 Laws, Politics &amp; Government <span class="nav-check" id="nc6"></span></div>
+
+  <div class="nav-section-label">// Military</div>
+  <div class="nav-item" onclick="scrollByID('t7')">🚀 Ships &amp; Fleet Philosophy <span class="nav-check" id="nc7"></span></div>
+  <div class="nav-item" onclick="scrollByID('t8')">⚔️ War Doctrine <span class="nav-check" id="nc8"></span></div>
+
+  <div class="nav-section-label">// Quest &amp; Arc</div>
+  <div class="nav-item" onclick="scrollByID('t9')">📖 Faction Quest &amp; Rewards <span class="nav-check" id="nc9"></span></div>
+  <div class="nav-item" onclick="scrollByID('t10')">🗓️ Turn-30 Playbook <span class="nav-check" id="nc10"></span></div>
+
+  <div class="nav-section-label">// Test Yourself</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- ═══════ MAIN ═══════ -->
+<main class="main">
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Fac.09</span> // The Hissho</div>
+    <h1 class="page-title"><img src="../images/Races/HisshoIcon.webp"> The<br>Hissho</h1>
+    <p class="page-subtitle">Warrior birds who replaced Approval with honor, colonization with conquest, and diplomacy with violence. The Hissho are a tall-play faction disguised as an aggressor — their real engine is a single, dense home system fed by mining probes stripping the galaxy bare while their warriors collect Keii from every kill. They are not a rush faction. They are a compounding fortress that cannot stop fighting without losing what it built.</p>
+  </div>
+
+  <!-- ══════════════════════════════════════ T0: IDENTITY -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">Faction Identity: The Tall War Machine</h2>
+        <div class="topic-subtitle">Fewer systems than anyone. More output per system than most. Always at war.</div>
+      </div>
+    </div>
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">🪶</span>
+        <span class="block-title">Core Traits and What Makes the Hissho Different</span>
+        <span class="block-tag tag-mech">OVERVIEW</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="vol-card-badge">◈ HISSHO — BIRDS OF WAR ◈</div>
+
+        <p>The Hissho are the only major faction in ES2 that fully replaces the Approval system with something else. Where every other empire manages population happiness to maintain FIDSI output, the Hissho manage Keii — a centralized honor resource that functions as an empire-wide multiplier and a currency simultaneously. This is not a cosmetic swap. It changes how expansion works, how laws function, how you fight, and what winning looks like. The player who treats Keii as "Hissho Approval" and plays them like a standard faction will perform below average. The player who understands that Keii is earned through violence and spent on growth — and that the entire faction identity is built around that loop — will find one of the strongest mid-game factions in the game.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">HONOR BOUND — THE APPROVAL REPLACEMENT</div>
+          Hissho have no Approval. Approval-based FIDSI multipliers, Approval-based overcolonization penalties, and Approval-based laws are all replaced by Keii equivalents. Systems cannot rebel due to low Approval. What they can do is become severely unproductive — and ultimately enter Anarchy — if Keii collapses. The <strong>Sacred Tradition</strong> trait ensures the government type doesn't change in rebellion, making Anarchy a production crisis rather than a political one.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">RESOURCE RECOVERERS — THE ECONOMIC ENGINE</div>
+          Each active mining probe in the empire adds a FIDSI bonus to the home system equal to 15% of the probed planet's FIDSI per population unit living in the home system. This is multiplicative with home system population — a dense home system turns every mining operation across the galaxy into home system output. The starting Economic Behemoth is the delivery mechanism for this entire economic identity.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">PIRATE SLAYERS — DIPLOMATIC EXILE</div>
+          Hissho cannot interact diplomatically with pirates at all. In exchange, they earn twice the loot from destroying a pirate lair. This removes the option to buy off pirates as a raiding tool, but every pirate lair in your territory is worth actively hunting, and every early skirmish generates Keii and double loot simultaneously.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">BEHEMOTH BUILDERS &amp; DISCOVERER — THE ECONOMIC HEAD START</div>
+          Hissho start with +1 Behemoth production cap beyond the normal limit, and begin the game with an Economic Behemoth already deployed on their home system. This Behemoth cannot be upgraded or modified until the Behemoth Blueprints technology is researched (unlocked via the faction quest). Until then, it carries 1 probe module and a +10 FIDSI module — functional but locked.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">COLONIZATION CONSTRAINT — THE DEFINING WEAKNESS</div>
+          The Resource Recoverers trait reduces the colonization threshold by 1: the overcolonization penalty activates at 2 systems instead of the normal 3. Each system above the limit imposes a flat <strong>−5% FIDSI penalty on all systems empire-wide</strong>. Only two expansion limit increases exist in the game: Federation government (+1) and Autonomous Administration (+1, late game). Plan to run 2–4 colonies maximum for the entire game.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">STERILE WORLD IMMUNITY — ILLO COLONIZERS</div>
+          Hissho have no Approval penalty for colonizing sterile planets, and empire development technologies grant cumulative population cap increases of +3 on sterile worlds. Gas giant systems — high FIDSI, sterile planets — are excellent mining targets and secondary colonization candidates without the output penalty that would cripple other factions.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE HISSHO IN ONE SENTENCE</div>
+          Maximize a single dense home system via mining probes and Fealty specializations, maintain Keii above 85 through continuous warfare, and raze everything you conquer rather than trying to govern it.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span><span class="src-pill">STEAM</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T1: KEII -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Keii: Full Mechanics</h2>
+        <div class="topic-subtitle">The FIDSI multiplier, the currency, and the resource you must never let run dry.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">How Keii Works as a Multiplier</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Keii is a single empire-wide value ranging from 0 to 100. It replaces the per-system Approval score and functions identically to Approval as a FIDSI multiplier — the percentage output of all Hissho systems is determined by the current Keii value according to the same scaling table Approval uses. Unlike Approval, which varies per system, Keii is consolidated: the entire empire rises and falls together.</p>
+
+        <div class="keii-bar">
+          <div class="keii-seg" style="width:50%;background:rgb(var(--red));color:rgb(var(--text-bright));">0–50 · PENALTY ZONE</div>
+          <div class="keii-seg" style="width:20%;background:rgb(var(--gold));color:rgb(var(--text-bright));">50–70</div>
+          <div class="keii-seg" style="width:15%;background:rgba(var(--green),0.7);color:rgb(var(--text-bright));">70–85 · TARGET</div>
+          <div class="keii-seg" style="width:15%;background:rgb(var(--green));color:rgb(var(--text-bright));">85–100 · DEVOTED</div>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">KEII THRESHOLDS &amp; FIDSI EFFECT</div>
+          Keii operates on the same 0–100 multiplier curve as Approval. Critical operating zones:<br><br>
+          <strong>85–100 (Devoted/Loyal):</strong> Maximum FIDSI multiplier. Fealty Center construction is gated here (~95+). Maintain this range as the default operational target.<br>
+          <strong>70–85 (Ideal operating range):</strong> Strong output. Community guidance recommends 70 as the practical floor during active wars where Keii fluctuates turn to turn.<br>
+          <strong>50–70:</strong> Noticeable output loss. The FIDSI modifier degrades meaningfully — avoid spending extended time here.<br>
+          <strong>Below 50:</strong> Severe FIDSI penalties. Empire enters crisis state. Unlike other factions, systems do not rebel — but near-zero Keii cripples total output simultaneously.<br><br>
+          <span style="color:rgb(var(--gold));">⚠ NOTE:</span> Exact percentage values at each threshold match the Approval table (wiki-sourced). Threshold labels (Devoted, Loyal) are community conventions, not in-game text — treat as operational guidelines.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">GOVERNMENT MODIFIER — REPUBLIC MULTIPLIER</div>
+          The wiki FIDSI modifier table for Hissho shows that Republic government provides a higher effective FIDSI multiplier than Dictatorship at the same Keii value. Republic also intensifies the parenthetical law bonuses — including Hatched at Home. Republic at 85 Keii outperforms Dictatorship at 85 Keii. This is the primary mechanical justification for eventually transitioning to Republic despite election overhead.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill src-pill unverified">COMMUNITY — threshold labels unverified</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1b">
+      <div class="block-header" onclick="toggle('cb1b')">
+        <span class="block-icon">➕</span>
+        <span class="block-title">Keii Gain Sources</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Source</th><th>Amount / Notes</th></tr>
+          <tr><td class="cell-key">Space battle victory</td><td class="cell-good">Scaled by CP destroyed and strength differential — stronger enemy = more Keii. +40% multiplier if within Behemoth Keii zone.</td></tr>
+          <tr><td class="cell-key">Ground battle (Subdue)</td><td class="cell-good">Large Keii gain; primary mid/late source. Diminishing returns on repeatedly subduing the same system.</td></tr>
+          <tr><td class="cell-key">Raze system</td><td class="cell-good">+5 Keii per raze.</td></tr>
+          <tr><td class="cell-key">Discover new system</td><td class="cell-good">+1 Keii per discovery.</td></tr>
+          <tr><td class="cell-key">Complete quest step</td><td class="cell-good">+5 Keii on most quest completions.</td></tr>
+          <tr><td class="cell-key">Blood Ritual (Observance)</td><td class="cell-good">+5 Keii flat.</td></tr>
+          <tr><td class="cell-key">Shrine of Eternal Sacrifice</td><td class="cell-good">+50% Keii after battles (late questline reward).</td></tr>
+          <tr><td class="cell-key">Hissho Holiday Act (law)</td><td class="cell-good">+20% bonus Keii after space and ground battles; +15% Keii zone radius on ships.</td></tr>
+          <tr><td class="cell-key">Tombs &amp; Trinkets (law)</td><td class="cell-good">+3% bonus Keii per pop after battles — scales with home system population.</td></tr>
+          <tr><td class="cell-key">Venerable Standard (Juggernaut module)</td><td class="cell-good">×2 Keii gain for the flotilla; also +10% energy/projectile damage.</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">STRENGTH DIFFERENTIAL — WHY YOU WANT DANGEROUS FIGHTS</div>
+          The stronger the enemy fleet relative to yours, the more Keii you gain from defeating it. Fighting weak pirates gives minimal Keii. Attacking an empire fleet that outweights yours — and winning — gives a large Keii injection. The Hissho are incentivized to punch up, not bully down.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1c">
+      <div class="block-header" onclick="toggle('cb1c')">
+        <span class="block-icon">➖</span>
+        <span class="block-title">Keii Loss Sources &amp; the Retreat Problem</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Source</th><th>Amount / Notes</th></tr>
+          <tr><td class="cell-key">Retreat from battle</td><td class="cell-bad">−10 Keii. Fixed cost, regardless of fleet size or outcome.</td></tr>
+          <tr><td class="cell-key">Colonize system (convert outpost)</td><td class="cell-bad">Escalating Keii cost — high when first established, decreases over time if you leave the outpost unconverted.</td></tr>
+          <tr><td class="cell-key">Hatched at Home (active)</td><td class="cell-bad">−1 Keii/turn per colonized system (Ancestral Reverence queue exempts that system).</td></tr>
+          <tr><td class="cell-key">Super Tax Act (if active)</td><td class="cell-bad">−2 Keii/turn empire-wide.</td></tr>
+          <tr><td class="cell-key">Hi Sci Act (if active)</td><td class="cell-bad">−2 Keii/turn per pop on systems — scales dangerously with population.</td></tr>
+        </table>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">THE RETREAT TRAP</div>
+          Retreating costs 10 flat Keii. Losing an individual ship in a fight you win costs zero Keii and may generate significant Keii from kills. The math almost always favors fighting to the end over retreating to preserve ships. Build cheap early combat ships, accept that they die, and treat every fight's Keii gain as the return on investment. Reserve retreat only when an entire fleet — not just individual ships — faces total annihilation.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1c',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb1d">
+      <div class="block-header" onclick="toggle('cb1d')">
+        <span class="block-icon">💸</span>
+        <span class="block-title">Keii Actions — Spending the Resource</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Action</th><th>Cost</th><th>Effect</th></tr>
+          <tr><td class="cell-key">Way of the Obsidian Eagle</td><td>Requires Titanium</td><td>+25 Industry on a system (or +20 via Behemoth). Strong early Industry spike.</td></tr>
+          <tr><td class="cell-key">War Banners</td><td>Keii cost</td><td>+extra movement and vision to a fleet for 10 turns.</td></tr>
+          <tr><td class="cell-key">Fealty Specializations</td><td>−25 Keii per structure</td><td>Permanent system specialization. See Topic 5.</td></tr>
+          <tr><td class="cell-key">Convert Outpost to Colony</td><td>Escalating Keii</td><td>Turns an outpost into a full colony. Cost decreases over time if you wait.</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">BANKING KEII BEFORE BATTLES</div>
+          If you are at 95–100 Keii and about to enter a battle, pre-queue Fealty Center/Foundation/Institute builds on non-capital systems. The −25 Keii cost triggers immediately on queue, making room for incoming battle Keii gains. Net result: combat income converts into permanent FIDSI improvements rather than hitting the cap and vanishing.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1d',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T2: RESOURCE RECOVERY -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Resource Recovery Engine</h2>
+        <div class="topic-subtitle">The Economic Behemoth is not support infrastructure — it is the primary economic engine of the faction.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🌑</span>
+        <span class="block-title">How Mining Probes Feed the Home System</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The Resource Recoverers affinity: each active mining probe anywhere in the empire applies a bonus to the home system equal to <strong>15% of the probed planet's FIDSI output, multiplied by every population unit currently living in the home system</strong>. The probe does not affect the system it is deployed on — it redirects a fraction of that planet's potential output back to your capital.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">CALCULATION EXAMPLE</div>
+          A large Gas Giant planet with values of 5F / 8I / 6D / 4S / 2E: the probe takes 15% of each value and adds it as a per-pop bonus to the home system. With 8 pops at home: (0.75F + 1.2I + 0.9D + 0.6S + 0.3E) × 8 = meaningful bonus across all FIDSI categories. A dense home system (10–12 pops) turns a single Gas Giant probe into the equivalent output of a well-developed colony added directly to your capital.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">STARTING BEHEMOTH — CONSTRAINTS AND UNLOCK</div>
+          The starting Economic Behemoth cannot be upgraded or have its modules changed until you research <strong>Behemoth Blueprints</strong> (unlocked by the faction quest, Chapter 1). Until then it runs with its default 1 probe module and +10 FIDSI module. This is functional but means the stacking strategy only becomes available at quest unlock — an additional reason to prioritize questline progression early.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb2b">
+      <div class="block-header" onclick="toggle('cb2b')">
+        <span class="block-icon">🔧</span>
+        <span class="block-title">Probe Module Stacking &amp; the Optimal Loadout</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Probe duration and cooldown effects <strong>stack across all probe modules on the same Behemoth</strong>. Fast Miner reduces cooldown; Deep Miner increases probe lifetime. Combined, the duration increase from Deep Miners applies to all probes including those from Fast Miners.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">PROBE MODULE STATS</div>
+          <table class="ref-table">
+            <tr><th>Module</th><th>Cooldown</th><th>Lifetime</th><th>Deposit Mult.</th><th>Cost</th></tr>
+            <tr><td class="cell-key">Fast Miner I</td><td>2 turns</td><td>3 turns</td><td>×0.75</td><td>90 Industry</td></tr>
+            <tr><td class="cell-key">Fast Miner II</td><td>2 turns</td><td>4 turns</td><td>×1.5</td><td>120 Industry</td></tr>
+            <tr><td class="cell-key">Deep Miner I</td><td>5 turns</td><td>8 turns</td><td>×0.75</td><td>90 Industry</td></tr>
+            <tr><td class="cell-key">Deep Miner II</td><td>5 turns</td><td>10 turns</td><td>×1.5</td><td>120 Industry</td></tr>
+            <tr><td class="cell-key">Core Miner</td><td>8 turns</td><td>12 turns</td><td>×2.25</td><td>180 Ind + 1 Adamantian</td></tr>
+            <tr><td class="cell-key">Gouge of Tonatsi</td><td>Special</td><td>Special</td><td>—</td><td>Quest Ch.1 reward</td></tr>
+          </table>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE STACKING TRICK — 1 ENGINE + 4 DEEP MINERS</div>
+          Community consensus (Knofbath mini-guide via wiki): load the Behemoth with <strong>1 Engine + 4 Deep Mining Probes</strong>. Duration stacking gives approximately 40 turns of continuous probe uptime. At a full home system this equates to adding the equivalent output of a fully populated planet to your capital for those 40 turns — repeated indefinitely as the Behemoth cycles positions.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">PROBE FRAGILITY — PROTECT YOUR INVESTMENTS</div>
+          Any hostile fleet entering the probed system destroys the probe immediately — including rival outpost ships, pirates, spawning pirate bases, and quest fleets. The ideal setup is an entire arm of uninhabited systems reserved exclusively for mining. Station 2–3 cheap defender ships in each actively mined system. They don't need to win major engagements — they only need to intercept colony ships and deter casual incursions.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">GAS GIANTS — TOP PRIORITY TARGETS</div>
+          Gas Giants have the highest FIDSI total per planet in the game. They are sterile (no penalty for Hissho), typically in uninhabited deep-space arms, and generate outsized Resource Recovery output. Identify Gas Giant systems during scouting and route your Behemoth to mine them first.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T3: EXPANSION -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Expansion Doctrine: The Colonization Constraint</h2>
+        <div class="topic-subtitle">The Hissho overcolonization penalty isn't a soft suggestion. It is the reason they raze everything.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">🗺️</span>
+        <span class="block-title">The −5% Penalty and Why Conquering Beats Colonizing</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">THE OVERCOLONIZATION MATH</div>
+          Hissho have a base colonization limit of 2 systems (−1 from the standard 3, per Resource Recoverers). Each system above that limit imposes a flat <strong>−5% FIDSI penalty on all systems empire-wide</strong>. At 4 systems over cap that is −20% across the board — equivalent to losing almost a full Keii tier of output. The wiki notes this penalty was added as a patch mechanic after the original Keii-only gate was insufficient to deter infinite expansion.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE TWO WAYS TO RAISE THE LIMIT</div>
+          <strong>Federation government:</strong> +1 system before penalty. Meaningful but Federation is often not the optimal government choice (see Topic 6).<br><br>
+          <strong>Autonomous Administration:</strong> +1 limit. Requires a level-4 system — late game only.<br><br>
+          Practical conclusion: plan for 2–4 colonies maximum for the entire game. Accepting a small FIDSI penalty (5–10%) for one or two strategic systems is different from sprawling into 8+ systems and destroying your output.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">OUTPOST FOREVER — THE DELAYED CONVERSION TRICK</div>
+          Hissho outposts do not automatically become colonies — they stay outposts until you spend Keii to convert them. The Keii cost is high when you first establish the outpost and drops over time. You can claim territory and block opponents with outposts while paying zero FIDSI penalty — the penalty only triggers on full colonies. Queue <strong>Ancestral Reverence</strong> on any system you do convert: this building exempts the system from Hatched at Home's Keii upkeep.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">CONQUEST IS COST-NEUTRAL; COLONIZATION IS NOT</div>
+          Taking an enemy system via invasion gives Keii from subduing and +5 from razing. Colonizing an empty system costs escalating Keii and adds to the FIDSI penalty. The economics almost always favor conquest — except for systems adjacent to your home system (covered by one Behemoth) or holding unique strategic resources you cannot acquire elsewhere.
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">SYSTEM QUALITY THRESHOLD</div>
+          When evaluating whether to colonize (and accept the penalty), apply this filter: does the system have 5+ planets, high-value resources (Titanium, Hyperium, or premium luxury deposits), or a position that lets your Behemoth cover it and another target simultaneously? If not — raze it, mine it, move on.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span><span class="src-pill">STEAM</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T4: OBSERVANCES -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Observances: Three-Cycle Ritual Management</h2>
+        <div class="topic-subtitle">One of three appears each election. One pop sacrifice for a powerful empire-wide effect. Only one of the three is a trap.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">🔥</span>
+        <span class="block-title">The Three Observances and When to Use Each</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every election cycle, one of three Observances becomes available. Performing one sacrifices a single population unit from any system and applies the effect empire-wide for 10 turns.</p>
+
+        <div class="ship-grid">
+          <div class="ship-card gold-top">
+            <div class="ship-name">SUN GOD'S RITUAL</div>
+            <div class="ship-role">FOOD → MANPOWER CONVERSION</div>
+            <div class="ship-body">Converts food production to manpower for 10 turns. Useful only in a specific scenario: you are at war, manpower is critically depleted, you have significant food surplus, and cannot wait for normal recovery. Outside that window this is <strong>actively harmful</strong> — it stops population growth for 10 turns at the moment your home system should be densifying for mining synergy. The YT01 narrator explicitly warns against reflexively triggering it. Do not use this as a default action.</div>
+          </div>
+          <div class="ship-card" style="border-top-color:rgb(var(--hissho-color));">
+            <div class="ship-name">BLOOD RITUAL</div>
+            <div class="ship-role">+5 KEII FLAT</div>
+            <div class="ship-body">Grants +5 Keii empire-wide. Useful when below 85 and needing to push into Devoted territory before queuing Fealty Centers, or when Keii has taken damage from a recent colonization and needs rebalancing. Perform this on your cheapest or least productive system (to sacrifice the least useful pop). The cost is 1 pop; the return is a permanent Keii bump worth roughly half a turn's combat income.</div>
+          </div>
+          <div class="ship-card cyan-top">
+            <div class="ship-name">DILIGENCE RITUAL</div>
+            <div class="ship-role">+50% DUST FOR 10 TURNS</div>
+            <div class="ship-body">The most consistently valuable Observance. A 50% Dust bonus for 10 turns stacks with other Dust multipliers (laws, system improvements, developments) and funds ship upgrades, buyouts, and high fleet upkeep during continuous warfare. Prioritize this whenever available unless you have a specific, urgent manpower crisis that cannot wait for natural recovery.</div>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">TIMING RELATIVE TO ELECTIONS</div>
+          Observances are tied to election cycles — one becomes available per cycle. You cannot defer them to the next election. If the current Observance is Sun God's Ritual and you have no manpower crisis, the 1-pop sacrifice for a currently-useless effect is generally not worth performing.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T5: FEALTY -->
+  <div class="topic" id="t5">
+    <div class="topic-header">
+      <div class="topic-num">05</div>
+      <div>
+        <h2 class="topic-title">Fealty Specializations &amp; System Development</h2>
+        <div class="topic-subtitle">The Hissho permanent system buff. Costs 25 Keii. Returns +3 FIDSI/pop forever.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb5a">
+      <div class="block-header" onclick="toggle('cb5a')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Fealty Mechanics, Banking, and Luxury Priorities</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT FEALTY SPECIALIZATIONS DO</div>
+          Fealty Center, Fealty Foundation, and Fealty Institute are unique planet specializations unlocked by researching Behemoth Blueprints. Each costs <strong>−25 Keii</strong> to queue. Once built, they permanently add <strong>+3 FIDSI per population unit</strong> on that system. This bonus persists through conquest. The structures auto-upgrade as you research higher-tier versions.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">TIMING — BUILD ONLY AT HIGH KEII</div>
+          The −25 Keii cost triggers on queue, not on completion. Queue Fealty structures only when at 95–100 Keii. Do not queue them below 85 — you knock yourself out of the Devoted/Loyal tier precisely when the FIDSI multiplier matters most for the building's output. Community guidance: <em>"Whenever you have 95–100 Keii, build one in your home system. Don't let Keii get out of loyal for too long."</em>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">BANKING TECHNIQUE — CONVERTING COMBAT GAINS INTO DEVELOPMENT</div>
+          Pre-queue Fealty structures before a battle at 95–100 Keii. The −25 cost immediately reduces your current value, making room for incoming battle Keii. You fight, gain Keii, don't waste overflow — it flows into the now-lowered total. The Fealty structure builds from your Industry queue. Net result: combat income converts into permanent FIDSI improvements rather than hitting the cap and vanishing.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">APPROVAL LUXURIES — THE HISSHO REPLACEMENT EFFECTS</div>
+          Since Hissho have no Approval, luxury resources that normally grant Approval instead grant FIDSI bonuses based on Keii state (from wiki economy data):<br><br>
+          <strong>Transvine (common):</strong> +20 FIDSI on System if Devoted; +15 if Loyal.<br>
+          <strong>Lost Cities (uncommon):</strong> +3 FIDSI/pop if Devoted; +2 FIDSI/pop if Loyal.<br>
+          <strong>Benthic Gems (rare):</strong> +15% FIDSI per System Level if Devoted; +10% if Loyal.<br><br>
+          Lost Cities and Benthic Gems are exceptional for a tall, dense home system — per-pop and per-level bonuses multiply with population density. The Steam guide describes Benthic Gems at tier 3 as equivalent to four tier-3 standard luxuries combined. Prioritize finding these on the market early; they compound with Fealty Centers for multiplicative output gains.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">STEAM</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T6: LAWS & POLITICS -->
+  <div class="topic" id="t6">
+    <div class="topic-header">
+      <div class="topic-num">06</div>
+      <div>
+        <h2 class="topic-title">Laws, Politics &amp; Government Progression</h2>
+        <div class="topic-subtitle">Hatched at Home is mandatory. Everything else is situational. The government path matters more than it looks.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb6a">
+      <div class="block-header" onclick="toggle('cb6a')">
+        <span class="block-icon">📜</span>
+        <span class="block-title">Hissho-Specific Laws</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <table class="ref-table">
+          <tr><th>Law</th><th>Party</th><th>Effect</th><th>Assessment</th></tr>
+          <tr>
+            <td class="cell-key">Hatched at Home</td>
+            <td>Independent</td>
+            <td>−1 Keii/turn per colonized system; +25% FIDSI (+31.25% Republic)</td>
+            <td class="cell-good">Mandatory. Keep active at all times. Queue Ancestral Reverence on systems you don't want counting toward the upkeep.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Hissho Holiday Act</td>
+            <td>Independent</td>
+            <td>+20% Keii gains after ground/space battles; +15% Keii zone radius; −10% Industry</td>
+            <td class="cell-good">Excellent in wartime. The −10% Industry cost is noticeable but the Keii amplification makes it self-sustaining during active wars.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Super Tax Act</td>
+            <td>Independent</td>
+            <td>+3 Dust/pop (+4 Republic); −2 Keii/turn</td>
+            <td class="cell-bad">Situational. Persistent unconditional Keii drain. Only viable in Devoted territory with surplus Keii and high population.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Hi Sci Act</td>
+            <td>Independent</td>
+            <td>+2 Science/pop (+3 Republic); −2 Keii/turn per pop</td>
+            <td class="cell-bad">Dangerous. The Keii drain scales with population — at 10 pops it is −20 Keii/turn. Only viable in Republic with very large combat Keii income.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Jingoist Joy Bill</td>
+            <td>Militarist (Power)</td>
+            <td>Free declaration of war on any empire; Militarist industry bonuses</td>
+            <td class="cell-good">The Militarist power law. Enables perpetual war doctrine without diplomatic penalties. Pursue Militarist Senate control specifically to unlock this.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Tombs &amp; Trinkets</td>
+            <td>Militarist (Tier 3)</td>
+            <td>−2 Dust/pop; +3% Keii gain per pop after battles</td>
+            <td class="cell-good">Scales with home system population. With 10+ pops and frequent battles, compounds with Holiday Act into very large battle Keii gains.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Spoils of War</td>
+            <td>Militarist</td>
+            <td>Science/Dust per enemy CP destroyed in battle</td>
+            <td class="cell-good">Passive resource income from every engagement. Always-on in a war-fighting build.</td>
+          </tr>
+        </table>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">WIKI-LAWS</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb6b">
+      <div class="block-header" onclick="toggle('cb6b')">
+        <span class="block-icon">🏛️</span>
+        <span class="block-title">Government Progression: Dictatorship → Ecologist → Republic</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">STARTING DICTATORSHIP — EXPLOIT IT EARLY</div>
+          Hissho begin as a Dictatorship: 1.5× Senator skill effects, election stability, but only 2 law slots. Priority on Turn 1 is to adopt <strong>Hatched at Home</strong> immediately. Second law slot holds Hissho Holiday Act during wars, or another combat law once Militarist senators develop.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">FIRST ELECTION — ECOLOGIST FOR COLONIZATION</div>
+          Bring in an Ecologist representative at the first election. The primary reason: Ecologist government or laws unlock colonization of planet types without researching the relevant tech — specifically useful for establishing your second system on whatever good planet is nearby without waiting for a tech unlock. The wiki mini-guide confirms: <em>"Choose Ecologist during first election to colonize planets in your second system without research."</em>
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MID-GAME TRANSITION TO REPUBLIC</div>
+          Republic is the endgame government. The Republic intensification of Hatched at Home (from +25% to ~+31.25% FIDSI) and improved law bonuses make Republic substantially more output-efficient. The wiki FIDSI modifier table shows Republic multipliers beating Dictatorship at the same Keii value. Election overhead and potential law disruption during the transition are the only real costs.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">FEDERATION — RARELY WORTH IT</div>
+          Federation adds +1 to the colonization limit. For a faction that wants 2–4 colonies anyway, this is marginal. Federation comes with Influence overhead and political complications not justified by +1 colony. Republic is the better default endgame government.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t6','cb6b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T7: SHIPS -->
+  <div class="topic" id="t7">
+    <div class="topic-header">
+      <div class="topic-num">07</div>
+      <div>
+        <h2 class="topic-title">Ships &amp; Fleet Philosophy</h2>
+        <div class="topic-subtitle">More uncontested attack slots than most. Less dedicated defense. Three distinct build directions.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb7a">
+      <div class="block-header" onclick="toggle('cb7a')">
+        <span class="block-icon">🚀</span>
+        <span class="block-title">Hull Philosophy and the Three Build Directions</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>The defining characteristic of Hissho hulls is <strong>more uncontested attack slots, at the cost of dedicated defense slots being replaced with hybrid Defense/Utility slots</strong>. This is not a weakness — it is a design language. You choose whether to fill hybrid slots with defense (survivable brawler), utility (amplified glass cannon), or a mix. Three fleet archetypes emerge, all viable:</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THREE BUILD DIRECTIONS (across all hull classes)</div>
+          <strong>Armored Slow:</strong> Fill hybrid slots with defense modules. Max armor/shields. Slower, survives longer — ideal for sustained sieges where Keii zone stacking is available.<br><br>
+          <strong>Fast Glass Cannon:</strong> Fill hybrid slots with engines. Maximum speed, minimum defense. Works well with Hissho Holiday Act — frequent fights, fast deaths, cheap replacement cycle.<br><br>
+          <strong>Weapon-Amplified Offense:</strong> Fill hybrid slots with damage amplifiers and utility modules. Prioritizes killing the enemy before they kill you. Best against lower-defense opponents.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">THE VENERABLE STANDARD — JUGGERNAUT MODULE</div>
+          Hissho have a unique Juggernaut module: the <strong>Venerable Standard</strong>. Effect: ×2 Keii gain for the entire flotilla, +10% Energy damage, +10% Projectile damage. This is the only Juggernaut module that doubles combat Keii income. If running a Juggernaut, the Venerable Standard is always included. Combined with Hissho Holiday Act, Tombs &amp; Trinkets, and the Shrine of Eternal Sacrifice, late-game battles near a Juggernaut become enormous Keii generation events.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb7b">
+      <div class="block-header" onclick="toggle('cb7b')">
+        <span class="block-icon">📊</span>
+        <span class="block-title">Hull-by-Hull Breakdown</span>
+        <span class="block-tag tag-mech">REFERENCE</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <div class="ship-grid">
+          <div class="ship-card">
+            <div class="ship-name">GLIDE / PEREGRINE</div>
+            <div class="ship-role">EXPLORER (SMALL)</div>
+            <div class="ship-body">Base: 2A / 3D / 2S (5 slots). Upgrade: 2A / 3D / 3S (6 slots). Standard explorer class. Refit for combat during early game — weapons + engines for pirate fights before dedicating to scouting. YT01 narrator equips laser defenses and uses Peregrines as early combat ships.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">CLAW / HAWK</div>
+            <div class="ship-role">ATTACKER (SMALL)</div>
+            <div class="ship-body">Base: 3A / 2D / 2S (5 slots). Upgrade: 4A / 3D / 3S (8 slots). <strong>4 uncontested attack slots after upgrade</strong> — the standout of the attacker class. No contention between attack and defense slots; full offensive potential without sacrificing survivability. Best early combat ship; cheap to produce and generates Keii from every fight won or lost.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">HOVER / KESTREL</div>
+            <div class="ship-role">PROTECTOR (SMALL) — HYPERIUM</div>
+            <div class="ship-body">Base: 1A / 3D / 4S (5 slots — 3 contested D/S). Upgrade: 3A / 4D / 5S + 3 Hyperium (8 slots). Slightly high attack for a protector, slightly low max defense. Requires Hyperium for the upgrade tier. Useful as a Guardian tanking ship; hybrid D/S slots give flexibility between survivability and support roles.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">CLIMB / FALCON</div>
+            <div class="ship-role">COORDINATOR (MEDIUM) — ANTIMATTER</div>
+            <div class="ship-body">Base: 2A+Squad / 4D / 5S (8 slots). Upgrade: 3A+Squad / 4D / 6S + 3 Antimatter (11 slots). Multiple uncontested utility slots — room for cloaking, fleet shields, or amplifiers. More offensive than typical coordinators. Can defeat equivalent-class hunters from other factions in one-on-one when fully fitted with defense modules.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">STRIKE / KITE</div>
+            <div class="ship-role">HUNTER (MEDIUM) — ADAMANTIAN</div>
+            <div class="ship-body">Base: 5A / 1D / 4S (7 slots). Upgrade: 5A / 3D / 5S + 3 Adamantian (10 slots). <strong>5 attack slots</strong> — maximum raw attack allocation of any hunter in the game. Fewer total module slots than most faction hunters (10 vs. standard 11). No contention between attack and defense. Glass cannon by default; armored direction requires committing all hybrid slots to defense. <span style="color:rgb(var(--red));">⚠ The 10-slot total vs. 11 is a real trade-off.</span></div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">DIVE / EAGLE</div>
+            <div class="ship-role">CARRIER (LARGE) — ORICHALCIX/QUADRINIX</div>
+            <div class="ship-body">Base: 1H+4A+Squad / 4D / 3S (10 slots). Upgrade: 2H+5A+Squad / 6D / 6S + 2 Orichalcix + 3 Quadrinix (15 slots). 7 weapon slots total (Heavy + Attack/Squadron) — slightly below the top end (UE/Sophons reach 8). 3 open utility slots at upgrade. Continues attack-bias even at carrier class.</div>
+          </div>
+          <div class="ship-card">
+            <div class="ship-name">ROOST / BROODSHIP</div>
+            <div class="ship-role">COLONIZER (SMALL)</div>
+            <div class="ship-body">1D / 2–3S hybrid (4 slots). Colony ships exist to move fast and deploy. Refit with engines — remove default defense modules, maximize movement speed. Unremarkable; serves the standard colony function. Note: colonization of outposts costs Keii, so the colonizer's job is establishing the outpost; the conversion decision comes later.</div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI-SHIPS</span><span class="src-pill">WIKI-MILITARY</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb7b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T8: WAR DOCTRINE -->
+  <div class="topic" id="t8">
+    <div class="topic-header">
+      <div class="topic-num">08</div>
+      <div>
+        <h2 class="topic-title">War Doctrine: Escalation, Keii Warfare &amp; Ground Combat</h2>
+        <div class="topic-subtitle">Subdue → Raze. Repeat. The Hissho war machine is not built to hold territory — it is built to strip it.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb8a">
+      <div class="block-header" onclick="toggle('cb8a')">
+        <span class="block-icon">⚔️</span>
+        <span class="block-title">The Escalation Sequence and Combat Economics</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">ESCALATION SEQUENCE: PIRATES → MINORS → NEIGHBORS</div>
+          <strong>Early game:</strong> Deploy the starting Behemoth to contest pirate lairs (Pirate Slayers: 2× loot). Use cheap combat-refitted scouts. Collect Keii and loot simultaneously. Explore aggressively — every new system is +1 Keii.<br><br>
+          <strong>Mid-early:</strong> Attack and subdue minor factions within striking range. Subdue yields significant Keii; raze if no value in keeping. Leave as tribute if they have a useful FIDSI bonus.<br><br>
+          <strong>Mid game:</strong> First neighbor war. Use Jingoist Joy Bill (if available) to declare without diplomatic cost. Target the weakest neighbor's outermost systems first. Subdue → Raze for maximum Keii and minimum system overhead.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SUBDUE vs OCCUPY vs RAZE — THE ECONOMICS</div>
+          <strong>Subdue (Hissho unique, replaces Pillage):</strong> Yields a large Keii gain. No Approval penalty. Diminishing returns on subduing the same system too quickly — wait 10+ turns before subduing the same target again for full value.<br><br>
+          <strong>Occupy (capture system):</strong> Useful only for enemy capitals in a Supremacy Victory run. Otherwise creates FIDSI penalty and Keii upkeep without commensurate benefit. Avoid for non-capital systems unless they meet the quality threshold (5+ planets, strategic resources).<br><br>
+          <strong>Raze:</strong> +5 Keii. Destroys the system permanently. Default action for most captured systems.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SACRED TRADITION — THE TACTICAL INTELLIGENCE ADVANTAGE</div>
+          At Hot War status, Hissho can see the movement paths and destinations of enemy fleets. This lets you intercept reinforcements before they arrive, avoid unfavorable engagements, and pick fights selectively. Combined with Pirate Slayers' forced aggression posture, Sacred Tradition partially compensates for the lack of diplomatic options by letting you control the military information landscape.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">MANPOWER MANAGEMENT IN EXTENDED WARS</div>
+          Keep Food output high and research Food-to-Manpower conversion technologies. A tactical trick for forward operations: <em>abandon an old system and annex a forward system as a manpower resupply point</em>, eliminating the need to return to your home system between engagements. Effective for extended Supremacy campaigns where returning to base costs 20–30 turns of fleet idle time. (Steam guide)
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">STEAM</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t8','cb8a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T9: FACTION QUEST -->
+  <div class="topic" id="t9">
+    <div class="topic-header">
+      <div class="topic-num">09</div>
+      <div>
+        <h2 class="topic-title">Faction Quest: Path Choices &amp; Rewards</h2>
+        <div class="topic-subtitle">Chapter 1 is a meaningful fork. The Gouge of Tonatsi is almost always the right choice.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb9a">
+      <div class="block-header" onclick="toggle('cb9a')">
+        <span class="block-icon">📖</span>
+        <span class="block-title">All Four Chapters: Conditions, Choices, and Rewards</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="quest-grid">
+          <div class="quest-card">
+            <strong>CHAPTER 1 — MILITARIST vs RELIGIOUS</strong><br><br>
+            <strong>Choice A (Militarist):</strong> Wrath of Tonatsi — offensive Juggernaut probe module; combat-oriented.<br>
+            <strong>Choice B (Religious):</strong> <strong>Gouge of Tonatsi</strong> — mining Behemoth probe module that enhances Resource Recovery.<br><br>
+            Both paths unlock <strong>Behemoth Blueprints</strong>, removing the starting Behemoth modification lock.<br><br>
+            <strong>Recommended: Gouge of Tonatsi.</strong> The Gouge directly synergizes with the core economic engine — a better mining probe multiplies home system output for the entire rest of the game. The Wrath is useful for a dedicated combat Juggernaut build, but economic compounding typically outweighs the combat-specific reward.
+          </div>
+          <div class="quest-card">
+            <strong>CHAPTER 2 — GLORY vs POWER</strong><br><br>
+            Branch choices yield different system improvement rewards. Civilian Emergency Centers (Glory path) or Koimachi Academy (Power path). Both provide useful mid-game improvements. The exact reward difference between branches is less decisive than Chapter 1's probe choice — follow whichever branch conditions align with your natural play patterns.
+          </div>
+          <div class="quest-card">
+            <strong>CHAPTER 3 — BERSERKER vs ENDURE</strong><br><br>
+            Unlocks one of two unique Battle Tactics:<br><br>
+            <strong>Berserker:</strong> Offensive tactic with aggressive combat bonuses. Suits glass cannon and weapon-amplified builds.<br>
+            <strong>Endure:</strong> Defensive tactic, higher survivability. Suits armored slow builds and garrison fleets.<br><br>
+            Choose based on your fleet composition and the enemy types you face most often.
+          </div>
+          <div class="quest-card">
+            <strong>CHAPTER 4 — SHRINE OF ETERNAL SACRIFICE</strong><br><br>
+            The Chapter 4 reward is the <strong>Shrine of Eternal Sacrifice</strong>: a system improvement that grants <strong>+50% Keii after battles</strong> permanently.<br><br>
+            Timing matters: complete Chapter 4 when your battle Keii economy is already strong. The +50% stacks with Hissho Holiday Act (+20%), Tombs &amp; Trinkets (+3%/pop), and Venerable Standard (×2 flotilla). In a fully stacked late-game war, single battles can generate 30–50+ Keii.
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t9','cb9a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ T10: TURN 30 -->
+  <div class="topic" id="t10">
+    <div class="topic-header">
+      <div class="topic-num">10</div>
+      <div>
+        <h2 class="topic-title">Turn-30 Playbook &amp; Victory Paths</h2>
+        <div class="topic-subtitle">What a healthy Hissho empire looks like at Turn 30 — and where the late game should go.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb10a">
+      <div class="block-header" onclick="toggle('cb10a')">
+        <span class="block-icon">🗓️</span>
+        <span class="block-title">Opening Framework: Turn-by-Turn Priorities</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="timeline">
+          <div class="tl-row">
+            <div class="tl-turn">TURN 1</div>
+            <div class="tl-body">
+              <strong>Adopt Hatched at Home immediately.</strong> The +25% FIDSI bonus compounds from this point forward — every turn without it is lost output. Refit scouts for combat (weapons + engines). Put the starting Behemoth on a probe cycle targeting the best available system — Gas Giant if visible, otherwise the highest-FIDSI planet reachable. Research toward early military tech and food production.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T1–10</div>
+            <div class="tl-body">
+              <strong>Scout aggressively. Pick fights with pirates.</strong> Every system discovered is +1 Keii. Every pirate lair destroyed is 2× loot and combat Keii. Route the Behemoth toward Gas Giant systems. Queue basic infrastructure (Industrial Infrastructure, Food buildings to grow home system population). Home system population density is the lever that multiplies everything else — Food is the early priority.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T5–15</div>
+            <div class="tl-body">
+              <strong>First election — support Ecologist.</strong> Get colonization flexibility for the second system. Identify the best nearby candidate (5+ planets, ideally with Titanium or a premium luxury). Establish outpost; don't convert to colony yet unless the Keii cost has decayed substantially. Research Behemoth Blueprints via the quest path. Begin queuing Fealty Centers as soon as Keii holds above 90.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T10–20</div>
+            <div class="tl-body">
+              <strong>First neighbor contact. Probe logistics established.</strong> Identify the weakest neighbor. Begin military buildup. Activate Hissho Holiday Act before the first real war declaration. Complete quest Chapter 1 (Gouge of Tonatsi) — redesign Behemoth to 1 Engine + 4 Deep Miners immediately on unlock. Station defensive ships in each actively mined system.
+            </div>
+          </div>
+          <div class="tl-row">
+            <div class="tl-turn">T20–30</div>
+            <div class="tl-body">
+              <strong>First war declared. Subdue-raze cycle begins.</strong> YT01 benchmark at Turn 30: approximately 350 Industry, strong Dust production, Hatched at Home active, mining Behemoth on a Gas Giant circuit. Attack the weakest neighbor's exposed systems — subdue for Keii, raze for +5 Keii, do not occupy. Bank Keii via Fealty Center queueing before major engagements.
+            </div>
+          </div>
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">YT01</span><span class="src-pill">STEAM</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb10b">
+      <div class="block-header" onclick="toggle('cb10b')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Victory Path Analysis</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">SUPREMACY — THE NATURAL PATH</div>
+          Supremacy Victory requires conquering enemy home systems. Every Hissho war generates Keii and removes enemy systems from your colonization penalty counter. Taking a home system is the natural endpoint of the Hissho escalation sequence. The Keii loop, subdue-raze doctrine, forced combat posture, and Sacred Tradition fleet intelligence all point here. Pursue Supremacy if you are fighting neighbors who haven't allied against you.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">SCIENCE — VIABLE TALL PATH</div>
+          A dense home system running Fealty Centers, Benthic Gems, Super Biofuel Factories, and Urgent AI Research (converts 50% of Industry/Food to Science) can generate Science output competitive with Sophons. The Steam guide recommends Offensive Laboratories + declaring war on everyone in the late game for the Science per CP destroyed. Science Victory is legitimate, especially if your galaxy favors a protected tall position.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">CONQUEST VICTORY — AWKWARD FOR HISSHO</div>
+          Conquest Victory requires controlling a minimum number of systems simultaneously — directly conflicting with the colonization penalty. Supremacy Victory accomplishes the same war-win outcome without the system-count requirement. If winning through domination is the goal, Supremacy is strictly better for Hissho than Conquest.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">ECONOMIC VICTORY — VIABLE SECONDARY</div>
+          Hissho generate strong Dust output from a well-developed tall home system. Trade Clearance Bureau (taxes rival trade routes) and Dust-enhancing luxury development make Economic Victory achievable. Less natural than Supremacy but viable if your neighbors have stabilized or been eliminated and you want to coast to an economic win on accumulated FIDSI output.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI</span><span class="src-pill">STEAM</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t10','cb10b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════════════════════════════════ QUIZ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Keii decisions under real game conditions — one right answer, concrete reasoning required</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar"><span class="q-icon">🎯</span><h3>Apply Your Knowledge</h3><span class="q-counter" id="q-counter"></span></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const doneTopics = new Set();
+  const VOLUME = 'fac09';
+  const TOTAL = 11;
+  let qIdx = 0;
+  let answered = false;
+  const quizzes = [
+    {
+      scenario: "Turn 8. You have 97 Keii. Your mining Behemoth is parked over a Gas Giant two lanes from your home system. A pirate fleet (3 small ships) is moving toward the system where your Behemoth is deployed. You have a 3-ship Claw/Hawk fleet that can intercept next turn before the pirates reach the Behemoth. Behemoth Blueprints research is not yet complete.",
+      q: "Before sending your fleet to intercept, should you queue any Fealty structures?",
+      opts: [
+        "No — queuing Fealty Centers would drop Keii from 97 to 72, risking the optimal operating range if the battle goes poorly.",
+        "Yes — queue one Fealty Center now (−25 Keii → 72). The battle will generate Keii income back above 85. You are wasting potential overflow at 97, and converting it into a permanent +3 FIDSI/pop structure is strictly better than fighting at cap and losing the excess gain.",
+        "Yes — queue as many Fealty Centers as possible before the fight to sink all excess Keii.",
+        "No — Fealty Centers require Behemoth Blueprints technology, which you haven't researched yet."
+      ],
+      correct: 3,
+      explain: "Option D is correct here: Fealty Centers are unlocked by Behemoth Blueprints, which the scenario states is not yet researched. This is not a trick question — knowing your tech unlock gates is part of playing Hissho correctly. Options A and B both describe valid reasoning for a situation where the tech IS available (B being the better choice), but neither applies when the building cannot yet be constructed. Option C is always wrong regardless of tech state — sinking Keii below 50 before a battle is a production crisis with no benefit. The takeaway: always know which Keii spending options are actually available before planning around them."
+    },
+    {
+      scenario: "Turn 22. You have 3 systems: home system (level 4), one colony (level 2), one outpost (not yet converted). Keii is 68. Hatched at Home is active, costing −1 Keii/turn per colonized system = −2/turn total. A neighbor has declared war. You have a 5-ship fleet and they have a comparable fleet approaching.",
+      q: "Should you retreat if the space battle looks like it's going badly partway through?",
+      opts: [
+        "Yes — saving 5 ships is worth the 10 Keii cost if the battle is clearly lost.",
+        "No — retreating costs 10 Keii, dropping you from 68 to 58. You are already below the recommended operating floor of 70, hemorrhaging Keii from Hatched at Home upkeep. A retreat collapses Keii further into the penalty zone. Fight to the end: even losing individual ships generates Keii from enemy kills, and a fleet loss while fighting costs less on both dimensions than retreating at 68.",
+        "Yes, but only retreat the most expensive ships to preserve Industry investment.",
+        "Retreat is never wrong for Hissho — ships can always be rebuilt faster than recovering Keii."
+      ],
+      correct: 1,
+      explain: "Retreat costs 10 flat Keii. At 68, retreating drops you to 58 — firmly in the penalty zone where FIDSI multipliers degrade significantly. You are also losing 2 Keii/turn from Hatched at Home, meaning recovery without battle income is slow. The correct play: fight to conclusion. Individual ship losses cost zero Keii, and every enemy ship destroyed gives Keii income that partially offsets losses. A full fleet loss at 68 is bad; a full fleet loss at 58 after paying the retreat tax is worse on both Keii and ship count simultaneously. Option A applies when Keii is well above 85 and the battle is a certain wipe. Option C is not a mechanic in ES2."
+    },
+    {
+      scenario: "Turn 35. This election cycle the available Observance is Sun God's Ritual (converts Food to Manpower for 10 turns). Your home system has 9 pops, food surplus is +24/turn, and manpower is at 65% capacity. You are preparing to declare war in approximately 3 turns.",
+      q: "Do you perform Sun God's Ritual?",
+      opts: [
+        "Yes — you're about to go to war and more manpower is always better than waiting.",
+        "Yes — 65% manpower with +24 food surplus means Sun God's Ritual will fill manpower to full well before your first ground battle.",
+        "No — at 65% manpower with +24 food surplus and 3 turns before war, you are not in a manpower crisis. Normal regeneration will recover meaningfully before first ground combat. Sun God's Ritual stops population growth for 10 turns, directly harming your home system's mining probe synergy. Pass this cycle.",
+        "No — Sun God's Ritual should never be used because it always stops population growth."
+      ],
+      correct: 2,
+      explain: "65% manpower with +24 food surplus and 3 turns before war is not a crisis. The YT01 narrator explicitly warns against reflexively triggering Sun God's Ritual, and this is why: stopping population growth for 10 turns is a real, compounding cost. Every new pop born adds to the Resource Recovery multiplier — 10 turns of frozen growth is 10 turns of reduced long-term FIDSI output. Diligence Ritual (not available this cycle) would be the ideal alternative. Since only Sun God's Ritual is available, the correct answer is to pass the cycle. Option D is too absolute — the Ritual is correct in a genuine manpower crisis (below 30% with no recovery time). Option B is wrong: Sun God converts food *production* to manpower, it doesn't add the stored food surplus instantly."
+    },
+    {
+      scenario: "Turn 50. You hold 4 systems: home (level 5, 12 pops), two colonies, and a captured enemy home system (6 planets, Titanium deposit). The captured system adds −5% FIDSI empire-wide as your 3rd system over the colonization limit. You are currently at peace.",
+      q: "What is the correct long-term decision about the captured system?",
+      opts: [
+        "Raze it immediately — all conquered systems should be razed regardless of quality.",
+        "Keep it as a colony permanently — Titanium justifies any FIDSI penalty.",
+        "Keep it and build Autonomous Administration in your level-5 home system to raise the colonization limit by 1, eliminating the −5% penalty. The system clears the quality threshold (6 planets + strategic resource). Meanwhile deploy the Behemoth to mine its planets to amplify home system output further.",
+        "Convert it back to an outpost to avoid the colony penalty, then reconvert when needed."
+      ],
+      correct: 2,
+      explain: "The quality threshold test: 6 planets + Titanium (a strategic resource for key tech and ship modules) clears the bar for keeping a system. The −5% FIDSI penalty from being one system over cap is real but fixed — not escalating. The correct response is not to accept the penalty indefinitely or raze the system, but to build Autonomous Administration (requires level-4 system, which your level-5 home qualifies for) to eliminate the penalty entirely. Option A applies to low-quality systems (3–4 planets, no strategic resources). Option D (outpost reconversion) would cost Keii to re-convert and solves nothing structurally. Option B without the Autonomous Administration plan accepts unnecessary long-term output loss that is fully avoidable."
+    },
+    {
+      scenario: "Turn 60. Your Keii economy from battles averages +15 Keii per engagement. You have Hissho Holiday Act active (+20% battle Keii) and 8 pops in your home system. You are about to complete Chapter 4 of the faction quest (Shrine of Eternal Sacrifice: +50% Keii after battles). Tombs & Trinkets law is available to adopt (+3% Keii per pop per battle, −2 Dust/pop). You have Militarist Senate control.",
+      q: "With the Shrine incoming, should you adopt Tombs & Trinkets now?",
+      opts: [
+        "No — the −2 Dust/pop cost is too high for a Keii-focused law at this stage.",
+        "Yes — Tombs & Trinkets at 8 pops = +24% bonus Keii per battle. Stacked with Holiday Act (+20%) and the incoming Shrine (+50%), each battle generates Keii at roughly ×1.94 the base rate. At +15 base Keii per battle, that becomes ~+29 per battle. The −16 Dust/turn from 8 pops is easily offset by the Keii income compounding that sustains Devoted-tier FIDSI multipliers.",
+        "Wait until after the Shrine is built before evaluating the combined value.",
+        "No — Tombs & Trinkets requires Militarist tier-3 Senate control, which you may not have."
+      ],
+      correct: 1,
+      explain: "The Hissho Keii stack is most powerful when multiple multipliers combine. Holiday Act (+20%), Shrine (+50%), and Tombs & Trinkets (+24% at 8 pops) are additive bonuses to battle Keii gain. At +15 base per battle, the combined stack pushes to approximately +29 — nearly doubling the Keii economy per engagement. The −2 Dust/pop cost at 8 pops is −16 Dust/turn, meaningful but vastly outweighed by the Keii gain keeping Devoted-tier multipliers active and unlocking additional Fealty Center banking. Option A treats the Dust cost as dominant when Keii income is clearly the larger factor. Option C (wait and evaluate) loses several turns of compounding for no reason — Tombs & Trinkets applies on adoption. Option D is a distractor: the scenario states you have Militarist Senate control."
+    }
+  ];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>

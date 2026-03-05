@@ -6,6 +6,7 @@
 <title>ES2 — The Vodyani: Ark-Born Predators Deep Dive</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+<link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
 <style>
   /* ── Fac05 — Vodyani: predatory orange ───────────────────────────────── */
   :root {
@@ -21,11 +22,7 @@
     radial-gradient(ellipse 30% 30% at 50% 10%, rgba(var(--accent-bright-rgb), 0.03) 0%, transparent 60%);
   }
 
-  h1.page-title {
-    text-shadow:
-      0 0 40px rgba(var(--vodyani-color), 0.4),
-      0 0 80px rgba(var(--vodyani-color), 0.15);
-  }
+  
 
   .sidebar-logo .game-name { color: rgb(var(--accent)); }
 
@@ -151,52 +148,7 @@
   .slot-m  { background: rgba(var(--vodyani-color), 0.12); color: rgb(var(--vodyani-color)); border: 1px solid rgba(var(--vodyani-color), 0.3); }
   .slot-lux{ background: rgba(var(--gold), 0.12); color: rgb(var(--gold)); border: 1px solid rgba(var(--gold), 0.3); }
 
-  /* ── Trait block (reused from Horatio pattern) ──────────────────────── */
-  .trait-block {
-    background: var(--card2);
-    border: 1px solid var(--border);
-    border-left: 3px solid rgb(var(--accent));
-    border-radius: 6px;
-    padding: 12px 16px;
-    margin: 10px 0;
-    font-size: var(--ts_sectionLabel);
-    line-height: 1.7;
-    color: var(--text);
-  }
-  .trait-block.warn {
-    border-left-color: rgb(var(--red));
-  }
-  .trait-label {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle);
-    letter-spacing: 2px;
-    color: rgb(var(--accent));
-    margin-bottom: 6px;
-    font-weight: 700;
-    text-transform: uppercase;
-  }
-  .trait-label.warn { color: rgb(var(--red)); }
-
-  /* ── Source pills ───────────────────────────────────────────────────── */
-  .source-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border);
-  }
-  .src-pill {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionTitle);
-    letter-spacing: 1px;
-    padding: 2px 8px;
-    border-radius: 3px;
-    background: var(--accent-dim);
-    color: rgb(var(--accent));
-    border: 1px solid rgba(var(--vodyani-color), 0.25);
-  }
-
+ 
   /* ── Timeline ───────────────────────────────────────────────────────── */
   .timeline { margin: 14px 0; }
   .tl-row {
@@ -224,20 +176,6 @@
     line-height: 1.7;
   }
 
-  /* ── vol-card-badge ─────────────────────────────────────────────────── */
-  .vol-card-badge {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: var(--ts_sectionLabel);
-    letter-spacing: 3px;
-    color: rgb(var(--accent));
-    background: var(--accent-dim);
-    border: 1px solid rgba(var(--vodyani-color), 0.3);
-    border-radius: 6px;
-    padding: 8px 16px;
-    margin-bottom: 16px;
-    text-align: center;
-    text-transform: uppercase;
-  }
 
   /* ── Ship grid (reused from Horatio) ────────────────────────────────── */
   .ship-grid {
