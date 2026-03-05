@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ES2 Guide — Vol.7: Faction Selection Guide</title>
   <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+  <link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
       --accent:     var(--vol7-accent);
       --accent-dim: rgba(var(--vol7-accent), 0.11);
-      --accent-bright-rgb: var(--vol7-accent);
+      
     }
     .vol-prev { --card-accent: var(--vol6-accent); }
 
@@ -216,28 +217,6 @@
       .archetype-grid { grid-template-columns: 1fr; }
       .axis-row { grid-template-columns: 110px 1fr 55px; gap: 7px; }
     }
-
-    /* ── Trait blocks (inline — not using deepdive CSS) ── */
-    .trait-block {
-      background: var(--card2);
-      border: 1px solid var(--border);
-      border-left: 3px solid rgb(var(--accent));
-      border-radius: 6px;
-      padding: 13px 16px;
-      margin: 10px 0;
-      font-size: var(--ts_table);
-      line-height: 1.7;
-    }
-    .trait-block.warn { border-left-color: rgb(var(--red)); }
-    .trait-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: var(--ts_sectionTitle);
-      letter-spacing: 2px;
-      color: rgb(var(--accent));
-      margin-bottom: 4px;
-      font-weight: 700;
-    }
-    .trait-label.warn { color: rgb(var(--red)); }
   </style>
 </head>
 <body>
@@ -299,7 +278,7 @@
 <main class="main">
 
   <div class="page-header">
-    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2 Guide</a> // <span>Vol.7</span> // Faction Selection</div>
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.7</span> // Faction Selection</div>
     <h1 class="page-title">Faction Selection Guide</h1>
     <p class="page-subtitle">Twelve factions. Wildly different rulesets. This volume is not a summary of each faction — the deep dives cover that. It is a selection tool: a structured way to match your playstyle, experience level, and game context to the faction that will produce the most interesting, learnable game. Two difficulty axes, a primary challenge label, victory path ratings, and cross-faction matchup analysis give you the filters needed to make an informed choice before the first turn.</p>
   </div>
@@ -363,7 +342,7 @@
         <p>Victory paths not listed on a card are not necessarily impossible — they are simply paths where the faction's mechanics create friction rather than leverage. An experienced player can pursue any path with any faction; this guide is about informed default targets.</p>
 
         <div class="done-row">
-          <span class="done-label">UNDERSTOOD</span>
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
           <button class="done-btn" onclick="markDone('t0','cb0b',this)">✓ MARK DONE</button>
         </div>
       </div>
@@ -386,7 +365,7 @@
       <div class="block-header" onclick="toggle('cb1a')">
         <span class="block-icon">🧩</span>
         <span class="block-title">The Six Archetypes</span>
-        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
@@ -406,7 +385,7 @@
           <div class="archetype-card">
             <div class="archetype-title">THE TALL FORTRESS</div>
             <div class="archetype-factions">
-              <span class="archetype-tag">🪶 Hissho</span>
+              <span class="archetype-tag">🦅 Hissho</span>
               <span class="archetype-tag">🌀 Vaulters</span>
               <span class="archetype-tag">👁️ Umbral Choir</span>
             </div>
@@ -458,7 +437,7 @@
         </div>
 
         <div class="done-row">
-          <span class="done-label">UNDERSTOOD</span>
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
           <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
         </div>
       </div>
@@ -481,7 +460,7 @@
       <div class="block-header" onclick="toggle('cb2a')">
         <span class="block-icon">🪪</span>
         <span class="block-title">All Factions at a Glance</span>
-        <span class="block-tag tag-strat">REFERENCE</span>
+        <span class="block-tag tag-strategy">REFERENCE</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
@@ -726,7 +705,7 @@
           <!-- ═══ HISSHO ═══ -->
           <div class="fac-card" style="--fac-c: var(--hissho-color)">
             <div class="fac-card-head">
-              <div class="fac-emoji">🪶</div>
+              <div class="fac-emoji">🦅</div>
               <div>
                 <div class="fac-name">HISSHO</div>
                 <div class="fac-tagline">A compounding fortress disguised as a rush faction. The real engine is a dense home system fed by mining probes — and a resource that requires constant war to sustain.</div>
@@ -914,8 +893,8 @@
             </div>
             <div class="fac-fit">
               <div class="fit-yes">↑ You want the highest power ceiling in the game and accept spawn-location variance as part of the challenge</div>
-              <div class="fit-yes">↑ The Ark economy produces a mid-game momentum swing unlike anything else — once the loop fires, it is nearly unstoppable</div>
-              <div class="fit-no">↓ Starting constellation luck is a real factor — if there's no leech target within range by turn 10, the entire engine is delayed to an extent that other factions cannot replicate</div>
+              <div class="fit-yes">↑ The Ark economy produces a mid-game momentum swing unlike anything else — once the loop fires, the compounding is nearly unstoppable</div>
+              <div class="fit-no">↓ Starting constellation luck is a real factor — no nearby leech target in turns 1–15 means a stunted game that no amount of skill fully compensates</div>
             </div>
           </div>
 
@@ -925,7 +904,7 @@
               <div class="fac-emoji">👁️</div>
               <div>
                 <div class="fac-name">UMBRAL CHOIR</div>
-                <div class="fac-tagline">One system. Infinite network. Everything flows back to Nexus. The most structurally alien faction in ES2 — they cannot colonize, yet hold an empire across the galaxy.</div>
+                <div class="fac-tagline">One system. Infinite network. Everything flows back to Nexus. They cannot colonize — yet hold an empire across the entire galaxy.</div>
               </div>
               <a href="../FactionsDeepGuide/es2-Fac10-umbralchoir.html" class="fac-deep-link">DEEP DIVE →</a>
             </div>
@@ -943,7 +922,7 @@
             </div>
             <div class="fac-challenge">
               <div class="challenge-label">PRIMARY CHALLENGE</div>
-              This is not a harder version of a familiar faction — it is a parallel game. No colonization, no standard expansion, no assimilation. Every standard ES2 instinct must be relearned. Do not pick this faction until you are comfortable with a minimum of three others.
+              This is not a harder version of a familiar faction — it is a parallel game. No colonization, no standard expansion, no assimilation. Every standard ES2 instinct must be relearned. Do not pick this faction until you are comfortable with at minimum three others.
             </div>
             <div class="fac-victory">
               <span class="vic-label">VICTORIES:</span>
@@ -953,7 +932,7 @@
             </div>
             <div class="fac-fit">
               <div class="fit-yes">↑ You want the deepest mechanical puzzle in ES2 and are prepared to lose the first two games learning it</div>
-              <div class="fit-yes">↑ The Sanctuary network makes the faction nearly impossible to rush — very strong in multiplayer once understood</div>
+              <div class="fit-yes">↑ The cloaked Nexus makes you nearly impossible to rush in multiplayer — a major structural advantage once the network establishes</div>
               <div class="fit-no">↓ Any level of inexperience with the game — the Umbral Choir punishes gaps in foundational knowledge that other factions would forgive</div>
             </div>
           </div>
@@ -962,11 +941,11 @@
 
         <div class="callout callout-gold">
           <div class="callout-label">FIRST FACTION? START HERE</div>
-          Community consensus across multiple threads is clear: <strong>United Empire</strong> is the strongest first-faction pick — standard mechanics, forgiving punish, and the Influence buyout teaches the economy layer without overwhelming it. <strong>Sophons</strong> are a strong alternative if you want a more science-focused game from the start. <strong>Lumeris</strong> are a viable third option if the economic identity appeals, but their snowball engine is slightly more fragile in aggressive lobbies. Avoid Vodyani, Umbral Choir, and Cravers as first picks regardless of how appealing their identity sounds.
+          Community consensus is clear: <strong>United Empire</strong> is the strongest first-faction pick — standard mechanics, forgiving punish, and the Influence buyout teaches the economy layer without overwhelming it. <strong>Sophons</strong> are a strong alternative for a science-focused game. <strong>Lumeris</strong> are viable if the economic identity appeals, but the snowball engine is more fragile in aggressive lobbies. Avoid Vodyani, Umbral Choir, and Cravers as first picks regardless of how appealing their identity looks.
         </div>
 
         <div class="done-row">
-          <span class="done-label">REVIEWED</span>
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
           <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
         </div>
       </div>
@@ -989,69 +968,69 @@
       <div class="block-header" onclick="toggle('cb3a')">
         <span class="block-icon">⚡</span>
         <span class="block-title">Victory Path Congestion</span>
-        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
         <p>When multiple factions in the same game share a primary victory path, the race to that condition becomes the defining mid-game conflict. This is not necessarily bad — some of the most interesting games emerge from two factions sprinting for the same win condition — but it is worth knowing before lobby selection.</p>
 
         <table class="ref-table">
-          <tr><th>Victory Path</th><th>Factions With It as Primary</th><th>Congestion Notes</th></tr>
+          <tr><th>Victory Path</th><th>Factions with it as Primary</th><th>Congestion Notes</th></tr>
           <tr>
             <td class="cell-key">Supremacy</td>
-            <td>Cravers, Hissho, Vodyani, Riftborn, Umbral Choir</td>
+            <td>🪳 Cravers, 🦅 Hissho, 🦋 Vodyani, ❄️ Riftborn, 👁️ Umbral Choir</td>
             <td>Most contested path in the game. A lobby with Cravers + Hissho + Vodyani will escalate to all-out war by turn 30 regardless of player intent.</td>
           </tr>
           <tr>
             <td class="cell-key">Economic</td>
-            <td>Lumeris, United Empire, Horatio</td>
-            <td>Moderate congestion. All three can coexist peacefully in the early game; the conflict emerges when Trade Company routes start overlapping and one player's Dust engine starts cannibalizing another's.</td>
+            <td>💰 Lumeris, ⚔️ United Empire, 🧬 Horatio</td>
+            <td>Moderate congestion. All three can coexist early; conflict emerges when Trade Company routes overlap and one Dust engine starts cannibalizing another.</td>
           </tr>
           <tr>
             <td class="cell-key">Diplomatic</td>
-            <td>Unfallen, Nakalim, Umbral Choir</td>
-            <td>Low congestion. Diplomatic victory requires a Senate majority — three factions chasing it will simply split the Senate and none will win cleanly. Exactly one Diplomatic-primary faction per lobby is ideal.</td>
+            <td>🌿 Unfallen, 🏛️ Nakalim, 👁️ Umbral Choir</td>
+            <td>Low congestion but self-limiting: Diplomatic Victory requires a Senate majority — three factions chasing it split the Senate and none wins cleanly. One Diplomatic-primary faction per lobby is ideal.</td>
           </tr>
           <tr>
             <td class="cell-key">Science</td>
-            <td>Sophons, Vaulters</td>
-            <td>Direct race. Sophons' Omniscience discount erodes faster when Vaulters are researching the same techs. These two factions push each other harder than any other science pairing.</td>
+            <td>🔬 Sophons, 🌀 Vaulters</td>
+            <td>Direct race. Sophons' Omniscience discount erodes faster when Vaulters research the same techs. These two push each other harder than any other science pairing.</td>
           </tr>
           <tr>
             <td class="cell-key">Expansion</td>
-            <td>Unfallen</td>
+            <td>🌿 Unfallen</td>
             <td>Rarely contested as a primary condition. Low congestion by design.</td>
           </tr>
         </table>
       </div>
     </div>
 
-    <div class="content-block open" id="cb3b">
+    <div class="content-block" id="cb3b">
       <div class="block-header" onclick="toggle('cb3b')">
         <span class="block-icon">🔗</span>
         <span class="block-title">Natural Allies and Natural Enemies</span>
-        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
-        <p>Some faction pairings create natural diplomatic stability; others make war almost structurally inevitable. This is based on mechanical incentive alignment, not lore.</p>
+        <p>Some faction pairings create natural diplomatic stability; others make war structurally inevitable. This is based on mechanical incentive alignment, not lore.</p>
 
         <div class="callout callout-tip">
           <div class="callout-label">NATURAL ALLIES</div>
-          <strong>Unfallen + Sophons:</strong> Both have strong Pacifist senate representation and no structural reason to go to war. The Unfallen vine can boost Sophon-controlled systems; the Sophons' science lead benefits any ally via shared techs.<br><br>
-          <strong>Unfallen + Lumeris:</strong> The Unfallen peace treaty FIDSI engine and the Lumeris Dust engine both require a stable, non-war environment. They compete for the same peaceful conditions and both benefit from maintaining them.<br><br>
-          <strong>United Empire + Nakalim:</strong> UE generates Influence excess; Nakalim generates Influence through Temples. Neither faction gains from fighting the other early, and both can benefit from Senate coalition building. Diplomatically stable pairing.
+          <strong>🌿 Unfallen + 🔬 Sophons:</strong> Both have strong Pacifist senate representation and no structural reason to go to war. The vine network can boost Sophon-controlled systems; the Sophons' science lead benefits any ally through shared tech timing.<br><br>
+          <strong>🌿 Unfallen + 💰 Lumeris:</strong> Both require a stable, non-war environment to run their engines. They compete for the same peaceful conditions and both benefit from maintaining them.<br><br>
+          <strong>⚔️ United Empire + 🏛️ Nakalim:</strong> UE generates Influence surplus; Nakalim generates Influence through Temples. Neither gains from fighting the other early, and both benefit from Senate coalition building. Diplomatically stable pairing.
         </div>
 
         <div class="callout callout-warn">
           <div class="callout-label">STRUCTURAL CONFLICTS</div>
-          <strong>Cravers vs. Anyone:</strong> The Cravers cannot make permanent peace. Their mechanics structurally require expansion into occupied space. Every neighboring faction is a future target — plan accordingly.<br><br>
-          <strong>Vodyani vs. Nearby Factions:</strong> The Essence leeching mechanic drains neighboring systems passively. Any faction sharing a constellation with Vodyani will feel the drain before the first formal declaration of war. Proximity is aggression.<br><br>
-          <strong>Hissho vs. Diplomatic Factions:</strong> The Hissho Militarist senate bias and Keii upkeep from peace makes sustained diplomacy economically costly for them. Unfallen and Nakalim players will find Hissho neighbors consistently unreliable as partners.
+          <strong>🪳 Cravers vs. Anyone:</strong> The Cravers cannot make permanent peace. Their mechanics structurally require expansion into occupied space. Every neighboring faction is a future target — plan accordingly.<br><br>
+          <strong>🦋 Vodyani vs. Nearby Factions:</strong> Essence leeching drains neighboring systems passively. Any faction sharing a constellation with Vodyani will feel the drain before the first formal declaration of war. Proximity is aggression.<br><br>
+          <strong>🦅 Hissho vs. Diplomatic Factions:</strong> The Hissho Militarist senate bias and Keii upkeep from sustained peace make diplomacy economically costly. 🌿 Unfallen and 🏛️ Nakalim players will find Hissho neighbors consistently unreliable as long-term partners.
         </div>
 
         <div class="done-row">
-          <span class="done-label">REVIEWED</span>
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
           <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
         </div>
       </div>
@@ -1074,7 +1053,7 @@
       <div class="block-header" onclick="toggle('cb4a')">
         <span class="block-icon">⚙️</span>
         <span class="block-title">Settings That Shift Faction Strength</span>
-        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
@@ -1085,52 +1064,52 @@
           <tr>
             <td class="cell-key">🪳 Cravers</td>
             <td>Economic Victory disabled</td>
-            <td class="cell-bad">Removes one of their strongest late-game pivots. Cravers who cannot close via Economic Victory must sustain military expansion indefinitely — exhausting for the player and potentially game-breaking on large maps.</td>
+            <td class="cell-bad">Removes one of their strongest late-game pivots. Cravers who cannot close via Economic Victory must sustain military expansion indefinitely — exhausting and potentially unsustainable on large maps.</td>
           </tr>
           <tr>
             <td class="cell-key">👁️ Umbral Choir</td>
             <td>Small galaxy</td>
-            <td class="cell-good">Dramatically stronger. The Sanctuary network has less distance to cover; the hacking operations reach opponent systems faster; the Nexus is harder to isolate. Umbral Choir on a small galaxy is a different experience from Umbral Choir on a large one.</td>
+            <td class="cell-good">Dramatically stronger. The Sanctuary network covers less distance; hacking operations reach opponent systems faster; the Nexus is harder to isolate. Small galaxy UC is a noticeably different experience from large galaxy UC.</td>
           </tr>
           <tr>
             <td class="cell-key">🌿 Unfallen</td>
             <td>High density / many star lanes</td>
-            <td class="cell-good">More star lanes means vines spread faster and block more corridors. High density also increases the number of factions nearby, which multiplies the peace treaty FIDSI engine.</td>
+            <td class="cell-good">More star lanes means vines spread faster and block more corridors. High density also increases the number of nearby factions, multiplying the peace treaty FIDSI engine.</td>
           </tr>
           <tr>
             <td class="cell-key">🌀 Vaulters</td>
             <td>Large galaxy, sparse lanes</td>
-            <td class="cell-good">The portal network's value scales with distance. On a large sparse galaxy, the Vaulters' ability to teleport troops and colonize instantly is worth far more than on a small dense one where every faction can reach every system in 3–4 turns.</td>
+            <td class="cell-good">The portal network's value scales with distance. On a large sparse map, instant teleportation is worth far more than on a small dense one where every faction can reach every system in 3–4 turns.</td>
           </tr>
           <tr>
             <td class="cell-key">🦋 Vodyani</td>
             <td>High density / many minor factions</td>
-            <td class="cell-good">More nearby leech targets reduces the starting location variance that is the faction's primary weakness. More minor factions means more Essence sources and more systems to drain. High density is the closest thing to a Vodyani safety net.</td>
+            <td class="cell-good">More nearby leech targets reduces starting location variance — the faction's primary weakness. High density is the closest thing to a Vodyani safety net the game settings offer.</td>
           </tr>
           <tr>
             <td class="cell-key">🔬 Sophons</td>
             <td>Many factions in lobby</td>
-            <td class="cell-bad">Omniscience decays faster when more factions research the same technologies. A 6-player game collapses the science discount much earlier than a 3-player game. Consider this when picking Sophons in large lobbies.</td>
+            <td class="cell-bad">Omniscience decays faster when more factions research the same technologies. A 6-player game collapses the discount much earlier than a 3-player game. Factor this in when picking Sophons in large lobbies.</td>
           </tr>
           <tr>
             <td class="cell-key">🏛️ Nakalim</td>
             <td>Diplomatic Victory disabled</td>
-            <td class="cell-bad">Removes their primary win condition. Nakalim can still win via Conquest (Academy conversion counts toward Conquest), but disabling Diplomatic Victory narrows their natural path significantly.</td>
+            <td class="cell-bad">Removes their primary win condition. They can still win via Conquest (Academy conversion counts toward it), but this setting narrows their natural path significantly.</td>
           </tr>
           <tr>
             <td class="cell-key">❄️ Riftborn</td>
-            <td>Standard — no specific setting dependency</td>
-            <td>Riftborn performance is relatively map-agnostic. Their sterile planet affinity means planet type distribution matters more than galaxy shape, but they have no single setting that dramatically shifts their viability.</td>
+            <td>Standard — no strong setting dependency</td>
+            <td>Performance is relatively map-agnostic. Planet type distribution matters more than galaxy shape, but no single setting dramatically shifts their viability.</td>
           </tr>
         </table>
 
         <div class="callout callout-tip">
           <div class="callout-label">SOLO VS. MULTIPLAYER NOTE</div>
-          Several factions rely on AI behavior to maintain their engines. Vodyani need nearby targets that don't proactively destroy their Arks in turns 1–5; Umbral Choir need opponents who don't beeline for their Nexus before the Sanctuary network is established. In multiplayer, experienced opponents will specifically target these pressure points. Solo play against the AI is generally more forgiving of faction-specific vulnerabilities.
+          Several factions rely on AI passivity to establish their engines safely. 🦋 Vodyani need early leech targets that don't proactively destroy their Arks in turns 1–5; 👁️ Umbral Choir need opponents who don't beeline for their Nexus before the Sanctuary network establishes. Experienced multiplayer opponents will specifically target these pressure points. Solo play is generally more forgiving of faction-specific early vulnerabilities.
         </div>
 
         <div class="done-row">
-          <span class="done-label">REVIEWED</span>
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
           <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
         </div>
       </div>
@@ -1168,70 +1147,73 @@ const doneTopics = new Set();
 const VOLUME = 'vol7';
 const TOTAL = 5;
 
-const QUIZ = [
-  {
+let qIdx = 0;
+let answered = false;
+
+const quizzes = [
+   {
     q: "You are joining a 4-player game. The other three players have chosen Cravers, Hissho, and Vodyani. You want to survive to the mid-game and have a realistic shot at winning. Which faction choice makes the most strategic sense?",
-    scenario: "Three aggressive factions: Cravers (cannot make peace), Hissho (constant war required), Vodyani (leeches neighbors). All three have Supremacy as a primary path.",
+    scenario: "Three aggressive factions: Cravers (structurally cannot make peace), Hissho (requires constant war to sustain Keii), Vodyani (leeches neighbors passively before any formal declaration). All three have Supremacy as a primary path.",
     opts: [
-      "Unfallen — the peace treaty FIDSI engine will power you through the mid-game while the aggressive factions fight each other",
-      "Umbral Choir — cloaked Nexus makes you nearly impossible to target early, and the hacking network can destabilize all three opponents simultaneously",
-      "United Empire — the most reliable conventional faction, and the Influence buyout gives flexibility to respond to fast-changing threat vectors",
-      "Sophons — a science lead compounds while the three aggressive factions exhaust each other; pick up the win in the late game"
+      "Unfallen — the peace treaty FIDSI engine will power you through the mid-game while the aggressive factions grind each other down",
+      "Umbral Choir — the cloaked Nexus removes you from the target queue entirely while the three aggressors fight each other",
+      "United Empire — the most reliable conventional faction; Influence buyout gives flexibility to respond to fast-changing threat vectors",
+      "Sophons — a science lead compounds while the three aggressors exhaust each other; win in the late game off accumulated tech"
     ],
     correct: 1,
-    explain: "The Umbral Choir's structural advantage in this lobby is their invisibility. The Cravers, Hissho, and Vodyani will spend the first 20–30 turns fighting each other and any visible neighbor — the UC's cloaked Nexus removes them from the target queue entirely. Unfallen (A) is plausible but the peace treaty engine collapses the moment any of the three aggressive factions declares war, which is structurally inevitable. UE (C) is competent but visible and conventional — a prime early target for Cravers who need to expand. Sophons (D) is a legitimate late-game theory but requires surviving to that point, which is harder for a visible, non-fortified faction."
+    explain: "The Umbral Choir's structural advantage in this lobby is invisibility. The Cravers, Hissho, and Vodyani will spend turns 1–30 fighting each other and any visible neighbor — the UC's cloaked Nexus removes them from the target queue entirely. Unfallen (A) is plausible but the peace treaty FIDSI engine collapses the moment any aggressor declares war, which is structurally inevitable in this lobby. UE (C) is competent but visible and conventional — a prime early target for Cravers who must expand. Sophons (D) requires surviving to a late game this lobby may never reach peacefully."
   },
   {
-    q: "You are picking your second or third faction after mastering United Empire. You want to learn 'going tall' — fewer systems, higher output per system. Which faction teaches this concept most clearly without introducing alien mechanics at the same time?",
-    scenario: "You understand FIDSI, colonization, and the Influence buyout. You want to deepen strategic understanding, not restart the learning curve.",
+    q: "You are picking your second or third faction after mastering United Empire. You want to learn 'going tall' — fewer systems, higher output per system. Which faction introduces this concept most cleanly without layering in alien mechanics at the same time?",
+    scenario: "You understand FIDSI, colonization, and the Influence buyout. You want to deepen strategic understanding, not restart the mechanical learning curve from zero.",
     opts: [
-      "Hissho — tall by necessity, and the Keii loop is a genuinely new resource to learn alongside the tall-play constraint",
+      "Hissho — tall by necessity, and the Keii resource loop is a genuinely new layer to learn alongside the tall-play constraint",
       "Umbral Choir — the extreme tall format (one system) is the purest expression of the concept",
-      "Vaulters — tall-play with familiar colonization mechanics, portal infrastructure as the differentiator, and forgiving punish severity",
-      "Riftborn — tall via constructed pops, reverse terraforming teaches planet evaluation from a new angle"
+      "Vaulters — tall-play through a familiar colonization framework, with the portal infrastructure as the concrete differentiator",
+      "Riftborn — reverse terraforming teaches planet evaluation from a new angle, and their tall tendency is structurally enforced"
     ],
     correct: 2,
-    explain: "Vaulters (C) is the correct bridge faction. They introduce tall-play through a familiar colonization framework — you still found outposts, still develop systems, still make tech choices — but the portal infrastructure creates a concrete payoff for concentrating on fewer, better systems. Punish severity is LOW, meaning mistakes are recoverable while you're learning. Hissho (A) combines tall-play with an entirely new resource (Keii) that requires constant war to sustain — too many new systems at once. Umbral Choir (B) is the deepest mechanical rebuild in the game and is explicitly flagged as an advanced pick. Riftborn (D) is a reasonable alternative but the Industry-vs-population queue split is a genuinely new constraint on top of the tall-play learning."
+    explain: "Vaulters (C) is the correct bridge faction. They introduce tall-play through familiar mechanics — you still found outposts, develop systems, make tech choices — but the portal infrastructure creates a concrete payoff for concentrating on fewer, better systems. Punish severity is LOW, so mistakes are recoverable while learning. Hissho (A) combines tall-play with an entirely new resource requiring constant war to sustain — two new systems at once. Umbral Choir (B) is explicitly the most mechanically alien faction in the game. Riftborn (D) is a reasonable alternative but the Industry-versus-population queue split adds another new constraint on top of the tall-play learning."
   },
   {
-    q: "You want to pursue Diplomatic Victory. You are setting up a solo game and choosing your faction. Galaxy size is Large, 6 AI opponents. Which faction is most naturally positioned for Diplomatic Victory in this configuration?",
-    scenario: "Diplomatic Victory requires a Senate majority. Large galaxy means more distance between factions, longer before first contact, more time to establish Influence dominance.",
+    q: "You want to pursue Diplomatic Victory in a solo game. Galaxy size is Large, 6 AI opponents. Which faction is most naturally positioned for this win condition in this configuration?",
+    scenario: "Diplomatic Victory requires a Senate majority. A Large galaxy means more distance between factions, longer before first contact, and more time to establish Influence dominance before Senate pressure begins.",
     opts: [
       "Nakalim — Diplomatic is their primary path, Temple Influence output is massive, and Academy conversion adds passive territory without triggering wars",
       "Unfallen — Diplomatic is their primary path, and the vine network accelerates Influence zone expansion across a large map",
-      "United Empire — Influence buyout gives the most flexible Senate manipulation tool in the game",
+      "United Empire — the Influence buyout gives the most flexible Senate manipulation tool in the game",
       "Sophons — a science lead produces diplomatic leverage through tech-sharing agreements and alliance pressure"
     ],
     correct: 0,
-    explain: "Nakalim (A) is the correct answer in this configuration. On a Large galaxy with 6 AI opponents, the Nakalim Temple + Academy conversion strategy has more space and more time to operate — two of the key inputs for their slow-building Influence engine. The Academy conversion path turns enemy systems into Diplomatic progress without requiring war declarations, which is especially powerful against AI opponents who respond poorly to indirect pressure. Unfallen (B) is also a strong Diplomatic faction but their vine-based Influence expansion is more effective in medium or high-density configurations where systems are closer together. UE (C) can manipulate the Senate but Diplomatic is not their primary path and their Influence lead competes with other economic priorities. Sophons (D) are not a diplomatic faction by design — the tech-sharing argument is theoretical rather than mechanical."
+    explain: "Nakalim (A) is correct in this configuration. On a Large galaxy with 6 AI opponents, the Temple + Academy conversion strategy has more space and more time to operate — two key inputs for their slow-building Influence engine. Academy conversion turns enemy territory into Diplomatic progress without requiring war, which is especially powerful against AI. Unfallen (B) is a strong Diplomatic faction but their vine-based expansion is more effective at medium density where systems are closer together. UE (C) can manipulate the Senate but Diplomatic is not their primary path. Sophons (D) are not a diplomatic faction by design."
   },
   {
-    q: "Turn 12. You are playing Vodyani. Your starting constellation had no minor factions and the nearest major faction is 4 systems away. Your first Ark has been circling your home system waiting for a leech target. What is the correct diagnosis of your situation?",
-    scenario: "Essence income is near-zero. Two more Arks will complete in 6 turns from the queue. Your home system has 3 pops generating minimal FIDSI.",
+    q: "Turn 12. You are playing Vodyani. Your starting constellation had no minor factions. The nearest major faction is 4 systems away. Your first Ark has been circling your home system with near-zero Essence income for 12 turns. What is the correct diagnosis?",
+    scenario: "Essence income is near-zero. Two more Arks complete in 6 turns. Home system has 3 pops, minimal FIDSI. Other factions who had good starts are already building second-generation infrastructure.",
     opts: [
-      "This is a recoverable situation — redirect the first Ark toward the nearest major faction and begin leeching immediately, accepting the travel time",
-      "This is a structurally compromised start — the Vodyani engine requires early Essence to build the snowball, and a 12-turn delay represents a deficit that will persist throughout the game",
-      "Send all three Arks to different nearby systems and begin colonizing empty systems to build a conventional population base while the Essence loop establishes",
+      "Recoverable — redirect the first Ark toward the nearest major faction and begin leeching immediately, accepting the travel time cost",
+      "Structurally compromised — a 12-turn Essence deficit is not a temporary setback, it is a compounding gap that will persist throughout the game",
+      "Send all three Arks to different systems and colonize empty planets to build a conventional population base in parallel",
       "Prioritize Science research to unlock Ark improvements that increase base Essence generation without a leech target"
     ],
     correct: 1,
-    explain: "Option B is the correct diagnosis. The community sources are explicit on this: Vodyani's primary challenge is starting constellation dependency. A 12-turn delay with near-zero Essence is not a temporary setback — it represents 12 turns of compounding missed by the snowball engine. The other factions who did have good starts are already building their second generation of infrastructure. Option A (redirect the Ark) is the correct immediate action, but it doesn't change the diagnosis — you are already behind in a faction whose entire identity is exponential compounding. Option C misunderstands the Vodyani mechanics: colonizing empty systems without Essence income is just a slower version of playing a faction you're not. Option D delays the core problem further while burning Science turns on a band-aid."
+    explain: "Option B is the correct diagnosis. Community sources are explicit: Vodyani's primary challenge is starting constellation dependency. A 12-turn delay with near-zero Essence represents 12 turns of missed compounding — the snowball engine's entire strength comes from exponential early growth. Option A (redirect the Ark) is the correct immediate action, but it does not change the diagnosis. Option C misunderstands Vodyani: colonizing empty systems without Essence income is just playing a weaker conventional faction. Option D delays the core problem while burning Science turns on a fix that doesn't address the structural deficit."
   },
   {
-    q: "You are designing a 6-player multiplayer lobby and want to ensure interesting mid-game conflict without a single faction dominating by turn 25. Two players have already locked in Sophons and Unfallen. You are filling the remaining four slots with AI. Which combination creates the most balanced, conflict-rich game?",
-    scenario: "Sophons (science racer, peace-preferred) and Unfallen (network builder, peace-preferred) are confirmed. Four slots remain.",
+    q: "You are designing a 6-player multiplayer lobby. Two players have locked Sophons and Unfallen. You are filling the remaining four slots with AI. Which combination creates the most balanced, conflict-rich game?",
+    scenario: "Sophons (science racer, peace-preferred) and Unfallen (network builder, peace-preferred) are confirmed. Both factions depend on peaceful early conditions to run their core engines. Four AI slots remain.",
     opts: [
-      "Cravers, Hissho, Vodyani, United Empire — three aggressive factions plus a generalist creates maximum conflict",
-      "Lumeris, Riftborn, Nakalim, Horatio — four non-aggressive factions creates a strategic variety game without early war forcing everyone's hand",
-      "Cravers, Riftborn, Nakalim, Lumeris — one forced-aggressor, two patient investors, one economic faction creates varied pacing without triple-aggressor overwhelm",
+      "Cravers, Hissho, Vodyani, United Empire — three aggressors plus a generalist for maximum conflict",
+      "Lumeris, Riftborn, Nakalim, Horatio — four non-aggressive factions for strategic variety without early war",
+      "Cravers, Riftborn, Nakalim, Lumeris — one forced-aggressor, two patient investors, one economic faction; varied pacing without triple-aggressor overwhelm",
       "Vaulters, Umbral Choir, Horatio, United Empire — four high-ceiling factions for a deep late-game"
     ],
     correct: 2,
-    explain: "Option C is the most balanced design. Cravers provide the conflict driver that a game with two peace-preferring factions needs — without Cravers, Hissho, or Vodyani, the lobby risks becoming too passive. But adding only one forced-aggressor (Cravers) rather than three (option A) prevents the early-game from becoming a survival-mode scramble for Sophons and Unfallen, both of whom need the peace treaty engine to function. Riftborn, Nakalim, and Lumeris each have distinct strategic identities and varied victory paths — the four factions pursue different win conditions and will not immediately collide. Option A's triple-aggressor configuration overwhelms the two peace factions within 15 turns. Option B eliminates all pressure and the game risks a slow, undramatic science race. Option D puts Umbral Choir (extreme complexity) into an AI slot — the AI plays UC poorly, essentially removing a faction from meaningful competition."
+    explain: "Option C is the most balanced design. Cravers provide the conflict driver this lobby needs — without any aggressor, the game risks a passive science race. But adding only one forced-aggressor rather than three prevents the early game from becoming survival mode for Sophons and Unfallen, both of whom need peace to function. Riftborn, Nakalim, and Lumeris have distinct strategic identities and different win conditions so they won't immediately collide. Option A's triple-aggressor overwhelms both peace factions within 15 turns. Option B eliminates all meaningful pressure. Option D puts Umbral Choir in an AI slot — the AI plays UC poorly, effectively removing a faction from meaningful competition."
   }
 ];
 </script>
 <script src="../CSSnJS/es2-guide.js"></script>
-<script>renderQuiz(QUIZ); initProgress(); initMobileNav();</script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
 </body>
 </html>
