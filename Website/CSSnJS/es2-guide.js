@@ -345,7 +345,11 @@ function answer(i) {
     if (idx === q.correct) btn.classList.add('correct');
     else if (idx === i)    btn.classList.add('wrong');
   });
-  document.getElementById('qexp').textContent = q.explain;
+  const exp = document.getElementById('qexp');
+  exp.textContent = q.explain;
+  exp.classList.add(i === q.correct ? 'ok' : 'bad');
+  exp.classList.add('show');
+  document.getElementById('btn-nq').classList.add('show');
 }
 
 function nextQ() {
