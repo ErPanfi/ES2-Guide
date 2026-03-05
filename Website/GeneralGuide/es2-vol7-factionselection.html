@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ES2 Guide — Vol.7: Faction Selection Guide</title>
+  <link rel="stylesheet" href="../CSSnJS/es2-guide.css">
+  <link rel="stylesheet" href="../CSSnJS/es2-faction-deepdive.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --accent:     var(--vol7-accent);
+      --accent-dim: rgba(var(--vol7-accent), 0.11);
+      
+    }
+    .vol-prev { --card-accent: var(--vol6-accent); }
+
+    /* ── Faction cards ── */
+    .fac-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    .fac-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-top: 3px solid rgb(var(--fac-c, var(--vol7-accent)));
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .fac-card-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .fac-emoji { font-size: calc(var(--ts_mainText) * 1.8); flex-shrink: 0; line-height: 1.1; }
+    .fac-name {
+      font-family: 'Orbitron', sans-serif;
+      font-size: var(--ts_topicTitle);
+      font-weight: 900;
+      color: rgb(var(--fac-c, var(--vol7-accent)));
+      letter-spacing: 2px;
+      line-height: 1.1;
+    }
+    .fac-tagline {
+      font-size: var(--ts_sectionLabel);
+      color: var(--text-dim);
+      line-height: 1.45;
+      margin-top: 4px;
+    }
+    .fac-deep-link {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--ts_sectionTitle);
+      letter-spacing: 1.5px;
+      color: rgb(var(--fac-c, var(--vol7-accent)));
+      text-decoration: none;
+      background: rgba(var(--fac-c, var(--vol7-accent)), 0.08);
+      border: 1px solid rgba(var(--fac-c, var(--vol7-accent)), 0.25);
+      padding: 4px 10px;
+      border-radius: 4px;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .fac-deep-link:hover { background: rgba(var(--fac-c, var(--vol7-accent)), 0.18); }
+
+    /* ── Complexity axes ── */
+    .fac-axes { display: flex; flex-direction: column; gap: 8px; margin: 14px 0; }
+    .axis-row {
+      display: grid;
+      grid-template-columns: 145px 1fr 70px;
+      align-items: center;
+      gap: 10px;
+    }
+    .axis-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--ts_sectionTitle);
+      letter-spacing: 1px;
+      color: var(--text-dim);
+    }
+    .axis-track {
+      height: 8px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .axis-fill {
+      height: 100%;
+      border-radius: 99px;
+    }
+    .axis-fill.mech  { background: rgb(var(--fac-c, var(--vol7-accent))); }
+    .axis-fill.p-low    { background: rgb(var(--green)); }
+    .axis-fill.p-med    { background: rgb(var(--gold)); }
+    .axis-fill.p-high   { background: rgb(var(--red)); }
+    .axis-fill.p-extreme{ background: rgb(var(--red)); }
+    .axis-value {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--ts_sectionTitle);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-align: right;
+    }
+    .v-low     { color: rgb(var(--green)); }
+    .v-med     { color: rgb(var(--gold)); }
+    .v-high    { color: rgb(var(--red)); }
+    .v-extreme { color: rgb(var(--red)); }
+
+    /* ── Primary challenge ── */
+    .fac-challenge {
+      background: rgba(var(--red), 0.06);
+      border-left: 3px solid rgb(var(--red));
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: var(--ts_sectionLabel);
+      line-height: 1.6;
+      color: var(--text);
+      margin: 12px 0;
+    }
+    .challenge-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--ts_sectionTitle);
+      letter-spacing: 2px;
+      color: rgb(var(--red));
+      margin-bottom: 4px;
+    }
+
+    /* ── Victory chips ── */
+    .fac-victory { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; align-items: center; }
+    .vic-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--ts_sectionTitle);
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-right: 2px;
+    }
+    .vpath-chip {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--ts_sectionTitle);
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 3px;
+      border: 1px solid;
+    }
+    .vpath-primary { background: rgba(var(--green), 0.12);  color: rgb(var(--green)); border-color: rgba(var(--green), 0.3); }
+    .vpath-strong  { background: rgba(var(--cyan),  0.10);  color: rgb(var(--cyan));  border-color: rgba(var(--cyan),  0.25);}
+    .vpath-viable  { background: rgba(var(--gold),  0.10);  color: rgb(var(--gold));  border-color: rgba(var(--gold),  0.25);}
+
+    /* ── Fit rows ── */
+    .fac-fit {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 12px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+    .fit-row {
+      font-size: var(--ts_sectionLabel);
+      line-height: 1.5;
+      padding: 2px 0 2px 10px;
+      border-left: 2px solid;
+    }
+    .fit-yes { color: rgb(var(--green)); border-color: rgba(var(--green), 0.4); }
+    .fit-no  { color: rgb(var(--red));   border-color: rgba(var(--red),   0.4); }
+
+    /* ── Archetype cards ── */
+    .archetype-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .archetype-card {
+      background: var(--card2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .archetype-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: var(--ts_sectionLabel);
+      font-weight: 700;
+      color: rgb(var(--text-bright));
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .archetype-factions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 10px;
+    }
+    .archetype-tag {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: var(--ts_sectionTitle);
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: var(--accent-dim);
+      color: rgb(var(--accent));
+      border: 1px solid rgba(var(--accent), 0.25);
+    }
+    .archetype-body {
+      font-size: var(--ts_sectionLabel);
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* ── Setup table modifier ── */
+    .cell-note { color: var(--text-dim); font-style: italic; font-size: var(--ts_sectionTitle); }
+
+    /* ── Mobile ── */
+    @media (max-width: 700px) {
+      .fac-grid { grid-template-columns: 1fr; }
+      .archetype-grid { grid-template-columns: 1fr; }
+      .axis-row { grid-template-columns: 110px 1fr 55px; gap: 7px; }
+    }
+  </style>
+</head>
+<body>
+<div class="layout">
+
+<!-- ══════════════════════════ SIDEBAR ══════════════════════════ -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <a href="../index.html" class="vol-card right linkToIndex">ES2</a>
+    <div class="game-name">VOLUME 7</div>
+    <div class="guide-name">Faction<br>Selection</div>
+  </div>
+
+  <div class="nav-section-label">// Intro</div>
+  <div class="nav-item active" onclick="scrollByID('t0')">📖 How to Read This Guide <span class="nav-check" id="nc0"></span></div>
+
+  <div class="nav-section-label">// Factions</div>
+  <div class="nav-item" onclick="scrollByID('t1')">🧩 Playstyle Archetypes <span class="nav-check" id="nc1"></span></div>
+  <div class="nav-item" onclick="scrollByID('t2')">🪪 Faction Cards <span class="nav-check" id="nc2"></span></div>
+
+  <div class="nav-section-label">// Galaxy Play</div>
+  <div class="nav-item" onclick="scrollByID('t3')">⚡ Faction Matchups <span class="nav-check" id="nc3"></span></div>
+  <div class="nav-item" onclick="scrollByID('t4')">⚙️ Galaxy Setup <span class="nav-check" id="nc4"></span></div>
+
+  <div class="nav-section-label">// Practice</div>
+  <div class="nav-item" onclick="scrollByID('quiz')">🧠 Scenario Quiz</div>
+
+  <div class="nav-section-label">// Volumes</div>
+  <div class="vol-card right vol-prev" onclick="location.href='es2-vol6-diplomacy.html'"><div class="vol-card-arrow">←</div> Vol.6: Diplomacy</div>
+
+  <div class="progress-mini">
+    <div class="progress-mini-label"><span>MASTERY</span><span id="pct-mini">0%</span></div>
+    <div class="progress-mini-bar"><div class="progress-mini-fill" id="bar-mini" style="width:0%"></div></div>
+  </div>
+</nav>
+
+<!-- Mobile nav -->
+<div class="mobile-bar">
+  <div class="mobile-bar-vol hidden">← Vol.6</div>
+  <div class="mobile-bar-menu" onclick="openDrawer()">☰</div>
+  <div class="mobile-bar-vol hidden"></div>
+</div>
+<div class="drawer-backdrop" onclick="closeDrawer()"></div>
+<div class="mobile-drawer">
+  <div class="drawer-handle"></div>
+  <div class="nav-section-label">// Intro</div>
+  <div class="nav-item" onclick="scrollByID('t0');closeDrawer()">📖 How to Read This Guide</div>
+  <div class="nav-section-label">// Factions</div>
+  <div class="nav-item" onclick="scrollByID('t1');closeDrawer()">🧩 Playstyle Archetypes</div>
+  <div class="nav-item" onclick="scrollByID('t2');closeDrawer()">🪪 Faction Cards</div>
+  <div class="nav-section-label">// Galaxy Play</div>
+  <div class="nav-item" onclick="scrollByID('t3');closeDrawer()">⚡ Faction Matchups</div>
+  <div class="nav-item" onclick="scrollByID('t4');closeDrawer()">⚙️ Galaxy Setup</div>
+  <div class="nav-section-label">// Practice</div>
+  <div class="nav-item" onclick="scrollByID('quiz');closeDrawer()">🧠 Scenario Quiz</div>
+</div>
+
+<!-- ══════════════════════════ MAIN ══════════════════════════ -->
+<main class="main">
+
+  <div class="page-header">
+    <div class="breadcrumb"><a href="../index.html" class="linkToIndex">ES2</a> // <span>Vol.7</span> // Faction Selection</div>
+    <h1 class="page-title">Faction Selection Guide</h1>
+    <p class="page-subtitle">Twelve factions. Wildly different rulesets. This volume is not a summary of each faction — the deep dives cover that. It is a selection tool: a structured way to match your playstyle, experience level, and game context to the faction that will produce the most interesting, learnable game. Two difficulty axes, a primary challenge label, victory path ratings, and cross-faction matchup analysis give you the filters needed to make an informed choice before the first turn.</p>
+  </div>
+
+  <!-- ══════════ T0: HOW TO READ ══════════ -->
+  <div class="topic" id="t0">
+    <div class="topic-header">
+      <div class="topic-num">00</div>
+      <div>
+        <h2 class="topic-title">How to Read This Guide</h2>
+        <div class="topic-subtitle">What the two axes measure, what the chips mean, and how to use this volume before choosing a faction</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0a">
+      <div class="block-header" onclick="toggle('cb0a')">
+        <span class="block-icon">📐</span>
+        <span class="block-title">The Two Difficulty Axes</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Every faction card in Topic 2 displays two bar indicators. They measure different things and do not add up to a single "difficulty" score — intentionally.</p>
+
+        <div class="trait-block">
+          <div class="trait-label">MECHANICAL COMPLEXITY</div>
+          How far does this faction deviate from standard ES2 rules? A low score means the faction uses familiar FIDSI, colonization, and diplomacy mechanics with minor twists. A high score means you are learning a parallel ruleset — one that replaces, rather than modifies, the baseline game. The bar fills in the faction's own color to emphasize that complexity is identity, not a warning.
+        </div>
+
+        <div class="trait-block warn">
+          <div class="trait-label warn">PUNISH SEVERITY</div>
+          How badly does misplay compound? Some factions are forgiving — a slow turn-10 can be recovered by turn 30. Others enter death spirals: one wrong decision compounds into irreversible deficits within 5–10 turns. This bar fills red because severity is a direct risk signal, independent of complexity. A mechanically simple faction can still be brutally punishing (see: Cravers).
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">THE FOUR ARCHETYPES THIS CREATES</div>
+          Low complexity + low punish = <strong>learning-friendly</strong> (United Empire, Vaulters). Low complexity + high punish = <strong>constrained aggressor</strong> (Cravers). High complexity + low punish = <strong>experiment-friendly expert faction</strong> (Horatio). High complexity + high punish = <strong>high-ceiling specialist</strong> (Vodyani, Umbral Choir). Your experience level determines which quadrant you should target.
+        </div>
+
+        <p>Each card also carries a <strong>Primary Challenge</strong> label — a single sentence naming the specific reason players most commonly lose with that faction. It is the thing the complexity and punish scores cannot fully express. Read it before dismissing a faction as "just a higher bar version of something simpler."</p>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb0b">
+      <div class="block-header" onclick="toggle('cb0b')">
+        <span class="block-icon">🏆</span>
+        <span class="block-title">Victory Path Chips</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Each card shows a faction's viable victory paths, color-coded by tier. These ratings are drawn from the faction deep dives and cross-referenced against community analysis. They represent how naturally the faction's mechanics point toward each win condition — not the maximum achievable tier by an expert player ignoring faction identity.</p>
+
+        <table class="ref-table">
+          <tr><th>Chip Color</th><th>Label</th><th>Meaning</th></tr>
+          <tr><td><span class="vpath-chip vpath-primary">Economic</span></td><td class="cell-key">PRIMARY</td><td>The faction's mechanics actively point here. Pursuing this path amplifies your faction's identity rather than working against it.</td></tr>
+          <tr><td><span class="vpath-chip vpath-strong">Science</span></td><td class="cell-key">STRONG</td><td>A natural second path. No fundamental mechanical conflict; requires deliberate tech choices to prioritize.</td></tr>
+          <tr><td><span class="vpath-chip vpath-viable">Conquest</span></td><td class="cell-key">VIABLE</td><td>Achievable but requires building against the faction's natural tendencies or accepting a slower approach.</td></tr>
+        </table>
+
+        <p>Victory paths not listed on a card are not necessarily impossible — they are simply paths where the faction's mechanics create friction rather than leverage. An experienced player can pursue any path with any faction; this guide is about informed default targets.</p>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t0','cb0b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════ T1: ARCHETYPES ══════════ -->
+  <div class="topic" id="t1">
+    <div class="topic-header">
+      <div class="topic-num">01</div>
+      <div>
+        <h2 class="topic-title">Playstyle Archetypes</h2>
+        <div class="topic-subtitle">Six recurring patterns across the twelve factions — a vocabulary for filtering before reading the cards</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb1a">
+      <div class="block-header" onclick="toggle('cb1a')">
+        <span class="block-icon">🧩</span>
+        <span class="block-title">The Six Archetypes</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Factions cluster into recurring strategic patterns. Some factions belong to more than one archetype — the overlap is informative, not an error. Knowing which archetypes you enjoy (or find tedious) narrows the card grid from twelve to two or three candidates before you read a single complexity bar.</p>
+
+        <div class="archetype-grid">
+
+          <div class="archetype-card">
+            <div class="archetype-title">THE GENERALIST</div>
+            <div class="archetype-factions">
+              <span class="archetype-tag">⚔️ United Empire</span>
+              <span class="archetype-tag">💰 Lumeris</span>
+            </div>
+            <div class="archetype-body">Standard mechanics, flexible win conditions, low friction on expansion. The engine is a familiar FIDSI loop with a single amplifying mechanic on top (Influence buyout for UE; Dust conversion for Lumeris). No alien ruleset to internalize. Correct for players who want to learn strategy from the ground up, or who want reliable performance across varied maps.</div>
+          </div>
+
+          <div class="archetype-card">
+            <div class="archetype-title">THE TALL FORTRESS</div>
+            <div class="archetype-factions">
+              <span class="archetype-tag">🦅 Hissho</span>
+              <span class="archetype-tag">🌀 Vaulters</span>
+              <span class="archetype-tag">👁️ Umbral Choir</span>
+            </div>
+            <div class="archetype-body">Fewer systems than everyone else. Higher output per system than most. Force concentrated rather than distributed. The Vaulters achieve this via portal teleportation; Hissho via Keii compounding on a single dense home system; Umbral Choir by holding exactly one system and projecting power through Sanctuaries and hacking. If you want to prove you don't need quantity to win, this is your archetype.</div>
+          </div>
+
+          <div class="archetype-card">
+            <div class="archetype-title">THE SNOWBALL AGGRESSOR</div>
+            <div class="archetype-factions">
+              <span class="archetype-tag">🪳 Cravers</span>
+              <span class="archetype-tag">🦋 Vodyani</span>
+            </div>
+            <div class="archetype-body">High ceiling with a death spiral underneath. Both factions are engines that produce exponentially increasing returns — as long as they keep moving. Stop the Cravers' expansion or the Vodyani's Essence loop, and the engine collapses. The payoff curve is steeper than any other archetype; so is the crash. Not recommended as a first "hard faction" pick — understand the engine before trusting it.</div>
+          </div>
+
+          <div class="archetype-card">
+            <div class="archetype-title">THE PATIENT INVESTOR</div>
+            <div class="archetype-factions">
+              <span class="archetype-tag">🧬 Horatio</span>
+              <span class="archetype-tag">❄️ Riftborn</span>
+              <span class="archetype-tag">🏛️ Nakalim</span>
+            </div>
+            <div class="archetype-body">Weak or conventional early game followed by compounding mid-to-late power. Horatio's splicing engine takes 25+ turns to ignite; Riftborn's constructed pops require Industry investment before they generate returns; Nakalim's relic and temple network builds slowly toward a dominant Influence sphere. All three reward the player who can absorb early vulnerability without panicking into suboptimal emergency plays.</div>
+          </div>
+
+          <div class="archetype-card">
+            <div class="archetype-title">THE NETWORK BUILDER</div>
+            <div class="archetype-factions">
+              <span class="archetype-tag">🌿 Unfallen</span>
+              <span class="archetype-tag">👁️ Umbral Choir</span>
+            </div>
+            <div class="archetype-body">Expansion through connectivity, not colonization. The Unfallen spread a vine network that converts territory into a diplomatic and economic engine; the Umbral Choir deploy Sanctuaries that serve as remote production nodes feeding a single hub. Both factions treat the galaxy as a graph problem rather than a territory-capture problem. The Unfallen approach is intuitive once the vine is understood; the Umbral Choir version requires full mechanical re-learning.</div>
+          </div>
+
+          <div class="archetype-card">
+            <div class="archetype-title">THE SCIENCE RACER</div>
+            <div class="archetype-factions">
+              <span class="archetype-tag">🔬 Sophons</span>
+              <span class="archetype-tag">🌀 Vaulters</span>
+            </div>
+            <div class="archetype-body">Technology lead as the primary strategic lever. Sophons exploit Omniscience — a decaying science discount that rewards discovering techs before everyone else. Vaulters combine a science-typed population, portal bonuses, and Hyperium system development to produce competitive science output without a dedicated affinity. Both factions can pursue Science Victory; both can pivot to non-science wins if the race goes wrong.</div>
+          </div>
+
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">OVERLAPS ARE INFORMATIVE</div>
+          Umbral Choir appears in both Tall Fortress and Network Builder. Vaulters appear in both Tall Fortress and Science Racer. These overlaps signal factions with multiple viable strategic directions — but also factions with higher complexity, since the player must choose which archetype to lean into per game.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t1','cb1a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════ T2: FACTION CARDS ══════════ -->
+  <div class="topic" id="t2">
+    <div class="topic-header">
+      <div class="topic-num">02</div>
+      <div>
+        <h2 class="topic-title">Faction Cards</h2>
+        <div class="topic-subtitle">All twelve factions — sorted from lowest to highest mechanical complexity. Each card links directly to the full deep dive.</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb2a">
+      <div class="block-header" onclick="toggle('cb2a')">
+        <span class="block-icon">🪪</span>
+        <span class="block-title">All Factions at a Glance</span>
+        <span class="block-tag tag-strategy">REFERENCE</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="fac-grid">
+
+          <!-- ═══ UNITED EMPIRE ═══ -->
+          <div class="fac-card" style="--fac-c: var(--ue-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">⚔️</div>
+              <div>
+                <div class="fac-name">UNITED EMPIRE</div>
+                <div class="fac-tagline">The compounding machine. Industry into Influence, Influence into more Industry — and then keeps going.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac07-unitedempire.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:15%"></div></div>
+                <div class="axis-value v-low">MINIMAL</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:15%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The Industry→Influence loop looks trivial — mastery is in how you fuel it without letting it stall mid-game when Approval begins to constrain expansion.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Economic</span>
+              <span class="vpath-chip vpath-primary">Wonder</span>
+              <span class="vpath-chip vpath-strong">Conquest</span>
+              <span class="vpath-chip vpath-viable">Science</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ First or second faction — this is the de-facto tutorial faction by community consensus</div>
+              <div class="fit-yes">↑ You want to experiment with multiple victory paths without committing to a single mechanic</div>
+              <div class="fit-no">↓ You want a distinctive identity — UE is the most powerful conventional faction, not a flavor pick</div>
+            </div>
+          </div>
+
+          <!-- ═══ VAULTERS ═══ -->
+          <div class="fac-card" style="--fac-c: var(--vaulters-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🌀</div>
+              <div>
+                <div class="fac-name">VAULTERS</div>
+                <div class="fac-tagline">Teleportation gates, instant colonization, Golden Age surges. The textbook definition of going tall.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac12-vaulters.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:28%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:22%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The portal build is expensive early and silent for 15–20 turns. Trusting the infrastructure investment before it pays off requires patience most players don't extend to a new faction.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Science</span>
+              <span class="vpath-chip vpath-strong">Economic</span>
+              <span class="vpath-chip vpath-viable">Conquest</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy infrastructure investment and want the portal payoff to feel earned</div>
+              <div class="fit-yes">↑ Good second faction after UE — introduces "going tall" without alien mechanics</div>
+              <div class="fit-no">↓ You want aggressive early expansion — Vaulters rewards patience, not speed</div>
+            </div>
+          </div>
+
+          <!-- ═══ LUMERIS ═══ -->
+          <div class="fac-card" style="--fac-c: var(--lumeris-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">💰</div>
+              <div>
+                <div class="fac-name">LUMERIS</div>
+                <div class="fac-tagline">Venetians of space. More Dust than anyone — and they spend it on territory, ships, and tech without declaring war.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac01-lumeris.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:28%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:38%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The snowball engine requires peaceful early turns — but you cannot control your neighbors. A Craver or Hissho spawning adjacent shuts down the Dust-first strategy before it ignites.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Economic</span>
+              <span class="vpath-chip vpath-strong">Diplomatic</span>
+              <span class="vpath-chip vpath-viable">Wonder</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You want to master the economic layer of ES2 — Lumeris teaches it at full depth</div>
+              <div class="fit-yes">↑ You enjoy buying solutions to problems rather than building them from Industry</div>
+              <div class="fit-no">↓ Aggressive multiplayer lobby — the Dust engine needs space to breathe in the early game</div>
+            </div>
+          </div>
+
+          <!-- ═══ SOPHONS ═══ -->
+          <div class="fac-card" style="--fac-c: var(--sophon-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🔬</div>
+              <div>
+                <div class="fac-name">SOPHONS</div>
+                <div class="fac-tagline">A 50% science discount that collapses as rivals catch up. The entire playstyle is a race against that decay curve.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac03-sophons.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:28%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:36%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The Omniscience discount decays to 0% as opponents research the same techs. Coasting on a science lead is not an option — you must compound the lead continuously or it evaporates.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Science</span>
+              <span class="vpath-chip vpath-strong">Diplomatic</span>
+              <span class="vpath-chip vpath-viable">Economic</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You want to use technology lead as a strategic weapon, not just a passive advantage</div>
+              <div class="fit-yes">↑ Community consensus: excellent beginner faction with a clear feedback loop</div>
+              <div class="fit-no">↓ Playing against experienced players who will deliberately catch up on researched techs to collapse your Omniscience value</div>
+            </div>
+          </div>
+
+          <!-- ═══ UNFALLEN ═══ -->
+          <div class="fac-card" style="--fac-c: var(--unfallen-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🌿</div>
+              <div>
+                <div class="fac-name">UNFALLEN</div>
+                <div class="fac-tagline">The galaxy's living root system. The vine locks territory, doubles movement speed, and prints FIDSI through peace — until you realize war is still an option.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac06-unfallen.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:35%"></div></div>
+                <div class="axis-value v-low">LOW–MED</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:36%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The vine looks like a slow colonization system. The real engine is the peace treaty FIDSI stack (~+20% empire-wide per active treaty). Declaring war to deal with an aggressive neighbor destroys this engine immediately.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Diplomatic</span>
+              <span class="vpath-chip vpath-primary">Expansion</span>
+              <span class="vpath-chip vpath-viable">Economic</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy territorial control and diplomatic leverage without building a war machine</div>
+              <div class="fit-yes">↑ Forgiving enough for a third or fourth faction pick despite novel mechanics</div>
+              <div class="fit-no">↓ Aggressive multiplayer lobby — the peace treaty FIDSI engine collapses the moment you're forced into war</div>
+            </div>
+          </div>
+
+          <!-- ═══ RIFTBORN ═══ -->
+          <div class="fac-card" style="--fac-c: var(--riftborn-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">❄️</div>
+              <div>
+                <div class="fac-name">RIFTBORN</div>
+                <div class="fac-tagline">They don't grow, they don't starve, and they terraform away from life. A precision Industry engine hiding behind an apparent simplicity.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac08-riftborn.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:48%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:36%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              Every Industry point spent on a new pop is one not spent on a building. The queue split between population and infrastructure defines the entire early-game tempo — and wrong answers don't announce themselves until turn 25.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Supremacy</span>
+              <span class="vpath-chip vpath-strong">Science</span>
+              <span class="vpath-chip vpath-viable">Economic</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy optimization puzzles and reverse-engineering resource problems others ignore</div>
+              <div class="fit-yes">↑ Genuine flexibility on victory paths — the faction doesn't force a specific win condition</div>
+              <div class="fit-no">↓ You want immediate strong output or a fast aggressive opener — Riftborn power is mid-to-late</div>
+            </div>
+          </div>
+
+          <!-- ═══ HISSHO ═══ -->
+          <div class="fac-card" style="--fac-c: var(--hissho-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🦅</div>
+              <div>
+                <div class="fac-name">HISSHO</div>
+                <div class="fac-tagline">A compounding fortress disguised as a rush faction. The real engine is a dense home system fed by mining probes — and a resource that requires constant war to sustain.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac09-hissho.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:48%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-high" style="width:72%"></div></div>
+                <div class="axis-value v-high">HIGH</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              Keii income requires constant combat. Keii expenditure is unavoidable. A Hissho empire that stops fighting for 10 turns enters Keii debt — a FIDSI multiplier collapse that is extremely difficult to reverse.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Supremacy</span>
+              <span class="vpath-chip vpath-strong">Science</span>
+              <span class="vpath-chip vpath-viable">Economic</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy tight resource loops, mining probe micro, and never having peace</div>
+              <div class="fit-yes">↑ Genuinely unique playstyle that teaches tall-play concepts through an aggressive lens</div>
+              <div class="fit-no">↓ You want to expand wide, play diplomatically, or take extended breaks from combat</div>
+            </div>
+          </div>
+
+          <!-- ═══ CRAVERS ═══ -->
+          <div class="fac-card" style="--fac-c: var(--cravers-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🪳</div>
+              <div>
+                <div class="fac-name">CRAVERS</div>
+                <div class="fac-tagline">A locust swarm wearing civilization's skin. Every planet they occupy degrades permanently — so they must always move forward.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac04-cravers.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:40%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-extreme" style="width:92%"></div></div>
+                <div class="axis-value v-extreme">EXTREME</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              Expansion is not a strategy — it is the only life support system. Cravers who stop expanding consume their own empire. The mechanic is legible; the margin for error is zero.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Supremacy</span>
+              <span class="vpath-chip vpath-primary">Conquest</span>
+              <span class="vpath-chip vpath-strong">Science</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You want maximum aggression and can accept being the faction every other player targets</div>
+              <div class="fit-yes">↑ Science Victory is a legitimate primary path — depletion bonuses apply to all FIDSI including Science</div>
+              <div class="fit-no">↓ You want diplomatic options, a mid-game breather, or any recovery window after a setback</div>
+            </div>
+          </div>
+
+          <!-- ═══ HORATIO ═══ -->
+          <div class="fac-card" style="--fac-c: var(--horatio-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🧬</div>
+              <div>
+                <div class="fac-name">HORATIO</div>
+                <div class="fac-tagline">A trillion clones of the galaxy's most perfect being. The gene splicing system is not a side mechanic — it is the entire mid-to-late strategy.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac02-horatio.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:56%"></div></div>
+                <div class="axis-value v-med">MED–HIGH</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:38%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The splicing engine requires 20–30 turns of investment before it activates. You must survive a weak early game without the tools that will eventually make you dominant.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Economic</span>
+              <span class="vpath-chip vpath-primary">Science</span>
+              <span class="vpath-chip vpath-strong">Wonder</span>
+              <span class="vpath-chip vpath-viable">Conquest</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy long-term compounding and population management puzzles</div>
+              <div class="fit-yes">↑ Most victory-path flexible faction in the game once the splicing engine fires</div>
+              <div class="fit-no">↓ You need strong output immediately or cannot survive the early-game vulnerability window</div>
+            </div>
+          </div>
+
+          <!-- ═══ NAKALIM ═══ -->
+          <div class="fac-card" style="--fac-c: var(--nakalim-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🏛️</div>
+              <div>
+                <div class="fac-name">NAKALIM</div>
+                <div class="fac-tagline">The Last Empire. They pay for every technology twice — and built an entire civilization around routing the permanent deficit.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac11-nakalim.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:56%"></div></div>
+                <div class="axis-value v-med">MED–HIGH</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:52%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The 50% science malus never closes — it is structural, not temporary. Every Nakalim strategy is built around routing around it via relics, Temples, and Academy conversion. Treating the faction as a normal tech race is a guaranteed loss.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Diplomatic</span>
+              <span class="vpath-chip vpath-primary">Conquest</span>
+              <span class="vpath-chip vpath-viable">Economic</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy Influence-based play and lateral approaches to resource deficits</div>
+              <div class="fit-yes">↑ Academy conversion provides a unique passive conquest path unavailable to any other faction</div>
+              <div class="fit-no">↓ You want fast technology progression — Nakalim cannot compete on science speed</div>
+            </div>
+          </div>
+
+          <!-- ═══ VODYANI ═══ -->
+          <div class="fac-card" style="--fac-c: var(--vodyani-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🦋</div>
+              <div>
+                <div class="fac-name">VODYANI</div>
+                <div class="fac-tagline">Parasites in silk robes. Your empire is a fleet of Arks. Once the Essence loop ignites — instant colonies, instant armies, unstoppable aggression.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac05-vodyani.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:72%"></div></div>
+                <div class="axis-value v-high">HIGH</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-high" style="width:80%"></div></div>
+                <div class="axis-value v-high">HIGH</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              Starting constellation determines viability. No nearby leech target in turns 1–15 means a severely stunted game. Vodyani has the most luck-dependent opener in ES2 — and the highest ceiling once the engine ignites.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Supremacy</span>
+              <span class="vpath-chip vpath-strong">Science</span>
+              <span class="vpath-chip vpath-strong">Economic</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You want the highest power ceiling in the game and accept spawn-location variance as part of the challenge</div>
+              <div class="fit-yes">↑ The Ark economy produces a mid-game momentum swing unlike anything else — once the loop fires, the compounding is nearly unstoppable</div>
+              <div class="fit-no">↓ Starting constellation luck is a real factor — no nearby leech target in turns 1–15 means a stunted game that no amount of skill fully compensates</div>
+            </div>
+          </div>
+
+          <!-- ═══ UMBRAL CHOIR ═══ -->
+          <div class="fac-card" style="--fac-c: var(--umbral-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">👁️</div>
+              <div>
+                <div class="fac-name">UMBRAL CHOIR</div>
+                <div class="fac-tagline">One system. Infinite network. Everything flows back to Nexus. They cannot colonize — yet hold an empire across the entire galaxy.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac10-umbralchoir.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill mech" style="width:95%"></div></div>
+                <div class="axis-value v-extreme">EXTREME</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-high" style="width:65%"></div></div>
+                <div class="axis-value v-high">HIGH</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              This is not a harder version of a familiar faction — it is a parallel game. No colonization, no standard expansion, no assimilation. Every standard ES2 instinct must be relearned. Do not pick this faction until you are comfortable with at minimum three others.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Supremacy</span>
+              <span class="vpath-chip vpath-primary">Diplomatic</span>
+              <span class="vpath-chip vpath-strong">Science</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You want the deepest mechanical puzzle in ES2 and are prepared to lose the first two games learning it</div>
+              <div class="fit-yes">↑ The cloaked Nexus makes you nearly impossible to rush in multiplayer — a major structural advantage once the network establishes</div>
+              <div class="fit-no">↓ Any level of inexperience with the game — the Umbral Choir punishes gaps in foundational knowledge that other factions would forgive</div>
+            </div>
+          </div>
+
+        </div><!-- end .fac-grid -->
+
+        <div class="callout callout-gold">
+          <div class="callout-label">FIRST FACTION? START HERE</div>
+          Community consensus is clear: <strong>United Empire</strong> is the strongest first-faction pick — standard mechanics, forgiving punish, and the Influence buyout teaches the economy layer without overwhelming it. <strong>Sophons</strong> are a strong alternative for a science-focused game. <strong>Lumeris</strong> are viable if the economic identity appeals, but the snowball engine is more fragile in aggressive lobbies. Avoid Vodyani, Umbral Choir, and Cravers as first picks regardless of how appealing their identity looks.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t2','cb2a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════ T3: FACTION MATCHUPS ══════════ -->
+  <div class="topic" id="t3">
+    <div class="topic-header">
+      <div class="topic-num">03</div>
+      <div>
+        <h2 class="topic-title">Faction Matchups: Galaxy Context</h2>
+        <div class="topic-subtitle">Which factions collide, which coexist, and which combinations make a multiplayer session interesting or lopsided</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb3a">
+      <div class="block-header" onclick="toggle('cb3a')">
+        <span class="block-icon">⚡</span>
+        <span class="block-title">Victory Path Congestion</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>When multiple factions in the same game share a primary victory path, the race to that condition becomes the defining mid-game conflict. This is not necessarily bad — some of the most interesting games emerge from two factions sprinting for the same win condition — but it is worth knowing before lobby selection.</p>
+
+        <table class="ref-table">
+          <tr><th>Victory Path</th><th>Factions with it as Primary</th><th>Congestion Notes</th></tr>
+          <tr>
+            <td class="cell-key">Supremacy</td>
+            <td>🪳 Cravers, 🦅 Hissho, 🦋 Vodyani, ❄️ Riftborn, 👁️ Umbral Choir</td>
+            <td>Most contested path in the game. A lobby with Cravers + Hissho + Vodyani will escalate to all-out war by turn 30 regardless of player intent.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Economic</td>
+            <td>💰 Lumeris, ⚔️ United Empire, 🧬 Horatio</td>
+            <td>Moderate congestion. All three can coexist early; conflict emerges when Trade Company routes overlap and one Dust engine starts cannibalizing another.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Diplomatic</td>
+            <td>🌿 Unfallen, 🏛️ Nakalim, 👁️ Umbral Choir</td>
+            <td>Low congestion but self-limiting: Diplomatic Victory requires a Senate majority — three factions chasing it split the Senate and none wins cleanly. One Diplomatic-primary faction per lobby is ideal.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Science</td>
+            <td>🔬 Sophons, 🌀 Vaulters</td>
+            <td>Direct race. Sophons' Omniscience discount erodes faster when Vaulters research the same techs. These two push each other harder than any other science pairing.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">Expansion</td>
+            <td>🌿 Unfallen</td>
+            <td>Rarely contested as a primary condition. Low congestion by design.</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb3b">
+      <div class="block-header" onclick="toggle('cb3b')">
+        <span class="block-icon">🔗</span>
+        <span class="block-title">Natural Allies and Natural Enemies</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Some faction pairings create natural diplomatic stability; others make war structurally inevitable. This is based on mechanical incentive alignment, not lore.</p>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">NATURAL ALLIES</div>
+          <strong>🌿 Unfallen + 🔬 Sophons:</strong> Both have strong Pacifist senate representation and no structural reason to go to war. The vine network can boost Sophon-controlled systems; the Sophons' science lead benefits any ally through shared tech timing.<br><br>
+          <strong>🌿 Unfallen + 💰 Lumeris:</strong> Both require a stable, non-war environment to run their engines. They compete for the same peaceful conditions and both benefit from maintaining them.<br><br>
+          <strong>⚔️ United Empire + 🏛️ Nakalim:</strong> UE generates Influence surplus; Nakalim generates Influence through Temples. Neither gains from fighting the other early, and both benefit from Senate coalition building. Diplomatically stable pairing.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">STRUCTURAL CONFLICTS</div>
+          <strong>🪳 Cravers vs. Anyone:</strong> The Cravers cannot make permanent peace. Their mechanics structurally require expansion into occupied space. Every neighboring faction is a future target — plan accordingly.<br><br>
+          <strong>🦋 Vodyani vs. Nearby Factions:</strong> Essence leeching drains neighboring systems passively. Any faction sharing a constellation with Vodyani will feel the drain before the first formal declaration of war. Proximity is aggression.<br><br>
+          <strong>🦅 Hissho vs. Diplomatic Factions:</strong> The Hissho Militarist senate bias and Keii upkeep from sustained peace make diplomacy economically costly. 🌿 Unfallen and 🏛️ Nakalim players will find Hissho neighbors consistently unreliable as long-term partners.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════ T4: GALAXY SETUP ══════════ -->
+  <div class="topic" id="t4">
+    <div class="topic-header">
+      <div class="topic-num">04</div>
+      <div>
+        <h2 class="topic-title">Galaxy Setup Recommendations</h2>
+        <div class="topic-subtitle">Faction performance is not map-agnostic — some factions are transformed by galaxy settings, others are nearly unaffected</div>
+      </div>
+    </div>
+
+    <div class="content-block open" id="cb4a">
+      <div class="block-header" onclick="toggle('cb4a')">
+        <span class="block-icon">⚙️</span>
+        <span class="block-title">Settings That Shift Faction Strength</span>
+        <span class="block-tag tag-strategy">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Galaxy size, density, and enabled victory conditions are the three settings with the largest per-faction impact. The table below flags cases where a specific configuration dramatically changes how a faction plays — not marginal adjustments, but fundamental shifts in viability or dominant strategy.</p>
+
+        <table class="ref-table">
+          <tr><th>Faction</th><th>Setting</th><th>Impact</th></tr>
+          <tr>
+            <td class="cell-key">🪳 Cravers</td>
+            <td>Economic Victory disabled</td>
+            <td class="cell-bad">Removes one of their strongest late-game pivots. Cravers who cannot close via Economic Victory must sustain military expansion indefinitely — exhausting and potentially unsustainable on large maps.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">👁️ Umbral Choir</td>
+            <td>Small galaxy</td>
+            <td class="cell-good">Dramatically stronger. The Sanctuary network covers less distance; hacking operations reach opponent systems faster; the Nexus is harder to isolate. Small galaxy UC is a noticeably different experience from large galaxy UC.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🌿 Unfallen</td>
+            <td>High density / many star lanes</td>
+            <td class="cell-good">More star lanes means vines spread faster and block more corridors. High density also increases the number of nearby factions, multiplying the peace treaty FIDSI engine.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🌀 Vaulters</td>
+            <td>Large galaxy, sparse lanes</td>
+            <td class="cell-good">The portal network's value scales with distance. On a large sparse map, instant teleportation is worth far more than on a small dense one where every faction can reach every system in 3–4 turns.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🦋 Vodyani</td>
+            <td>High density / many minor factions</td>
+            <td class="cell-good">More nearby leech targets reduces starting location variance — the faction's primary weakness. High density is the closest thing to a Vodyani safety net the game settings offer.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🔬 Sophons</td>
+            <td>Many factions in lobby</td>
+            <td class="cell-bad">Omniscience decays faster when more factions research the same technologies. A 6-player game collapses the discount much earlier than a 3-player game. Factor this in when picking Sophons in large lobbies.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">🏛️ Nakalim</td>
+            <td>Diplomatic Victory disabled</td>
+            <td class="cell-bad">Removes their primary win condition. They can still win via Conquest (Academy conversion counts toward it), but this setting narrows their natural path significantly.</td>
+          </tr>
+          <tr>
+            <td class="cell-key">❄️ Riftborn</td>
+            <td>Standard — no strong setting dependency</td>
+            <td>Performance is relatively map-agnostic. Planet type distribution matters more than galaxy shape, but no single setting dramatically shifts their viability.</td>
+          </tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">SOLO VS. MULTIPLAYER NOTE</div>
+          Several factions rely on AI passivity to establish their engines safely. 🦋 Vodyani need early leech targets that don't proactively destroy their Arks in turns 1–5; 👁️ Umbral Choir need opponents who don't beeline for their Nexus before the Sanctuary network establishes. Experienced multiplayer opponents will specifically target these pressure points. Solo play is generally more forgiving of faction-specific early vulnerabilities.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD & APPLIED</span>
+          <button class="done-btn" onclick="markDone('t4','cb4a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="topic-divider">
+
+  <!-- ══════════ QUIZ ══════════ -->
+  <div class="topic" id="quiz">
+    <div class="topic-header">
+      <div class="topic-num">🧠</div>
+      <div>
+        <h2 class="topic-title">Scenario Quiz</h2>
+        <div class="topic-subtitle">Faction selection under real game conditions — apply the two-axis framework and matchup knowledge, not faction preference</div>
+      </div>
+    </div>
+    <div class="quiz-wrap">
+      <div class="quiz-title-bar">
+        <span class="q-icon">🎯</span>
+        <h3>Apply Your Knowledge</h3>
+        <span class="q-counter" id="q-counter"></span>
+      </div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+</main>
+</div><!-- end .layout -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const doneTopics = new Set();
+const VOLUME = 'vol7';
+const TOTAL = 5;
+
+let qIdx = 0;
+let answered = false;
+
+const quizzes = [
+   {
+    q: "You are joining a 4-player game. The other three players have chosen Cravers, Hissho, and Vodyani. You want to survive to the mid-game and have a realistic shot at winning. Which faction choice makes the most strategic sense?",
+    scenario: "Three aggressive factions: Cravers (structurally cannot make peace), Hissho (requires constant war to sustain Keii), Vodyani (leeches neighbors passively before any formal declaration). All three have Supremacy as a primary path.",
+    opts: [
+      "Unfallen — the peace treaty FIDSI engine will power you through the mid-game while the aggressive factions grind each other down",
+      "Umbral Choir — the cloaked Nexus removes you from the target queue entirely while the three aggressors fight each other",
+      "United Empire — the most reliable conventional faction; Influence buyout gives flexibility to respond to fast-changing threat vectors",
+      "Sophons — a science lead compounds while the three aggressors exhaust each other; win in the late game off accumulated tech"
+    ],
+    correct: 1,
+    explain: "The Umbral Choir's structural advantage in this lobby is invisibility. The Cravers, Hissho, and Vodyani will spend turns 1–30 fighting each other and any visible neighbor — the UC's cloaked Nexus removes them from the target queue entirely. Unfallen (A) is plausible but the peace treaty FIDSI engine collapses the moment any aggressor declares war, which is structurally inevitable in this lobby. UE (C) is competent but visible and conventional — a prime early target for Cravers who must expand. Sophons (D) requires surviving to a late game this lobby may never reach peacefully."
+  },
+  {
+    q: "You are picking your second or third faction after mastering United Empire. You want to learn 'going tall' — fewer systems, higher output per system. Which faction introduces this concept most cleanly without layering in alien mechanics at the same time?",
+    scenario: "You understand FIDSI, colonization, and the Influence buyout. You want to deepen strategic understanding, not restart the mechanical learning curve from zero.",
+    opts: [
+      "Hissho — tall by necessity, and the Keii resource loop is a genuinely new layer to learn alongside the tall-play constraint",
+      "Umbral Choir — the extreme tall format (one system) is the purest expression of the concept",
+      "Vaulters — tall-play through a familiar colonization framework, with the portal infrastructure as the concrete differentiator",
+      "Riftborn — reverse terraforming teaches planet evaluation from a new angle, and their tall tendency is structurally enforced"
+    ],
+    correct: 2,
+    explain: "Vaulters (C) is the correct bridge faction. They introduce tall-play through familiar mechanics — you still found outposts, develop systems, make tech choices — but the portal infrastructure creates a concrete payoff for concentrating on fewer, better systems. Punish severity is LOW, so mistakes are recoverable while learning. Hissho (A) combines tall-play with an entirely new resource requiring constant war to sustain — two new systems at once. Umbral Choir (B) is explicitly the most mechanically alien faction in the game. Riftborn (D) is a reasonable alternative but the Industry-versus-population queue split adds another new constraint on top of the tall-play learning."
+  },
+  {
+    q: "You want to pursue Diplomatic Victory in a solo game. Galaxy size is Large, 6 AI opponents. Which faction is most naturally positioned for this win condition in this configuration?",
+    scenario: "Diplomatic Victory requires a Senate majority. A Large galaxy means more distance between factions, longer before first contact, and more time to establish Influence dominance before Senate pressure begins.",
+    opts: [
+      "Nakalim — Diplomatic is their primary path, Temple Influence output is massive, and Academy conversion adds passive territory without triggering wars",
+      "Unfallen — Diplomatic is their primary path, and the vine network accelerates Influence zone expansion across a large map",
+      "United Empire — the Influence buyout gives the most flexible Senate manipulation tool in the game",
+      "Sophons — a science lead produces diplomatic leverage through tech-sharing agreements and alliance pressure"
+    ],
+    correct: 0,
+    explain: "Nakalim (A) is correct in this configuration. On a Large galaxy with 6 AI opponents, the Temple + Academy conversion strategy has more space and more time to operate — two key inputs for their slow-building Influence engine. Academy conversion turns enemy territory into Diplomatic progress without requiring war, which is especially powerful against AI. Unfallen (B) is a strong Diplomatic faction but their vine-based expansion is more effective at medium density where systems are closer together. UE (C) can manipulate the Senate but Diplomatic is not their primary path. Sophons (D) are not a diplomatic faction by design."
+  },
+  {
+    q: "Turn 12. You are playing Vodyani. Your starting constellation had no minor factions. The nearest major faction is 4 systems away. Your first Ark has been circling your home system with near-zero Essence income for 12 turns. What is the correct diagnosis?",
+    scenario: "Essence income is near-zero. Two more Arks complete in 6 turns. Home system has 3 pops, minimal FIDSI. Other factions who had good starts are already building second-generation infrastructure.",
+    opts: [
+      "Recoverable — redirect the first Ark toward the nearest major faction and begin leeching immediately, accepting the travel time cost",
+      "Structurally compromised — a 12-turn Essence deficit is not a temporary setback, it is a compounding gap that will persist throughout the game",
+      "Send all three Arks to different systems and colonize empty planets to build a conventional population base in parallel",
+      "Prioritize Science research to unlock Ark improvements that increase base Essence generation without a leech target"
+    ],
+    correct: 1,
+    explain: "Option B is the correct diagnosis. Community sources are explicit: Vodyani's primary challenge is starting constellation dependency. A 12-turn delay with near-zero Essence represents 12 turns of missed compounding — the snowball engine's entire strength comes from exponential early growth. Option A (redirect the Ark) is the correct immediate action, but it does not change the diagnosis. Option C misunderstands Vodyani: colonizing empty systems without Essence income is just playing a weaker conventional faction. Option D delays the core problem while burning Science turns on a fix that doesn't address the structural deficit."
+  },
+  {
+    q: "You are designing a 6-player multiplayer lobby. Two players have locked Sophons and Unfallen. You are filling the remaining four slots with AI. Which combination creates the most balanced, conflict-rich game?",
+    scenario: "Sophons (science racer, peace-preferred) and Unfallen (network builder, peace-preferred) are confirmed. Both factions depend on peaceful early conditions to run their core engines. Four AI slots remain.",
+    opts: [
+      "Cravers, Hissho, Vodyani, United Empire — three aggressors plus a generalist for maximum conflict",
+      "Lumeris, Riftborn, Nakalim, Horatio — four non-aggressive factions for strategic variety without early war",
+      "Cravers, Riftborn, Nakalim, Lumeris — one forced-aggressor, two patient investors, one economic faction; varied pacing without triple-aggressor overwhelm",
+      "Vaulters, Umbral Choir, Horatio, United Empire — four high-ceiling factions for a deep late-game"
+    ],
+    correct: 2,
+    explain: "Option C is the most balanced design. Cravers provide the conflict driver this lobby needs — without any aggressor, the game risks a passive science race. But adding only one forced-aggressor rather than three prevents the early game from becoming survival mode for Sophons and Unfallen, both of whom need peace to function. Riftborn, Nakalim, and Lumeris have distinct strategic identities and different win conditions so they won't immediately collide. Option A's triple-aggressor overwhelms both peace factions within 15 turns. Option B eliminates all meaningful pressure. Option D puts Umbral Choir in an AI slot — the AI plays UC poorly, effectively removing a faction from meaningful competition."
+  }
+];
+</script>
+<script src="../CSSnJS/es2-guide.js"></script>
+<script>renderQuiz(); initProgress(); initMobileNav();</script>
+</body>
+</html>
