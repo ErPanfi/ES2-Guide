@@ -393,34 +393,38 @@
     <div class="content-block" id="cb3b">
       <div class="block-header" onclick="toggle('cb3b')">
         <span class="block-icon">🦸</span>
-        <span class="block-title">Hero Relic Slots — Four Tiers</span>
+        <span class="block-title">Hero Relic Assignment — Binary in Re-Awakening</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
 
-        <p>Heroes can be assigned up to 8 relics across four slots. <strong>Slots must be filled in order</strong> — earlier slots must be filled before later ones unlock. Each slot takes 2 relics. The four slots, in order:</p>
+        <div class="reawakening-banner">
+          <strong>⚠ RE-AWAKENING CHANGE — SYSTEM REPLACED</strong><br>
+          The original Nakalim had a tiered hero relic system (up to 8 relics per hero across 4 ordered slots). Re-Awakening replaced this entirely with a <strong>binary assignment</strong>: assigning <strong>one relic</strong> to a hero unlocks all bonuses simultaneously. The old multi-relic, slot-fill-order mechanic no longer exists.
+        </div>
+
+        <p>Assigning a single relic to a hero grants all of the following at once:</p>
 
         <table class="ref-table">
-          <tr><th>Slot</th><th>Bonus per relic</th><th>Max (4 relics = 8 slots)</th></tr>
-          <tr><td class="cell-key">1st — Influence</td><td>+5% Influence on system per relic</td><td class="cell-good">+40% Influence on system</td></tr>
-          <tr><td class="cell-key">2nd — Fleet Health</td><td>+5% fleet health per relic</td><td class="cell-good">+40% fleet health</td></tr>
-          <tr><td class="cell-key">3rd — Industry</td><td>+5% Industry on system per relic</td><td class="cell-good">+40% Industry on system</td></tr>
-          <tr><td class="cell-key">4th — Fleet Damage</td><td>+5% fleet damage per relic</td><td class="cell-good">+40% fleet damage</td></tr>
+          <tr><th>Bonus</th><th>Value</th></tr>
+          <tr><td class="cell-key">XP gain</td><td class="cell-good">+25% XP on Hero</td></tr>
+          <tr><td class="cell-key">Recovery rate</td><td class="cell-good">+50% Hero Recovery Rate</td></tr>
+          <tr><td class="cell-key">System FIDSI</td><td class="cell-good">+10% FIDSI on Fervent systems</td></tr>
+          <tr><td class="cell-key">System Approval</td><td class="cell-good">+5 Approval per Temple on System</td></tr>
+          <tr><td class="cell-key">Fleet Health</td><td class="cell-good">+10% Fleet Health</td></tr>
+          <tr><td class="cell-key">Fleet Damage</td><td class="cell-good">+10% Fleet Damage</td></tr>
+          <tr><td class="cell-key">Fleet Evasion</td><td class="cell-good">+10% Fleet Evasion</td></tr>
+          <tr><td class="cell-key">Fleet Shields</td><td class="cell-good">+10% Fleet Shields</td></tr>
         </table>
 
         <div class="trait-block">
           <div class="trait-label">PRIORITY LOGIC</div>
-          Hero relic slots are better suited to <strong>fleet commander heroes</strong> during war phases (health + damage), and to <strong>governors on key Influence-generating systems</strong> during conversion phases. The wiki notes: "better suited to either slotting into your best systems, or to a key fleet commander, during the mid-to-late game." Reassign dynamically — pull from a governor before a fleet engagement, re-slot after. The wiki's opportunity cost calculation: each hero relic is worth 50 Science/turn unassigned, so 8 relics on a hero costs 400 Science/turn. Justify this against the concrete fleet or governor benefit.
-        </div>
-
-        <div class="trait-block warn">
-          <div class="trait-label warn">SLOT FILL ORDER IS NON-NEGOTIABLE</div>
-          You cannot skip to the 3rd slot (Industry) without filling slots 1 and 2 first. You need 4 relics before the 3rd slot activates at all. Plan your relic inventory before assigning: if you have 3 relics and want fleet health, fill slot 1 (Influence, 2 relics) and partially fill slot 2 (1 relic) — then acquire one more relic to unlock the second health bonus. The wiki clarifies: "the number of relics on the hero is counted regardless of whether the bonus its slot applies to is relevant" — meaning even system-bonus slots count toward unlocking fleet slots when the hero is commanding a fleet.
+          Because assignment is binary (one relic = all bonuses, no relic = nothing), the decision simplifies to: <em>which heroes benefit most from the package?</em> Fleet commanders gain meaningful combat bonuses across four stats simultaneously. Governors on high-population temple systems gain the FIDSI and Approval bonuses. The opportunity cost is straightforward: one hero relic costs 50 Science/turn from your unassigned pool. That is a real cost — weigh it against the concrete benefit the hero will generate. Reassignment carries a 1-turn cooldown; pull relics off governors before major fleet engagements and re-slot after.
         </div>
 
         <div class="source-row">
-          <span class="src-pill">WIKI — HERO ASSIGNMENT</span><span class="src-pill">GUD LP02p02</span>
+          <span class="src-pill">RE-AWAKENING CHANGELOG</span><span class="src-pill">GUD LP02p02</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
@@ -451,20 +455,35 @@
       </div>
       <div class="block-body">
 
+        <div class="reawakening-banner">
+          <strong>⚠ RE-AWAKENING CHANGE — MECHANIC INVERTED</strong><br>
+          In the original Awakening DLC, temples imposed a -50% FIDS penalty on an otherwise normal planet. Re-Awakening reversed this: <strong>all Nakalim planets carry a -50% Base FIDS penalty by default</strong>. A Temple does not impose a penalty — it <em>removes</em> it, while redirecting the planet's base Science to Influence. The strategic framing changes entirely: temples are restoration, not sacrifice.
+        </div>
+
         <div class="trait-block">
           <div class="trait-label">THE CORE MECHANIC</div>
-          A Temple of the Lost placed on a planet reduces that planet's FIDS output to <strong>50% of normal</strong>, and in return generates <strong>10 Influence per Population on that planet</strong> (wiki values; note: the wiki flags a section as outdated — current Re-Awakening behavior may convert the planet's base Science to Influence instead; verify in-game). The Influence output is substantial at any stage of the game and directly grows your sphere of influence.
+          Every untempled Nakalim planet operates at <strong>-50% Base FIDS</strong> by default. Building a Temple of the Lost on a planet (cost: <strong>1 Relic + 1 turn</strong>) does two things simultaneously:
+          <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.8;">
+            <li>Removes the -50% FIDS malus on that planet, restoring full FIDS output.</li>
+            <li>Converts the planet's base Science output into Influence.</li>
+          </ul>
+          The net result: a templed planet produces full Food, Industry, and Dust — but its Science contribution is redirected to Influence generation. This is not a FIDS sacrifice; it is a Science-to-Influence conversion on a planet that would otherwise generate Science at half value anyway.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT THIS MEANS IN PRACTICE</div>
+          An untempled planet is running at 50% efficiency across the board. The Temple restores that efficiency at the cost of Science — which the Nakalim generates poorly anyway. The correct read: <strong>every planet should eventually receive a Temple</strong>, not just low-value ones. The priority question becomes sequencing — which planets do you temple first to maximize early FIDS recovery and Influence output — rather than which planets to "sacrifice."
           <br><br>
-          Temples also grant <strong>+2 Approval per pop on that planet</strong> for Nakalim population units. This makes temple planets self-sustaining happiness-wise even as they sacrifice FIDS.
+          The +2 Approval per Nakalim pop on templed planets remains in Re-Awakening, making temple planets comfortable to operate at scale.
         </div>
 
         <div class="trait-block warn">
           <div class="trait-label warn">TEMPLES DO NOT AMPLIFY INFLUENCE CIRCLE GROWTH</div>
-          A common misconception: temples do not apply a hidden multiplier to sphere-of-influence radius growth. They simply produce flat Influence, which feeds into the standard zone expansion mechanic at its normal rate. GUD observed this directly: <em>"the temple does not seem to have improved our radius as much as I would have expected."</em> This is confirmed by the wiki: <em>"The temples don't seem to apply any secret multiplier to the rate of influence-circle-growth; they simply provide a lot of influence, and work with the circle-growth mechanic in its vanilla formulation."</em> Scale your expectations accordingly — the effect is real but not magical.
+          Temples do not apply a hidden multiplier to sphere-of-influence radius growth. They convert Science to Influence, which feeds into the standard zone expansion mechanic at its normal rate. GUD observed this directly in the pre-Re-Awakening version: <em>"the temple does not seem to have improved our radius as much as I would have expected."</em> The wiki confirms the vanilla formulation applies. Scale expectations accordingly — the Influence output is real and substantial, but it compounds through population count, not through a growth multiplier.
         </div>
 
         <div class="source-row">
-          <span class="src-pill">WIKI — TEMPLE TO THE LOST</span><span class="src-pill">GUD LP02p01</span>
+          <span class="src-pill">RE-AWAKENING CHANGELOG</span><span class="src-pill">WIKI — TEMPLE TO THE LOST</span><span class="src-pill">GUD LP02p01</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
@@ -482,11 +501,11 @@
       </div>
       <div class="block-body">
 
-        <p>Every Temple sacrifices 50% of a planet's FIDS. Placement is therefore a tradeoff decision: which planets are expendable from a production standpoint, and which systems need temples for conversion purposes?</p>
+        <p>Since all planets carry the -50% FIDS penalty by default, the real placement question is sequencing: which planets do you temple first? The answer depends on two factors — Influence priority (how urgently you need zone expansion in a given direction) and Cathedral progress (you need temples on <em>every</em> planet in a system to unlock a Cathedral there).</p>
 
         <div class="trait-block">
-          <div class="trait-label">PREFER LOW-VALUE PLANETS</div>
-          GUD demonstrates this live: given two candidate planets, he explicitly rejects the higher-production temperate ("we would lose too much") and places the Temple on the lower-yield planet. The Influence output per pop is the same regardless of the planet's original FIDS — a sterile or lava planet with one pop still produces 10 Influence. Place temples where the 50% FIDS cost is smallest — on poor planets, not on productive ones. Your arable productive planets continue generating Food, Industry, and Dust without penalty.
+          <div class="trait-label">TEMPLE HIGH-VALUE PLANETS FIRST</div>
+          With the Re-Awakening mechanic, the priority logic inverts from the original. You want to restore FIDS on your most productive planets as early as possible — temple your best Food and Industry planets first, so they operate at full efficiency sooner. Low-value planets can stay untempled longer since their 50% penalty costs you less in absolute terms. GUD's original advice (temple low-value planets to minimize sacrifice) was correct for the old mechanic; under Re-Awakening, the reverse holds: high-value planets benefit most from having the penalty lifted.
         </div>
 
         <div class="trait-block">
@@ -567,35 +586,120 @@
       <div class="topic-num">05</div>
       <div>
         <h2 class="topic-title">Cathedrals</h2>
-        <div class="topic-subtitle">Cathedrals unlock empire relic slots and provide system bonuses. Their full strategic role in the Nakalim build is not yet fully documented from confirmed sources.</div>
+        <div class="topic-subtitle">The payoff for fully templing a system — substantial local bonuses plus empire-wide relic slots that reshape your strategic options.</div>
       </div>
     </div>
 
     <div class="content-block open" id="cb5a">
       <div class="block-header" onclick="toggle('cb5a')">
         <span class="block-icon">📖</span>
-        <span class="block-title">Cathedral Mechanics — What Is Confirmed</span>
+        <span class="block-title">Cathedral Mechanics — Build Cost, Prerequisites, and System Bonuses</span>
         <span class="block-tag tag-mech">MECHANIC</span>
         <span class="block-chevron">▾</span>
       </div>
       <div class="block-body">
 
         <div class="trait-block">
-          <div class="trait-label">WHAT CATHEDRALS DO</div>
-          Cathedrals are system improvements that provide empire relic slots (the Exploration, Expansion, Diplomacy, and Political slots described in Topic 3). Each Cathedral also appears to provide the <strong>Expansion Slot</strong>'s colonization threshold bonus (+1 per Cathedral), meaning more Cathedrals directly expand how many systems you can hold without overcrowding penalties. The faction quest Pacifist path can reward <strong>Cathedral to the Lost</strong>: a unique improvement that grants +3% FIDSI on System per Temple to the Lost built in the entire Empire — a late-game FIDSI multiplier that scales with your temple count empire-wide.
+          <div class="trait-label">PREREQUISITE — ALL PLANETS MUST HAVE TEMPLES</div>
+          A Cathedral can only be built in a system where <strong>every planet already has a Temple of the Lost</strong>. There are no partial shortcuts. This makes the Cathedral a deliberate investment milestone rather than an early unlock — you must fully commit a system to the temple network before the Cathedral becomes available. Practical implication: <strong>target low planet-count systems first</strong> for your first Cathedral. A 2–3 planet system can be fully templed far faster than a 6-planet system.
         </div>
 
-        <div class="trait-block warn">
-          <div class="trait-label warn">⚠ CONTENT GAP — CATHEDRAL BUILD ORDER &amp; PLACEMENT</div>
-          The strategic question of <em>when</em> to build Cathedrals, <em>where</em> to place them, how many to build, and how they interact with the temple network's expansion sequencing is not covered by any source currently available to this guide. The wiki describes Cathedral slots but does not provide build-order guidance. The LP sources (GUD) do not demonstrate Cathedral construction explicitly in recorded play. This section will be updated when a reliable source addresses it. In the meantime: build Cathedrals as soon as Industry permits on your highest-population systems that already have temples — the FIDSI percentages scale with the system's existing output, so placement matters.
+        <div class="trait-block">
+          <div class="trait-label">BUILD COST AND SYSTEM BONUSES</div>
+          Cost: <strong>1,120 Industry, no Relics</strong>. Once built, the Cathedral provides the following bonuses directly to its host system:
+          <ul style="margin:8px 0 0 0;padding-left:18px;line-height:1.9;">
+            <li><strong>+10% FIDSI</strong> on the system</li>
+            <li><strong>+30% Influence Radius</strong></li>
+            <li><strong>+5 Vision</strong></li>
+            <li><strong>5% Enemy Health damaged per turn</strong> for fleets within the Influence Radius</li>
+            <li><strong>20% Friendly Health repaired per turn</strong> for fleets within the Influence Radius</li>
+            <li>Increases the number of empire relic slots available (see below)</li>
+          </ul>
+          The fleet health regeneration bonus alone makes Cathedral systems natural fleet staging bases during war — any fleet resting in the Influence Radius of a Cathedral system heals at 20%/turn.
         </div>
 
         <div class="source-row">
-          <span class="src-pill">WIKI — RELICS</span><span class="src-pill">WIKI — FACTION QUEST</span>
+          <span class="src-pill">RE-AWAKENING CHANGELOG</span>
         </div>
         <div class="done-row">
           <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
           <button class="done-btn" onclick="markDone('t5','cb5a',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5b">
+      <div class="block-header" onclick="toggle('cb5b')">
+        <span class="block-icon">⚗️</span>
+        <span class="block-title">Empire Relic Slots — One Active Per Cathedral</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <p>Each Cathedral adds one empire relic slot to your pool. Each slot can be loaded with one of four types, but <strong>only one slot type may be active per Cathedral at a time</strong>. To run two different slot types simultaneously (e.g. Exploration and Diplomacy), you need two Cathedrals. Switching between slot types is free and toggleable.</p>
+
+        <p>The exact number of relics required to activate each slot type is not specified in available sources — the changelog states only "multiple relics." Treat this as an in-game UI detail to verify on first Cathedral construction.</p>
+
+        <div class="relic-grid">
+          <div class="relic-card">
+            <div class="relic-card-label">🧭 EXPLORATION SLOT</div>
+            <p>+25% Movement Point efficiency, +5 Vision Range on Fleets &amp; Systems. Most useful in the early-to-mid game when relic collection and map control are the priority.</p>
+          </div>
+          <div class="relic-card">
+            <div class="relic-card-label">🌍 EXPANSION SLOT</div>
+            <p>+1 Colonization Threshold per Cathedral, no disapproval from planet type on templed planets. Scales with Cathedral count — each additional Cathedral adds +1 threshold when this slot is active.</p>
+          </div>
+          <div class="relic-card">
+            <div class="relic-card-label">🤝 DIPLOMACY SLOT</div>
+            <p>Constant minor faction relation bonus + increased influence radius. Supports the pacific conversion snowball by expanding your zone and keeping minor factions aligned.</p>
+          </div>
+          <div class="relic-card">
+            <div class="relic-card-label">⚖️ POLITICAL SLOT</div>
+            <p>Bonuses vary by leading party. Religious (preferred): Heroes earned faster, assignable outside borders. Pacifist: +100% Trade Value on Cathedral systems, +40% fleet health regen in friendly territory. Militarist: -20% retrofit cost, retrofit outside friendly territory.</p>
+          </div>
+        </div>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">MULTI-CATHEDRAL PRIORITY</div>
+          Your first Cathedral enables one active slot. Your second enables a second independent slot — allowing two slot types to run in parallel. The Expansion Slot's colonization threshold bonus also scales (+1 per Cathedral), making each additional Cathedral directly increase how many systems you can hold comfortably. Build toward multiple Cathedrals as a mid-game goal, not a late-game luxury.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">RE-AWAKENING CHANGELOG</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5b',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-block" id="cb5c">
+      <div class="block-header" onclick="toggle('cb5c')">
+        <span class="block-icon">✨</span>
+        <span class="block-title">Coupled Collaboration — Doubling Slot Output</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+
+        <div class="trait-block">
+          <div class="trait-label">WHAT IT DOES</div>
+          The faction quest reward <strong>Coupled Collaboration</strong> (Chapter 4.2, Pacifist branch) doubles the output of all active empire relic slots, empire-wide. This is a bonus output multiplier — if the Diplomacy slot provides X influence radius increase, Coupled Collaboration makes it 2X. The doubling applies to all Cathedrals simultaneously, not just the Cathedral in the system where the improvement is built.
+        </div>
+
+        <div class="trait-block">
+          <div class="trait-label">STRATEGIC TIMING</div>
+          Coupled Collaboration arrives as a late quest reward, so its full value requires that your Cathedral network is already built and active by the time it triggers. The more Cathedrals you have running when Coupled Collaboration arrives, the larger the immediate empire-wide impact. This makes Cathedral construction in the mid-game a prerequisite for getting full value from the quest reward — not something to defer until the reward is already in hand.
+        </div>
+
+        <div class="source-row">
+          <span class="src-pill">WIKI — FACTION QUEST</span><span class="src-pill">USER CONFIRMED</span>
+        </div>
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t5','cb5c',this)">✓ MARK DONE</button>
         </div>
       </div>
     </div>
