@@ -18,11 +18,8 @@
       radial-gradient(ellipse 50% 40% at 80% 70%, rgba(var(--purple), 0.04) 0%, transparent 65%);
   }
 
-  h1.page-title {
-    text-shadow:
-      0 0 40px rgba(var(--vol6-accent), 0.45),
-      0 0 80px rgba(var(--vol6-accent), 0.15);
-  }
+
+  .sidebar-logo .game-name { color: rgb(var(--accent)); }
 
     .vol-next { --card-accent: var(--vol7-accent); }
     .vol-prev { --card-accent: var(--vol5-accent); }
@@ -423,6 +420,36 @@
       </div>
     </div>
 
+    <div class="content-block" id="cb3rf">
+      <div class="block-header" onclick="toggle('cb3rf')">
+        <span class="block-icon">🔥</span>
+        <span class="block-title">Righteous Fury: The Cold War Exception</span>
+        <span class="block-tag tag-mech">MECHANIC</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p><strong>Righteous Fury</strong> is the Religious party's Power Law, available from Turn 1 to any empire with a Religious majority. Its effect: you can attack enemy ships, invade enemy systems, and operate inside opponent influence zones <strong>while remaining in Cold War</strong>. It also lets you ignore Closed Borders. The Dictatorship variant adds +1 Influence/pop and +15% hero XP/turn.</p>
+
+        <p>The diplomatic inversion this creates is significant. In a standard aggression scenario the attacker pays Influence to declare war and is subject to Force Truces. With Righteous Fury active:</p>
+
+        <ul class="step-list">
+          <li><span class="step-n">NO WAR DECLARED</span><span>You remain in Cold War. Force Truces require being at war — you cannot be force-truced because you never declared war.</span></li>
+          <li><span class="step-n">DEFENDER PAYS</span><span>The empire being attacked must declare war on you if they want the right to force a truce. That declaration costs <em>them</em> Influence and makes them the formal aggressor in treaty terms.</span></li>
+          <li><span class="step-n">CLOSED BORDERS IGNORED</span><span>If the defender closes borders hoping to lock you out, Righteous Fury bypasses it. The closure is also reciprocal — the defender has now locked themselves out of your territory too.</span></li>
+        </ul>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">COUNTER-PLAY</div>
+          The Pacifist Power Law (Right Thing Rule) allows force-peaceing a Cold War opponent — but the targeted empire can spend Influence to decline. Against a Religious empire running Righteous Fury, the practical counter is either sufficient Influence to repeatedly decline Force Peace, a military fleet capable of defending without a formal war declaration, or declaring war yourself to regain Force Truce access — at the cost of Influence and diplomatic standing.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t3','cb3rf',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
+
     <div class="content-block" id="cb3b">
       <div class="block-header" onclick="toggle('cb3b')">
         <span class="block-icon">⚖️</span>
@@ -539,19 +566,27 @@
           </div>
           <div class="party-card">
             <div class="pname">⚔️ Militarist — Level 2</div>
-            <div class="pbonus"><strong>Spoils of War:</strong> +50–100 Science and +50–100 Dust per enemy Command Point destroyed. Strong in wars of attrition.</div>
+            <div class="pbonus"><strong>Spoils of War:</strong> +50 Science and +50 Dust per enemy Command Point destroyed (+100/+100 in Republic). Also −10% ship upkeep. Self-financing aggression in prolonged wars.</div>
+          </div>
+          <div class="party-card">
+            <div class="pname">⚔️ Militarist — Level 3</div>
+            <div class="pbonus"><strong>Us or Them:</strong> +20 Approval per <em>captured Home System</em> on all your systems (+30 Republic). Not per active war — scales with conquest, not ongoing conflict count.</div>
           </div>
           <div class="party-card">
             <div class="pname">⚔️ Militarist — Level 4</div>
-            <div class="pbonus"><strong>Deadly Intent Bill:</strong> +33% damage on weapon modules and +33% troops damage. Applies to all combat empires-wide.</div>
+            <div class="pbonus"><strong>Deadly Intent Bill:</strong> +33% (+40% Republic) damage on all weapon modules and +33% troops damage. Flat empire-wide combat multiplier — the single highest-impact law slot for pure aggression.</div>
           </div>
           <div class="party-card">
             <div class="pname">☮️ Pacifist — Power Law</div>
-            <div class="pbonus">Alliance Approval/FIDS bonus per allied empire. Penalty-free war declarations impossible — declaring war removes this law and shocks your politics.</div>
+            <div class="pbonus"><strong>Right Thing Rule:</strong> Allows you to force Peace on a Cold War opponent. Also +1 Dust/pop (+2 Dictatorship). The Force Peace costs the opponent Influence to decline — useful as an anti-aggression tool, weaker as pure offense.</div>
           </div>
           <div class="party-card">
-            <div class="pname">☮️ Pacifist — Mid Tiers</div>
-            <div class="pbonus">Various laws granting FIDS bonuses per empire at Peace and per empire in Alliance. Creates strong economic incentive to stay non-aggressive.</div>
+            <div class="pname">☮️ Pacifist — Level 2</div>
+            <div class="pbonus"><strong>Make Love Not War:</strong> +20 Approval per Alliance (+30 Republic) and +10 Approval per Peace (+15 Republic) on all systems. Approval is a FIDSI multiplier — this is effectively an empire-wide output law at scale.</div>
+          </div>
+          <div class="party-card">
+            <div class="pname">☮️ Pacifist — Level 4</div>
+            <div class="pbonus"><strong>Fair Trade Bill:</strong> +10% FIDSI per Allied Empire (+15% Republic) and +5% FIDSI per empire at Peace (+10% Republic) on all systems. In a 3-ally game this is +30–45% FIDSI from one law — one of the strongest late-game economic laws.</div>
           </div>
           <div class="party-card">
             <div class="pname">🏭 Industrialist — Level 3</div>
@@ -561,7 +596,7 @@
 
         <div class="callout callout-tip">
           <div class="callout-label">OFFENSIVE POLITICS CORE INSIGHT</div>
-          The Militarist forced law grants free war declarations — eliminating the Influence cost that constrains most empires when initiating conflict. If your Militarists have held power long enough to reach higher levels, Spoils of War and Deadly Intent together can make sustained warfare self-financing in Science and Dust while dramatically amplifying combat damage. This is the senate foundation for aggressive mid-game strategies.
+          The Militarist Power Law eliminates the Influence cost of war declarations — the primary diplomatic tax on aggression. With Militarists at Level 2, Spoils of War turns enemy ship destruction into Science and Dust income. At Level 3, Us or Them rewards territorial conquest with Approval per captured Home System. At Level 4, Deadly Intent (+33% weapon and troop damage) is among the strongest raw combat multipliers in the game. The full Militarist stack effectively makes war self-financing while dramatically amplifying offensive power. Contrast with the Pacifist Level 4 law — Fair Trade Bill — which generates up to +30–45% empire-wide FIDSI per allied empire in a multi-ally game. These two paths represent opposite ends of the senate-as-foreign-policy spectrum: one makes war cheap and profitable, the other makes peace compoundingly productive.
         </div>
 
         <div class="done-row">

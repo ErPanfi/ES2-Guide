@@ -729,15 +729,17 @@
 
         <p><strong>Vote redistribution after elections:</strong> losing parties' votes are redistributed to winning parties based on ideological proximity on the politics wheel — never to the opposite party. Example: if Pacifists lose but Scientists and Religious win, Pacifist votes go to Scientists (closer neighbor). This creates predictable drift — a Senate race between two parties often ends with the ideologically adjacent winner absorbing the loser's base, making runaway majorities easier to sustain than they appear.</p>
 
+        <p><strong>Senate composition also directly affects per-system Approval</strong>, independently of overcolonization and overpopulation. Every system receives <strong>+2 Approval per representative whose party is currently in power</strong>, and <strong>−3 Approval per representative whose party is NOT in power</strong>. These bonuses and penalties are calculated continuously every turn, not just at elections. The practical implication is non-obvious: a system with a large Pacifist population living under an Industrialist government bleeds −3 Approval per Pacifist representative every single turn. In a Democracy with three parties in power this effect is naturally mitigated — more parties in power means fewer representatives drawing the −3 penalty. In a Dictatorship or Autocracy with one ruling party, mixed-population systems can accumulate significant persistent Approval penalties from the unrepresented majority.</p>
+
         <p><strong>Law slot counts by government and tech stage:</strong></p>
 
         <table class="ref-table">
           <tr><th>Government</th><th>Base Slots</th><th>+ED Stage 3</th><th>+ED Stage 5</th><th>Total Max</th></tr>
-          <tr><td class="cell-key">Democracy</td><td>4</td><td>+1</td><td>+2</td><td>7</td></tr>
-          <tr><td class="cell-key">Autocracy</td><td>4</td><td>+1</td><td>+1</td><td>6</td></tr>
-          <tr><td class="cell-key">Republic</td><td>3</td><td>+1</td><td>+1</td><td>5</td></tr>
-          <tr><td class="cell-key">Federation</td><td>3</td><td>+1</td><td>+1</td><td>5</td></tr>
-          <tr><td class="cell-key">Dictatorship</td><td>3</td><td>+1</td><td>+1</td><td>5</td></tr>
+          <tr><td class="cell-key">Democracy</td><td>3</td><td>+1</td><td>+2</td><td>6</td></tr>
+          <tr><td class="cell-key">Autocracy</td><td>3</td><td>+1</td><td>+1</td><td>5</td></tr>
+          <tr><td class="cell-key">Republic</td><td>2</td><td>+1</td><td>+1</td><td>4</td></tr>
+          <tr><td class="cell-key">Federation</td><td>2</td><td>+1</td><td>+1</td><td>4</td></tr>
+          <tr><td class="cell-key">Dictatorship</td><td>2</td><td>+1</td><td>+1</td><td>4</td></tr>
         </table>
 
         <p>Laws cost Influence to maintain — upkeep is the law's level multiplied by total empire population. Forced/power laws and Independent laws have no upkeep. At high pop counts, sustaining multiple Level 3–4 laws becomes a meaningful Influence drain. Monitor this when scaling wide.</p>
@@ -826,11 +828,11 @@
 
         <table class="ref-table">
           <tr><th>Government</th><th>Max Law Slots</th><th>Senate Parties</th><th>Key Mechanic</th></tr>
-          <tr><td class="cell-key">Democracy</td><td>7</td><td>3 parties</td><td>+1 Approval/pop on systems; 3 Hero Senators simultaneously; stable but inflexible — hard to force a minority party in</td></tr>
-          <tr><td class="cell-key">Republic</td><td>5</td><td>2 parties</td><td>All party law effects enhanced (~33–100% stronger); Dust used for election interference; highest raw law power</td></tr>
-          <tr><td class="cell-key">Federation</td><td>5</td><td>2 parties</td><td>+1 overcolonization threshold per Hero in leading party; −20% luxury development cost; best government for wide play</td></tr>
-          <tr><td class="cell-key">Dictatorship</td><td>5</td><td>1 party (chosen)</td><td>You pick the winning party directly each election; Hero Senator gets ×1.5 skill bonus; forced law gets Dictatorship bonus; rebels trigger at Unhappy (30%) not Mutinous (10%)</td></tr>
-          <tr><td class="cell-key">Autocracy</td><td>6</td><td>1 party (fixed)</td><td>Cravers only; cannot change government; no rebellion possible; same Dictatorship bonuses plus immunity to anarchy</td></tr>
+          <tr><td class="cell-key">Democracy</td><td>6</td><td>3 parties</td><td>+1 Approval/pop on systems; 3 Hero Senators simultaneously; stable but inflexible — hard to force a minority party in</td></tr>
+          <tr><td class="cell-key">Republic</td><td>4</td><td>2 parties</td><td>All party law effects enhanced (~33–100% stronger); Dust used for election interference; highest raw law power</td></tr>
+          <tr><td class="cell-key">Federation</td><td>4</td><td>2 parties</td><td>+1 overcolonization threshold per Hero in leading party; −20% luxury development cost; best government for wide play</td></tr>
+          <tr><td class="cell-key">Dictatorship</td><td>4</td><td>1 party (chosen)</td><td>You pick the winning party directly each election; Hero Senator gets ×1.5 skill bonus; forced law gets Dictatorship bonus; rebels trigger at Unhappy (30%) not Mutinous (10%)</td></tr>
+          <tr><td class="cell-key">Autocracy</td><td>5</td><td>1 party (fixed)</td><td>Cravers only; cannot change government; no rebellion possible; same Dictatorship bonuses plus immunity to anarchy</td></tr>
         </table>
 
         <div class="callout callout-tip">
@@ -840,7 +842,7 @@
 
         <div class="callout callout-tip">
           <div class="callout-label">REPUBLIC + HIGH-VALUE LAW COMBOS</div>
-          Republic law enhancement is strongest on laws with large base values. Pacifist's Toys for Boys (+25 Approval) becomes effectively +37 in Republic. Scientist's Need to Breed (+30% Food) becomes +40%. Militarist and Scientist weapon damage laws both hit harder. The rule: if you're building around 1–2 specific laws as your economic engine, Republic amplifies them more than any other government. If you need breadth across many law types, Democracy's 7 slots wins.
+          Republic law enhancement is strongest on laws with large base values. Pacifist's Toys for Boys (+25 Approval) becomes effectively +37 in Republic. Scientist's Need to Breed (+30% Food) becomes +40%. Militarist and Scientist weapon damage laws both hit harder. The rule: if you're building around 1–2 specific laws as your economic engine, Republic amplifies them more than any other government. If you need breadth across many law types, Democracy's 6 slots wins.
         </div>
 
         <div class="done-row">

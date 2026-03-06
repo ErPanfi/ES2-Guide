@@ -144,12 +144,12 @@
         </div>
 
         <table class="ref-table">
-          <tr><th>Tier</th><th>Threshold</th><th>System: Food &amp; Influence</th><th>Empire: Dust &amp; Science</th></tr>
-          <tr><td class="cell-key">Mutinous</td><td>0</td><td class="cell-bad">−75%</td><td class="cell-bad">−30%</td></tr>
-          <tr><td class="cell-key">Unhappy</td><td>10</td><td class="cell-bad">−30%</td><td class="cell-bad">−15%</td></tr>
-          <tr><td class="cell-key">Content</td><td>30</td><td>No modifier</td><td>No modifier</td></tr>
-          <tr><td class="cell-key">Happy</td><td>70</td><td class="cell-good">+10%</td><td class="cell-good">+15%</td></tr>
-          <tr><td class="cell-key">Ecstatic</td><td>85</td><td class="cell-good">+25%</td><td class="cell-good">+30%</td></tr>
+          <tr><th>System tier</th><th>Empire tier</th><th>Threshold</th><th>System: Food &amp; Influence</th><th>Empire: Dust &amp; Science</th></tr>
+          <tr><td class="cell-key">Mutinous</td><td class="cell-key">Traitorous</td><td>0</td><td class="cell-bad">−75%</td><td class="cell-bad">−30%</td></tr>
+          <tr><td class="cell-key">Unhappy</td><td class="cell-key">Defiant</td><td>10</td><td class="cell-bad">−30%</td><td class="cell-bad">−15%</td></tr>
+          <tr><td class="cell-key">Content</td><td class="cell-key">Content</td><td>30</td><td>No modifier</td><td>No modifier</td></tr>
+          <tr><td class="cell-key">Happy</td><td class="cell-key">Loyal</td><td>70</td><td class="cell-good">+10%</td><td class="cell-good">+15%</td></tr>
+          <tr><td class="cell-key">Ecstatic</td><td class="cell-key">Devoted</td><td>85</td><td class="cell-good">+25%</td><td class="cell-good">+30%</td></tr>
         </table>
 
         <p>There is no gradient between tiers — 31% and 69% Approval produce identical output. This makes Approval a binary gate, not a continuous dial. Dropping from 85% to 84% costs you the full +30% Dust/Science bonus empire-wide in one turn. Rising from 69% to 70% unlocks +15% on the same outputs immediately.</p>
@@ -638,6 +638,11 @@
         <p>Modernization levels provide two compounding benefits: additional <strong>luxury resource slots</strong> (unlocking more FIDSI bonuses for that system) and increased <strong>maximum population capacity</strong> (allowing more pops, which multiplies base production further). Higher levels require more luxury resources — Levels 4 and 5 require Tier 2 and Tier 3 luxuries respectively.</p>
 
         <p>Level 2 modernization additionally unlocks the <strong>Spaceport</strong>, enabling population transfer. This is the most direct reason to prioritize getting your most productive systems to Level 2 early — it opens the population optimization loop.</p>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">RESOURCE SELECTION IS PERMANENT</div>
+          When you initiate a Development project you must choose which luxury resource(s) to assign to that level's slot(s). <strong>This selection cannot be changed once confirmed.</strong> Before committing, consider which luxury resources you currently have in surplus, which you are likely to acquire more of, and which FIDSI output that system is being built around. Assigning a Food luxury to a system you later specialise for Industry is a permanent inefficiency. Plan the system's long-term role before confirming the slot.
+        </div>
 
         <table class="ref-table">
           <tr><th>Level</th><th>Luxury Slots</th><th>Pop Capacity Increase</th><th>Requirement</th></tr>
