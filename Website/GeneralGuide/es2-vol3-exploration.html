@@ -145,13 +145,7 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>The galaxy is divided into <strong>constellations</strong> — clusters of systems connected internally by star lanes. Constellations never connect to each other via star lanes. The only ways to cross between constellations are <strong>warp drive</strong> (free movement through open space, unlocked by Baryonic Shielding) or <strong>wormholes</strong>. There are typically around 3 wormholes discoverable in each constellation, each connecting to a nearby constellation. Wormholes are substantially more numerous near the galactic core.</p>
-
-          <p>The <strong>galactic core</strong> is its own constellation — usually containing large, high-value systems and almost always hosting The Academy. Systems there are harder to defend due to exposure from multiple directions, but the economic and strategic rewards are significant. Sending probes toward the core early to locate The Academy and map those systems before rivals do is consistently worth the investment.</p>
-
-          <p><strong>Wormholes</strong> are bidirectional shortcuts between distant systems. Unlike star lane travel, <strong>wormhole transit expends all remaining movement points for that turn</strong> — but only any amount of MPs is required to enter. A fleet with 1 of 9 MPs remaining can still use a wormhole. The practical implication: move along star lanes first, <em>then</em> end the turn's movement by jumping through the wormhole, so the full-MP drain doesn't waste a standing movement budget.</p>
-
-          <p>Wormhole <em>detection</em> requires <strong>Autonomous Materials</strong> (Science S3), which unlocks the <em>Hawking Radiation Dowser</em>. Without it, wormholes in unexplored space won't appear on your map. Source: confirmed from in-game observation (wiki article also lists the Hawking Radiation Dowser under Autonomous Materials, S3).</p>
+          <p><strong>Wormholes</strong> are bidirectional connections between two systems not linked by a standard star lane. They function identically to star lanes for movement cost. Finding one early that opponents haven't scouted is a genuine strategic edge — they can cut travel time between distant sectors dramatically. Note that wormhole <em>detection</em> is not automatic: the <strong>Autonomous Materials</strong> technology (Science T3) unlocks the <em>Hawking Radiation Dowser</em>, which is what enables your ships to detect wormholes. Without it, wormholes in unexplored regions of the map may not appear.</p>
 
           <p><strong>Free movement</strong> — travel to systems not connected to the star lane network — is unlocked by <strong>Baryonic Shielding</strong> (Science T2), which grants the <em>Warp Drive (Free Movement)</em> module. This is what allows access to unconnected systems and special nodes.</p>
 
@@ -268,23 +262,16 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Probes are launched from ships that carry a probe module — Exploration or Hero ships only. The starting exploration ship comes with Improved Probes (2 stock). Probes can be added to hero ships as well, which is one of the best reasons to assign your starting hero to the scout fleet early — additional probe stock and vision multiply your early coverage meaningfully.</p>
+          <p>Probes are launched from ships that carry a probe module. The starting exploration ship comes with two probes. Probes can be added to hero ships as well, which is one of the best reasons to assign your starting hero to the scout fleet early — the hero ship's larger vision range and additional probe slots multiply your early coverage dramatically.</p>
 
-          <p>Each probe module has three stats that govern effectiveness:</p>
+          <p>Each probe has three key stats:</p>
           <ul class="step-list">
-            <li><span class="step-n">VISION</span><span>The detection radius around the probe's position as it moves. Higher vision reveals more of the surrounding area with each tile traveled.</span></li>
-            <li><span class="step-n">STOCK</span><span>How many probes the module holds simultaneously. A module with Stock 3 means three separate probes can be in flight at once before any cooldown triggers.</span></li>
-            <li><span class="step-n">COOLDOWN</span><span>Turns to restock one probe after it depletes. A 1-turn cooldown means a probe is essentially always available; a 4-turn cooldown creates genuine coverage gaps.</span></li>
+            <li><span class="step-n">LIFETIME</span><span>How many turns the probe remains active and moving. A lifetime of 5 means the probe travels for 5 turns before expiring.</span></li>
+            <li><span class="step-n">RANGE</span><span>The vision radius of the probe at each position it passes through. A range of 4 reveals a 4-tile radius around its current location each turn.</span></li>
+            <li><span class="step-n">SPEED</span><span>How many tiles the probe travels per turn. A speed of 6 means it covers 6 tiles of distance per turn of lifetime.</span></li>
           </ul>
 
-          <table class="ref-table">
-            <tr><th>Module</th><th>Req. Tech</th><th>Vision</th><th>Stock</th><th>Cooldown</th><th>Cost</th></tr>
-            <tr><td class="cell-key">Improved Probes</td><td>(initial)</td><td>1</td><td>2</td><td>4 turns</td><td>30 Industry</td></tr>
-            <tr><td class="cell-key">Titanium Probes</td><td>Machine Bacteria (S2)</td><td>2</td><td>2</td><td class="cell-good">1 turn</td><td>40 Industry + 1 Ti</td></tr>
-            <tr><td class="cell-key">Hyperium Probes</td><td>Machine Bacteria (S2)</td><td class="cell-good">3</td><td class="cell-good">3</td><td>2 turns</td><td>60 Industry + 1 Hy</td></tr>
-          </table>
-
-          <p>The choice between Titanium and Hyperium is non-obvious. Titanium Probes have only a 1-turn cooldown — effectively always ready — making them reliable for sustained coverage even without staggering. Hyperium Probes have better vision (3 vs 2) and more stock (3 vs 2) but a 2-turn cooldown; the extra range makes them stronger for deep-space exploration where you want to see farther ahead. Explorer hulls also get a built-in −50% probe restock duration, which halves these cooldowns further, making both options faster than the base numbers suggest.</p>
+          <p>Probes have a <strong>cooldown before they regenerate</strong>. The cooldown depends on the probe module type — standard probes have a longer cooldown, while Hyperium probes regenerate faster. Managing your probe timing matters in the early game: launching all probes at once leaves you without coverage for the cooldown window. Staggering launches is often better than firing everything simultaneously.</p>
 
           <div class="done-row">
             <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -342,25 +329,22 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Curiosities appear as small icons on planets. Each has a type that predicts the reward category and also increments a specific political ideology in your empire when investigated:</p>
+          <p>Curiosities appear as small icons on planets and systems. They are one of exploration's primary reward mechanisms. Several named types exist:</p>
 
           <table class="ref-table">
-            <tr><th>Type</th><th>High Chance</th><th>Low Chance</th><th>Political Output</th></tr>
-            <tr><td class="cell-key">Atmospheric</td><td>Anomaly</td><td>Loot</td><td>Scientist</td></tr>
-            <tr><td class="cell-key">Subterranean</td><td>Luxury or Strategic Resource Deposit</td><td>Loot</td><td>Scientist</td></tr>
-            <tr><td class="cell-key">Life Form</td><td>Anomaly</td><td>Luxury Resource Deposit, Loot</td><td>Ecologist</td></tr>
-            <tr><td class="cell-key">Ruins</td><td>Anomaly</td><td>Luxury Resource Deposit, Loot</td><td>Religious</td></tr>
-            <tr><td class="cell-key">Guardian</td><td colspan="2">Unfallen-specific — awakens a guardian on the planet</td><td>—</td></tr>
-            <tr><td class="cell-key">Quest</td><td colspan="2">Added by active quests — reward depends on quest; cannot be probed via build queue</td><td>—</td></tr>
+            <tr><th>Type</th><th>Common Rewards</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Lifeform</td><td>Anomaly, loot, exile pops</td><td>Good chance of population exile spawns</td></tr>
+            <tr><td class="cell-key">Subterranean</td><td>Anomaly, strategic resource deposit</td><td>—</td></tr>
+            <tr><td class="cell-key">Ruins</td><td>Loot, Dust, technology fragments</td><td>—</td></tr>
+            <tr><td class="cell-key">Atmospheric</td><td>Anomaly, loot, luxury resource</td><td>Good chance of pop exiles; also exile pops</td></tr>
+            <tr><td class="cell-key">Guardian</td><td>Varies — often tied to quest rewards</td><td>—</td></tr>
           </table>
 
-          <p>Resource Deposit rewards scale with curiosity tier: Level 1 can only reveal Common resources (Titanium, Hyperium, or common luxuries). Higher tier curiosities can reveal Uncommon and Rare deposits. When a resource deposit is found, you also receive a small immediate quantity of that resource — useful early for marketplace access.</p>
-
-          <p>Loot rewards vary widely: fixed FIDSI amounts, a random ship, a unique module, a unique system improvement, or a unique battle tactic. These are not predictable but are consistently useful.</p>
+          <p>There is also at least one Unfallen-faction-specific curiosity type. All curiosity rewards have a probability distribution — the UI tooltip on hover shows the categories of outcomes (e.g., "high chance of anomaly / low chance of luxury resource") without guaranteeing specifics.</p>
 
           <div class="callout callout-warn">
-            <div class="callout-label">THE TRAP OUTCOME</div>
-            All curiosities carry a small chance of failing entirely (no reward) or triggering a <strong>trap</strong> — spawning a small pirate fleet in the system that immediately attacks. This probability is low but real. Investigating a home-system curiosity in the first 10 turns is particularly high-risk: a pirate spawn next to your colony ship or lightly armed scout before you have a combat fleet available can be crippling. Atmospheric and Life Form types have the highest anomaly probability — which can cut both ways.
+            <div class="callout-label">DON'T RUSH HOME SYSTEM CURIOSITIES</div>
+            Researching a curiosity on your starting system early carries a meaningful risk of triggering a negative anomaly before you have the tech to remove it. A detrimental anomaly applying a FIDSI nerf from turn 3 onward can compound into a significant economic setback. Leave home-system curiosities until you have OCP Investigation or Autonomous Materials researched, unless the reward probability is clearly favorable.
           </div>
 
           <div class="done-row">
@@ -373,26 +357,22 @@
       <div class="content-block" id="cb4b">
         <div class="block-header" onclick="toggle('cb4b')">
           <span class="block-icon">🔬</span>
-          <span class="block-title">Curiosity Detection: Two Stats, Not One</span>
+          <span class="block-title">Curiosity Detection Tiers and Baryonic Shielding</span>
           <span class="block-tag tag-mech">MECHANIC</span>
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Your empire has <strong>two separate curiosity stats</strong> that advance independently: <em>Curiosity Detection Level</em> (which curiosities you can see on the map) and <em>Expedition Power</em> (which curiosities your fleet can actually investigate). A curiosity that exceeds your Expedition Power will appear on the map but remain un-investigable until your power catches up.</p>
-
-          <p>Both stats are advanced by researching specific techs — not by reaching a stage threshold:</p>
+          <p>Curiosity tiers are unlocked in two layers: <strong>stage-gated empire-wide unlocks</strong> and <strong>scanner detection</strong> within each tier. The stage structure is:</p>
 
           <table class="ref-table">
-            <tr><th>Tech (Stage)</th><th>Detection Level</th><th>Expedition Power</th></tr>
-            <tr><td class="cell-key">(starting)</td><td>2</td><td>1</td></tr>
-            <tr><td class="cell-key">Baryonic Shielding (S2)</td><td class="cell-good">3</td><td class="cell-good">2</td></tr>
-            <tr><td class="cell-key">Evaporation Inhibitors (S3)</td><td class="cell-good">4</td><td class="cell-good">3</td></tr>
-            <tr><td class="cell-key">Ultra-Deep Habitats (S4)</td><td>4</td><td class="cell-good">4</td></tr>
+            <tr><th>Curiosity Tier</th><th>Unlocked By</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Common</td><td>Science Stage 1 (starting)</td><td>Available from turn 1</td></tr>
+            <tr><td class="cell-key">Uncommon</td><td>Science Stage 3 threshold reached</td><td>Requires 3 Stage 2 techs researched first</td></tr>
+            <tr><td class="cell-key">Rare</td><td>Science Stage 4 threshold reached</td><td>Requires 3 Stage 3 techs researched first</td></tr>
+            <tr><td class="cell-key">Deep Epoch (4th tier)</td><td>Ultra-Deep Habitats tech (Stage 4)</td><td>Specific tech required, not just stage threshold</td></tr>
           </table>
 
-          <p>The <strong>stage-gated unlocks</strong> (Common / Uncommon / Rare curiosities existing in the world) are a separate layer on top of this — they determine which curiosity tier is generated in the galaxy. The Detection and Expedition Power stats determine whether your ships can interact with them. In practice: reach Stage 3 to unlock Uncommon curiosities empire-wide, and research Baryonic Shielding to actually see and probe them.</p>
-
-          <p>Note that <strong>Evaporation Inhibitors</strong> is the Primary Terraforming tech — its curiosity detection advancement is a secondary benefit that often goes unnoticed. If you're already researching it for terraforming purposes, your detection stats jump to 4/3 as a side effect.</p>
+          <p>Within each unlocked tier, <strong>Baryonic Shielding</strong> (Stage 2) provides the <em>Advanced Scanners</em> module that increases what your ships can actually detect. Think of it as: the stage threshold determines which curiosity tier exists in the world, while Advanced Scanners determines whether your fleet can see and interact with them. Without Baryonic Shielding, higher-tier curiosities that are already "in the world" after you reach Stage 3 may not be detectable by your exploration ships.</p>
 
           <div class="done-row">
             <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -423,24 +403,9 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Special nodes are galaxy-map locations outside the colonizable system network. They include asteroid fields, black holes, collapsing stars, nebular clouds, neutron stars, solar nebulae, and (Vaulters DLC) rejuvenation fields. They are not connected to the star lane grid and won't appear on your map without the <strong>Low Kelvin Sciences</strong> technology (Science S4), which unlocks <em>Ultra-MRI Astronomy</em>.</p>
+          <p>Special nodes are galaxy-map locations that exist outside the colonizable system network. They include <strong>asteroid fields, black holes, and nebulae</strong>. These nodes are not connected to the standard star lane grid and are therefore invisible without the <strong>Ultra IR Astronomy</strong> technology (Science tree), which enables probes to detect them.</p>
 
-          <p>Each node type provides two things to a behemoth in orbit: a <strong>tech cost reduction</strong> in a specific tree branch, and a yield of <strong>two types of strategic resources</strong> (requires the relevant exploitation tech to activate). Each node reduces costs in a different branch — matching a behemoth to the right node for your current research priority is the core placement decision:</p>
-
-          <table class="ref-table">
-            <tr><th>Node Type</th><th>Tech Cost Reduction Branch</th><th>Strategic Resources</th></tr>
-            <tr><td class="cell-key">Black Hole</td><td class="cell-good">Science & Exploration</td><td>Titanium + Hyperium</td></tr>
-            <tr><td class="cell-key">Neutron Star</td><td class="cell-good">Science & Exploration</td><td>Orichalcix + Quadrinix</td></tr>
-            <tr><td class="cell-key">Asteroid Field</td><td>Economy & Trade</td><td>Adamantian + Antimatter</td></tr>
-            <tr><td class="cell-key">Solar Nebula</td><td>Economy & Trade</td><td>Titanium + Hyperium</td></tr>
-            <tr><td class="cell-key">Nebular Clouds</td><td>Empire Development</td><td>Orichalcix + Quadrinix</td></tr>
-            <tr><td class="cell-key">Rejuvenation Field <em>(Vaulters DLC)</em></td><td>Empire Development</td><td>—</td></tr>
-            <tr><td class="cell-key">Collapsing Star</td><td>Military</td><td>Adamantian + Antimatter</td></tr>
-          </table>
-
-          <p>All nodes apply a −2% / −3% Science cost penalty to a different branch when orbited — this is a minor negative that comes with the territory. The net value is strongly positive: the behemoth's own Science output (+80 or +160/turn from node modules) and the tech cost reduction in the matching branch far outweigh the penalty.</p>
-
-          <p>The Umbral Choir's home system is located at a special node by default, and they can plant Transmigration Beacons on other nodes — enabling them to receive that node's FIDSI effects on their home system and, as a last resort, teleport their home system there.</p>
+          <p>On their own, special nodes don't do anything for your empire. Their value comes from parking a Behemoth — specifically one configured with special-node extraction modules — in orbit. A behemoth at a special node harvests resources from it, typically strategic resources or additional FIDSI yields, depending on the module loadout.</p>
 
           <div class="done-row">
             <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -494,21 +459,11 @@
 
           <p><strong>Layer 1 — System orbit bonus:</strong> A behemoth orbiting any system (yours or otherwise) provides a flat <strong>+10 to all FIDSI categories</strong> (Food, Industry, Dust, Science — not Influence) on that system. This is a passive bonus requiring no further action. The AI regularly exploits this by parking behemoths over their developed systems as both a boost and a defense anchor.</p>
 
-          <p><strong>Layer 2 — Tech cost reduction:</strong> With the Stellar Node Study modules equipped, the behemoth grants a <strong>−2% (Stellar Node Study 1) or −3% (Stellar Node Study 2)</strong> cost reduction to the tech branch matching the node type it's orbiting. This is per-node, per-behemoth — two behemoths at two different node types each reduce their respective branches independently, but two behemoths at the same node type do not double the reduction on that branch.</p>
-
-          <p>The exact module values from the wiki are:</p>
-
-          <table class="ref-table">
-            <tr><th>Module</th><th>Tech Required</th><th>Science Output</th><th>Cost Reduction</th></tr>
-            <tr><td class="cell-key">Basic Node Analyzer</td><td>Behemoth Analyzers (S2)</td><td>+50 Science, +50 Dust, +20 Influence</td><td>—</td></tr>
-            <tr><td class="cell-key">Stellar Node Study 1</td><td>Behemoth Analyzers (S2)</td><td>+80 Science</td><td class="cell-good">−2% matching branch</td></tr>
-            <tr><td class="cell-key">Advanced Node Analyzer</td><td>Behemoth Basic Climatology (S3)</td><td>+25% Special Node Effect amplifier + resource yields</td><td>—</td></tr>
-            <tr><td class="cell-key">Stellar Node Study 2</td><td>Behemoth Advanced Climatology (S4)</td><td>+160 Science</td><td class="cell-good">−3% matching branch</td></tr>
-          </table>
+          <p><strong>Layer 2 — Tech cost reduction:</strong> With the appropriate behemoth module researched, the science behemoth grants a <strong>−15% cost reduction on a specific tech tree branch</strong>. A second behemoth doubles this to approximately −30%. Community experience with science victories confirms this stacking is one of the primary acceleration mechanisms — the initial investment in multiple behemoth tech researches pays back rapidly through compressed tech timelines.</p>
 
           <div class="callout callout-tip">
-            <div class="callout-label">SCIENCE VICTORY CORE LOOP — REVISED</div>
-            The −2%/−3% reduction per behemoth per branch is smaller than it might initially appear in isolation, but it compounds: a single behemoth at a Black Hole gives −2% to your Science & Exploration branch continuously throughout the game. Combined with the +80/+160 Science output per turn and the Advanced Node Analyzer's resource yields, the behemoth pays back its research investment in compressed Science timelines and reduced tech costs over many turns. The goal is not to chase a massive single-turn discount — it's to establish a persistent mid-game advantage that widens with time.
+            <div class="callout-label">SCIENCE VICTORY CORE LOOP</div>
+            For science-victory-focused play: unlock behemoths, build one science behemoth (orbit your science-focused home system for +10 Science), research the tech cost reduction module, build a second science behemoth. The compound effect — more science production plus reduced tech cost — is the primary reason science victories can be competitive in speed against military paths.
           </div>
 
           <p>Behemoths cannot be embedded in a regular fleet — they move and fight alone. This means a military behemoth replacing your strike fleet is almost always a weaker choice than building one alongside a conventional fleet. A military behemoth's module count per slot is multiplied by ×4 (same as all large ships), but the isolation penalty usually outweighs raw firepower for most combat situations.</p>
@@ -530,28 +485,74 @@
         <div class="topic-num">06</div>
         <div>
           <h2 class="topic-title">Anomalies: Activation, Risk & Removal</h2>
-          <div class="topic-subtitle">Three anomaly categories, their FIDSI impact, and the tech path to neutralize detrimental effects</div>
+          <div class="topic-subtitle">Five anomaly categories, their full FIDSI impact, the undiscovered-anomaly rule, and the tech path to neutralize detrimental effects</div>
         </div>
       </div>
 
       <div class="content-block open" id="cb6a">
         <div class="block-header" onclick="toggle('cb6a')">
           <span class="block-icon">⚠️</span>
-          <span class="block-title">The Three Anomaly Categories</span>
+          <span class="block-title">Anomaly Categories: Full Reference</span>
           <span class="block-tag tag-mech">MECHANIC</span>
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Anomalies are persistent modifiers on individual planets, applied at discovery (via curiosity expedition or automatic on colonization). They fall into three categories:</p>
+          <p>Anomalies are persistent planet-level modifiers. A planet has three attribute slots total — shared between anomalies, luxury resources, and strategic resources. Anomalies are applied on discovery (curiosity expedition) or automatically on colonization. There are five distinct categories: <strong>Beneficial</strong>, <strong>Mixed</strong>, <strong>Detrimental</strong>, <strong>Reduced</strong>, and <strong>Ruin</strong>.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">UNDISCOVERED ANOMALIES HAVE NO EFFECT</div>
+            This is easy to miss: an anomaly's effects — positive <em>or</em> negative — are completely suppressed until the curiosity is investigated. A planet with a devastating detrimental anomaly sitting uninvestigated costs you nothing. Conversely, a strong beneficial anomaly yields nothing until explored. This creates a genuine strategic decision: if you know a planet carries a detrimental anomaly and you don't have the tech to remove it yet, you can deliberately leave the curiosity uninvestigated to avoid the penalty. The Vodyani, who lack access to anomaly reduction techs, benefit most from this rule — leaving detrimental curiosities uninvestigated is often their only option.
+          </div>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm); color: var(--red);">Detrimental Anomalies (10 total)</h3>
+          <p>Pure FIDSI penalties, no compensating upside. Reducible only via Ontological Rev-Eng (S5) or a terraforming behemoth. All values are per population unless noted.</p>
 
           <table class="ref-table">
-            <tr><th>Category</th><th>Effect</th><th>Example</th></tr>
-            <tr><td class="cell-key">Beneficial</td><td class="cell-good">Pure FIDSI bonus — always positive</td><td class="cell-good">Antonov Rings: +Dust, +1 Science per population</td></tr>
-            <tr><td class="cell-key">Detrimental</td><td class="cell-bad">Pure FIDSI penalty — always negative</td><td class="cell-bad">Strong Magnetic Field: significant FIDSI nerf on that planet</td></tr>
-            <tr><td class="cell-key">Mixed</td><td>Has both a positive and a negative component simultaneously</td><td>Positive bonus to one FIDSI type, penalty to another</td></tr>
+            <tr><th>Anomaly</th><th>Effects</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Acid Rain</td><td class="cell-bad">−2 Industry/pop, −4 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">High Gravity</td><td class="cell-bad">−1 Science/pop, −2 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Irradiated</td><td class="cell-bad">−1 Science/pop, −1 Food/pop, −4 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Kessler Syndrome</td><td class="cell-bad">−1 Dust/pop, −1 Industry/pop, −2 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Long Season</td><td class="cell-bad">−1 Dust/pop, −1 Food/pop</td><td>Lightest detrimental overall</td></tr>
+            <tr><td class="cell-key">Polar Tempests</td><td class="cell-bad">−1 Food/pop, −1 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Poor Soil</td><td class="cell-bad">−3 Food/pop, −2 Approval/pop</td><td>Crippling on food-dependent systems</td></tr>
+            <tr><td class="cell-key">Strong Magnetic Field</td><td class="cell-bad">−1 Science/pop, −1 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Low-Quality Foundations</td><td class="cell-bad">−1 FIDS/pop</td><td>Crescents only</td></tr>
+            <tr><td class="cell-key">Uninhabitable Area</td><td class="cell-bad">−1 Population Slot, −2 Approval/pop</td><td>Crescents only; note the pop slot loss</td></tr>
           </table>
 
-          <p>Anomalies apply at the planet level, not the system level. A system can have multiple planets each carrying different anomalies. When evaluating a system for colonization, the anomaly mix on all its planets should factor into your decision — a highly detrimental anomaly on a planet you'll rely on heavily can undermine a system that looked promising on paper.</p>
+          <div class="callout callout-warn">
+            <div class="callout-label">APPROVAL DAMAGE IS MULTIPLIER DAMAGE</div>
+            Seven of the ten detrimental anomalies carry an Approval penalty. At sub-70% Approval you lose the Loyal bonus on all empire-wide Dust and Science output. A single Irradiated or Acid Rain planet on a high-population colony isn't just hurting that planet — it can drag your entire empire's Approval below the multiplier threshold. Factor this into colonization decisions, not just the per-planet FIDSI delta.
+          </div>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm); color: var(--yellow, #c8a84b);">Mixed Anomalies (12 total)</h3>
+          <p>Both a positive and a negative component simultaneously. The Science S3 tech <strong>Autonomous Materials</strong> unlocks <em>Simple Anomaly Reduction</em>, which strips the negative side while keeping the positive. Post-reduction, the anomaly moves to the Reduced category. All values are per population.</p>
+
+          <table class="ref-table">
+            <tr><th>Anomaly</th><th>Positive</th><th>Negative</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Aurora Waves</td><td class="cell-good">+1 Approval/pop, +2 Dust/pop</td><td class="cell-bad">−2 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Geothermic Activity</td><td class="cell-good">+1 Industry/pop</td><td class="cell-bad">−1 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Hostile Fauna</td><td class="cell-good">+1 Food/pop</td><td class="cell-bad">−1 Science/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Ice-10</td><td class="cell-good">+2 Science/pop</td><td class="cell-bad">−2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Metallic Waters</td><td class="cell-good">+1 Industry/pop</td><td class="cell-bad">−2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Meteor Strikes</td><td class="cell-good">+1 Industry/pop</td><td class="cell-bad">−1 Science/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Permanent Monsoon</td><td class="cell-good">+2 Food/pop</td><td class="cell-bad">−2 Approval/pop, −2 Industry/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Psychoactive Air</td><td class="cell-good">+1 Approval/pop, +1 Dust/pop</td><td class="cell-bad">−1 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Seismic Activity</td><td class="cell-good">+1 Science/pop</td><td class="cell-bad">−2 Approval/pop, −1 Dust/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Shattered Crust</td><td class="cell-good">+2 Dust/pop</td><td class="cell-bad">−1 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Flickering Matter</td><td class="cell-good">+2 Science/pop</td><td class="cell-bad">−1 Industry/pop</td><td>Crescents only</td></tr>
+            <tr><td class="cell-key">Pseudo-Atmosphere</td><td class="cell-good">+1 Influence/pop, +1 Approval/pop</td><td class="cell-bad">−2 Science/pop</td><td>Crescents only</td></tr>
+          </table>
+
+          <p>10 of 12 mixed anomalies carry an Approval penalty — the same multiplier risk as detrimental anomalies. Ice-10 (+2 Science, −2 Approval) is a prime early target for Autonomous Materials: the positive side is substantial and the negative side disappears entirely on reduction.</p>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm); color: var(--green);">Beneficial Anomalies (30+)</h3>
+          <p>Pure FIDSI bonuses, no downside. There are over 30 beneficial anomalies — too numerous to enumerate fully here, but several warrant strategic attention. <strong>Komatiite Volcano</strong> (+4 Industry/pop) and <strong>Mineral Rich</strong> (+3 Industry/pop) are strong on industrial colonies. <strong>Antonov Rings</strong> (+1 Science/pop, +2 Dust/pop) and <strong>Humeris Insidentes</strong> (+4 Science/pop) are excellent on science worlds. <strong>Garden of Eden</strong> (+2 Approval/pop, +1 FIDS/pop, +1 pop slot) is one of the strongest all-rounders in the game.</p>
+          <p><strong>Moon anomalies</strong> (Single Moon, Binary Moons, Multiple Moons) each grant +1 Population Slot and can be further investigated for additional bonuses once the relevant tech is researched. These stack with the planet's existing population capacity and are worth investigating as soon as Compact Warp Methods (S3) enables moon infrastructure.</p>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm);">Ruin Anomalies (10 total, Supremacy DLC)</h3>
+          <p>Ruins are generated by in-game events: destroying pirate lairs, assimilating or invading minor factions, large fleet battles. They can be beneficial (Gutted Pirate Hideout/Lair/Stronghold: +Dust/+Industry per pop) or mixed (Debris Field tiers: +Science/pop, −Dust/pop; Trench/Devastation/Apocalyptic Landscape: +Science/pop, −Food/pop). Pre-galactic Architecture (+1 each to Dust, Science, Approval per pop) is purely positive. <strong>Crucially, ruin anomaly negative effects cannot be reduced</strong> — Autonomous Materials and OCP Investigation Unit do not apply to them. The mixed ruin anomalies are permanent tradeoffs.</p>
 
           <div class="done-row">
             <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -578,7 +579,7 @@
 
           <div class="callout callout-warn">
             <div class="callout-label">THE OCP TRAP — DON'T PLAN AROUND IT</div>
-            A detrimental anomaly on a colonized planet will be costing you FIDSI from the moment of colonization until Stage 5 research is complete. On a medium galaxy at normal speed that gap can easily be 80–120+ turns. A "Strong Magnetic Field" applying −4 Industry / −2 Science per turn for 100 turns is a 600-point cumulative Industry loss and a 200-point Science loss before the fix even lands. Treat detrimental anomalies as permanent penalties when evaluating systems to colonize, not as temporary problems. The fix exists — it just costs far more than it looks.
+            A detrimental anomaly on a colonized planet will be costing you FIDSI from the moment of colonization until Stage 5 research is complete. On a medium galaxy at normal speed that gap can easily be 80–120+ turns. Take Strong Magnetic Field as an example: at −1 Science/pop, −1 Industry/pop, −2 Approval/pop (wiki-confirmed values), a 3-population planet bleeds −3 Science, −3 Industry, and −6 Approval every single turn — plus the Approval hit risks your empire-wide Loyal multiplier. Over 100 turns that's 300 cumulative Science lost and 300 Industry lost before the fix even lands. Treat detrimental anomalies as permanent penalties when evaluating systems to colonize, not as temporary problems. The fix exists — it just costs far more than it looks.
           </div>
 
           <p>Anomaly reduction via the <strong>terraforming behemoth</strong> (Behemoth Basic Climatology module, Science S3) offers a middle path: the behemoth can reduce anomalies on colonized planets, including detrimental ones, without requiring Stage 5. This is covered in detail in T7. If you have a severe detrimental anomaly on a high-value planet and behemoths are available, this may be your fastest practical remedy.</p>
@@ -639,13 +640,7 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Behemoth terraforming is not instant. Each Climate Engineering module produces an <strong>Industry value per turn</strong> that accumulates until the threshold for the target action is met — exactly like a build queue. The exact values per module, from the wiki:</p>
-
-          <table class="ref-table">
-            <tr><th>Module</th><th>Terraformation</th><th>Anomaly Reduction</th><th>Planetary Reconstruction</th><th>Depletion Cancellation</th></tr>
-            <tr><td class="cell-key">Climate Engineering</td><td>60 Industry/turn</td><td>40 Industry/turn</td><td>—</td><td>passive</td></tr>
-            <tr><td class="cell-key">Advanced Climate Engineering</td><td>120 Industry/turn</td><td>80 Industry/turn</td><td>80 Industry/turn</td><td>2 depletion pts/turn</td></tr>
-          </table>
+          <p>Behemoth terraforming is not instant. Each Climate Engineering module produces an Industry value per turn. That Industry accumulates turn-by-turn until the threshold for the target action is met — exactly like a build queue, but driven by the behemoth's module output rather than the system's Industry production.</p>
 
           <p>Two stacking rules apply:</p>
           <ul class="step-list">
@@ -921,7 +916,7 @@
           <p>Key questions at turn 30:</p>
           <ul class="step-list">
             <li><span class="step-n">QUESTION 1</span><span>What stage are you in for each quadrant? If you're still in Stage 2–3 for Military or Economy at turn 30, your Endless tech timeline is under pressure.</span></li>
-            <li><span class="step-n">QUESTION 2</span><span>Have you unlocked behemoths and the Stellar Node Study modules? A science behemoth orbiting a Black Hole or Neutron Star gives a −2% (Study 1) or −3% (Study 2) reduction on Science & Exploration tech costs, plus +80/+160 Science/turn — the persistent compound advantage that makes science victories competitive over time. If you don't have one orbiting yet, this is the most urgent accelerant available.</span></li>
+            <li><span class="step-n">QUESTION 2</span><span>Have you unlocked behemoths and the tech-cost-reduction modules? The science behemoth's −15% per branch is your primary tool for compressing the Stage 5 timeline — if you don't have one orbiting yet, this is the most urgent accelerant available.</span></li>
             <li><span class="step-n">QUESTION 3</span><span>Are you being pressured militarily? A science victory player who ignores their fleet until Stage 5 is near risks being conquered before the win condition is reachable. You need enough military presence to deter or repel aggression throughout the mid-game.</span></li>
           </ul>
 
@@ -942,7 +937,7 @@
         <div class="block-body">
           <p>Two once-per-galaxy unique buildings are major science victory accelerants: the <strong>Endless Research Park</strong> and the <strong>Intergalactic Technology Center</strong>. Both provide substantial science bonuses but can only be built once across the entire galaxy — whichever empire builds them first locks out all others. Racing to build these before a scientifically competitive opponent is a meaningful priority.</p>
 
-          <p>The science behemoth's tech cost reduction stacks across different node types: a behemoth at a Black Hole gives −2%/−3% to Science & Exploration, while a second at a Neutron Star gives another −2%/−3% to the same branch (different node, same branch). Combined with the flat Science output bonus per module (+80 or +160/turn per behemoth), the compound effect across many turns represents the largest per-investment FIDSI leverage available in the mid-to-late game. Community experience benchmarks science victories at roughly <strong>turn 50 on fast speed in medium galaxies on Endless difficulty</strong> for optimized play — but this requires behemoths deployed early, the unique buildings if accessible, and strong Science-quadrant development throughout.</p>
+          <p>The science behemoth's tech-cost-reduction stacks with itself: a second science behemoth (with the appropriate module) doubles the reduction to approximately −30%. Combined with the flat +10 Science orbit bonus on your core system, two science behemoths represent the largest per-investment FIDSI leverage available in the mid-to-late game. Community experience benchmarks science victories at roughly <strong>turn 50 on fast speed in medium galaxies on Endless difficulty</strong> for optimized play — but this requires both behemoths, the unique buildings if accessible, and strong Science-quadrant development throughout.</p>
 
           <p>The Sophons are the canonical science victory faction, with bonuses that make the Science quadrant faster and cheaper. Riftborn and Vaulters are noted as close alternatives. The Nakalim face structural disadvantages due to their scientific penalties and are poorly suited to this path.</p>
 
