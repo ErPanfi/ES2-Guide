@@ -112,6 +112,25 @@
     position: relative;
     z-index: 1;
   }
+  
+  .row-cards {
+
+	/**
+	* Calculated values.
+	*/
+	--gap-count: calc(var(--cols) - 1);
+	--total-gap-width: calc(var(--gap-count) * var(--card-gap));
+	--grid-item--max-width: calc((100% - var(--total-gap-width)) / var(--cols));
+
+    display: grid;
+    /*grid-template-columns: repeat(var(--cols), var(--card-w));*/
+	grid-template-columns: repeat(auto-fill, minmax(max(var(--card-w), var(--grid-item--max-width)), 1fr));
+	
+    grid-gap: var(--card-gap);
+	width:100%;
+  }
+
+  
 
   /* ── Volume cards effects ──────────────────────────────────── */
   .vol-card {
