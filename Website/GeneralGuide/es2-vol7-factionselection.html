@@ -91,7 +91,7 @@
       height: 100%;
       border-radius: 99px;
     }
-    .axis-fill.mech  { background: rgb(var(--fac-c, var(--vol7-accent))); }
+
     .axis-fill.p-low    { background: rgb(var(--green)); }
     .axis-fill.p-med    { background: rgb(var(--gold)); }
     .axis-fill.p-high   { background: rgb(var(--red)); }
@@ -210,6 +210,29 @@
 
     /* ── Setup table modifier ── */
     .cell-note { color: var(--text-dim); font-style: italic; font-size: var(--ts_sectionTitle); }
+
+    /* ── Tier dividers inside fac-grid ── */
+    .tier-divider {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 0 4px;
+    }
+    .tier-divider-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+    .tier-divider-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: var(--ts_sectionTitle);
+      letter-spacing: 3px;
+      white-space: nowrap;
+    }
+    .tier-beginner .tier-divider-label { color: rgb(var(--green)); }
+    .tier-advanced .tier-divider-label { color: rgb(var(--gold)); }
+    .tier-expert   .tier-divider-label { color: rgb(var(--red)); }
 
     /* ── Mobile ── */
     @media (max-width: 700px) {
@@ -467,6 +490,14 @@
 
         <div class="fac-grid">
 
+
+          <!-- ══ BEGINNER FACTIONS ══ -->
+          <div class="tier-divider tier-beginner">
+            <div class="tier-divider-line"></div>
+            <div class="tier-divider-label">// BEGINNER</div>
+            <div class="tier-divider-line"></div>
+          </div>
+          <!-- ═══ UNITED EMPIRE ═══ -->
           <!-- ═══ UNITED EMPIRE ═══ -->
           <div class="fac-card" style="--fac-c: var(--ue-color)">
             <div class="fac-card-head">
@@ -480,7 +511,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:15%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:15%"></div></div>
                 <div class="axis-value v-low">MINIMAL</div>
               </div>
               <div class="axis-row">
@@ -507,84 +538,7 @@
             </div>
           </div>
 
-          <!-- ═══ VAULTERS ═══ -->
-          <div class="fac-card" style="--fac-c: var(--vaulters-color)">
-            <div class="fac-card-head">
-              <div class="fac-emoji">🌀</div>
-              <div>
-                <div class="fac-name">VAULTERS</div>
-                <div class="fac-tagline">Teleportation gates, instant colonization, Golden Age surges. The textbook definition of going tall.</div>
-              </div>
-              <a href="../FactionsDeepGuide/es2-Fac12-vaulters.html" class="fac-deep-link">DEEP DIVE →</a>
-            </div>
-            <div class="fac-axes">
-              <div class="axis-row">
-                <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:28%"></div></div>
-                <div class="axis-value v-low">LOW</div>
-              </div>
-              <div class="axis-row">
-                <div class="axis-label">PUNISH SEVERITY</div>
-                <div class="axis-track"><div class="axis-fill p-low" style="width:22%"></div></div>
-                <div class="axis-value v-low">LOW</div>
-              </div>
-            </div>
-            <div class="fac-challenge">
-              <div class="challenge-label">PRIMARY CHALLENGE</div>
-              The portal build is expensive early and silent for 15–20 turns. Trusting the infrastructure investment before it pays off requires patience most players don't extend to a new faction.
-            </div>
-            <div class="fac-victory">
-              <span class="vic-label">VICTORIES:</span>
-              <span class="vpath-chip vpath-primary">Science</span>
-              <span class="vpath-chip vpath-strong">Economic</span>
-              <span class="vpath-chip vpath-viable">Conquest</span>
-            </div>
-            <div class="fac-fit">
-              <div class="fit-yes">↑ You enjoy infrastructure investment and want the portal payoff to feel earned</div>
-              <div class="fit-yes">↑ Good second faction after UE — introduces "going tall" without alien mechanics</div>
-              <div class="fit-no">↓ You want aggressive early expansion — Vaulters rewards patience, not speed</div>
-            </div>
-          </div>
-
-          <!-- ═══ LUMERIS ═══ -->
-          <div class="fac-card" style="--fac-c: var(--lumeris-color)">
-            <div class="fac-card-head">
-              <div class="fac-emoji">💰</div>
-              <div>
-                <div class="fac-name">LUMERIS</div>
-                <div class="fac-tagline">Venetians of space. More Dust than anyone — and they spend it on territory, ships, and tech without declaring war.</div>
-              </div>
-              <a href="../FactionsDeepGuide/es2-Fac01-lumeris.html" class="fac-deep-link">DEEP DIVE →</a>
-            </div>
-            <div class="fac-axes">
-              <div class="axis-row">
-                <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:28%"></div></div>
-                <div class="axis-value v-low">LOW</div>
-              </div>
-              <div class="axis-row">
-                <div class="axis-label">PUNISH SEVERITY</div>
-                <div class="axis-track"><div class="axis-fill p-med" style="width:38%"></div></div>
-                <div class="axis-value v-med">MEDIUM</div>
-              </div>
-            </div>
-            <div class="fac-challenge">
-              <div class="challenge-label">PRIMARY CHALLENGE</div>
-              The snowball engine requires peaceful early turns — but you cannot control your neighbors. A Craver or Hissho spawning adjacent shuts down the Dust-first strategy before it ignites.
-            </div>
-            <div class="fac-victory">
-              <span class="vic-label">VICTORIES:</span>
-              <span class="vpath-chip vpath-primary">Economic</span>
-              <span class="vpath-chip vpath-strong">Diplomatic</span>
-              <span class="vpath-chip vpath-viable">Wonder</span>
-            </div>
-            <div class="fac-fit">
-              <div class="fit-yes">↑ You want to master the economic layer of ES2 — Lumeris teaches it at full depth</div>
-              <div class="fit-yes">↑ You enjoy buying solutions to problems rather than building them from Industry</div>
-              <div class="fit-no">↓ Aggressive multiplayer lobby — the Dust engine needs space to breathe in the early game</div>
-            </div>
-          </div>
-
+          <!-- ═══ SOPHONS ═══ -->
           <!-- ═══ SOPHONS ═══ -->
           <div class="fac-card" style="--fac-c: var(--sophon-color)">
             <div class="fac-card-head">
@@ -598,7 +552,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:28%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:28%"></div></div>
                 <div class="axis-value v-low">LOW</div>
               </div>
               <div class="axis-row">
@@ -624,6 +578,87 @@
             </div>
           </div>
 
+          <!-- ═══ LUMERIS ═══ -->
+          <!-- ═══ LUMERIS ═══ -->
+          <div class="fac-card" style="--fac-c: var(--lumeris-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">💰</div>
+              <div>
+                <div class="fac-name">LUMERIS</div>
+                <div class="fac-tagline">Venetians of space. More Dust than anyone — and they spend it on territory, ships, and tech without declaring war.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac01-lumeris.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:28%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:38%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The snowball engine requires peaceful early turns — but you cannot control your neighbors. A Craver or Hissho spawning adjacent shuts down the Dust-first strategy before it ignites.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Economic</span>
+              <span class="vpath-chip vpath-strong">Diplomatic</span>
+              <span class="vpath-chip vpath-viable">Wonder</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You want to master the economic layer of ES2 — Lumeris teaches it at full depth</div>
+              <div class="fit-yes">↑ You enjoy buying solutions to problems rather than building them from Industry</div>
+              <div class="fit-no">↓ Aggressive multiplayer lobby — the Dust engine needs space to breathe in the early game</div>
+            </div>
+          </div>
+
+          <!-- ═══ VAULTERS ═══ -->
+          <!-- ═══ VAULTERS ═══ -->
+          <div class="fac-card" style="--fac-c: var(--vaulters-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🌀</div>
+              <div>
+                <div class="fac-name">VAULTERS</div>
+                <div class="fac-tagline">Teleportation gates, instant colonization, Golden Age surges. The textbook definition of going tall.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac12-vaulters.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:28%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:22%"></div></div>
+                <div class="axis-value v-low">LOW</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              The portal build is expensive early and silent for 15–20 turns. Trusting the infrastructure investment before it pays off requires patience most players don't extend to a new faction.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Science</span>
+              <span class="vpath-chip vpath-strong">Economic</span>
+              <span class="vpath-chip vpath-viable">Conquest</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy infrastructure investment and want the portal payoff to feel earned</div>
+              <div class="fit-yes">↑ Good second faction after UE — introduces "going tall" without alien mechanics</div>
+              <div class="fit-no">↓ You want aggressive early expansion — Vaulters rewards patience, not speed</div>
+            </div>
+          </div>
+
+          <!-- ═══ UNFALLEN ═══ -->
           <!-- ═══ UNFALLEN ═══ -->
           <div class="fac-card" style="--fac-c: var(--unfallen-color)">
             <div class="fac-card-head">
@@ -637,7 +672,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:35%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-low" style="width:35%"></div></div>
                 <div class="axis-value v-low">LOW–MED</div>
               </div>
               <div class="axis-row">
@@ -663,6 +698,14 @@
             </div>
           </div>
 
+
+          <!-- ══ ADVANCED FACTIONS ══ -->
+          <div class="tier-divider tier-advanced">
+            <div class="tier-divider-line"></div>
+            <div class="tier-divider-label">// ADVANCED</div>
+            <div class="tier-divider-line"></div>
+          </div>
+          <!-- ═══ RIFTBORN ═══ -->
           <!-- ═══ RIFTBORN ═══ -->
           <div class="fac-card" style="--fac-c: var(--riftborn-color)">
             <div class="fac-card-head">
@@ -676,7 +719,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:48%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:48%"></div></div>
                 <div class="axis-value v-med">MEDIUM</div>
               </div>
               <div class="axis-row">
@@ -702,84 +745,7 @@
             </div>
           </div>
 
-          <!-- ═══ HISSHO ═══ -->
-          <div class="fac-card" style="--fac-c: var(--hissho-color)">
-            <div class="fac-card-head">
-              <div class="fac-emoji">🦅</div>
-              <div>
-                <div class="fac-name">HISSHO</div>
-                <div class="fac-tagline">A compounding fortress disguised as a rush faction. The real engine is a dense home system fed by mining probes — and a resource that requires constant war to sustain.</div>
-              </div>
-              <a href="../FactionsDeepGuide/es2-Fac09-hissho.html" class="fac-deep-link">DEEP DIVE →</a>
-            </div>
-            <div class="fac-axes">
-              <div class="axis-row">
-                <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:48%"></div></div>
-                <div class="axis-value v-med">MEDIUM</div>
-              </div>
-              <div class="axis-row">
-                <div class="axis-label">PUNISH SEVERITY</div>
-                <div class="axis-track"><div class="axis-fill p-high" style="width:72%"></div></div>
-                <div class="axis-value v-high">HIGH</div>
-              </div>
-            </div>
-            <div class="fac-challenge">
-              <div class="challenge-label">PRIMARY CHALLENGE</div>
-              Keii income requires constant combat. Keii expenditure is unavoidable. A Hissho empire that stops fighting for 10 turns enters Keii debt — a FIDSI multiplier collapse that is extremely difficult to reverse.
-            </div>
-            <div class="fac-victory">
-              <span class="vic-label">VICTORIES:</span>
-              <span class="vpath-chip vpath-primary">Supremacy</span>
-              <span class="vpath-chip vpath-strong">Science</span>
-              <span class="vpath-chip vpath-viable">Economic</span>
-            </div>
-            <div class="fac-fit">
-              <div class="fit-yes">↑ You enjoy tight resource loops, mining probe micro, and never having peace</div>
-              <div class="fit-yes">↑ Genuinely unique playstyle that teaches tall-play concepts through an aggressive lens</div>
-              <div class="fit-no">↓ You want to expand wide, play diplomatically, or take extended breaks from combat</div>
-            </div>
-          </div>
-
-          <!-- ═══ CRAVERS ═══ -->
-          <div class="fac-card" style="--fac-c: var(--cravers-color)">
-            <div class="fac-card-head">
-              <div class="fac-emoji">🪳</div>
-              <div>
-                <div class="fac-name">CRAVERS</div>
-                <div class="fac-tagline">A locust swarm wearing civilization's skin. Every planet they occupy degrades permanently — so they must always move forward.</div>
-              </div>
-              <a href="../FactionsDeepGuide/es2-Fac04-cravers.html" class="fac-deep-link">DEEP DIVE →</a>
-            </div>
-            <div class="fac-axes">
-              <div class="axis-row">
-                <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:40%"></div></div>
-                <div class="axis-value v-med">MEDIUM</div>
-              </div>
-              <div class="axis-row">
-                <div class="axis-label">PUNISH SEVERITY</div>
-                <div class="axis-track"><div class="axis-fill p-extreme" style="width:92%"></div></div>
-                <div class="axis-value v-extreme">EXTREME</div>
-              </div>
-            </div>
-            <div class="fac-challenge">
-              <div class="challenge-label">PRIMARY CHALLENGE</div>
-              Expansion is not a strategy — it is the only life support system. Cravers who stop expanding consume their own empire. The mechanic is legible; the margin for error is zero.
-            </div>
-            <div class="fac-victory">
-              <span class="vic-label">VICTORIES:</span>
-              <span class="vpath-chip vpath-primary">Supremacy</span>
-              <span class="vpath-chip vpath-primary">Conquest</span>
-              <span class="vpath-chip vpath-strong">Science</span>
-            </div>
-            <div class="fac-fit">
-              <div class="fit-yes">↑ You want maximum aggression and can accept being the faction every other player targets</div>
-              <div class="fit-yes">↑ Science Victory is a legitimate primary path — depletion bonuses apply to all FIDSI including Science</div>
-              <div class="fit-no">↓ You want diplomatic options, a mid-game breather, or any recovery window after a setback</div>
-            </div>
-          </div>
-
+          <!-- ═══ HORATIO ═══ -->
           <!-- ═══ HORATIO ═══ -->
           <div class="fac-card" style="--fac-c: var(--horatio-color)">
             <div class="fac-card-head">
@@ -793,7 +759,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:56%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:56%"></div></div>
                 <div class="axis-value v-med">MED–HIGH</div>
               </div>
               <div class="axis-row">
@@ -821,6 +787,7 @@
           </div>
 
           <!-- ═══ NAKALIM ═══ -->
+          <!-- ═══ NAKALIM ═══ -->
           <div class="fac-card" style="--fac-c: var(--nakalim-color)">
             <div class="fac-card-head">
               <div class="fac-emoji">🏛️</div>
@@ -833,7 +800,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:56%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:56%"></div></div>
                 <div class="axis-value v-med">MED–HIGH</div>
               </div>
               <div class="axis-row">
@@ -859,6 +826,94 @@
             </div>
           </div>
 
+          <!-- ═══ HISSHO ═══ -->
+          <!-- ═══ HISSHO ═══ -->
+          <div class="fac-card" style="--fac-c: var(--hissho-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🦅</div>
+              <div>
+                <div class="fac-name">HISSHO</div>
+                <div class="fac-tagline">A compounding fortress disguised as a rush faction. The real engine is a dense home system fed by mining probes — and a resource that requires constant war to sustain.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac09-hissho.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:48%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-high" style="width:72%"></div></div>
+                <div class="axis-value v-high">HIGH</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              Keii income requires constant combat. Keii expenditure is unavoidable. A Hissho empire that stops fighting for 10 turns enters Keii debt — a FIDSI multiplier collapse that is extremely difficult to reverse.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Supremacy</span>
+              <span class="vpath-chip vpath-strong">Science</span>
+              <span class="vpath-chip vpath-viable">Economic</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You enjoy tight resource loops, mining probe micro, and never having peace</div>
+              <div class="fit-yes">↑ Genuinely unique playstyle that teaches tall-play concepts through an aggressive lens</div>
+              <div class="fit-no">↓ You want to expand wide, play diplomatically, or take extended breaks from combat</div>
+            </div>
+          </div>
+
+
+          <!-- ══ EXPERT FACTIONS ══ -->
+          <div class="tier-divider tier-expert">
+            <div class="tier-divider-line"></div>
+            <div class="tier-divider-label">// EXPERT</div>
+            <div class="tier-divider-line"></div>
+          </div>
+          <!-- ═══ CRAVERS ═══ -->
+          <!-- ═══ CRAVERS ═══ -->
+          <div class="fac-card" style="--fac-c: var(--cravers-color)">
+            <div class="fac-card-head">
+              <div class="fac-emoji">🪳</div>
+              <div>
+                <div class="fac-name">CRAVERS</div>
+                <div class="fac-tagline">A locust swarm wearing civilization's skin. Every planet they occupy degrades permanently — so they must always move forward.</div>
+              </div>
+              <a href="../FactionsDeepGuide/es2-Fac04-cravers.html" class="fac-deep-link">DEEP DIVE →</a>
+            </div>
+            <div class="fac-axes">
+              <div class="axis-row">
+                <div class="axis-label">MECH COMPLEXITY</div>
+                <div class="axis-track"><div class="axis-fill p-med" style="width:40%"></div></div>
+                <div class="axis-value v-med">MEDIUM</div>
+              </div>
+              <div class="axis-row">
+                <div class="axis-label">PUNISH SEVERITY</div>
+                <div class="axis-track"><div class="axis-fill p-extreme" style="width:92%"></div></div>
+                <div class="axis-value v-extreme">EXTREME</div>
+              </div>
+            </div>
+            <div class="fac-challenge">
+              <div class="challenge-label">PRIMARY CHALLENGE</div>
+              Expansion is not a strategy — it is the only life support system. Cravers who stop expanding consume their own empire. The mechanic is legible; the margin for error is zero.
+            </div>
+            <div class="fac-victory">
+              <span class="vic-label">VICTORIES:</span>
+              <span class="vpath-chip vpath-primary">Supremacy</span>
+              <span class="vpath-chip vpath-primary">Conquest</span>
+              <span class="vpath-chip vpath-strong">Science</span>
+            </div>
+            <div class="fac-fit">
+              <div class="fit-yes">↑ You want maximum aggression and can accept being the faction every other player targets</div>
+              <div class="fit-yes">↑ Science Victory is a legitimate primary path — depletion bonuses apply to all FIDSI including Science</div>
+              <div class="fit-no">↓ You want diplomatic options, a mid-game breather, or any recovery window after a setback</div>
+            </div>
+          </div>
+
+          <!-- ═══ VODYANI ═══ -->
           <!-- ═══ VODYANI ═══ -->
           <div class="fac-card" style="--fac-c: var(--vodyani-color)">
             <div class="fac-card-head">
@@ -872,7 +927,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:72%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-high" style="width:72%"></div></div>
                 <div class="axis-value v-high">HIGH</div>
               </div>
               <div class="axis-row">
@@ -899,6 +954,7 @@
           </div>
 
           <!-- ═══ UMBRAL CHOIR ═══ -->
+          <!-- ═══ UMBRAL CHOIR ═══ -->
           <div class="fac-card" style="--fac-c: var(--umbral-color)">
             <div class="fac-card-head">
               <div class="fac-emoji">👁️</div>
@@ -911,7 +967,7 @@
             <div class="fac-axes">
               <div class="axis-row">
                 <div class="axis-label">MECH COMPLEXITY</div>
-                <div class="axis-track"><div class="axis-fill mech" style="width:95%"></div></div>
+                <div class="axis-track"><div class="axis-fill p-extreme" style="width:95%"></div></div>
                 <div class="axis-value v-extreme">EXTREME</div>
               </div>
               <div class="axis-row">
@@ -1147,11 +1203,8 @@ const doneTopics = new Set();
 const VOLUME = 'vol7';
 const TOTAL = 5;
 
-let qIdx = 0;
-let answered = false;
-
-const quizzes = [
-   {
+const QUIZ = [
+  {
     q: "You are joining a 4-player game. The other three players have chosen Cravers, Hissho, and Vodyani. You want to survive to the mid-game and have a realistic shot at winning. Which faction choice makes the most strategic sense?",
     scenario: "Three aggressive factions: Cravers (structurally cannot make peace), Hissho (requires constant war to sustain Keii), Vodyani (leeches neighbors passively before any formal declaration). All three have Supremacy as a primary path.",
     opts: [
