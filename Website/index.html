@@ -9,9 +9,13 @@
 <link rel="stylesheet" href="CSSnJS/es2-faction-deepdive.css">
 <style>
   :root {
-    --accent:          var(--vol4-accent);
-    --accent-rgb:      var(--vol4-accent);
-    --accent-dim:      rgba(var(--vol4-accent), 0.11);
+    --accent:     var(--vol4-accent);
+    --accent-rgb: var(--vol4-accent);
+    --accent-dim: rgba(var(--vol4-accent), 0.11);
+
+    /* Single source of truth for card sizing */
+    --card-w:   300px;
+    --card-gap: 10px;
   }
 
   /* ── Page layout ───────────────────────────────────────────── */
@@ -92,34 +96,62 @@
     margin-top: 18px;
   }
 
-  /* ── Two-column body ───────────────────────────────────────── */
+  /* ── Body: stacked rows ─────────────────────────────────────── */
   .index-body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0;
+    display: flex;
+    flex-direction: column;
     flex: 1;
   }
 
-  .index-col {
-    padding: 44px 60px;
+  /* ── Section row ────────────────────────────────────────────── */
+  .index-row {
+    padding: 36px 60px;
+    border-top: 1px solid var(--border);
+    /* Horizontal overflow → scrollbar */
+    overflow-x: auto;
+    overflow-y: visible;
+    /* Idle: invisible bar (Firefox) */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+    transition: scrollbar-color 0.3s ease;
   }
 
-  .index-col + .index-col {
-    border-left: 1px solid var(--border);
+  /* Firefox: show on hover */
+  .index-row:hover {
+    scrollbar-color: var(--border) transparent;
   }
 
+  /* WebKit: always reserve the 4px track but keep thumb invisible at rest */
+  .index-row::-webkit-scrollbar          { height: 4px; }
+  .index-row::-webkit-scrollbar-track    { background: transparent; }
+  .index-row::-webkit-scrollbar-thumb    {
+    background: transparent;
+    border-radius: 2px;
+    transition: background 0.3s ease;
+  }
+  .index-row:hover::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* Accent stripe per tier */
+  .index-row.row-guide      { border-left: 3px solid rgb(var(--vol0-accent)); }
+  .index-row.row-beginner   { border-left: 3px solid rgb(var(--ue-color)); }
+  .index-row.row-advanced   { border-left: 3px solid rgb(var(--riftborn-color)); }
+  .index-row.row-expert     { border-left: 3px solid rgb(var(--cravers-color)); }
+
+  /* ── Section label ──────────────────────────────────────────── */
   .col-label {
     font-family: 'Share Tech Mono', monospace;
     font-size: var(--ts_topicTitle);
     letter-spacing: 3px;
     color: var(--text-dim);
     text-transform: uppercase;
-    margin-bottom: 28px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 16px;
+    width: 100%;
   }
 
+  .col-label::before,
   .col-label::after {
     content: '';
     flex: 1;
@@ -127,31 +159,38 @@
     background: var(--border);
   }
 
+  /* ── Horizontal card strip ──────────────────────────────────── */
+  /*
+   * Fixed-column grid: --cols is set inline on each .row-cards.
+   * With no wrapping and fixed column widths the strip exceeds the
+   * viewport width when needed; .index-row's overflow-x:auto takes over.
+   */
+  .row-cards {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), var(--card-w));
+    gap: var(--card-gap);
+    width: max-content;   /* shrink to actual content, never stretch */
+  }
 
-  /* ── Coming soon placeholder ───────────────────────────────── */
+  .row-cards .vol-card {
+    width: var(--card-w);
+    box-sizing: border-box;
+  }
+
+  /* ── Coming-soon placeholder ────────────────────────────────── */
   .coming-soon {
-    padding: 20px 20px;
+    padding: 20px;
     border-radius: 8px;
-    margin-bottom: 8px;
     opacity: 0.4;
-/*     border: 1px dashed var(--text-dim); */
     --card-accent: var(--text-dim);
     border-style: dashed;
     border-width: 1px;
   }
 
-  .vol-card.coming-soon::before
-  {
-    background: var(--text-dim);
-  }
-
-  .vol-card.coming-soon:hover
-  {
-    transform: none;
-  }
-
+  .vol-card.coming-soon::before          { background: var(--text-dim); }
+  .vol-card.coming-soon:hover            { transform: none; }
   .vol-card.coming-soon:hover .vol-card-emoji {
-      filter: drop-shadow(0 0 10px var(--text-dim));
+    filter: drop-shadow(0 0 10px var(--text-dim));
   }
 
   .coming-soon-label {
@@ -168,7 +207,7 @@
     color: var(--text-dim);
   }
 
-  /* ── Footer strip ──────────────────────────────────────────── */
+  /* ── Footer ─────────────────────────────────────────────────── */
   .index-footer {
     margin-top: 40px;
     padding: 20px 60px 0;
@@ -182,13 +221,73 @@
     align-items: center;
   }
 
-  /* ── Responsive ────────────────────────────────────────────── */
+  /* ── Spine column overrides (prototype — candidates for es2-guide.css) ─── */
+
+  /* Emoji column: flex column, badge sits right below the emoji */
+  .row-cards .vol-card-emoji {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;       /* fill card height */
+    justify-content: flex-start;
+    width: 32px;
+    padding: 4px 0;
+    gap: 6px;
+  }
+
+  /* Badge stretches to fill remaining spine height below the emoji */
+  .row-cards .vol-card-emoji .vol-card-badge {
+    flex: 1;                   /* grow to fill leftover space */
+    writing-mode: vertical-rl;
+    letter-spacing: 1.5px;
+    font-size: var(--ts_sectionTitle);
+    opacity: 0.7;
+    transition: opacity 0.18s;
+    display: flex;
+    /* Under vertical-rl, flex-direction:row flows top→bottom on screen */
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    /* Padding on the short axis */
+    padding: 8px 2px;
+  }
+
+  .row-cards .vol-card:hover .vol-card-emoji .vol-card-badge {
+    opacity: 1;
+  }
+
+  /* The three children inside the pill */
+  .row-cards .vol-card-emoji .vol-card-badge .badge-diamond {
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .row-cards .vol-card-emoji .vol-card-badge .badge-label {
+    flex: 1;                   /* pushes diamonds to top and bottom */
+    display: flex;
+    /* Under vertical-rl: justify-content handles the block/vertical axis */
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ── Mobile: collapse to single column, no scroll ───────────── */
   @media (max-width: 768px) {
     .index-header { padding: 36px 24px 28px; }
     .index-header::after { left: 24px; right: 24px; }
-    .index-body { grid-template-columns: 1fr; }
-    .index-col { padding: 32px 24px; }
-    .index-col + .index-col { border-left: none; border-top: 1px solid var(--border); }
+
+    .index-row {
+      padding: 28px 20px;
+      border-left: none;
+      overflow-x: visible;
+    }
+
+    .row-cards {
+      grid-template-columns: 1fr;
+      width: 100%;
+    }
+
+    .row-cards .vol-card { width: 100%; }
+
     .index-title { font-size: calc(var(--ts_mainText) * 2.2); }
     .index-footer { padding: 16px 24px 0; flex-direction: column; gap: 8px; text-align: center; }
   }
@@ -196,298 +295,344 @@
 </head>
 <body>
 <div class="index-wrap">
-
-  <!-- ── HEADER ── -->
-  <header class="index-header">
-    <div class="header-eyebrow">// ENDLESS SPACE 2 — FIELD MANUAL</div>
-    <h1 class="index-title">
+<!-- ── HEADER ── -->
+<header class="index-header">
+<div class="header-eyebrow">// ENDLESS SPACE 2 — FIELD MANUAL</div>
+<h1 class="index-title">
       ES2
       <span>COMPREHENSIVE GUIDE</span>
-    </h1>
-    <p class="index-subtitle">A technical reference for players past the basics. Mechanics, strategy, and faction deep-dives — all sourced, all traceable.</p>
-  </header>
-
-  <!-- ── BODY ── -->
-  <div class="index-body">
-
-    <!-- LEFT: General Guide -->
-    <div class="index-col">
-      <div class="col-label">// General Guide</div>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol0-gamestart.html"
-         style="--card-accent: var(--vol0-accent);">
-        <div class="vol-card-emoji">🚀</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.0 ◈</div>
-          <div class="vol-card-title">Game Start Essentials</div>
-          <div class="vol-card-sub">First 20 turns, FIDSI primer, scouting, heroes, politics and victory overview</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol1-economy.html"
-         style="--card-accent: var(--vol1-accent);">
-        <div class="vol-card-emoji">🏭</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.1 ◈</div>
-          <div class="vol-card-title">Inside your Empire: Material & Money</div>
-          <div class="vol-card-sub">FIDSI deep dive, population, resources, trade, Behemoths and economic victory</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol2-people.html"
-         style="--card-accent: var(--vol2-accent);">
-        <div class="vol-card-emoji">🏛️</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.2 ◈</div>
-          <div class="vol-card-title">Inside your Empire: People & Ideas</div>
-          <div class="vol-card-sub">Approval, expansion, influence, parties, laws, government types and elections</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol3-exploration.html"
-         style="--card-accent: var(--vol3-accent);">
-        <div class="vol-card-emoji">🔭</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.3 ◈</div>
-          <div class="vol-card-title">Outside your Empire</div>
-          <div class="vol-card-sub">Exploration, probes, curiosities, anomalies, pirates, minor factions and science victory</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol4-combat.html"
-         style="--card-accent: var(--vol4-accent);">
-        <div class="vol-card-emoji">⚔️</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.4 ◈</div>
-          <div class="vol-card-title">Ships, Combat & Military</div>
-          <div class="vol-card-sub">Ship design, combat system, battle cards, Behemoths, ground invasion and military victory</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol5-heroes.html"
-         style="--card-accent: var(--vol5-accent);">
-        <div class="vol-card-emoji">🦸</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.5 ◈</div>
-          <div class="vol-card-title">Heroes & the Academy</div>
-          <div class="vol-card-sub">Classes, XP, skill trees, assignment strategy, the hero market and the Galactic Academy</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol6-diplomacy.html"
-         style="--card-accent: var(--vol6-accent);">
-        <div class="vol-card-emoji">🤝</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.6 ◈</div>
-          <div class="vol-card-title">Diplomacy & Hacking</div>
-          <div class="vol-card-sub">Relation scores, agreements, war, Senate coalitions and the Penumbra DLC hacking system</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol7-factionselection.html"
-         style="--card-accent: var(--vol7-accent);">
-        <div class="vol-card-emoji">🧭</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.7 ◈</div>
-          <div class="vol-card-title">Choosing the right faction</div>
-          <div class="vol-card-sub">How to find your way between 12 asymmetric factions: Complexity, Forgiveness and Uniqueness explained.</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <!--a class="vol-card left" href="GeneralGuide/es2-vol7-factions.html"
-         style="--card-accent: var(--vol7-accent);">
-        <div class="vol-card-emoji">🔍</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.7 ◈</div>
-          <div class="vol-card-title">Faction Guides — Beginner</div>
-          <div class="vol-card-sub">United Empire, Sophons, Unfallen, Nakalim, Hissho, Vaulters</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card left" href="GeneralGuide/es2-vol8-factions-expert.html"
-         style="--card-accent: var(--vol8-accent);">
-        <div class="vol-card-emoji">🔬</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ VOL.8 ◈</div>
-          <div class="vol-card-title">Faction Guides — Intermediate & Expert</div>
-          <div class="vol-card-sub">Lumeris, Horatio, Vodyani, Cravers, Riftborn, Umbral Choir</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a-->
-
-      <!--div class="vol-card left coming-soon">
-        <div class="vol-card-emoji">⏳</div>
-        <div class="vol-card-text">
-
-          <div class="coming-soon-label">// MORE VOLUMES COMING SOON</div>
-          <div class="coming-soon-text">All done!</div>
-          </div>
-        </div-->
-
-    </div>
-
-    <!-- RIGHT: Faction Deep Dives -->
-    <div class="index-col">
-      <div class="col-label">// Faction Deep Dives</div>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac01-lumeris.html"
-         style="--card-accent: var(--lumeris-color);">
-        <div class="vol-card-emoji">💰</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.1 ◈</div>
-          <div class="vol-card-title">The Lumeris</div>
-          <div class="vol-card-sub">Trade empire, Dust economy, TAKT decision framework, off-piste colonization and the Industrialist pivot</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac02-horatio.html"
-         style="--card-accent: var(--horatio-color);">
-        <div class="vol-card-emoji">🧬</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.2 ◈</div>
-          <div class="vol-card-title">The Horatio</div>
-          <div class="vol-card-sub">Gene splicing, GENE SEQUENCER framework, nursery systems, splice priority ranking and the 40-turn pipeline</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac03-sophons.html"
-         style="--card-accent: var(--sophon-color);">
-        <div class="vol-card-emoji">🔬</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.3 ◈</div>
-          <div class="vol-card-title">The Sophons</div>
-          <div class="vol-card-sub">Omniscience decay curve, Industry problem, Burning Light admiral path, fleet design and the Supremacy vs. Science Victory tradeoff</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac04-cravers.html"
-         style="--card-accent: var(--cravers-color);">
-        <div class="vol-card-emoji">🪳</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.4 ◈</div>
-          <div class="vol-card-title">The Cravers</div>
-          <div class="vol-card-sub">Depletion math, Slave Driver mechanics, approval toolkit, three strategic paths and the depleted-planet military endgame</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac05-vodyani.html"
-         style="--card-accent: var(--vodyani-color);">
-        <div class="vol-card-emoji">🦋</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.5 ◈</div>
-          <div class="vol-card-title">The Vodyani</div>
-          <div class="vol-card-sub">Essence economy, BARK math, population virtualization, Righteous Fury, drain-to-invade doctrine and the 40-turn playbook</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac06-unfallen.html"
-         style="--card-accent: var(--unfallen-color);">
-        <div class="vol-card-emoji">🌿</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.6 ◈</div>
-          <div class="vol-card-title">The Unfallen</div>
-          <div class="vol-card-sub">Vine network mechanics, free instant colonization, wormhole chain exploit, Guardian approval engine, Pacifist FIDSI multiplier and the vine-frontier war constraint</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac07-unitedempire.html"
-         style="--card-accent: var(--ue-color);">
-        <div class="vol-card-emoji">⚔️</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.7 ◈</div>
-          <div class="vol-card-title">The United Empire</div>
-          <div class="vol-card-sub">Emperor's Will buyout formulas, population fork, Industrialist/Militarist tension, wide expansion framework and the compounding machine</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac08-riftborn.html"
-         style="--card-accent: var(--riftborn-color);">
-        <div class="vol-card-emoji">❄️</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.8 ◈</div>
-          <div class="vol-card-title">The Riftborn</div>
-          <div class="vol-card-sub">Constructed population cost curve, industry-driven colonization, Singularity toolkit, wide empire architecture and the Guardian fleet doctrine</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac09-hissho.html"
-         style="--card-accent: var(--hissho-color);">
-        <div class="vol-card-emoji">🦅</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.9 ◈</div>
-          <div class="vol-card-title">The Hissho</div>
-          <div class="vol-card-sub">Keii multiplier mechanics, Resource Recovery engine, expansion constraint, Observance management, war doctrine and the subdue-raze cycle</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac10-umbralchoir.html"
-         style="--card-accent: var(--umbral-color);">
-        <div class="vol-card-emoji">👁️</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.10 ◈</div>
-          <div class="vol-card-title">The Umbral Choir</div>
-          <div class="vol-card-sub">Nexus-and-Sanctuary architecture, Bandwidth economy, proxy hacking imperative, Shadow conversion pipeline, manpower crisis management and playing against the Umbral Choir</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac11-nakalim.html"
-         style="--card-accent: var(--nakalim-color);">
-        <div class="vol-card-emoji">🏛️</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.11 ◈</div>
-          <div class="vol-card-title">The Nakalim</div>
-          <div class="vol-card-sub">Relics & assignment, Temples & placement, the Influence Bomb, Cathedrals, science routing, quest branches, ships, strategic directions & first-40 playbook</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <a class="vol-card right" href="FactionsDeepGuide/es2-Fac12-vaulters.html"
-         style="--card-accent: var(--vaulters-color);">
-        <div class="vol-card-emoji">🌀</div>
-        <div class="vol-card-text">
-          <div class="vol-card-badge">◈ FAC.12 ◈</div>
-          <div class="vol-card-title">The Vaulters</div>
-          <div class="vol-card-sub">Instant colonization without outposts, Golden Age FIDSI surges on every new colony, a portal network that makes distance irrelevant, and corsairs available from turn 1.</div>
-        </div>
-        <div class="vol-card-arrow">→</div>
-      </a>
-
-      <!--div class="vol-card right coming-soon">
-        <div class="vol-card-emoji">⏳</div>
-        <div class="vol-card-text">
-          <div class="coming-soon-label">// MORE VOLUMES COMING SOON</div>
-          <div class="coming-soon-text">all done!</div>
-        </div>
-      </div-->
-
-    </div>
-
-  </div>
-  <!-- ── FOOTER ── -->
-  <footer class="index-footer">
-    <span>ENDLESS SPACE 2 — FIELD MANUAL</span>
-    <span>ErPanfi + Claude Free</span>
-  </footer>
-
-</body>
-</html>
+</h1>
+<p class="index-subtitle">A technical reference for players past the basics. Mechanics, strategy, and faction deep-dives — all sourced, all traceable.</p>
+</header>
+<div class="index-body">
+<!-- ── ROW 1 · General Guide — 8 volumes ── -->
+<div class="index-row row-guide">
+<div class="col-label">// General Guide</div>
+<div class="row-cards" style="--cols:8">
+<a class="vol-card" href="GeneralGuide/es2-vol0-gamestart.html" style="--card-accent: var(--vol0-accent);">
+<div class="vol-card-emoji">🚀
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 0</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Game Start Essentials</div>
+<div class="vol-card-sub">First 20 turns, FIDSI primer, scouting, heroes, politics and victory overview</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="GeneralGuide/es2-vol1-economy.html" style="--card-accent: var(--vol1-accent);">
+<div class="vol-card-emoji">🏭
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 1</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Inside your Empire: Material &amp; Money</div>
+<div class="vol-card-sub">FIDSI deep dive, population, resources, trade, Behemoths and economic victory</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="GeneralGuide/es2-vol2-people.html" style="--card-accent: var(--vol2-accent);">
+<div class="vol-card-emoji">🏛️
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 2</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Inside your Empire: People &amp; Ideas</div>
+<div class="vol-card-sub">Approval, expansion, influence, parties, laws, government types and elections</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="GeneralGuide/es2-vol3-exploration.html" style="--card-accent: var(--vol3-accent);">
+<div class="vol-card-emoji">🔭
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 3</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Outside your Empire</div>
+<div class="vol-card-sub">Exploration, probes, curiosities, anomalies, pirates, minor factions and science victory</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="GeneralGuide/es2-vol4-combat.html" style="--card-accent: var(--vol4-accent);">
+<div class="vol-card-emoji">⚔️
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 4</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Ships, Combat &amp; Military</div>
+<div class="vol-card-sub">Ship design, combat system, battle cards, Behemoths, ground invasion and military victory</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="GeneralGuide/es2-vol5-heroes.html" style="--card-accent: var(--vol5-accent);">
+<div class="vol-card-emoji">🦸
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 5</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Heroes &amp; the Academy</div>
+<div class="vol-card-sub">Classes, XP, skill trees, assignment strategy, the hero market and the Galactic Academy</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="GeneralGuide/es2-vol6-diplomacy.html" style="--card-accent: var(--vol6-accent);">
+<div class="vol-card-emoji">🤝
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 6</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Diplomacy &amp; Hacking</div>
+<div class="vol-card-sub">Relation scores, agreements, war, Senate coalitions and the Penumbra DLC hacking system</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="GeneralGuide/es2-vol7-factionselection.html" style="--card-accent: var(--vol7-accent);">
+<div class="vol-card-emoji">🧭
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">VOL 7</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">Choosing the right faction</div>
+<div class="vol-card-sub">How to find your way between 12 asymmetric factions: Complexity, Forgiveness and Uniqueness explained.</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+</div>
+</div>
+<!-- ── ROW 2 · Beginner Factions — 5 cards ── -->
+<!-- Order: United Empire · Vaulters · Sophons · Lumeris · Unfallen -->
+<div class="index-row row-beginner">
+<div class="col-label">// Faction Deep Dives — Beginner</div>
+<div class="row-cards" style="--cols:5">
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac07-unitedempire.html" style="--card-accent: var(--ue-color);">
+<div class="vol-card-emoji">⚔️
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 1</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The United Empire</div>
+<div class="vol-card-sub">Emperor's Will buyout formulas, population 
+fork, Industrialist/Militarist tension, wide expansion framework and the
+ compounding machine</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac12-vaulters.html" style="--card-accent: var(--vaulters-color);">
+<div class="vol-card-emoji">🌀
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 2</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Vaulters</div>
+<div class="vol-card-sub">Instant colonization without outposts, Golden 
+Age FIDSI surges on every new colony, a portal network that makes 
+distance irrelevant, and corsairs available from turn 1.</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac03-sophons.html" style="--card-accent: var(--sophon-color);">
+<div class="vol-card-emoji">🔬
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 3</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Sophons</div>
+<div class="vol-card-sub">Omniscience decay curve, Industry problem, 
+Burning Light admiral path, fleet design and the Supremacy vs. Science 
+Victory tradeoff</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac01-lumeris.html" style="--card-accent: var(--lumeris-color);">
+<div class="vol-card-emoji">💰
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 4</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Lumeris</div>
+<div class="vol-card-sub">Trade empire, Dust economy, TAKT decision framework, off-piste colonization and the Industrialist pivot</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac06-unfallen.html" style="--card-accent: var(--unfallen-color);">
+<div class="vol-card-emoji">🌿
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 5</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Unfallen</div>
+<div class="vol-card-sub">Vine network mechanics, free instant 
+colonization, wormhole chain exploit, Guardian approval engine, Pacifist
+ FIDSI multiplier and the vine-frontier war constraint</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+</div>
+</div>
+<!-- ── ROW 3 · Advanced Factions — 4 cards ── -->
+<!-- Order: Riftborn · Horatio · Nakalim · Hissho -->
+<div class="index-row row-advanced">
+<div class="col-label">// Faction Deep Dives — Advanced</div>
+<div class="row-cards" style="--cols:4">
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac08-riftborn.html" style="--card-accent: var(--riftborn-color);">
+<div class="vol-card-emoji">❄️
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 6</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Riftborn</div>
+<div class="vol-card-sub">Constructed population cost curve, 
+industry-driven colonization, Singularity toolkit, wide empire 
+architecture and the Guardian fleet doctrine</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac02-horatio.html" style="--card-accent: var(--horatio-color);">
+<div class="vol-card-emoji">🧬
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 7</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Horatio</div>
+<div class="vol-card-sub">Gene splicing, GENE SEQUENCER framework, nursery systems, splice priority ranking and the 40-turn pipeline</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac11-nakalim.html" style="--card-accent: var(--nakalim-color);">
+<div class="vol-card-emoji">🏛️
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 8</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Nakalim</div>
+<div class="vol-card-sub">Relics &amp; assignment, Temples &amp; 
+placement, the Influence Bomb, Cathedrals, science routing, quest 
+branches, ships, strategic directions &amp; first-40 playbook</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac09-hissho.html" style="--card-accent: var(--hissho-color);">
+<div class="vol-card-emoji">🦅
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 9</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Hissho</div>
+<div class="vol-card-sub">Keii multiplier mechanics, Resource Recovery 
+engine, expansion constraint, Observance management, war doctrine and 
+the subdue-raze cycle</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+</div>
+</div>
+<!-- ── ROW 4 · Expert Factions — 3 cards ── -->
+<!-- Order: Cravers · Vodyani · Umbral Choir -->
+<div class="index-row row-expert">
+<div class="col-label">// Faction Deep Dives — Expert</div>
+<div class="row-cards" style="--cols:3">
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac04-cravers.html" style="--card-accent: var(--cravers-color);">
+<div class="vol-card-emoji">🪳
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 10</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Cravers</div>
+<div class="vol-card-sub">Depletion math, Slave Driver mechanics, approval toolkit, three strategic paths and the depleted-planet military endgame</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac05-vodyani.html" style="--card-accent: var(--vodyani-color);">
+<div class="vol-card-emoji">🦋
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 11</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Vodyani</div>
+<div class="vol-card-sub">Essence economy, BARK math, population virtualization, Righteous Fury, drain-to-invade doctrine and the 40-turn playbook</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+<a class="vol-card" href="FactionsDeepGuide/es2-Fac10-umbralchoir.html" style="--card-accent: var(--umbral-color);">
+<div class="vol-card-emoji">👁️ 
+	<div class="vol-card-badge">
+		<span class="badge-diamond">◈</span>
+		<span class="badge-label">FAC 12</span>
+		<span class="badge-diamond">◈</span>
+	</div>
+</div>
+<div class="vol-card-text">
+<div class="vol-card-title">The Umbral Choir</div>
+<div class="vol-card-sub">Nexus-and-Sanctuary architecture, Bandwidth 
+economy, proxy hacking imperative, Shadow conversion pipeline, manpower 
+crisis management and playing against the Umbral Choir</div>
+</div>
+<div class="vol-card-arrow">→</div>
+</a>
+</div>
+</div>
+</div><!-- /.index-body -->
+<!-- ── FOOTER ── -->
+<footer class="index-footer">
+<span>ENDLESS SPACE 2 — FIELD MANUAL</span>
+<span>ErPanfi + Claude Free</span>
+</footer>
+</div><!-- /.index-wrap -->
+</body></html>

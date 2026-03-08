@@ -131,7 +131,8 @@
   }
 
   .vol-card::before {
-    content: '';
+    left:0;
+	content: '';
     position: absolute;
     top: 0; bottom: 0;
     width: 3px;
@@ -231,6 +232,12 @@
 	color: rgb(var(--card-accent));
 	margin-bottom: 8px;
 }  
+
+.vol-card-emoji .vol-card-badge {
+	text-orientation: upright;
+	writing-mode: vertical-lr;
+	padding: 3px 2px;
+}
 
 
   /* SIDEBAR NAV */
