@@ -485,28 +485,74 @@
         <div class="topic-num">06</div>
         <div>
           <h2 class="topic-title">Anomalies: Activation, Risk & Removal</h2>
-          <div class="topic-subtitle">Three anomaly categories, their FIDSI impact, and the tech path to neutralize detrimental effects</div>
+          <div class="topic-subtitle">Five anomaly categories, their full FIDSI impact, the undiscovered-anomaly rule, and the tech path to neutralize detrimental effects</div>
         </div>
       </div>
 
       <div class="content-block open" id="cb6a">
         <div class="block-header" onclick="toggle('cb6a')">
           <span class="block-icon">⚠️</span>
-          <span class="block-title">The Three Anomaly Categories</span>
+          <span class="block-title">Anomaly Categories: Full Reference</span>
           <span class="block-tag tag-mech">MECHANIC</span>
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Anomalies are persistent modifiers on individual planets, applied at discovery (via curiosity expedition or automatic on colonization). They fall into three categories:</p>
+          <p>Anomalies are persistent planet-level modifiers. A planet has three attribute slots total — shared between anomalies, luxury resources, and strategic resources. Anomalies are applied on discovery (curiosity expedition) or automatically on colonization. There are five distinct categories: <strong>Beneficial</strong>, <strong>Mixed</strong>, <strong>Detrimental</strong>, <strong>Reduced</strong>, and <strong>Ruin</strong>.</p>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">UNDISCOVERED ANOMALIES HAVE NO EFFECT</div>
+            This is easy to miss: an anomaly's effects — positive <em>or</em> negative — are completely suppressed until the curiosity is investigated. A planet with a devastating detrimental anomaly sitting uninvestigated costs you nothing. Conversely, a strong beneficial anomaly yields nothing until explored. This creates a genuine strategic decision: if you know a planet carries a detrimental anomaly and you don't have the tech to remove it yet, you can deliberately leave the curiosity uninvestigated to avoid the penalty. The Vodyani, who lack access to anomaly reduction techs, benefit most from this rule — leaving detrimental curiosities uninvestigated is often their only option.
+          </div>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm); color: var(--red);">Detrimental Anomalies (10 total)</h3>
+          <p>Pure FIDSI penalties, no compensating upside. Reducible only via Ontological Rev-Eng (S5) or a terraforming behemoth. All values are per population unless noted.</p>
 
           <table class="ref-table">
-            <tr><th>Category</th><th>Effect</th><th>Example</th></tr>
-            <tr><td class="cell-key">Beneficial</td><td class="cell-good">Pure FIDSI bonus — always positive</td><td class="cell-good">Antonov Rings: +Dust, +1 Science per population</td></tr>
-            <tr><td class="cell-key">Detrimental</td><td class="cell-bad">Pure FIDSI penalty — always negative</td><td class="cell-bad">Strong Magnetic Field: significant FIDSI nerf on that planet</td></tr>
-            <tr><td class="cell-key">Mixed</td><td>Has both a positive and a negative component simultaneously</td><td>Positive bonus to one FIDSI type, penalty to another</td></tr>
+            <tr><th>Anomaly</th><th>Effects</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Acid Rain</td><td class="cell-bad">−2 Industry/pop, −4 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">High Gravity</td><td class="cell-bad">−1 Science/pop, −2 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Irradiated</td><td class="cell-bad">−1 Science/pop, −1 Food/pop, −4 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Kessler Syndrome</td><td class="cell-bad">−1 Dust/pop, −1 Industry/pop, −2 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Long Season</td><td class="cell-bad">−1 Dust/pop, −1 Food/pop</td><td>Lightest detrimental overall</td></tr>
+            <tr><td class="cell-key">Polar Tempests</td><td class="cell-bad">−1 Food/pop, −1 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Poor Soil</td><td class="cell-bad">−3 Food/pop, −2 Approval/pop</td><td>Crippling on food-dependent systems</td></tr>
+            <tr><td class="cell-key">Strong Magnetic Field</td><td class="cell-bad">−1 Science/pop, −1 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Low-Quality Foundations</td><td class="cell-bad">−1 FIDS/pop</td><td>Crescents only</td></tr>
+            <tr><td class="cell-key">Uninhabitable Area</td><td class="cell-bad">−1 Population Slot, −2 Approval/pop</td><td>Crescents only; note the pop slot loss</td></tr>
           </table>
 
-          <p>Anomalies apply at the planet level, not the system level. A system can have multiple planets each carrying different anomalies. When evaluating a system for colonization, the anomaly mix on all its planets should factor into your decision — a highly detrimental anomaly on a planet you'll rely on heavily can undermine a system that looked promising on paper.</p>
+          <div class="callout callout-warn">
+            <div class="callout-label">APPROVAL DAMAGE IS MULTIPLIER DAMAGE</div>
+            Seven of the ten detrimental anomalies carry an Approval penalty. At sub-70% Approval you lose the Loyal bonus on all empire-wide Dust and Science output. A single Irradiated or Acid Rain planet on a high-population colony isn't just hurting that planet — it can drag your entire empire's Approval below the multiplier threshold. Factor this into colonization decisions, not just the per-planet FIDSI delta.
+          </div>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm); color: var(--yellow, #c8a84b);">Mixed Anomalies (12 total)</h3>
+          <p>Both a positive and a negative component simultaneously. The Science S3 tech <strong>Autonomous Materials</strong> unlocks <em>Simple Anomaly Reduction</em>, which strips the negative side while keeping the positive. Post-reduction, the anomaly moves to the Reduced category. All values are per population.</p>
+
+          <table class="ref-table">
+            <tr><th>Anomaly</th><th>Positive</th><th>Negative</th><th>Notes</th></tr>
+            <tr><td class="cell-key">Aurora Waves</td><td class="cell-good">+1 Approval/pop, +2 Dust/pop</td><td class="cell-bad">−2 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Geothermic Activity</td><td class="cell-good">+1 Industry/pop</td><td class="cell-bad">−1 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Hostile Fauna</td><td class="cell-good">+1 Food/pop</td><td class="cell-bad">−1 Science/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Ice-10</td><td class="cell-good">+2 Science/pop</td><td class="cell-bad">−2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Metallic Waters</td><td class="cell-good">+1 Industry/pop</td><td class="cell-bad">−2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Meteor Strikes</td><td class="cell-good">+1 Industry/pop</td><td class="cell-bad">−1 Science/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Permanent Monsoon</td><td class="cell-good">+2 Food/pop</td><td class="cell-bad">−2 Approval/pop, −2 Industry/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Psychoactive Air</td><td class="cell-good">+1 Approval/pop, +1 Dust/pop</td><td class="cell-bad">−1 Science/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Seismic Activity</td><td class="cell-good">+1 Science/pop</td><td class="cell-bad">−2 Approval/pop, −1 Dust/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Shattered Crust</td><td class="cell-good">+2 Dust/pop</td><td class="cell-bad">−1 Industry/pop, −2 Approval/pop</td><td>—</td></tr>
+            <tr><td class="cell-key">Flickering Matter</td><td class="cell-good">+2 Science/pop</td><td class="cell-bad">−1 Industry/pop</td><td>Crescents only</td></tr>
+            <tr><td class="cell-key">Pseudo-Atmosphere</td><td class="cell-good">+1 Influence/pop, +1 Approval/pop</td><td class="cell-bad">−2 Science/pop</td><td>Crescents only</td></tr>
+          </table>
+
+          <p>10 of 12 mixed anomalies carry an Approval penalty — the same multiplier risk as detrimental anomalies. Ice-10 (+2 Science, −2 Approval) is a prime early target for Autonomous Materials: the positive side is substantial and the negative side disappears entirely on reduction.</p>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm); color: var(--green);">Beneficial Anomalies (30+)</h3>
+          <p>Pure FIDSI bonuses, no downside. There are over 30 beneficial anomalies — too numerous to enumerate fully here, but several warrant strategic attention. <strong>Komatiite Volcano</strong> (+4 Industry/pop) and <strong>Mineral Rich</strong> (+3 Industry/pop) are strong on industrial colonies. <strong>Antonov Rings</strong> (+1 Science/pop, +2 Dust/pop) and <strong>Humeris Insidentes</strong> (+4 Science/pop) are excellent on science worlds. <strong>Garden of Eden</strong> (+2 Approval/pop, +1 FIDS/pop, +1 pop slot) is one of the strongest all-rounders in the game.</p>
+          <p><strong>Moon anomalies</strong> (Single Moon, Binary Moons, Multiple Moons) each grant +1 Population Slot and can be further investigated for additional bonuses once the relevant tech is researched. These stack with the planet's existing population capacity and are worth investigating as soon as Compact Warp Methods (S3) enables moon infrastructure.</p>
+
+          <h3 style="margin: var(--sp-md) 0 var(--sp-sm); font-size: var(--ts-sm);">Ruin Anomalies (10 total, Supremacy DLC)</h3>
+          <p>Ruins are generated by in-game events: destroying pirate lairs, assimilating or invading minor factions, large fleet battles. They can be beneficial (Gutted Pirate Hideout/Lair/Stronghold: +Dust/+Industry per pop) or mixed (Debris Field tiers: +Science/pop, −Dust/pop; Trench/Devastation/Apocalyptic Landscape: +Science/pop, −Food/pop). Pre-galactic Architecture (+1 each to Dust, Science, Approval per pop) is purely positive. <strong>Crucially, ruin anomaly negative effects cannot be reduced</strong> — Autonomous Materials and OCP Investigation Unit do not apply to them. The mixed ruin anomalies are permanent tradeoffs.</p>
 
           <div class="done-row">
             <span class="done-label">UNDERSTOOD & APPLIED</span>
@@ -533,7 +579,7 @@
 
           <div class="callout callout-warn">
             <div class="callout-label">THE OCP TRAP — DON'T PLAN AROUND IT</div>
-            A detrimental anomaly on a colonized planet will be costing you FIDSI from the moment of colonization until Stage 5 research is complete. On a medium galaxy at normal speed that gap can easily be 80–120+ turns. A "Strong Magnetic Field" applying −4 Industry / −2 Science per turn for 100 turns is a 600-point cumulative Industry loss and a 200-point Science loss before the fix even lands. Treat detrimental anomalies as permanent penalties when evaluating systems to colonize, not as temporary problems. The fix exists — it just costs far more than it looks.
+            A detrimental anomaly on a colonized planet will be costing you FIDSI from the moment of colonization until Stage 5 research is complete. On a medium galaxy at normal speed that gap can easily be 80–120+ turns. Take Strong Magnetic Field as an example: at −1 Science/pop, −1 Industry/pop, −2 Approval/pop (wiki-confirmed values), a 3-population planet bleeds −3 Science, −3 Industry, and −6 Approval every single turn — plus the Approval hit risks your empire-wide Loyal multiplier. Over 100 turns that's 300 cumulative Science lost and 300 Industry lost before the fix even lands. Treat detrimental anomalies as permanent penalties when evaluating systems to colonize, not as temporary problems. The fix exists — it just costs far more than it looks.
           </div>
 
           <p>Anomaly reduction via the <strong>terraforming behemoth</strong> (Behemoth Basic Climatology module, Science S3) offers a middle path: the behemoth can reduce anomalies on colonized planets, including detrimental ones, without requiring Stage 5. This is covered in detail in T7. If you have a severe detrimental anomaly on a high-value planet and behemoths are available, this may be your fastest practical remedy.</p>

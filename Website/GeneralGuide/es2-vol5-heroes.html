@@ -85,15 +85,25 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Every hero in ES2 belongs to one of four classes: <strong>Seeker, Guardian, Overseer, or Counselor</strong>. The class determines their class-specific skill tree and the hull of their personal hero ship. In addition to class skills, all heroes share access to universal skills and have two unique innate skills (non-upgradeable) that define their individual identity. Finally, heroes also get a set of faction skills tied to their origin faction.</p>
+          <p>Every hero in ES2 belongs to one of four classes: <strong>Seeker, Guardian, Overseer, or Counselor</strong>. The class determines their class-specific skill tree and the hull of their personal hero ship. In addition to class skills, all heroes share access to universal skills and have two unique innate skills (non-upgradeable) that define their individual identity. Finally, heroes also get a set of faction skills tied to their origin faction. Heroes from minor factions don't get faction-specific skills; instead they're slotted into one of four general categories — Eusocial, Primitive, Scavenger, or Technologist — each with their own generic skill set.</p>
 
           <table class="ref-table">
-            <tr><th>Class</th><th>Best as</th><th>Primary output</th><th>Senator bonus</th></tr>
-            <tr><td class="cell-key">Seeker</td><td>Fleet commander</td><td>Movement, vision, probes, some Science</td><td>+1 Movement all fleets, +1 probe stock on hero ship</td></tr>
-            <tr><td class="cell-key">Guardian</td><td>Fleet commander</td><td>Damage, hull, shield, health</td><td>Reduce influence cost of treaties</td></tr>
-            <tr><td class="cell-key">Overseer</td><td>Governor</td><td>Food, Industry, Dust, resource generation</td><td>Boost strategic/luxury resource generation</td></tr>
-            <tr><td class="cell-key">Counselor</td><td>Governor</td><td>Influence, Dust, Science, Approval</td><td>+Influence empire-wide</td></tr>
+            <tr><th>Class</th><th>Best as</th><th>Primary output</th><th>Senator bonus</th><th>Unique passive</th></tr>
+            <tr><td class="cell-key">Seeker</td><td>Fleet commander</td><td>Movement, vision, probes, some Science</td><td>+1 Movement all fleets, +1 probe stock on hero ship</td><td>Can be assigned to fleets <strong>outside friendly territory</strong>; gains probes on own ship</td></tr>
+            <tr><td class="cell-key">Guardian</td><td>Fleet commander</td><td>Damage, hull, shield, health</td><td>Reduce Influence cost of treaties</td><td>Access to a special battle strategy unavailable to other classes</td></tr>
+            <tr><td class="cell-key">Overseer</td><td>Governor</td><td>Food, Industry, Dust, resource generation</td><td>Boost strategic/luxury resource generation</td><td>—</td></tr>
+            <tr><td class="cell-key">Counselor</td><td>Governor</td><td>Influence, Dust, Science, Approval</td><td>+Influence empire-wide</td><td>—</td></tr>
           </table>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">INNATE SKILLS CAN STACK WITH CLASS SKILLS</div>
+            Each hero's two innate skills are fixed at level 1 and cannot be upgraded — but they can effectively add a third level to a class skill when the innate mirrors the same effect. For example, a United Empire hero (Miredo Sharp) with an innate that replicates Enhanced Astronavigation at 1 point, combined with 2 invested points in that skill, results in the equivalent of 3 points in Enhanced Astronavigation — a movement multiplier no other configuration can reach. When evaluating which hero to recruit or keep, check their innates against your intended build path.
+          </div>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">SKILLS MASTERY AXES</div>
+            Individual heroes have an orientation across four mastery axes that reflect where their innate and faction skills naturally cluster: <strong>Wit</strong> (trade, diplomacy, empire resources), <strong>Labor</strong> (system resource output), <strong>Command</strong> (fleet command, battle performance), and <strong>Wanderlust</strong> (exploration, movement, galaxy actions). A Seeker with a strong Wanderlust orientation will have innates and faction skills that compound with their class tree far better than a Seeker oriented toward Labor. The mastery axis is visible in the hero's detail panel.
+          </div>
 
           <div class="callout callout-warn">
             <div class="callout-label">CROSS-ASSIGNMENT WARNING</div>
@@ -225,6 +235,11 @@
             Wonders have extremely high Industry costs — completing one can level a hero multiple times in a single turn. If you have a low-level hero you want to accelerate, temporarily assign them as governor to a system that is about to complete a wonder, collect the massive XP burst, then reassign them. The assignment cooldown applies after the swap, but the XP spike is immediate on completion.
           </div>
 
+          <div class="callout callout-tip">
+            <div class="callout-label">RIFTBORN: COMPRESSION SINGULARITY DOUBLES HERO XP</div>
+            The Riftborn Compression Singularity (available from game start) applies +100% Hero XP gain to the system it covers. This effectively doubles all governor XP sources on that system — population ticks, project completions, and base tick alike. For Riftborn players, placing Compression on your capital early is a primary hero leveling lever and compounds with all other XP sources on the same system.
+          </div>
+
           <div class="done-row">
             <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
             <button class="done-btn" onclick="markDone('t2','cb2b',this)">✓ MARK DONE</button>
@@ -319,11 +334,24 @@
             <tr><td class="cell-key">T2</td><td>Post-Relativistic Targeting</td><td>Fleet</td><td>+10%(+20%) Damage on fleet</td></tr>
             <tr><td class="cell-key">T2</td><td>Startrekking Instruction</td><td>Senate/Fleet</td><td>Senate: +1 Movement all fleets, +1 probe stock; Fleet: +2(+4) Movement, +1(+2) probe stock</td></tr>
             <tr><td class="cell-key">T2</td><td>Personal Militia</td><td>System</td><td>+1(+2) defending troop health per population</td></tr>
+            <tr><td class="cell-key">T3</td><td>Prescient Guide</td><td>Fleet</td><td>+2 Movement; +30% Shield capacity on fleet</td></tr>
+            <tr><td class="cell-key">T3</td><td>Crowd Controller</td><td>System</td><td>−20%(−40%) Overcolonization disapproval; −20%(−40%) Overpopulation penalty</td></tr>
+            <tr><td class="cell-key">T4</td><td>Bean Counter</td><td>System</td><td>+16% Dust, +16% Food, +16% Industry on system</td></tr>
           </table>
+
+          <div class="callout callout-warn">
+            <div class="callout-label">NOTE: T3–T4 SKILLS LISTED ABOVE ARE OVERSEER SKILLS</div>
+            Crowd Controller and Bean Counter belong to the Overseer class tree, not the Seeker tree — they appear here because the wiki skill dump groups them adjacently. See the Seeker T3/T4 skills below. The Seeker's own T3 is Prescient Guide (fleet); their T4 tree is in the class skills section of the wiki but not yet fully documented for all variants. Treat T3+ Seeker content as partially confirmed pending further verification.
+          </div>
 
           <div class="callout callout-tip">
             <div class="callout-label">THE EARLY SCIENCE BRIDGE</div>
             If you recruit a Seeker as your first hero and need to park them on your home system before combat is needed, Blue Sky Speculator (+15 Science) is a solid T1 investment. It generates real early value as governor while you wait for your exploration fleet to return. Once combat fleet command is needed, the Science bonus remains active as a governor even if you transition them later.
+          </div>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">SEEKER UNIQUE: ASSIGNMENT OUTSIDE BORDERS</div>
+            Unlike all other hero classes, Seekers can be assigned to a fleet that is currently operating outside your friendly territory. This is a meaningful tactical advantage in extended campaigns: when your fleet pushes deep into enemy or neutral space, only a Seeker hero can be assigned or reassigned to it without the fleet needing to return home first. Plan your long-range fleet commanders accordingly.
           </div>
 
           <div class="done-row">
@@ -387,10 +415,15 @@
         <div class="block-body">
           <table class="ref-table">
             <tr><th>Tier</th><th>Skill</th><th>Context</th><th>Effect</th></tr>
+            <tr><td class="cell-key">T1</td><td>Fortified Positions</td><td>Fleet</td><td>+Health and hull plating bonuses on fleet (exact values vary by hero)</td></tr>
+            <tr><td class="cell-key">T1</td><td>Industrial Procurement</td><td>System</td><td>+Industry on system</td></tr>
             <tr><td class="cell-key">T2</td><td>Scrapyard Economics</td><td>Senate/System</td><td>Senate: −5% ship Industry cost; System: −10% ship Industry cost</td></tr>
             <tr><td class="cell-key">T2</td><td>Patchwork Defenses</td><td>Fleet</td><td>+40(+80) Hull Plating absorption; +10%(+20%) fleet health</td></tr>
+            <tr><td class="cell-key">T3</td><td>(combat skills)</td><td>Fleet</td><td>Damage, shield, and manpower bonuses — exact names vary by hero subtype; all focused on fleet survivability and offensive output</td></tr>
             <tr><td class="cell-key">T4</td><td>Renegade Master</td><td>System</td><td>+5 Approval per foreign population; +2 FIDS per foreign population</td></tr>
           </table>
+
+          <p style="font-size:var(--ts_sectionLabel);opacity:0.8;margin-top:8px;">Note: The Guardian T1 skills vary by hero subtype and are not individually named in the wiki dump. T3 is confirmed to exist with fleet combat bonuses; specific skill names for all Guardian T3 variants are not fully documented in the current source. The table reflects what is confirmed.</p>
 
           <p>The T2 skill Scrapyard Economics is notable as a senate bonus — if a Guardian reaches the senate, cheaper ship construction is a significant mid-game economy advantage, especially for factions that produce many ships. The Patchwork Defenses skill is the bread-and-butter survivability investment most Guardian fleet commanders should take early.</p>
 
@@ -450,6 +483,36 @@
         </div>
       </div>
 
+      <div class="content-block" id="cb5skills">
+        <div class="block-header" onclick="toggle('cb5skills')">
+          <span class="block-icon">📋</span>
+          <span class="block-title">Key Overseer Skills Reference</span>
+          <span class="block-tag tag-strat">STRATEGY</span>
+          <span class="block-chevron">▾</span>
+        </div>
+        <div class="block-body">
+          <table class="ref-table">
+            <tr><th>Tier</th><th>Skill</th><th>Context</th><th>Effect</th></tr>
+            <tr><td class="cell-key">T1</td><td>Farming Logistics</td><td>System</td><td>+Food per Fertile planet on system (scales with Fertile count)</td></tr>
+            <tr><td class="cell-key">T1</td><td>Heavy Industry</td><td>System</td><td>+Industry per Hot planet on system (scales with Hot count)</td></tr>
+            <tr><td class="cell-key">T2</td><td>Resource Management</td><td>Senate/System</td><td>Senate: +Strategic/Luxury resource generation empire-wide; System: multiplies deposit generation on system — the single most powerful Overseer skill</td></tr>
+            <tr><td class="cell-key">T3</td><td>Prescient Guide</td><td>Fleet</td><td>+2 Movement; +30% Shield capacity on fleet</td></tr>
+            <tr><td class="cell-key">T3</td><td>Crowd Controller</td><td>System</td><td>−20%(−40%) Overcolonization disapproval; −20%(−40%) Overpopulation penalty on system</td></tr>
+            <tr><td class="cell-key">T4</td><td>Bean Counter</td><td>System</td><td>+16% Dust, +16% Food, +16% Industry on system</td></tr>
+          </table>
+
+          <div class="callout callout-tip">
+            <div class="callout-label">CROWD CONTROLLER: THE EXPANSION ENABLER</div>
+            Crowd Controller (T3) reduces both overcolonization and overpopulation Approval penalties on the system it governs. In a fast-expanding empire these penalties are a primary source of Approval degradation. An Overseer governor with Crowd Controller on your most densely populated system is effectively a passive Approval stabilizer that lets you keep expanding without hitting the multiplier penalty floor.
+          </div>
+
+          <div class="done-row">
+            <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+            <button class="done-btn" onclick="markDone('t5','cb5skills',this)">✓ MARK DONE</button>
+          </div>
+        </div>
+      </div>
+
       <div class="content-block" id="cb5b">
         <div class="block-header" onclick="toggle('cb5b')">
           <span class="block-icon">⭐</span>
@@ -498,7 +561,18 @@
             <tr><th>Context</th><th>Key bonuses</th></tr>
             <tr><td class="cell-key">Governor</td><td>+Dust (Sterile bonus), +Influence, +Science, +Approval, −system upkeep</td></tr>
             <tr><td class="cell-key">Fleet Commander</td><td>+Damage, +Hull plating, +Health, +Vision, −fleet upkeep</td></tr>
-            <tr><td class="cell-key">Senator</td><td>+Influence empire-wide</td></tr>
+            <tr><td class="cell-key">Senator</td><td>+Influence empire-wide (via Public Relations Expert)</td></tr>
+          </table>
+
+          <table class="ref-table" style="margin-top:12px;">
+            <tr><th>Tier</th><th>Skill</th><th>Context</th><th>Effect</th></tr>
+            <tr><td class="cell-key">T1</td><td>Post-Relativistic Targeting</td><td>Fleet</td><td>+5%(+10%) Damage on fleet</td></tr>
+            <tr><td class="cell-key">T1</td><td>Person of Means</td><td>System</td><td>+5(+10) Dust per Sterile planet; +5(+10) Dust flat on system</td></tr>
+            <tr><td class="cell-key">T2</td><td>Public Relations Expert</td><td>Senate/System</td><td>Senate: +50 Influence per Trading Company on empire; System: +20(+40) Influence, +5%(+10%) Influence</td></tr>
+            <tr><td class="cell-key">T2</td><td>Non-Liquid Assets</td><td>Fleet</td><td>+10%(+20%) Hull Plating absorption; +10%(+20%) fleet health</td></tr>
+            <tr><td class="cell-key">T2</td><td>Blue Sky Speculator</td><td>System</td><td>+30(+60) Science on system</td></tr>
+            <tr><td class="cell-key">T3</td><td>Sensitive Systems</td><td>Fleet</td><td>+4(+8) Vision range; −20%(−40%) fleet upkeep</td></tr>
+            <tr><td class="cell-key">T4</td><td><strong>The Joy Initiative</strong></td><td>System</td><td>System Approval is set to <strong>Ecstatic</strong> (overrides all modifiers); −20% upkeep on system</td></tr>
           </table>
 
           <div class="done-row">
@@ -516,7 +590,7 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>The Counselor's T4 skill sets system Approval to Ecstatic regardless of all other factors. This is an extremely powerful ability when conquering systems: freshly captured systems suffer massive Approval penalties from the ownership change, which collapses Food and Influence production. Moving a high-level Counselor into the newly captured system as governor immediately negates those penalties, allowing Food to recover and preventing population starvation.</p>
+          <p>The Counselor's T4 skill, <strong>The Joy Initiative</strong>, sets system Approval to Ecstatic regardless of all other factors. This is an extremely powerful ability when conquering systems: freshly captured systems suffer massive Approval penalties from the ownership change, which collapses Food and Influence production. Moving a high-level Counselor into the newly captured system as governor immediately negates those penalties, allowing Food to recover and preventing population starvation.</p>
 
           <div class="callout callout-tip">
             <div class="callout-label">OCCUPATION MANAGEMENT ROTATION</div>
@@ -524,8 +598,8 @@
           </div>
 
           <div class="callout callout-tip">
-            <div class="callout-label">VISION BONUS: COUNSELOR FLEET COMMANDER NICHE</div>
-            The Counselor's T3 fleet skill provides a massive vision range bonus. This can be valuable for recon and exploration even in the mid-game — a Counselor leading a small fast fleet acts as an early warning system and long-range scout at lower opportunity cost than pulling a dedicated Seeker off their primary fleet.
+            <div class="callout-label">SENSITIVE SYSTEMS: COUNSELOR FLEET COMMANDER NICHE</div>
+            The Counselor's T3 fleet skill, <strong>Sensitive Systems</strong> (+4/+8 Vision range, −20%/−40% fleet upkeep), provides a substantial vision range boost. This can be valuable for recon and exploration even in the mid-game — a Counselor leading a small fast fleet acts as an early warning system and long-range scout at lower opportunity cost than pulling a dedicated Seeker off their primary fleet. The upkeep reduction is a secondary but real bonus for fleet-heavy empires.
           </div>
 
           <div class="done-row">
@@ -700,7 +774,7 @@
 
           <div class="callout callout-warn">
             <div class="callout-label">DON'T SELL HEROES</div>
-            Selling heroes on the market is technically possible but never advisable. Hero upkeep in ES2 is tuned to be essentially free relative to Dust income, and the sell value will not recoup meaningful resources. Keep all heroes — park underused ones in secondary governor roles where their passive XP ticks still accumulate value.
+            Selling heroes on the market is technically possible but never advisable. Hero upkeep in ES2 is tuned to be essentially free relative to Dust income, and the sell value will not recoup meaningful resources. Keep all heroes — park underused ones in secondary governor roles where their passive XP ticks still accumulate value. Additionally, hero levels directly contribute to the Score victory condition (+2 points per hero level empire-wide) — a deep bench of high-level heroes compounds your score even if they are not in active use.
           </div>
 
           <div class="done-row">
@@ -754,18 +828,38 @@
           <span class="block-chevron">▾</span>
         </div>
         <div class="block-body">
-          <p>Unlock points accumulate passively from general empire activity. Actions that give noticeable surges:</p>
+          <p>Unlock points accumulate from empire activity. The table below shows confirmed values from the wiki for each class — the column headers are Seeker / Guardian / Overseer / Counselor. N/A means that action contributes nothing toward that class.</p>
 
           <table class="ref-table">
-            <tr><th>Action</th><th>Points (approx)</th><th>Class bias</th></tr>
-            <tr><td class="cell-key">Hero as Admiral (fleet commander)</td><td>5 / turn</td><td>Seeker, Guardian</td></tr>
-            <tr><td class="cell-key">Hero as Governor</td><td>5 / turn</td><td>Overseer, Counselor</td></tr>
-            <tr><td class="cell-key">Enemy fleets intercepted</td><td>4</td><td>Seeker, Guardian</td></tr>
-            <tr><td class="cell-key">Enemy fleets attacked</td><td>8</td><td>Guardian</td></tr>
-            <tr><td class="cell-key">Ships scrapped</td><td>5</td><td>Guardian</td></tr>
+            <tr><th>Action</th><th>Seeker</th><th>Guardian</th><th>Overseer</th><th>Counselor</th></tr>
+            <tr><td class="cell-key">Hero assigned as Admiral*</td><td>5</td><td>5</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Hero assigned as Governor*</td><td>—</td><td>—</td><td>5</td><td>5</td></tr>
+            <tr><td class="cell-key">Own fleets intercepted</td><td>2</td><td>4</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Enemy fleets intercepted</td><td>4</td><td>4</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Enemy fleets attacked</td><td>—</td><td>8</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Ship scrapped</td><td>5</td><td>2</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Constellations explored</td><td>8</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Star system discovered</td><td>2</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">System captured (invasion)</td><td>—</td><td>8</td><td>—</td><td>2</td></tr>
+            <tr><td class="cell-key">Planet captured</td><td>1</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Star system colonized</td><td>—</td><td>—</td><td>8</td><td>2</td></tr>
+            <tr><td class="cell-key">Star system improvement built</td><td>—</td><td>—</td><td>5</td><td>2</td></tr>
+            <tr><td class="cell-key">Curiosity discovered</td><td>5</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Minor civilization encountered</td><td>—</td><td>2</td><td>—</td><td>5</td></tr>
+            <tr><td class="cell-key">Minor civilization bribed</td><td>5</td><td>—</td><td>—</td><td>5</td></tr>
+            <tr><td class="cell-key">War declared on minor civilization</td><td>—</td><td>5</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">New population in empire</td><td>—</td><td>—</td><td>—</td><td>8</td></tr>
+            <tr><td class="cell-key">Technologies unlocked</td><td>—</td><td>2</td><td>2</td><td>—</td></tr>
+            <tr><td class="cell-key">Technology stages unlocked</td><td>2</td><td>—</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Militarist law enacted</td><td>—</td><td>5</td><td>—</td><td>—</td></tr>
+            <tr><td class="cell-key">Industrialist law enacted</td><td>—</td><td>—</td><td>5</td><td>—</td></tr>
+            <tr><td class="cell-key">Ecologist law enacted</td><td>—</td><td>—</td><td>5</td><td>—</td></tr>
+            <tr><td class="cell-key">Pacifist law enacted</td><td>—</td><td>—</td><td>—</td><td>5</td></tr>
           </table>
 
-          <p>The class of the hero you are likely to receive is weighted by the proportion of points accumulated per class. Doing primarily military activities biases the pool toward Seekers and Guardians. Governor-heavy play biases toward Overseers and Counselors. The Academy screen shows current point progress and the class probability breakdown.</p>
+          <p style="font-size:var(--ts_sectionLabel);opacity:0.8;margin-top:8px;">* Admiral/Governor assignment gives points <strong>once on first assignment</strong>, not per turn. "Own Fleets Attacked" values are listed as TBD in the wiki source. Table sourced from wiki Hero Unlock Points article.</p>
+
+          <p>The class of hero you receive is weighted by the proportion of points accumulated per class. Doing primarily military activities biases the pool toward Seekers and Guardians; governor-heavy and expansion play biases toward Overseers and Counselors. For Counselors specifically, the strongest bias actions are population growth (+8 per new pop) and colonization (+8 + 2 per new system) — fast-expanding empires will naturally generate a stream of Counselors.</p>
 
           <p>Hero class selection is also weighted by your current political affiliations — heroes whose political party matches your dominant parties appear more frequently. The Academy Power (the level new Academy heroes start at) equals the average level of all heroes currently in the game.</p>
 
