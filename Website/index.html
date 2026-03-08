@@ -165,13 +165,6 @@
    * With no wrapping and fixed column widths the strip exceeds the
    * viewport width when needed; .index-row's overflow-x:auto takes over.
    */
-  .row-cards {
-    display: grid;
-    grid-template-columns: repeat(var(--cols), var(--card-w));
-    gap: var(--card-gap);
-    width: max-content;   /* shrink to actual content, never stretch */
-  }
-
   .row-cards .vol-card {
     width: var(--card-w);
     box-sizing: border-box;

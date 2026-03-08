@@ -112,6 +112,15 @@
     position: relative;
     z-index: 1;
   }
+  
+  .row-cards {
+    display: grid;
+    grid-template-columns: repeat(var(--cols), var(--card-w));
+    gap: var(--card-gap);
+    width: max-content;   /* shrink to actual content, never stretch */
+  }
+
+  
 
   /* ── Volume cards effects ──────────────────────────────────── */
   .vol-card {
