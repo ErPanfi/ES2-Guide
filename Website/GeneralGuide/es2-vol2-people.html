@@ -800,6 +800,40 @@
         </div>
       </div>
     </div>
+
+    <div class="content-block" id="cb6d">
+      <div class="block-header" onclick="toggle('cb6d')">
+        <span class="block-icon">🔍</span>
+        <span class="block-title">Diagnostic: Why Is My Approval Bleeding?</span>
+        <span class="block-tag tag-strat">STRATEGY</span>
+        <span class="block-chevron">▾</span>
+      </div>
+      <div class="block-body">
+        <p>Approval problems are rarely monocausal. Overcolonization is the most visible drain and is covered in T1 — but if your Approval is lower than overcolonization alone explains, three additional sources are the usual culprits, and they are all less visible than the system count.</p>
+
+        <table class="ref-table">
+          <tr><th>Hidden drain</th><th>Mechanic</th><th>How to check</th></tr>
+          <tr><td class="cell-key">Population/party mismatch</td><td>−3 Approval per representative whose party is <em>not</em> in power, applied every turn. A system with 6 Pacifist pops under a pure Industrialist Dictatorship bleeds −18 Approval from that source alone.</td><td>Open the System view → Population tab. Compare pop composition against your current ruling party. Large unrepresented populations on high-pop systems are the worst offenders.</td></tr>
+          <tr><td class="cell-key">Overpopulation</td><td>Penalty = (Current Pop − Max Pop × 0.7) × 3.75, floored at 0. Kicks in once a system exceeds 70% of its max population capacity. Scales linearly — at 90% capacity on a 10-slot system it's −7.5 Approval on that system.</td><td>Any system approaching or over 70% capacity. The Spaceport transfer to an underpopulated system fixes both the penalty and the receiving system's FIDSI gap simultaneously.</td></tr>
+          <tr><td class="cell-key">Post-conquest mutinous pops</td><td>Conquered populations arrive at Mutinous (0 Approval). A single high-pop conquered system can drag Empire Approval sharply downward for several turns until the population assimilates or is relocated.</td><td>Check newly conquered systems first. Use luxury bribes (if Dictatorship) or laws to accelerate recovery. Spaceport transfer of the mutinous pops to a low-max system minimises their weight in the empire-wide average.</td></tr>
+        </table>
+
+        <div class="callout callout-tip">
+          <div class="callout-label">DIAGNOSTIC ORDER</div>
+          If your Approval is lower than expected: (1) subtract the overcolonization penalty (−10 × excess systems) from your current Approval to get the baseline; (2) identify your highest-pop systems and check their population composition against the ruling party — if a large bloc is unrepresented, that's your bleeder; (3) check for systems above 70% pop capacity; (4) check for recently conquered systems still at Mutinous. In most mid-game slumps, the culprit is (1) or (2). Items (3) and (4) tend to be transient unless ignored for many turns.
+        </div>
+
+        <div class="callout callout-warn">
+          <div class="callout-label">THE DICTATORSHIP AMPLIFIER</div>
+          Under a Dictatorship or Autocracy, the population/party mismatch penalty is structurally larger than under Democracy. With only one party in power, every representative from any other pop type draws −3 Approval every turn. On a diverse empire this accumulates into a persistent, invisible Approval deficit that overcolonization alone does not explain. If you are playing a single-party government with a heterogeneous population and your Approval is lower than the system count justifies, the representative penalty is the first place to look.
+        </div>
+
+        <div class="done-row">
+          <span class="done-label">UNDERSTOOD &amp; APPLIED</span>
+          <button class="done-btn" onclick="markDone('t7','cb6d',this)">✓ MARK DONE</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <hr class="topic-divider">
