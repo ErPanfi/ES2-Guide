@@ -147,14 +147,14 @@
     margin-bottom: 20px;
     display: flex;
     align-items: center;
-    gap: 10px;
-    /* Don't let the label stretch to the full scrollable width */
-    width: fit-content;
+    gap: 16px;
+    width: 100%;
   }
 
+  .col-label::before,
   .col-label::after {
     content: '';
-    width: 120px;
+    flex: 1;
     height: 1px;
     background: var(--border);
   }
