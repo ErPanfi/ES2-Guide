@@ -16,12 +16,33 @@
     .vol-prev { --card-accent: var(--vol6-accent); }
 
     /* ── Faction cards ── */
-    .fac-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
-      gap: 20px;
-      margin: 20px 0;
-    }
+
+    .row-cards { 
+		--cols: 3;
+		--card-w: 500px;
+		--card-gap: 20px;
+		margin: 12px 0 24px; 
+		}
+		
+	.row-cards.advanced
+	{
+		--cols: 4;
+		--card-w: 440px;
+	}
+		
+	@media (min-width: 2435px) {
+	  .row-cards.beginner {
+		--card-w: 440px;
+		--cols: 5;
+	  }
+	}		
+
+	@media (max-width: 2335px) {
+	  .row-cards.advanced {
+		--card-w: 600px;
+	  }
+	}		
+
     .fac-card {
       /*background: var(--card);*/
       background: rgba(var(--fac-c),0.05);
@@ -213,14 +234,15 @@
     /* ── Setup table modifier ── */
     .cell-note { color: var(--text-dim); font-style: italic; font-size: var(--ts_sectionTitle); }
 
-    /* ── Tier dividers inside fac-grid ── */
+    /* ── Tier dividers ── */
     .tier-divider {
-      grid-column: 1 / -1;
       display: flex;
       align-items: center;
       gap: 14px;
       padding: 10px 0 4px;
+      margin-top: 16px;
     }
+    .tier-divider:first-child { margin-top: 0; }
     .tier-divider-line {
       flex: 1;
       height: 1px;
@@ -238,7 +260,6 @@
 
     /* ── Mobile ── */
     @media (max-width: 700px) {
-      .fac-grid { grid-template-columns: 1fr; }
       .archetype-grid { grid-template-columns: 1fr; }
       .axis-row { grid-template-columns: 110px 1fr 55px; gap: 7px; }
     }
@@ -490,16 +511,13 @@
       </div>
       <div class="block-body">
 
-        <div class="fac-grid">
-
-
-          <!-- ══ BEGINNER FACTIONS ══ -->
+        <!-- ══ BEGINNER FACTIONS ══ -->
           <div class="tier-divider tier-beginner">
             <div class="tier-divider-line"></div>
             <div class="tier-divider-label">// BEGINNER</div>
             <div class="tier-divider-line"></div>
           </div>
-          <!-- ═══ UNITED EMPIRE ═══ -->
+        <div class="row-cards beginner">
           <!-- ═══ UNITED EMPIRE ═══ -->
           <div class="fac-card" style="--fac-c: var(--ue-color)">
             <div class="fac-card-head">
@@ -700,14 +718,15 @@
             </div>
           </div>
 
+        </div><!-- end row-cards: beginner -->
 
-          <!-- ══ ADVANCED FACTIONS ══ -->
+        <!-- ══ ADVANCED FACTIONS ══ -->
           <div class="tier-divider tier-advanced">
             <div class="tier-divider-line"></div>
             <div class="tier-divider-label">// ADVANCED</div>
             <div class="tier-divider-line"></div>
           </div>
-          <!-- ═══ RIFTBORN ═══ -->
+        <div class="row-cards advanced">
           <!-- ═══ RIFTBORN ═══ -->
           <div class="fac-card" style="--fac-c: var(--riftborn-color)">
             <div class="fac-card-head">
@@ -868,14 +887,15 @@
             </div>
           </div>
 
+        </div><!-- end row-cards: advanced -->
 
-          <!-- ══ EXPERT FACTIONS ══ -->
+        <!-- ══ EXPERT FACTIONS ══ -->
           <div class="tier-divider tier-expert">
             <div class="tier-divider-line"></div>
             <div class="tier-divider-label">// EXPERT</div>
             <div class="tier-divider-line"></div>
           </div>
-          <!-- ═══ CRAVERS ═══ -->
+        <div class="row-cards expert">
           <!-- ═══ CRAVERS ═══ -->
           <div class="fac-card" style="--fac-c: var(--cravers-color)">
             <div class="fac-card-head">
@@ -995,7 +1015,7 @@
             </div>
           </div>
 
-        </div><!-- end .fac-grid -->
+        </div><!-- end row-cards: expert -->
 
         <div class="callout callout-gold">
           <div class="callout-label">FIRST FACTION? START HERE</div>
