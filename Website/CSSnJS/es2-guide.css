@@ -117,7 +117,7 @@
     display: grid;
     grid-template-columns: repeat(var(--cols), var(--card-w));
     gap: var(--card-gap);
-    width: max-content;   /* shrink to actual content, never stretch */
+	width:100%;
   }
 
   
